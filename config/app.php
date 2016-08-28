@@ -157,6 +157,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Invigor\UM\UMServiceProvider::class,
+        \App\Providers\HelperServiceProvider::class,
     ],
 
     /*
@@ -207,6 +208,8 @@ return [
         'role' => Invigor\UM\Middleware\UMRole::class,
         'permission' => Invigor\UM\Middleware\UMPermission::class,
         'ability' => Invigor\UM\Middleware\UMAbility::class,
+
+        'Style' => App\Helpers\StyleHelper::class,
     ],
 
 ];

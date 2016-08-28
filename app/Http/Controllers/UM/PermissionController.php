@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers\UM;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Invigor\UM\Controllers\UMPermissionController;
+use Invigor\UM\UMGroup;
 use Invigor\UM\UMPermission;
 use Invigor\UM\UMRole;
 
@@ -35,7 +37,11 @@ class PermissionController extends UMPermissionController
                 return $output;
             }
         } else {
-            return view('um.permission.index');
+            $userCount = User::count();
+            $groupCount = UMGroup::count();
+            $roleCount = UMRole::count();
+            $permissionCount = UMPermission::count();
+            return view('um.permission.index')->with(compact('userCount', 'groupCount', 'roleCount', 'permissionCount'));
         }
     }
 

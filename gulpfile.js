@@ -29,19 +29,21 @@ elixir(function(mix) {
     ]);
     mix.styles([
         "node_modules/bootstrap/dist/css/bootstrap.css",
-        // "node_modules/datatables.net-bs/css/dataTables.bootstrap.css",
-        // "node_modules/select2/dist/css/select2.css",
+        "node_modules/datatables.net-bs/css/dataTables.bootstrap.css",
+        "node_modules/select2/dist/css/select2.css",
         'vendor/driftyco/ionicons/css/ionicons.css',
         'node_modules/font-awesome/css/font-awesome.css',
         'vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css',
-        'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.css'
+        'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.css',
+        'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.scripts([
         "node_modules/jquery/dist/jquery.js",
+        // 'vendor/almasaeed2010/adminlte/plugins/jQuery/jQuery-2.2.3.min.js',
         "node_modules/bootstrap/dist/js/bootstrap.js",
-        // "node_modules/datatables.net/js/jquery.dataTables.js",
-        // "node_modules/datatables.net-bs/js/dataTables.bootstrap.js",
-        // "node_modules/select2/dist/js/select2.js",
+        "node_modules/datatables.net/js/jquery.dataTables.js",
+        "node_modules/datatables.net-bs/js/dataTables.bootstrap.js",
+        "node_modules/select2/dist/js/select2.js",
         'vendor/almasaeed2010/adminlte/plugins/slimScroll/jquery.slimscroll.min.js',
         'vendor/almasaeed2010/adminlte/plugins/fastclick/fastclick.js',
         'vendor/almasaeed2010/adminlte/dist/js/app.min.js'

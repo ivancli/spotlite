@@ -2,7 +2,7 @@
 @section('content')
     <h3>Create User</h3>
     <div class="um-form-container">
-        @include('um::forms.user.create')
+        @include('um.forms.user.create')
     </div>
 
 @stop

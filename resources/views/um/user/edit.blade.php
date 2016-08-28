@@ -2,7 +2,7 @@
 @section('content')
     <h3>Edit User: {{$user->name}}</h3>
     <div class="um-form-container">
-        @include('um::forms.user.edit')
+        @include('um.forms.user.edit')
     </div>
 @stop
 @section('scripts')

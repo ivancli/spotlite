@@ -1,21 +1,33 @@
 @extends('layouts.adminlte')
+@section('title', 'User List')
 @section('content')
+    @include('um.partials.banner_stats')
     <div class="row">
         <div class="col-sm-12">
-            <table class="table table-bordered table-hover table-striped" id="tbl-users">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Created at</th>
-                    <th>Updated at</th>
-                    <th width="10%"></th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">User List</h3>
+
+                    <div class="box-tools pull-right">
+                        <a href="{{route('um.user.create')}}" class="btn btn-default btn-sm">Create User</a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover table-striped" id="tbl-users">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Email</th>
+                            <th width="10%"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 @stop
@@ -32,28 +44,24 @@
                 "pagingType": "full_numbers",
                 "processing": true,
                 "serverSide": true,
-                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<'link-create'>><'col-sm-7'p>>",
+                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'><'col-sm-7'p>>",
                 "ajax": "{{route('um.user.index')}}",
                 "columns": [
                     {
-                        "name": "id",
-                        "data": "id"
+                        "name": "user_id",
+                        "data": "user_id"
                     },
                     {
-                        "name": "name",
-                        "data": "name"
+                        "name": "first_name",
+                        "data": "first_name"
+                    },
+                    {
+                        "name": "last_name",
+                        "data": "last_name"
                     },
                     {
                         "name": "email",
                         "data": "email"
-                    },
-                    {
-                        "name": "created_at",
-                        "data": "created_at"
-                    },
-                    {
-                        "name": "updated_at",
-                        "data": "updated_at"
                     },
                     {
                         "class": "text-center",
@@ -84,11 +92,6 @@
                     }
                 ]
             });
-            $("div.link-create").append(
-                    $("<a>").attr({
-                        "href": "{{route('um.user.create')}}"
-                    }).addClass('btn btn-default').text("Create User")
-            )
         });
 
         function deleteUser(url, callback) {
