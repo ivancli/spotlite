@@ -157,7 +157,10 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Invigor\UM\UMServiceProvider::class,
-        \App\Providers\HelperServiceProvider::class,
+
+        App\Providers\HelperServiceProvider::class,
+
+        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
     ],
 
     /*
@@ -210,6 +213,8 @@ return [
         'ability' => Invigor\UM\Middleware\UMAbility::class,
 
         'Style' => App\Helpers\StyleHelper::class,
+
+        'Breadcrumbs' =>DaveJamesMiller\Breadcrumbs\Facade::class,
     ],
 
 ];

@@ -1,5 +1,9 @@
 @extends('layouts.adminlte')
 @section('title', 'User List')
+@section('header_title', 'Users')
+@section('breadcrumbs')
+    {!! Breadcrumbs::render('user') !!}
+@stop
 @section('content')
     @include('um.partials.banner_stats')
     <div class="row">

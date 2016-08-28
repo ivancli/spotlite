@@ -31,19 +31,19 @@
 <!-- Site wrapper -->
 <div class="wrapper">
 
-    @include('layout_partials.default-header')
+    @include('layout_partials.default_header')
 
     <!-- =============================================== -->
 
     <!-- Left side column. contains the sidebar -->
-    @include('layout_partials.default-sidebar')
+    @include('layout_partials.default_sidebar')
 
     <!-- =============================================== -->
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        @yield('content-header')
+        @include('layout_partials.default_content_header')
 
         <!-- Main content -->
         <section class="content">
