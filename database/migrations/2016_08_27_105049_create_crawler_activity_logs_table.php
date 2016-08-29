@@ -3,12 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateCrawlerLogsTable extends Migration {
+class CreateCrawlerActivityLogsTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('crawler_logs', function(Blueprint $table) {
-			$table->bigIncrements('crawler_log_id');
+		Schema::create('crawler_activity_logs', function(Blueprint $table) {
+			$table->bigIncrements('crawler_activity_log_id');
 			$table->integer('crawler_id')->unsigned()->index();
 			$table->enum('status', array('started', 'prepared', 'crawled', 'validated', 'reported', 'finished'))->index();
 			$table->text('message')->nullable();
@@ -18,6 +18,6 @@ class CreateCrawlerLogsTable extends Migration {
 
 	public function down()
 	{
-		Schema::drop('crawler_logs');
+		Schema::drop('crawler_activity_logs');
 	}
 }

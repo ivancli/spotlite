@@ -59,7 +59,7 @@ class CreateMainTablesForeignKeys extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('no action');
         });
-        Schema::table('crawler_logs', function (Blueprint $table) {
+        Schema::table('crawler_activity_logs', function (Blueprint $table) {
             $table->foreign('crawler_id')->references('crawler_id')->on('crawlers')
                 ->onDelete('no action')
                 ->onUpdate('no action');
@@ -89,7 +89,7 @@ class CreateMainTablesForeignKeys extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });
-        Schema::table('report_logs', function (Blueprint $table) {
+        Schema::table('report_activity_logs', function (Blueprint $table) {
             $table->foreign('report_task_id')->references('report_task_id')->on('report_tasks')
                 ->onDelete('no action')
                 ->onUpdate('no action');
@@ -124,7 +124,7 @@ class CreateMainTablesForeignKeys extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('no action');
         });
-        Schema::table('alert_logs', function (Blueprint $table) {
+        Schema::table('alert_activity_logs', function (Blueprint $table) {
             $table->foreign('alert_id')->references('alert_id')->on('alerts')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
@@ -163,8 +163,8 @@ class CreateMainTablesForeignKeys extends Migration
         Schema::table('crawler_ips', function (Blueprint $table) {
             $table->dropForeign('crawler_ips_ip_id_foreign');
         });
-        Schema::table('crawler_logs', function (Blueprint $table) {
-            $table->dropForeign('crawler_logs_crawler_id_foreign');
+        Schema::table('crawler_activity_logs', function (Blueprint $table) {
+            $table->dropForeign('crawler_activity_logs_crawler_id_foreign');
         });
         Schema::table('products', function (Blueprint $table) {
             $table->dropForeign('products_user_id_foreign');
@@ -181,8 +181,8 @@ class CreateMainTablesForeignKeys extends Migration
         Schema::table('reports', function (Blueprint $table) {
             $table->dropForeign('reports_report_task_id_foreign');
         });
-        Schema::table('report_logs', function (Blueprint $table) {
-            $table->dropForeign('report_logs_report_task_id_foreign');
+        Schema::table('report_activity_logs', function (Blueprint $table) {
+            $table->dropForeign('report_activity_logs_report_task_id_foreign');
         });
         Schema::table('user_activity_logs', function (Blueprint $table) {
             $table->dropForeign('user_activity_logs_user_id_foreign');
@@ -202,8 +202,8 @@ class CreateMainTablesForeignKeys extends Migration
         Schema::table('alert_emails', function (Blueprint $table) {
             $table->dropForeign('alert_emails_alert_id_foreign');
         });
-        Schema::table('alert_logs', function (Blueprint $table) {
-            $table->dropForeign('alert_logs_alert_id_foreign');
+        Schema::table('alert_activity_logs', function (Blueprint $table) {
+            $table->dropForeign('alert_activity_logs_alert_id_foreign');
         });
     }
 }
