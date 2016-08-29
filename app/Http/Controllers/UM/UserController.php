@@ -142,7 +142,7 @@ class UserController extends UMUserController
                         return $user;
                     }
                 } else {
-                    return redirect()->route('um.user.index')->with(compact(['user', 'status']));
+                    return redirect()->route('um.user.show', $user->getKey())->with(compact(['user', 'status']));
                 }
             }
         }
@@ -238,7 +238,7 @@ class UserController extends UMUserController
                         return $user;
                     }
                 } else {
-                    return redirect()->route("um.user.index")->with(compact(['user', 'status']));
+                    return redirect()->route("um.user.show", $user->getKey())->with(compact(['user', 'status']));
                 }
             }
         }

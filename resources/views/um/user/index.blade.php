@@ -8,7 +8,7 @@
     @include('um.partials.banner_stats')
     <div class="row">
         <div class="col-sm-12">
-            <div class="box">
+            <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">User List</h3>
 

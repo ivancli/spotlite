@@ -11,10 +11,19 @@
 |
 */
 
-Route::get('login', function () {
-    return view('auth.login');
+
+Route::group(['middleware' => 'auth'], function(){
+    Route::get('/', 'DashboardController@index');
+    Route::get('verify', 'Chargify\VerifyController@paymentTrigger');
 });
 
-Route::get('register', function () {
-    return view('auth.register');
-});
+
+
+
+Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
+Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
+
+Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
+Route::post('register', 'Auth\AuthController@postRegister')->name('register.post');
+
+Route::get('logout', 'Auth\AuthController@logout')->name('logout');

@@ -1,9 +1,8 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: ivan.li
- * Date: 8/15/2016
- * Time: 10:54 AM
- */
-?>
-
+<div class="form-group required">
+    {!! Form::label('email', 'Email', array('class' => 'control-label')) !!}
+    {!! Form::email('email', null, array('class' => 'form-control')) !!}
+</div>
+<div class="form-group required">
+    {!! Form::label('password', 'Password', array('class' => 'control-label')) !!}
+    {!! Form::password('password', array('class' => 'form-control')) !!}
+</div>

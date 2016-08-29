@@ -38,15 +38,15 @@ elixir(function(mix) {
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.scripts([
-        "node_modules/jquery/dist/jquery.js",
-        // 'vendor/almasaeed2010/adminlte/plugins/jQuery/jQuery-2.2.3.min.js',
+        // "node_modules/jquery/dist/jquery.js",
+        'vendor/almasaeed2010/adminlte/plugins/jQuery/jQuery-2.2.3.min.js',
         "node_modules/bootstrap/dist/js/bootstrap.js",
         "node_modules/datatables.net/js/jquery.dataTables.js",
         "node_modules/datatables.net-bs/js/dataTables.bootstrap.js",
         "node_modules/select2/dist/js/select2.js",
         'vendor/almasaeed2010/adminlte/plugins/slimScroll/jquery.slimscroll.min.js',
         'vendor/almasaeed2010/adminlte/plugins/fastclick/fastclick.js',
-        'vendor/almasaeed2010/adminlte/dist/js/app.min.js'
+        'vendor/almasaeed2010/adminlte/dist/js/app.js'
     ], "public/js/main.js", "./");
 
     /* copy images */

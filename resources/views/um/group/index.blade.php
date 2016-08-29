@@ -1,10 +1,14 @@
 @extends('layouts.adminlte')
 @section('title', 'Group List')
+@section('header_title', 'Group List')
+@section('breadcrumbs')
+    {!! Breadcrumbs::render('group') !!}
+@stop
 @section('content')
     @include('um.partials.banner_stats')
     <div class="row">
         <div class="col-sm-12">
-            <div class="box">
+            <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Group List</h3>
 

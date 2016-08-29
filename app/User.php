@@ -15,7 +15,7 @@ class User extends Authenticatable
      */
     protected $primaryKey = "user_id";
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password', 'verification_code',
     ];
 
     public $timestamps = false;
@@ -28,4 +28,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'verification_code',
     ];
+
+    public function subscriptions()
+    {
+        return $this->hasMany('App\Models\Subscription', 'user_id', 'user_id');
+    }
 }

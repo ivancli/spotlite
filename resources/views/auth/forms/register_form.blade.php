@@ -1,22 +1,19 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: ivan.li
- * Date: 8/15/2016
- * Time: 10:54 AM
- */
-?>
-
-<div>
-    {!! Form::label('first_name', 'First name') !!}
-    {!! Form::text('first_name', old('name'), ['class' => 'form-control input-sm', 'placeholder' => 'full name']) !!}
+<div class="form-group required">
+    {!! Form::label('first_name', 'First name', array('class' => 'control-label')) !!}
+    {!! Form::text('first_name', null, array('class' => 'form-control')) !!}
+</div><div class="form-group required">
+    {!! Form::label('last_name', 'Last name', array('class' => 'control-label')) !!}
+    {!! Form::text('last_name', null, array('class' => 'form-control')) !!}
 </div>
-<div>
-    {!! Form::label('email', 'Email') !!}
-    {!! Form::text('email', old('email'), ['class' => 'form-control input-sm', 'placeholder' => 'email', 'disabled' => 'disabled']) !!}
+<div class="form-group required">
+    {!! Form::label('email', 'Email', array('class' => 'control-label')) !!}
+    {!! Form::email('email', null, array('class' => 'form-control')) !!}
 </div>
-
-<div>
-    {!! Form::label('status', 'Status') !!} &nbsp;
-    {!! Form::select('status', array('active' => 'active', 'inactive' => 'inactive', 'locked' => 'locked', 'deleted' => 'deleted'), old('status'), ['class' => 'control-inline form-control input-sm m-b-5']) !!}
+<div class="form-group required">
+    {!! Form::label('password', 'Password', array('class' => 'control-label')) !!}
+    {!! Form::password('password', array('class' => 'form-control')) !!}
+</div>
+<div class="form-group required">
+    {!! Form::label('password_confirmation', 'Confirm password', array('class' => 'control-label')) !!}
+    {!! Form::password('password_confirmation', array('class' => 'form-control')) !!}
 </div>
