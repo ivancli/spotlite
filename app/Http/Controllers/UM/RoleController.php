@@ -157,7 +157,7 @@ class RoleController extends UMRoleController
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-                'name' => 'required|max:255|min:1|unique:roles,name,' . $id,
+                'name' => 'required|max:255|min:1|unique:roles,name,' . $id . ',role_id',
         ]);
         if ($validator->fails()) {
             $status = false;

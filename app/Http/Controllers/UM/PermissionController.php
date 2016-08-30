@@ -69,7 +69,7 @@ class PermissionController extends UMPermissionController
     {
         /*validation*/
         $validator = Validator::make($request->all(), [
-                'name' => 'required|max:255|min:1|unique:permissions,name'
+            'name' => 'required|max:255|min:1|unique:permissions,name'
         ]);
         if ($validator->fails()) {
             $status = false;
@@ -163,7 +163,7 @@ class PermissionController extends UMPermissionController
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-                'name' => 'required|max:255|min:1|unique:permissions,name,' . $id,
+            'name' => 'required|max:255|min:1|unique:permissions,name,' . $id . ',permission_id',
         ]);
         if ($validator->fails()) {
             $status = false;

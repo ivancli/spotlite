@@ -6,4 +6,8 @@
 @stop
 @section('content')
     Blank page
+
+    @if(isset($login) && $login === true)
+        Yo, u just logged in.
+    @endif
 @stop

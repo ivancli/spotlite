@@ -11,15 +11,13 @@
 |
 */
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', 'DashboardController@index')->name("dashboard.index");
+    Route::get('verify', 'Chargify\VerificationController@paymentTrigger');
 
-Route::group(['middleware' => 'auth'], function(){
-    Route::get('/', 'DashboardController@index');
-    Route::get('verify', 'Chargify\VerifyController@paymentTrigger');
 });
 
-
-
-
+/*Auth*/
 Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 

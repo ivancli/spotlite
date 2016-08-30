@@ -158,7 +158,7 @@ class GroupController extends UMGroupController
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255|min:1|unique:groups,name,' . $id,
+            'name' => 'required|max:255|min:1|unique:groups,name,' . $id . ',group_id',
             'active' => 'boolean',
             'url' => 'required|url|max:2083|min:1',
             'description' => 'max: 2048'

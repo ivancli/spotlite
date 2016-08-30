@@ -40,6 +40,9 @@
 
     <!-- =============================================== -->
 
+    @if(Auth::check() && Auth::user()->last_login)
+
+    @endif
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -253,6 +256,9 @@
 <script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
 
 @yield('scripts')
+
+@include('scripts.notification')
+
 </body>
 </html>
 
