@@ -128,6 +128,7 @@ class AuthController extends Controller
                         $sub->api_subscription_id = $subscription->id;
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
+                        $this->redirectTo = route('msg.subscription.welcome');
                     } catch (Exception $e) {
                         return $user;
                     }

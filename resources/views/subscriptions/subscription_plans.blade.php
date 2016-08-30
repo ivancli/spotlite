@@ -1,5 +1,6 @@
 @extends('layouts.adminlte')
 @section('title', 'Subscription')
+@section('header_title', "Complete your signup process")
 @section('content')
     <div class="row">
         <div class="col-sm-12">

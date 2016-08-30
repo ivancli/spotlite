@@ -23,7 +23,7 @@ class VerifySubscriptions
      */
     public function handle($request, Closure $next)
     {
-        if($this->auth->guest() || !$request->user()->hasValidSubscription()){
+        if ($this->auth->guest() || $request->user()->needSubscription()) {
             /* TODO replace route with actual value */
             return redirect()->route('subscribe.products');
         }

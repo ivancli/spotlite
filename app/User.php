@@ -44,6 +44,12 @@ class User extends Authenticatable
         });
     }
 
+    public function needSubscription()
+    {
+        return !$this->isStaff() && !$this->hasValidSubscription();
+
+    }
+
     public function hasValidSubscription()
     {
         $subscriptions = $this->cachedSubscription();
@@ -74,5 +80,29 @@ class User extends Authenticatable
             }
         }
         return $subscriptions;
+    }
+
+    public function latestValidSubscription()
+    {
+        $subscription = $this->subscriptions->last();
+        $isValid = true;
+        if (!is_null($subscription)) {
+            if (!is_null($subscription->expiry_at)) {
+                if (strtotime($subscription->expiry_at) < time()) {
+                    $isValid = false;
+                }
+            } elseif (!is_null($subscription->cancelled_at)) {
+                if (strtotime($subscription->cancelled_at) < time()) {
+                    $isValid = false;
+                }
+            }
+            if ($isValid == true) {
+                return $subscription;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
