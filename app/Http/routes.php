@@ -12,9 +12,14 @@
 */
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', 'DashboardController@index')->name("dashboard.index");
-    Route::get('verify', 'Chargify\VerificationController@paymentTrigger');
+    Route::group(['middleware' => ['subs']], function () {
+        Route::get('/', 'DashboardController@index')->name("dashboard.index");
+    });
 
+    /* Subscription related routes*/
+    Route::get('verify', 'Chargify\VerificationController@paymentTrigger');
+    Route::get('subscription', 'Chargify\SubscriptionController@viewAPIProducts')->name('subscribe.products');
+    Route::post('subscription', 'Chargify\SubscriptionController@createSubscription')->name('subscribe.store');
 });
 
 /*Auth*/

@@ -1,25 +1,52 @@
 TODO
+----------------------------------
+
 IMPORTANT:
-quick add subscription status check when user login.
+
+//quick add subscription status check when user login. (this one needs a middleware)
+subscription check is finished.
+Now need to handle user re-subscribe.
+
+
+
+
 
 1. show welcome message when user first login (right after register)
+
     1) move the current welcome/success message to a popup
+
     2) modify the welcome/success message just so it depends on the subscription package
+
+
 2. prompt user if they haven't set up a group
+
     1) might need to use notification js plugins
         a). http://ned.im/noty/
         b). https://notifyjs.com/
+
     2) modify group CRUD
         a). ignore group with the same name instead of prompting errors
         b). attach user to the group soon as it's created. (should work without making changes)
+
+
 3. check the websites provided by Ryan
     http://www.pricetrakker.com/
     https://www.import.io/
     http://www.price2spy.com/
+
     1) check the necessity of verify email addresses on registration.
+
     2) check the way their registration and payment process work
+
+
 4. work on subscription management page
+
     1) view current subscription information
+
     2) upgrade or downgrade my subscription package
+
+
 5. work on profile management page
+
+
 6. hide admin sidebar items from client users

@@ -3,13 +3,13 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            @if(Auth::check())
-            <li class="{{Style::set_active('/')}}">
-                <a href="{{url('/')}}">
-                    <i class="fa fa-dashboard"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
+            @if(Auth::check() && (Auth::user()->hasValidSubscription() || Auth::user()->isStaff()))
+                <li class="{{Style::set_active('/')}}">
+                    <a href="{{url('/')}}">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
                 <li class="{{Style::set_active_starts_with('product')}}"><a href="{{url('product')}}"><i
                                 class="fa fa-square-o"></i> <span>Products</span></a></li>
                 <li class="treeview {{Style::set_active_or(array('report', 'alert'))}}">

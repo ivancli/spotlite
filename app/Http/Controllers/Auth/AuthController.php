@@ -79,7 +79,9 @@ class AuthController extends Controller
             'verification_code' => $verificationCode
         ]);
         $role = UMRole::where("name", "client")->first();
-        $user->attachRole($role);
+        if($role != null) {
+            $user->attachRole($role);
+        }
         /* TODO get product and check if it's free */
         if (request()->has('api_product_id')) {
             $product = $this->getProduct(request('api_product_id'));
@@ -131,7 +133,6 @@ class AuthController extends Controller
                     }
                 }
             }
-
         }
         return $user;
     }

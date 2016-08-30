@@ -13,7 +13,8 @@ class CreateSubscriptionsTable extends Migration {
 			$table->text('api_product_id');
 			$table->text('api_customer_id');
 			$table->text('api_subscription_id');
-			$table->timestamp('expiry_date');
+			$table->timestamp('expiry_date')->nullable();
+			$table->timestamp('cancelled_at')->nullable();
 		});
 	}
 

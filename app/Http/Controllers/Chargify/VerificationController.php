@@ -50,7 +50,7 @@ class VerificationController extends Controller
                             $sub->api_product_id = $subscription->product->id;
                             $sub->api_customer_id = $subscription->customer->id;
                             $sub->api_subscription_id = $subscription->id;
-                            $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
+                            $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
 
 
