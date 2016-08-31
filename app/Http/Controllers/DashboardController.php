@@ -16,11 +16,9 @@ class DashboardController extends Controller
     use ChargifyAPI;
     public function index()
     {
-        dump(request()->user()->hasValidSubscription());
         $subscriptions = request()->user()->subscriptions;
         foreach($subscriptions as $subscription){
             $apiSub = $this->getSubscription($subscription->api_subscription_id);
-            dump($apiSub);
         }
         return view('dashboard.index');
     }

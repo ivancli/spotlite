@@ -2,6 +2,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Created by PhpStorm.
@@ -29,6 +31,19 @@ class Subscription extends Model
         } else {
             return is_null($this->cancelled_at) || $this->cancelled_at > time();
         }
+    }
 
+    public function save(array $options = [])
+    {
+        $result = parent::save($options);
+        Cache::tags(Config::get('user_subscriptions'))->flush();
+        return $result;
+    }
+
+    public function delete(array $options = [])
+    {
+        $result = parent::delete($options);
+        Cache::tags(Config::get('user_subscriptions'))->flush();
+        return $result;
     }
 }

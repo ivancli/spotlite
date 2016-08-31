@@ -16,6 +16,10 @@ class APISubscriptionController extends Controller
 {
     use ChargifyAPI;
 
+    /**
+     * Called when user register but not yet selected a package
+     * @return $this
+     */
     public function viewAPIProducts()
     {
         $chosenAPIProductIDs = array();
@@ -25,15 +29,19 @@ class APISubscriptionController extends Controller
         }
 
         //load all products from Chargify
-        $APIProducts = $this->getProducts();
-
-        return view('subscriptions.subscription_plans')->with(compact(['APIProducts', 'chosenAPIProductIDs']));
+        $products = $this->getProducts();
+        foreach ($products as $index => $product) {
+            if (auth()->user()->subscriptions->count() != 0 && $product->product->price_in_cents == 0) {
+                unset($products[$index]);
+            }
+        }
+        return view('subscriptions.subscription_plans')->with(compact(['products', 'chosenAPIProductIDs']));
     }
 
     public function createSubscription()
     {
         $user = auth()->user();
-        if(!request()->has('api_product_id')){
+        if (!request()->has('api_product_id')) {
             /* TODO should handle the error in a better way*/
             abort(403);
             return false;
@@ -41,7 +49,7 @@ class APISubscriptionController extends Controller
 
         $productId = request()->get('api_product_id');
         $product = $this->getProduct($productId);
-        if(!is_null($product)){
+        if (!is_null($product)) {
             if ($product->require_credit_card) {
                 /* redirect to Chargify payment gateway (signup page) */
                 $chargifyLink = array_first($product->public_signup_pages)->url;
@@ -95,6 +103,7 @@ class APISubscriptionController extends Controller
 
     public function finishPayment(Request $request)
     {
+
         if (!$request->has('ref') || !$request->has('id')) {
             abort(403, "unauthorised access");
         } else {
@@ -105,19 +114,23 @@ class APISubscriptionController extends Controller
                 if (property_exists($reference, 'user_id') && property_exists($reference, 'verification_code')) {
                     $user = User::findOrFail($reference->user_id);
                     if ($user->verification_code == $reference->verification_code) {
-                        /* todo enable this once it's live */
                         $user->verification_code = null;
                         $user->save();
 
-                        /*todo UPDATE AND CHECK SUBSCRIPTION STATUS*/
                         $subscription_id = $request->get('id');
                         $subscription = $this->getSubscription($subscription_id);
-                        if ($user->subscriptions->count() > 0) {
-                            foreach ($user->subscriptions as $userSub) {
-                                /*todo find out the not expired one*/
+                        if ($user->latestValidSubscription() != false) {
+//                            foreach ($user->subscriptions as $userSub) {
+                            $sub = $user->latestValidSubscription();
+                            $expiry_datetime = $subscription->expires_at;
+                            $sub->api_product_id = $subscription->product->id;
+                            $sub->api_customer_id = $subscription->customer->id;
+                            $sub->api_subscription_id = $subscription->id;
+                            $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
+                            $sub->save();
 
-
-                            }
+                            return redirect()->route('msg.subscription.update');
+//                            }
                         } else {
                             /* create subscription record in DB */
                             $expiry_datetime = $subscription->expires_at;
@@ -146,6 +159,54 @@ class APISubscriptionController extends Controller
                 return false;
             }
 
+        }
+    }
+
+    public function updateSubscription($id)
+    {
+        $subscription = Subscription::findOrFail($id);
+        $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
+
+        $fields = new \stdClass();
+        $migration = new \stdClass();
+        $migration->product_id = request()->get('api_product_id');
+        $fields->migration = $migration;
+
+//        $result = $this->previewMigration($apiSubscription->id, json_encode($fields));
+        $result = $this->migrateSubscription($apiSubscription->id, json_encode($fields));
+        if ($result != false) {
+            if (!is_null($result->subscription)) {
+                $subscription->api_product_id = $result->subscription->product->id;
+                if(!is_null($result->subscription->canceled_at)){
+                    $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
+                }
+                if(!is_null($result->subscription->expires_at)){
+                    $subscription->expiry_date = date('Y-m-d H:i:s', strtotime($result->subscription->expires_at));
+                }
+                $subscription->save();
+                return redirect()->route('msg.subscription.update');
+            }
+        }
+    }
+
+    public function cancelSubscription($id)
+    {
+        $subscription = Subscription::findOrFail($id);
+        $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
+        if (!is_null($apiSubscription) && is_null($apiSubscription->canceled_at)) {
+            $result = $this->cancelSubscriptionBySubscriptionID($apiSubscription->id);
+            if (!is_null($result->subscription->canceled_at)) {
+                $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
+                $subscription->save();
+                return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
+            } else {
+                abort(500);
+                return false;
+            }
+        } else {
+            /*TODO enhance error handling*/
+            abort(404);
+            return false;
         }
     }
 }

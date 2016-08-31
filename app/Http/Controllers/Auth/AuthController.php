@@ -82,12 +82,10 @@ class AuthController extends Controller
         if($role != null) {
             $user->attachRole($role);
         }
-        /* TODO get product and check if it's free */
         if (request()->has('api_product_id')) {
             $product = $this->getProduct(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
 
-            /* TODO if it's not free then prepare to redirect */
             if ($requireCreditCard == true) {
                 /* REQUIRED CREDIT CARD */
                 $reference = array(

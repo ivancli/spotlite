@@ -55,11 +55,15 @@ class User extends Authenticatable
         $subscriptions = $this->cachedSubscription();
         $isValid = false;
         foreach ($subscriptions as $subscription) {
-            if (!is_null($subscription->expiry_date)) {
-                if (strtotime($subscription->expiry_date) > time()) {
-                    $isValid = true;
-                }
-            } elseif (is_null($subscription->cancelled_at) || strtotime($subscription->cancelled_at) > time()) {
+            $expiryValid = false;
+            $cancelledValid = false;
+            if (is_null($subscription->expiry_date) || strtotime($subscription->expiry_date) > time()) {
+                $expiryValid = true;
+            }
+            if (is_null($subscription->cancelled_at) || strtotime($subscription->cancelled_at) > time()) {
+                $cancelledValid = true;
+            }
+            if ($expiryValid && $cancelledValid) {
                 $isValid = true;
             }
         }

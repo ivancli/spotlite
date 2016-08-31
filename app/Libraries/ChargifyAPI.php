@@ -82,4 +82,50 @@ trait ChargifyAPI
             return false;
         }
     }
+
+    public function cancelSubscriptionBySubscriptionID($subscription_id)
+    {
+        $apiURL = env('CHARGIFY_API_URL') . "subscriptions/$subscription_id.json";
+        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $method = "delete";
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'method']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function previewMigration($subscription_id, $fields)
+    {
+        //https://[@subdomain].chargify.com/subscriptions/[@subscription.id]/migrations/preview.json
+        $apiURL = env('CHARGIFY_API_URL') . "subscriptions/$subscription_id/migrations/preview.json";
+        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $method = "post";
+        $data_type = 'json';
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function migrateSubscription($subscription_id, $fields)
+    {
+        $apiURL = env('CHARGIFY_API_URL') . "subscriptions/$subscription_id/migrations.json";
+        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $method = "post";
+        $data_type = 'json';
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

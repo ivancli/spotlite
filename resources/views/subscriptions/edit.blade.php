@@ -16,9 +16,9 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 text-center">
-                            {!! Form::open(array('route' => 'chargify.subscribe.store', 'method' => 'post')) !!}
+                            {!! Form::model($subscription ,array('route' => array('chargify.subscribe.update', $subscription->getKey()), 'method' => 'put')) !!}
                             <input type="hidden" name="api_product_id" id="txt-api-product-id">
-                            {!! Form::submit('Subscribe Now', ["class"=>"btn btn-primary btn-lg", "id" => "btn-subscribe", "disabled" => "disabled"]) !!}
+                            {!! Form::submit('Update Subscription', ["class"=>"btn btn-primary btn-lg", "id" => "btn-subscribe", "disabled" => "disabled"]) !!}
                             {!! Form::close() !!}
                         </div>
                     </div>
@@ -41,7 +41,7 @@
         });
 
         function updateSubscribeButton() {
-            $("#btn-subscribe").prop("disabled", $(".product-container.selected").length == 0);
+            $("#btn-subscribe").prop("disabled", $(".product-container.selected").length == 0 || $(".product-container.selected").hasClass("chosen"));
         }
     </script>
 @stop

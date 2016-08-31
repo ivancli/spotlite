@@ -32,9 +32,16 @@
                             <li>
                                 <ul class="spotlite-menu">
                                     <li>
-                                        <a href="#">
+                                        <a href="{{route('profile.index')}}">
                                             <h3>
                                                 Profile
+                                            </h3>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('account.index')}}">
+                                            <h3>
+                                                Account Settings
                                             </h3>
                                         </a>
                                     </li>

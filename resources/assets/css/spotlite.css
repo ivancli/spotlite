@@ -7,6 +7,10 @@
     margin-bottom: 5px;
 }
 
+.m-b-10 {
+    margin-bottom: 10px;
+}
+
 .product-container {
     width: 180px;
     display: inline-block;
