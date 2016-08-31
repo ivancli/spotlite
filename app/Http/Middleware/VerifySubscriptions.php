@@ -25,7 +25,7 @@ class VerifySubscriptions
     {
         if ($this->auth->guest() || $request->user()->needSubscription()) {
             /* TODO replace route with actual value */
-            return redirect()->route('subscribe.products');
+            return redirect()->route('chargify.subscribe.products');
         }
         return $next($request);
     }

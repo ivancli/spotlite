@@ -5,7 +5,9 @@ IMPORTANT:
 
 //quick add subscription status check when user login. (this one needs a middleware)
 subscription check is finished.
-Now need to handle user re-subscribe.
+//Now need to handle user re-subscribe.
+re-subscribe is done.
+Now need to handle upgrade downgrade and cancel.
 
 
 

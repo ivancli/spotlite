@@ -15,12 +15,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['subs']], function () {
         Route::get('/', 'DashboardController@index')->name("dashboard.index");
         Route::get('msg/subscription/welcome', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
+        Route::resource('subscription', 'SubscriptionController');
     });
 
     /* Subscription related routes*/
-    Route::get('verify', 'Chargify\SubscriptionController@finishPayment');
-    Route::get('subscription', 'Chargify\SubscriptionController@viewAPIProducts')->name('subscribe.products');
-    Route::post('subscription', 'Chargify\SubscriptionController@createSubscription')->name('subscribe.store');
+    Route::get('verify', 'Chargify\APISubscriptionController@finishPayment');
+    Route::get('c_subscription', 'Chargify\APISubscriptionController@viewAPIProducts')->name('chargify.subscribe.products');
+    Route::post('c_subscription', 'Chargify\APISubscriptionController@createSubscription')->name('chargify.subscribe.store');
 });
 
 /*Auth*/

@@ -17,6 +17,8 @@
                     </div>
                 </div>
             </div>
+            {{--TODO remove debug info--}}
+            {{dump($apiSubscription)}}
         </div>
     </div>
 @stop

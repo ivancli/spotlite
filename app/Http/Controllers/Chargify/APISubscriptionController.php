@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class SubscriptionController extends Controller
+class APISubscriptionController extends Controller
 {
     use ChargifyAPI;
 

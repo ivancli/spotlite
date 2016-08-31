@@ -39,7 +39,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{{route('subscription.index')}}">
                                             <h3>
                                                 Manage My Subscription
                                             </h3>
