@@ -46,7 +46,9 @@ elixir(function(mix) {
         "node_modules/select2/dist/js/select2.js",
         'vendor/almasaeed2010/adminlte/plugins/slimScroll/jquery.slimscroll.min.js',
         'vendor/almasaeed2010/adminlte/plugins/fastclick/fastclick.js',
-        'vendor/almasaeed2010/adminlte/dist/js/app.js'
+        'vendor/almasaeed2010/adminlte/dist/js/app.js',
+        'resources/assets/js/commonFunctions.js',
+        'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");
 
     /* copy images */

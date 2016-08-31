@@ -31,7 +31,7 @@
                             <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-primary">
                                 Change My Plan
                             </a>
-                            <button class="btn btn-default">Update Payment Method</button>
+                            {{--<button class="btn btn-default">Update Payment Method</button>--}}
                         </div>
                     </div>
                 </div>

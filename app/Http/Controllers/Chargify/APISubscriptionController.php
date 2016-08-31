@@ -166,25 +166,29 @@ class APISubscriptionController extends Controller
     {
         $subscription = Subscription::findOrFail($id);
         $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
-
-        $fields = new \stdClass();
-        $migration = new \stdClass();
-        $migration->product_id = request()->get('api_product_id');
-        $fields->migration = $migration;
+        /*TODO check current subscription has payment method or not*/
+        if (is_null($apiSubscription->payment_type)) {
+            $this->createSubscription();
+        } else {
+            $fields = new \stdClass();
+            $migration = new \stdClass();
+            $migration->product_id = request()->get('api_product_id');
+            $fields->migration = $migration;
 
 //        $result = $this->previewMigration($apiSubscription->id, json_encode($fields));
-        $result = $this->migrateSubscription($apiSubscription->id, json_encode($fields));
-        if ($result != false) {
-            if (!is_null($result->subscription)) {
-                $subscription->api_product_id = $result->subscription->product->id;
-                if(!is_null($result->subscription->canceled_at)){
-                    $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
+            $result = $this->migrateSubscription($apiSubscription->id, json_encode($fields));
+            if ($result != false) {
+                if (!is_null($result->subscription)) {
+                    $subscription->api_product_id = $result->subscription->product->id;
+                    if (!is_null($result->subscription->canceled_at)) {
+                        $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
+                    }
+                    if (!is_null($result->subscription->expires_at)) {
+                        $subscription->expiry_date = date('Y-m-d H:i:s', strtotime($result->subscription->expires_at));
+                    }
+                    $subscription->save();
+                    return redirect()->route('msg.subscription.update');
                 }
-                if(!is_null($result->subscription->expires_at)){
-                    $subscription->expiry_date = date('Y-m-d H:i:s', strtotime($result->subscription->expires_at));
-                }
-                $subscription->save();
-                return redirect()->route('msg.subscription.update');
             }
         }
     }

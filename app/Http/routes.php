@@ -14,13 +14,13 @@
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['subs']], function () {
         Route::get('/', 'DashboardController@index')->name("dashboard.index");
-        Route::get('msg/subscription/welcome', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
-        Route::get('msg/subscription/update', 'MessageController@updateSubscription')->name("msg.subscription.update");
+        Route::get('msg/subscription/welcome/{$raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
+        Route::get('msg/subscription/update/{$raw?}', 'MessageController@updateSubscription')->name("msg.subscription.update");
         Route::resource('subscription', 'SubscriptionController');
         Route::put('c_subscription/{id}', 'Chargify\APISubscriptionController@updateSubscription')->name('chargify.subscribe.update');
     });
 
-    Route::get('msg/subscription/cancelled/{id}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
+    Route::get('msg/subscription/cancelled/{id}/{$raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
 
     /* User account related routes */
     Route::resource('account', 'User\AccountController');
