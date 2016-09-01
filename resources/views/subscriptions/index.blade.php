@@ -9,7 +9,7 @@
                     <h3 class="box-title">Current Subscription</h3>
 
                     <div class="box-tools pull-right">
-                        {!! Form::model($sub, array('route' => array('chargify.subscribe.cancel', $sub->getKey()), 'method' => 'delete', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
+                        {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'method' => 'delete', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
                         {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-danger btn-sm"]) !!}
                         {!! Form::close() !!}
                     </div>

@@ -14,23 +14,25 @@
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['subs']], function () {
         Route::get('/', 'DashboardController@index')->name("dashboard.index");
-        Route::get('msg/subscription/welcome/{$raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
-        Route::get('msg/subscription/update/{$raw?}', 'MessageController@updateSubscription')->name("msg.subscription.update");
-        Route::resource('subscription', 'SubscriptionController');
-        Route::put('c_subscription/{id}', 'Chargify\APISubscriptionController@updateSubscription')->name('chargify.subscribe.update');
-    });
+        Route::get('msg/subscription/welcome/{raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
+        Route::get('msg/subscription/update/{raw?}', 'MessageController@updateSubscription')->name("msg.subscription.update");
 
-    Route::get('msg/subscription/cancelled/{id}/{$raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
+
+    });
 
     /* User account related routes */
     Route::resource('account', 'User\AccountController');
     Route::resource('profile', 'User\ProfileController');
 
+
+    //for those users who registered but not yet subscribe
     /* Subscription related routes*/
-    Route::get('verify', 'Chargify\APISubscriptionController@finishPayment');
-    Route::get('c_subscription', 'Chargify\APISubscriptionController@viewAPIProducts')->name('chargify.subscribe.products');
-    Route::post('c_subscription', 'Chargify\APISubscriptionController@createSubscription')->name('chargify.subscribe.store');
-    Route::delete('c_subscription/{id}', 'Chargify\APISubscriptionController@cancelSubscription')->name('chargify.subscribe.cancel');
+    Route::get('subscription/back', 'SubscriptionController@viewProducts')->name('subscription.back');
+    Route::get('subscription/finalise', 'SubscriptionController@finalise')->name('subscription.finalise');
+    Route::resource('subscription', 'SubscriptionController', ['except' => ['create']]);
+
+    Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
+
 });
 
 /*Auth*/

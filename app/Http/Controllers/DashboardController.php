@@ -9,16 +9,22 @@
 namespace App\Http\Controllers;
 
 
-use App\Libraries\ChargifyAPI;
+use App\Contracts\SubscriptionManagement\SubscriptionManager;
 
 class DashboardController extends Controller
 {
-    use ChargifyAPI;
+    protected $subscriptionManager;
+
+    public function __construct(SubscriptionManager $subscriptionManager)
+    {
+        $this->subscriptionManager = $subscriptionManager;
+    }
+
     public function index()
     {
         $subscriptions = request()->user()->subscriptions;
-        foreach($subscriptions as $subscription){
-            $apiSub = $this->getSubscription($subscription->api_subscription_id);
+        foreach ($subscriptions as $subscription) {
+            $apiSub = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
         }
         return view('dashboard.index');
     }

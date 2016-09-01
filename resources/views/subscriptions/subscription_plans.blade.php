@@ -16,7 +16,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 text-center">
-                            {!! Form::open(array('route' => 'chargify.subscribe.store', 'method' => 'post')) !!}
+                            {!! Form::open(array('route' => 'subscription.store', 'method' => 'post')) !!}
                             <input type="hidden" name="api_product_id" id="txt-api-product-id">
                             {!! Form::submit('Subscribe Now', ["class"=>"btn btn-primary btn-lg", "id" => "btn-subscribe", "disabled" => "disabled"]) !!}
                             {!! Form::close() !!}

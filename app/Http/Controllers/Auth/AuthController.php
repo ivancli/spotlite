@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Libraries\ChargifyAPI;
+use App\Contracts\SubscriptionManagement\SubscriptionManager;
 use App\Models\Subscription;
 use App\User;
 use Exception;
@@ -25,7 +25,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins, ChargifyAPI;
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
      * Where to redirect users after login / registration.
@@ -35,14 +35,17 @@ class AuthController extends Controller
     protected $redirectTo = '/';
     protected $username = 'email';
 
+    protected $subscriptionManager;
+
     /**
      * Create a new authentication controller instance.
      *
-     * @return void
+     * @param SubscriptionManager $subscriptionManager
      */
-    public function __construct()
+    public function __construct(SubscriptionManager $subscriptionManager)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+        $this->subscriptionManager = $subscriptionManager;
     }
 
     /**
@@ -79,11 +82,11 @@ class AuthController extends Controller
             'verification_code' => $verificationCode
         ]);
         $role = UMRole::where("name", "client")->first();
-        if($role != null) {
+        if ($role != null) {
             $user->attachRole($role);
         }
         if (request()->has('api_product_id')) {
-            $product = $this->getProduct(request('api_product_id'));
+            $product = $this->subscriptionManager->getProduct(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
 
             if ($requireCreditCard == true) {
@@ -110,7 +113,7 @@ class AuthController extends Controller
                 $subscription->customer_attributes = $customer_attributes;
                 $fields->subscription = $subscription;
 
-                $result = $this->setSubscription(json_encode($fields));
+                $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
                 if ($result != null) {
                     /* clear verification code*/
                     $user->verification_code = null;
@@ -138,7 +141,7 @@ class AuthController extends Controller
 
     public function showRegistrationForm()
     {
-        $products = $this->getProducts();
+        $products = $this->subscriptionManager->getProducts();
 
         if (property_exists($this, 'registerView')) {
             return view($this->registerView)->with(compact(['products']));
