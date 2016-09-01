@@ -8,6 +8,6 @@ class RandomUserSeeder extends Seeder
 
     public function run()
     {
-        factory(App\User::class, 123)->create();
+        factory(App\Models\User::class, 123)->create();
     }
 }

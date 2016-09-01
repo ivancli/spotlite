@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\SubscriptionManagement\SubscriptionManager;
 use App\Models\Subscription;
-use App\User;
+use App\Models\User;
 use Exception;
 use Invigor\UM\UMRole;
 use Validator;

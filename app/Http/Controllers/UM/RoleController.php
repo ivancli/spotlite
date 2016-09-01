@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\UM;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Invigor\UM\Controllers\UMRoleController;

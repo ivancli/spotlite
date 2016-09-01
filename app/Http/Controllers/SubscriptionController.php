@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contracts\SubscriptionManagement\SubscriptionManager;
 use App\Models\Subscription;
-use App\User;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
