@@ -35,6 +35,23 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Subscription', 'user_id', 'user_id');
     }
 
+    public function activityLogs()
+    {
+        return $this->hasMany('App\Models\Logs\UserActivityLog', 'user_id', 'user_id');
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /*TODO the following blocks of code need to be refined*/
+
     public function cachedSubscription()
     {
         $userPrimaryKey = $this->primaryKey;
@@ -109,4 +126,6 @@ class User extends Authenticatable
             return false;
         }
     }
+
+    /*TODO the code above need to be refined*/
 }

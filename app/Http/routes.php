@@ -33,6 +33,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
 
+
+    /*logging*/
+    Route::resource('log/user_activity', 'Log\UserActivityLogController');
+
 });
 
 /*Auth*/

@@ -53,6 +53,19 @@
                                 Permissions</a></li>
                     </ul>
                 </li>
+                <li class="treeview {{Style::set_active_starts_with('log.')}}">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i>
+                        <span>System Log Management</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{Style::set_active_starts_with('log.user_activity')}}">
+                            <a href="{{route('log.user_activity.index')}}">
+                                <i class="fa fa-circle-o"></i> User Activity Logs
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endif
         </ul>
     </section>

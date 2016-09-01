@@ -150,3 +150,14 @@ Breadcrumbs::register('edit_group', function($breadcrumbs, $group)
     $breadcrumbs->parent('group');
     $breadcrumbs->push('Edit group', route('um.group.edit', $group->getKey()));
 });
+
+/**
+ * Log
+ */
+
+// Home > Group
+Breadcrumbs::register('user_activity_log', function($breadcrumbs)
+{
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('User Activity Log', route('log.user_activity.index'));
+});

@@ -159,6 +159,7 @@ return [
         Invigor\UM\UMServiceProvider::class,
 
         App\Providers\HelperServiceProvider::class,
+        App\Providers\LogServiceProvider::class,
 
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
     ],
@@ -214,7 +215,7 @@ return [
 
         'Style' => App\Helpers\StyleHelper::class,
 
-        'Breadcrumbs' =>DaveJamesMiller\Breadcrumbs\Facade::class,
+        'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
     ],
 
 ];

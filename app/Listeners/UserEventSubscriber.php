@@ -1,6 +1,9 @@
 <?php
 namespace App\Listeners;
 
+use App\Contracts\LogManagement\Logger;
+//use App\Jobs\LogUserActivity;
+
 /**
  * Created by PhpStorm.
  * User: ivan.li
@@ -9,12 +12,24 @@ namespace App\Listeners;
  */
 class UserEventSubscriber
 {
+
+    protected $logger;
+
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Handle user login events.
      * @param $event
+     * @internal param Logger $logger
      */
     public function onUserLogin($event)
     {
+        $this->logger->storeLog("login");
+//        dispatch(new LogUserActivity(auth()->user(), "login"));
+
         $user = $event->user;
         $user->last_login = date('Y-m-d H:i:s');
         if (is_null($user->is_first_login)) {
@@ -23,6 +38,12 @@ class UserEventSubscriber
             $user->is_first_login = 'n';
         }
         $user->save();
+    }
+
+    public function onUserLogout($event)
+    {
+        $this->logger->storeLog("logout");
+//        dispatch(new LogUserActivity(auth()->user(), "logout"));
     }
 
     /**
@@ -35,6 +56,10 @@ class UserEventSubscriber
         $events->listen(
             'Illuminate\Auth\Events\Login',
             'App\Listeners\UserEventSubscriber@onUserLogin'
+        );
+        $events->listen(
+            'Illuminate\Auth\Events\Logout',
+            'App\Listeners\UserEventSubscriber@onUserLogout'
         );
     }
 

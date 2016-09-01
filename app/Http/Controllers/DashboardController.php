@@ -26,6 +26,7 @@ class DashboardController extends Controller
         foreach ($subscriptions as $subscription) {
             $apiSub = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
         }
+
         return view('dashboard.index');
     }
 }

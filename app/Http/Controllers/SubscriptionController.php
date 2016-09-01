@@ -3,6 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\SubscriptionManagement\SubscriptionManager;
+use App\Events\Subscription\SubscriptionCancelled;
+use App\Events\Subscription\SubscriptionCancelling;
+use App\Events\Subscription\SubscriptionCompleted;
+use App\Events\Subscription\SubscriptionCreating;
+use App\Events\Subscription\SubscriptionEditViewed;
+use App\Events\Subscription\SubscriptionManagementViewed;
+use App\Events\Subscription\SubscriptionUpdated;
+use App\Events\Subscription\SubscriptionUpdating;
+use App\Events\Subscription\SubscriptionViewed;
 use App\Models\Subscription;
 use App\Models\User;
 use Exception;
@@ -43,6 +52,7 @@ class SubscriptionController extends Controller
                 unset($products[$index]);
             }
         }
+        event(new SubscriptionViewed());
         return view('subscriptions.subscription_plans')->with(compact(['products', 'chosenAPIProductIDs']));
     }
 
@@ -57,13 +67,14 @@ class SubscriptionController extends Controller
         $sub = $user->latestValidSubscription();
         $current_sub_id = $user->latestValidSubscription()->api_subscription_id;
         $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
-
+        event(new SubscriptionManagementViewed());
         return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription']));
     }
 
 
     public function store()
     {
+        event(new SubscriptionCreating());
         $user = auth()->user();
         if (!request()->has('api_product_id')) {
             /* TODO should handle the error in a better way*/
@@ -115,6 +126,7 @@ class SubscriptionController extends Controller
                         $sub->api_subscription_id = $subscription->id;
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
+                        event(new SubscriptionCompleted($sub));
                         return redirect()->route('msg.subscription.welcome');
                     } catch (Exception $e) {
                         /*TODO need to handle exception properly*/
@@ -150,6 +162,7 @@ class SubscriptionController extends Controller
                             $sub->api_subscription_id = $subscription->id;
                             $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
+                            event(new SubscriptionUpdated($sub));
                             return redirect()->route('msg.subscription.update');
 //                            }
                         } else {
@@ -162,7 +175,7 @@ class SubscriptionController extends Controller
                             $sub->api_subscription_id = $subscription->id;
                             $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
-
+                            event(new SubscriptionCompleted($sub));
                             return redirect()->route('msg.subscription.welcome');
 //                            return redirect()->route('dashboard.index');
                         }
@@ -185,13 +198,14 @@ class SubscriptionController extends Controller
 
     public function edit($id)
     {
+
         $subscription = auth()->user()->latestValidSubscription();
         /*TODO validate the $subscription*/
 
         $chosenAPIProductIDs = array();
         $validSubscriptions = auth()->user()->validSubscriptions();
-        foreach ($validSubscriptions as $subscription) {
-            $chosenAPIProductIDs[] = $subscription->api_product_id;
+        foreach ($validSubscriptions as $validSubscription) {
+            $chosenAPIProductIDs[] = $validSubscription->api_product_id;
         }
 
         //load all products from Chargify
@@ -204,12 +218,14 @@ class SubscriptionController extends Controller
                 unset($products[$index]);
             }
         }
+        event(new SubscriptionEditViewed($subscription));
         return view('subscriptions.edit')->with(compact(['products', 'chosenAPIProductIDs', 'subscription']));
     }
 
     public function update($id)
     {
         $subscription = Subscription::findOrFail($id);
+        event(new SubscriptionUpdating($subscription));
         $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
         /*TODO check current subscription has payment method or not*/
         if (is_null($apiSubscription->payment_type)) {
@@ -231,6 +247,7 @@ class SubscriptionController extends Controller
                         $subscription->expiry_date = date('Y-m-d H:i:s', strtotime($result->subscription->expires_at));
                     }
                     $subscription->save();
+                    event(new SubscriptionUpdated($subscription));
                     return redirect()->route('msg.subscription.update');
                 }
             }
@@ -245,12 +262,14 @@ class SubscriptionController extends Controller
     public function destroy($id)
     {
         $subscription = Subscription::findOrFail($id);
+        event(new SubscriptionCancelling($subscription));
         $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
         if (!is_null($apiSubscription) && is_null($apiSubscription->canceled_at)) {
             $result = $this->subscriptionManager->cancelSubscription($apiSubscription->id);
             if (!is_null($result->subscription->canceled_at)) {
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
                 $subscription->save();
+                event(new SubscriptionCancelled($subscription));
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
             } else {
                 abort(500);
