@@ -3,7 +3,7 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            @if(Auth::check() && (Auth::user()->hasValidSubscription() || Auth::user()->isStaff()))
+            @if(auth()->check() && (auth()->user()->hasValidSubscription() || auth()->user()->isStaff()))
                 <li class="{{Style::set_active('/')}}">
                     <a href="{{url('/')}}">
                         <i class="fa fa-dashboard"></i>
@@ -24,6 +24,8 @@
                                         class="fa fa-bell-o"></i> Alerts</a></li>
                     </ul>
                 </li>
+            @endif
+            @if(auth()->check() && auth()->user()->isStaff())
                 <li class="treeview {{Style::set_active_starts_with(array('domain', 'site'))}}">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
@@ -38,30 +40,33 @@
                 </li>
                 <li class="treeview {{Style::set_active_starts_with('um.')}}">
                     <a href="#">
-                        <i class="fa fa-files-o"></i>
+                        <i class="fa fa-users"></i>
                         <span>User Management</span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{Style::set_active_starts_with('um.user')}}"><a href="{{route('um.user.index')}}"><i
-                                        class="fa fa-circle-o"></i> Users</a></li>
-                        <li class="{{Style::set_active_starts_with('um.group')}}"><a href="{{route('um.group.index')}}"><i
-                                        class="fa fa-circle-o"></i> Groups</a></li>
-                        <li class="{{Style::set_active_starts_with('um.role')}}"><a href="{{route('um.role.index')}}"><i
-                                        class="fa fa-circle-o"></i> Roles</a></li>
+                        <li class="{{Style::set_active_starts_with('um.user')}}"><a
+                                    href="{{route('um.user.index')}}"><i
+                                        class="fa fa-user"></i> Users</a></li>
+                        <li class="{{Style::set_active_starts_with('um.group')}}"><a
+                                    href="{{route('um.group.index')}}"><i
+                                        class="fa fa-users"></i> Groups</a></li>
+                        <li class="{{Style::set_active_starts_with('um.role')}}"><a
+                                    href="{{route('um.role.index')}}"><i
+                                        class="fa fa-tags"></i> Roles</a></li>
                         <li class="{{Style::set_active_starts_with('um.permission')}}"><a
-                                    href="{{route('um.permission.index')}}"><i class="fa fa-circle-o"></i>
-                                Permissions</a></li>
+                                    href="{{route('um.permission.index')}}">
+                                <i class="fa fa-key"></i> Permissions</a></li>
                     </ul>
                 </li>
                 <li class="treeview {{Style::set_active_starts_with('log.')}}">
                     <a href="#">
-                        <i class="fa fa-files-o"></i>
+                        <i class="fa fa-file-text-o"></i>
                         <span>System Log Management</span>
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{Style::set_active_starts_with('log.user_activity')}}">
                             <a href="{{route('log.user_activity.index')}}">
-                                <i class="fa fa-circle-o"></i> User Activity Logs
+                                <i class="fa fa-map-o"></i> User Activity Logs
                             </a>
                         </li>
                     </ul>

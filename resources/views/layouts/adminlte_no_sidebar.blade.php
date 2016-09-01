@@ -33,20 +33,9 @@
 
     @include('layout_partials.default_header')
 
-    <!-- =============================================== -->
-
-    <!-- Left side column. contains the sidebar -->
-    @include('layout_partials.default_sidebar')
-
-    <!-- =============================================== -->
-
-    @if(Auth::check() && Auth::user()->last_login)
-
-    @endif
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        @include('layout_partials.default_content_header')
 
         <!-- Main content -->
         <section class="content">

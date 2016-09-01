@@ -117,3 +117,7 @@
 .modal-header {
     padding: 7px 15px;
 }
+
+td.shrink, th.shrink {
+    width: 1%;
+}
