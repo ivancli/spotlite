@@ -7,11 +7,8 @@ IMPORTANT:
 subscription check is finished.
 //Now need to handle user re-subscribe.
 re-subscribe is done.
-Now need to handle upgrade downgrade and cancel.
-
-
-
-
+//Now need to handle upgrade downgrade and cancel.
+Subscription migration is finished
 
 1. show welcome message when user first login (right after register)
 
@@ -31,6 +28,7 @@ Now need to handle upgrade downgrade and cancel.
         b). attach user to the group soon as it's created. (should work without making changes)
 
 
+//DONE
 3. check the websites provided by Ryan
     http://www.pricetrakker.com/
     https://www.import.io/
@@ -40,7 +38,7 @@ Now need to handle upgrade downgrade and cancel.
 
     2) check the way their registration and payment process work
 
-
+//DONE
 4. work on subscription management page
 
     1) view current subscription information
@@ -50,5 +48,5 @@ Now need to handle upgrade downgrade and cancel.
 
 5. work on profile management page
 
-
+//DONE
 6. hide admin sidebar items from client users
