@@ -10,6 +10,12 @@ use App\Http\Requests;
 
 class ProfileController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:read_user', ['only' => ['show']]);
+    }
+
     /**
      * Edit page of my profile
      * @return $this
@@ -17,7 +23,7 @@ class ProfileController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        return view('user.profile.profile_edit')->with(compact(['user']));
+        return view('user.profile.edit')->with(compact(['user']));
     }
 
     /**
@@ -26,7 +32,8 @@ class ProfileController extends Controller
      */
     public function show($id)
     {
-        dump($id);
+        $user = User::findOrFail($id);
+        return view('user.profile.index')->with(compact(['user']));
     }
 
     /**
@@ -38,6 +45,7 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
         /*TODO validation here*/
+
 
         $user = User::findOrFail($id);
         $user->update($request->all());
