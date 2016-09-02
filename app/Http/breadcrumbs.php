@@ -177,3 +177,12 @@ Breadcrumbs::register('group_show', function ($breadcrumbs, $user) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Group', route('group.show', $user->getKey()));
 });
+
+
+/**
+ * Account Settings
+ */
+Breadcrumbs::register('account_index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Account Settings', route('account.index'));
+});

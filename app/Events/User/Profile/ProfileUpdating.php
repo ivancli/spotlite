@@ -3,7 +3,6 @@
 namespace App\Events\User\Profile;
 
 use App\Events\Event;
-use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Events\User\Profile;
+namespace App\Events\User\Account;
 
 use App\Events\Event;
 use App\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ProfileViewed extends Event
+class AccountEditViewed extends Event
 {
     use SerializesModels;
 
@@ -19,7 +19,7 @@ class ProfileViewed extends Event
      */
     public function __construct(User $user)
     {
-        $this->user = $user;
+        return $this->user = $user;
     }
 
     /**
