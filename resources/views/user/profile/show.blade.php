@@ -1,8 +1,8 @@
 @extends('layouts.adminlte')
-@section('title', 'My Profile')
-@section('header_title', 'My Profile')
+@section('title', 'Profile')
+@section('header_title', 'Profile')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('profile_index', $user) !!}
+    {!! Breadcrumbs::render('profile_show', $user) !!}
 @stop
 @section('content')
     <div class="row">
@@ -10,9 +10,6 @@
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{$user->first_name}} {{$user->last_name}}</h3>
-                    <div class="box-tools pull-right">
-                        <a href="{{route('profile.edit')}}" class="btn btn-default btn-sm">Edit</a>
-                    </div>
                 </div>
                 <div class="box-body">
                     @include('user.profile.partials.view')

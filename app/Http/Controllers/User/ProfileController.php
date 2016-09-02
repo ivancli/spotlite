@@ -22,10 +22,16 @@ class ProfileController extends Controller
 
     /**
      * Edit page of my profile
-     * @param Request $request
      * @return $this
      */
-    public function index(Request $request)
+    public function index()
+    {
+        $user = auth()->user();
+        event(new ProfileViewed($user));
+        return view('user.profile.index')->with(compact(['user']));
+    }
+
+    public function edit()
     {
         $user = auth()->user();
         event(new ProfileEditViewed($user));
@@ -41,7 +47,7 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail($id);
         event(new ProfileViewed($user));
-        return view('user.profile.index')->with(compact(['user']));
+        return view('user.profile.show')->with(compact(['user']));
     }
 
     /**
