@@ -71,6 +71,30 @@ class UserEventSubscriber
         $this->logger->storeLog("updated profile of user_id - {$user->getKey()}");
     }
 
+    public function onAccountViewed($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("viewed account of user_id - {$user->getKey()}");
+    }
+
+    public function onAccountEditViewed($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("viewed edit account of user_id - {$user->getKey()}");
+    }
+
+    public function onAccountUpdating($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("updating account of user_id - {$user->getKey()}");
+    }
+
+    public function onAccountUpdated($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("updated account of user_id - {$user->getKey()}");
+    }
+
     /**
      * Register the listeners for the subscriber.
      *
@@ -101,6 +125,23 @@ class UserEventSubscriber
         $events->listen(
             'App\Events\User\Profile\ProfileUpdated',
             'App\Listeners\UserEventSubscriber@onProfileUpdated'
+        );
+        /*Account settings related event listeners*/
+        $events->listen(
+            'App\Events\User\Account\AccountViewed',
+            'App\Listeners\UserEventSubscriber@onAccountViewed'
+        );
+        $events->listen(
+            'App\Events\User\Account\AccountEditViewed',
+            'App\Listeners\UserEventSubscriber@onAccountEditViewed'
+        );
+        $events->listen(
+            'App\Events\User\Account\AccountUpdating',
+            'App\Listeners\UserEventSubscriber@onAccountUpdating'
+        );
+        $events->listen(
+            'App\Events\User\Account\AccountUpdated',
+            'App\Listeners\UserEventSubscriber@onAccountUpdated'
         );
     }
 
