@@ -32,3 +32,5 @@ Subscription migration is finished
 4. Dependency injection in queue job classes
 
 5. Push logging to queue instead of logging immediately
+
+6. Complete Group CRUD with Ajax functions
