@@ -23,6 +23,9 @@ Route::group(['middleware' => ['auth']], function () {
     /* User account related routes */
     Route::resource('account', 'User\AccountController');
 
+    /* Group related routes*/
+    Route::resource('group', 'User\GroupController');
+
     /* User profile related routes*/
     Route::get('profile/edit', 'User\ProfileController@edit')->name('profile.edit');
     Route::resource('profile', 'User\ProfileController', ['only' => [

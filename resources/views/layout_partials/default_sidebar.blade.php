@@ -24,6 +24,17 @@
                                         class="fa fa-bell-o"></i> Alerts</a></li>
                     </ul>
                 </li>
+
+                {{--<li class="treeview {{Style::set_active_starts_with(array('group.'))}}">--}}
+                    {{--<a href="#">--}}
+                        {{--<i class="fa fa-users"></i>--}}
+                        {{--<span>Group Management</span>--}}
+                    {{--</a>--}}
+                    {{--<ul class="treeview-menu">--}}
+                        {{--<li class="{{Style::set_active('dashboard')}}"><a href="{{url('alert')}}"><i--}}
+                                        {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
+                    {{--</ul>--}}
+                {{--</li>--}}
             @endif
             @if(auth()->check() && auth()->user()->isStaff())
                 <li class="treeview {{Style::set_active_starts_with(array('domain', 'site'))}}">

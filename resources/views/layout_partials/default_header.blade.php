@@ -47,6 +47,13 @@
                                     </li>
                                     @if(!auth()->user()->isStaff())
                                         <li>
+                                            <a href="{{route('group.index')}}">
+                                                <h3>
+                                                    Group Management
+                                                </h3>
+                                            </a>
+                                        </li>
+                                        <li>
                                             <a href="{{route('subscription.index')}}">
                                                 <h3>
                                                     Manage My Subscription
