@@ -167,5 +167,11 @@ Breadcrumbs::register('user_activity_log', function($breadcrumbs)
 Breadcrumbs::register('profile_index', function($breadcrumbs)
 {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push('Profile', route('profile.index'));
+    $breadcrumbs->push('Edit Profile', route('profile.index'));
+});
+
+Breadcrumbs::register('profile_show', function($breadcrumbs, $user)
+{
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Profile', route('profile.show', $user->getKey()));
 });

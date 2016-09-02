@@ -1,6 +1,6 @@
 @extends('layouts.adminlte')
-@section('title', 'Profile')
-@section('header_title', 'Profile')
+@section('title', 'Edit Profile')
+@section('header_title', 'Edit Profile')
 @section('breadcrumbs')
     {!! Breadcrumbs::render('profile_index') !!}
 @stop
@@ -20,14 +20,4 @@
             </div>
         </div>
     </div>
-@stop
-@section('scripts')
-    <script type="text/javascript">
-        $(function () {
-            $(".form-container select").select2({
-                "allowClear": true,
-                "placeholder": ""
-            });
-        })
-    </script>
 @stop
