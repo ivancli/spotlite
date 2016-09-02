@@ -45,13 +45,15 @@
                                             </h3>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="{{route('subscription.index')}}">
-                                            <h3>
-                                                Manage My Subscription
-                                            </h3>
-                                        </a>
-                                    </li>
+                                    @if(!auth()->user()->isStaff())
+                                        <li>
+                                            <a href="{{route('subscription.index')}}">
+                                                <h3>
+                                                    Manage My Subscription
+                                                </h3>
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <a href="{{route('logout')}}">
                                             <h3>

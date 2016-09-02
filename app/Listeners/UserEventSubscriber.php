@@ -2,6 +2,7 @@
 namespace App\Listeners;
 
 use App\Contracts\LogManagement\Logger;
+
 //use App\Jobs\LogUserActivity;
 
 /**
@@ -46,6 +47,30 @@ class UserEventSubscriber
 //        dispatch(new LogUserActivity(auth()->user(), "logout"));
     }
 
+    public function onProfileViewed($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("viewed profile of user_id - {$user->getKey()}");
+    }
+
+    public function onProfileEditViewed($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("viewed edit profile of user_id - {$user->getKey()}");
+    }
+
+    public function onProfileUpdating($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("updating profile of user_id - {$user->getKey()}");
+    }
+
+    public function onProfileUpdated($event)
+    {
+        $user = $event->user;
+        $this->logger->storeLog("updated profile of user_id - {$user->getKey()}");
+    }
+
     /**
      * Register the listeners for the subscriber.
      *
@@ -60,6 +85,22 @@ class UserEventSubscriber
         $events->listen(
             'Illuminate\Auth\Events\Logout',
             'App\Listeners\UserEventSubscriber@onUserLogout'
+        );
+        $events->listen(
+            'App\Events\User\Profile\ProfileViewed',
+            'App\Listeners\UserEventSubscriber@onProfileViewed'
+        );
+        $events->listen(
+            'App\Events\User\Profile\ProfileEditViewed',
+            'App\Listeners\UserEventSubscriber@onProfileEditViewed'
+        );
+        $events->listen(
+            'App\Events\User\Profile\ProfileUpdating',
+            'App\Listeners\UserEventSubscriber@onProfileUpdating'
+        );
+        $events->listen(
+            'App\Events\User\Profile\ProfileUpdated',
+            'App\Listeners\UserEventSubscriber@onProfileUpdated'
         );
     }
 
