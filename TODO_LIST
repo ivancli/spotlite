@@ -28,3 +28,7 @@ Subscription migration is finished
         b). attach user to the group soon as it's created. (should work without making changes)
 
 3. Update profile management to use Ajax
+
+4. Dependency injection in queue job classes
+
+5. Push logging to queue instead of logging immediately
