@@ -1,9 +1,11 @@
 <?php
 namespace App\Repositories\LogManagement;
 
+use App\Filters\QueryFilter;
 use App\Contracts\LogManagement\Logger;
 use App\Models\Logs\UserActivityLog;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 
 /**
@@ -15,19 +17,76 @@ use App\Models\User;
 class UserActivityLogger implements Logger
 {
     protected $userActivityLog;
+    protected $request;
 
-    public function __construct(UserActivityLog $userActivityLog)
+    public function __construct(UserActivityLog $userActivityLog, Request $request)
     {
         $this->userActivityLog = $userActivityLog;
+        $this->request = $request;
     }
 
     /**
      * get all logs
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public function getLogs()
     {
-        $this->userActivityLog->all();
+        return $this->userActivityLog->all();
+    }
+
+    /**
+     * get all logs and filter in DataTables format
+     * @param QueryFilter $filters
+     * @return \stdClass
+     */
+    public function getDataTablesLogs(QueryFilter $filters)
+    {
+        $logs = $this->userActivityLog->with('owner')->filter($filters)->get();
+        $output = new \stdClass();
+        $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
+        $output->recordTotal = $this->getLogCount();
+        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+            $output->recordsFiltered = $logs->count();
+        } else {
+            $output->recordsFiltered = $this->getLogCount();
+        }
+        $output->data = $logs->toArray();
+        return $output;
+    }
+
+    /**
+     * get all logs of a user in DataTables format
+     * @param QueryFilter $filters
+     * @param User $user
+     * @return mixed
+     */
+    public function getDataTablesLogsByUser(QueryFilter $filters, User $user)
+    {
+        $logs = $this->userActivityLog->with('owner')->filter($filters)->where('user_id', $user->getKey())->get();
+        $output = new \stdClass();
+        $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
+        $output->recordTotal = $this->getLogCount($user->getKey());
+        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+            $output->recordsFiltered = $logs->count();
+        } else {
+            $output->recordsFiltered = $this->getLogCount($user->getKey());
+        }
+        $output->data = $logs->toArray();
+        return $output;
+    }
+
+    /**
+     * get total number of logs by itself of user_id
+     * @param null $user_id
+     * @return mixed
+     */
+    public function getLogCount($user_id = null)
+    {
+        if (is_null($user_id)) {
+            return $this->userActivityLog->count();
+        } else {
+            return $this->userActivityLog->where("user_id", $user_id)->count();
+        }
     }
 
     /**

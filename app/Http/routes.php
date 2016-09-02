@@ -35,7 +35,9 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     /*logging*/
-    Route::resource('log/user_activity', 'Log\UserActivityLogController');
+    Route::resource('log/user_activity', 'Log\UserActivityLogController', ['only' => [
+        'index', 'show'
+    ]]);
 
 });
 

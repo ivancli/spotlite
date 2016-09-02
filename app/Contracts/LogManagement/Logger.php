@@ -1,6 +1,7 @@
 <?php
 namespace App\Contracts\LogManagement;
 
+use App\Filters\QueryFilter;
 use App\Models\User;
 
 /**
@@ -17,6 +18,21 @@ interface Logger
      * @return mixed
      */
     public function getLogs();
+
+    /**
+     * get all logs in DataTables format
+     * @param QueryFilter $filters
+     * @return mixed
+     */
+    public function getDataTablesLogs(QueryFilter $filters);
+
+    /**
+     * get all logs of a user in DataTables format
+     * @param QueryFilter $filters
+     * @param User $user
+     * @return mixed
+     */
+    public function getDataTablesLogsByUser(QueryFilter $filters, User $user);
 
     /**
      * get a single log

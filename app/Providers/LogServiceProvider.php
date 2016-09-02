@@ -35,5 +35,12 @@ class LogServiceProvider extends ServiceProvider
         $this->app->when('App\Http\Controllers\Log\UserActivityLogController')
             ->needs('App\Contracts\LogManagement\Logger')
             ->give('App\Repositories\LogManagement\UserActivityLogger');
+
+        $this->app->when('App\Http\Controllers\Log\UserActivityLogController')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\UserActivityLogFilters');
+        $this->app->when('App\Models\UserActivityLog')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\UserActivityLogFilters');
     }
 }

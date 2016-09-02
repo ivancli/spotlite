@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\Logs;
 
+use App\Filters\QueryFilter;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,8 +17,22 @@ class UserActivityLog extends Model
         'user_id', 'activity',
     ];
 
+    protected $appends = array('urls');
+
     public function owner()
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'user_id');
+    }
+
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
+    }
+
+    public function getUrlsAttribute()
+    {
+        return array(
+            "owner" => route("log.user_activity.show", $this->owner->getKey()),
+        );
     }
 }
