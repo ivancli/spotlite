@@ -1,25 +1,21 @@
 <?php
 //Login
-Breadcrumbs::register('login', function($breadcrumbs)
-{
+Breadcrumbs::register('login', function ($breadcrumbs) {
     $breadcrumbs->push('Login', route('login.get'));
 });
 
 //Register
-Breadcrumbs::register('register', function($breadcrumbs)
-{
+Breadcrumbs::register('register', function ($breadcrumbs) {
     $breadcrumbs->push('Register', route('register.get'));
 });
 
 //Register / Login
-Breadcrumbs::register('register_login', function($breadcrumbs)
-{
+Breadcrumbs::register('register_login', function ($breadcrumbs) {
     $breadcrumbs->push('Register / Login', route('login.get'));
 });
 
 //Home
-Breadcrumbs::register('home', function($breadcrumbs)
-{
+Breadcrumbs::register('home', function ($breadcrumbs) {
     $breadcrumbs->push('Home', url('/'));
 });
 
@@ -28,29 +24,25 @@ Breadcrumbs::register('home', function($breadcrumbs)
  */
 
 // Home > User
-Breadcrumbs::register('user', function($breadcrumbs)
-{
+Breadcrumbs::register('user', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('User', route('um.user.index'));
 });
 
 // Home > User > Create user
-Breadcrumbs::register('create_user', function($breadcrumbs)
-{
+Breadcrumbs::register('create_user', function ($breadcrumbs) {
     $breadcrumbs->parent('user');
     $breadcrumbs->push('Create user', route('um.user.create'));
 });
 
 // Home > User > Show user
-Breadcrumbs::register('show_user', function($breadcrumbs, $user)
-{
+Breadcrumbs::register('show_user', function ($breadcrumbs, $user) {
     $breadcrumbs->parent('user');
     $breadcrumbs->push('User details', route('um.user.show', $user->getKey()));
 });
 
 // Home > User > Edit user
-Breadcrumbs::register('edit_user', function($breadcrumbs, $user)
-{
+Breadcrumbs::register('edit_user', function ($breadcrumbs, $user) {
     $breadcrumbs->parent('user');
     $breadcrumbs->push('Edit user', route('um.user.edit', $user->getKey()));
 });
@@ -60,61 +52,53 @@ Breadcrumbs::register('edit_user', function($breadcrumbs, $user)
  */
 
 // Home > Role
-Breadcrumbs::register('role', function($breadcrumbs)
-{
+Breadcrumbs::register('role', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Role', route('um.role.index'));
 });
 
 // Home > Role > Create role
-Breadcrumbs::register('create_role', function($breadcrumbs)
-{
+Breadcrumbs::register('create_role', function ($breadcrumbs) {
     $breadcrumbs->parent('role');
     $breadcrumbs->push('Create role', route('um.role.create'));
 });
 
 // Home > Role > Create role
-Breadcrumbs::register('show_role', function($breadcrumbs, $role)
-{
+Breadcrumbs::register('show_role', function ($breadcrumbs, $role) {
     $breadcrumbs->parent('role');
     $breadcrumbs->push('Role details', route('um.role.show', $role->getKey()));
 });
 
 // Home > Role > Create role
-Breadcrumbs::register('edit_role', function($breadcrumbs, $role)
-{
+Breadcrumbs::register('edit_role', function ($breadcrumbs, $role) {
     $breadcrumbs->parent('role');
     $breadcrumbs->push('Edit role', route('um.role.edit', $role->getKey()));
 });
 
 /**
  * Permission
-*/
+ */
 
 // Home > Permission
-Breadcrumbs::register('permission', function($breadcrumbs)
-{
+Breadcrumbs::register('permission', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Permission', route('um.permission.index'));
 });
 
 // Home > Permission > Create permission
-Breadcrumbs::register('create_permission', function($breadcrumbs)
-{
+Breadcrumbs::register('create_permission', function ($breadcrumbs) {
     $breadcrumbs->parent('permission');
     $breadcrumbs->push('Create permission', route('um.permission.create'));
 });
 
 // Home > Permission > Show permission
-Breadcrumbs::register('show_permission', function($breadcrumbs, $permission)
-{
+Breadcrumbs::register('show_permission', function ($breadcrumbs, $permission) {
     $breadcrumbs->parent('permission');
     $breadcrumbs->push('Permission details', route('um.permission.show', $permission->getKey()));
 });
 
 // Home > Permission > Edit permission
-Breadcrumbs::register('edit_permission', function($breadcrumbs, $permission)
-{
+Breadcrumbs::register('edit_permission', function ($breadcrumbs, $permission) {
     $breadcrumbs->parent('permission');
     $breadcrumbs->push('Edit permission', route('um.permission.edit', $permission->getKey()));
 });
@@ -124,29 +108,25 @@ Breadcrumbs::register('edit_permission', function($breadcrumbs, $permission)
  */
 
 // Home > Group
-Breadcrumbs::register('group', function($breadcrumbs)
-{
+Breadcrumbs::register('group', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Group', route('um.group.index'));
 });
 
 // Home > Group > Create group
-Breadcrumbs::register('create_group', function($breadcrumbs)
-{
+Breadcrumbs::register('create_group', function ($breadcrumbs) {
     $breadcrumbs->parent('group');
     $breadcrumbs->push('Create group', route('um.group.create'));
 });
 
 // Home > Group > Show group
-Breadcrumbs::register('show_group', function($breadcrumbs, $group)
-{
+Breadcrumbs::register('show_group', function ($breadcrumbs, $group) {
     $breadcrumbs->parent('group');
     $breadcrumbs->push('Group details', route('um.group.show', $group->getKey()));
 });
 
 // Home > Group > Edit group
-Breadcrumbs::register('edit_group', function($breadcrumbs, $group)
-{
+Breadcrumbs::register('edit_group', function ($breadcrumbs, $group) {
     $breadcrumbs->parent('group');
     $breadcrumbs->push('Edit group', route('um.group.edit', $group->getKey()));
 });
@@ -155,8 +135,7 @@ Breadcrumbs::register('edit_group', function($breadcrumbs, $group)
  * Log
  */
 
-Breadcrumbs::register('user_activity_log', function($breadcrumbs)
-{
+Breadcrumbs::register('user_activity_log', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('User Activity Log', route('log.user_activity.index'));
 });
@@ -164,19 +143,37 @@ Breadcrumbs::register('user_activity_log', function($breadcrumbs)
 /**
  * Profile
  */
-Breadcrumbs::register('profile_index', function($breadcrumbs)
-{
+Breadcrumbs::register('profile_index', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('My Profile', route('profile.index'));
 });
-Breadcrumbs::register('profile_edit', function($breadcrumbs)
-{
+Breadcrumbs::register('profile_edit', function ($breadcrumbs) {
     $breadcrumbs->parent('profile_index');
     $breadcrumbs->push('Edit Profile', route('profile.edit'));
 });
 
-Breadcrumbs::register('profile_show', function($breadcrumbs, $user)
-{
+Breadcrumbs::register('profile_show', function ($breadcrumbs, $user) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Profile', route('profile.show', $user->getKey()));
+});
+
+
+/**
+ * Group
+ */
+Breadcrumbs::register('group_index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('My Groups', route('group.index'));
+});
+Breadcrumbs::register('group_create', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Create Group', route('group.create'));
+});
+Breadcrumbs::register('group_edit', function ($breadcrumbs, $group) {
+    $breadcrumbs->parent('group_index');
+    $breadcrumbs->push('Edit Group', route('group.edit', $group->getKey()));
+});
+Breadcrumbs::register('group_show', function ($breadcrumbs, $user) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Group', route('group.show', $user->getKey()));
 });
