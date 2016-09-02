@@ -155,9 +155,17 @@ Breadcrumbs::register('edit_group', function($breadcrumbs, $group)
  * Log
  */
 
-// Home > Group
 Breadcrumbs::register('user_activity_log', function($breadcrumbs)
 {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('User Activity Log', route('log.user_activity.index'));
+});
+
+/**
+ * Profile
+ */
+Breadcrumbs::register('profile_index', function($breadcrumbs)
+{
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Profile', route('profile.index'));
 });
