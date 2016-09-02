@@ -27,26 +27,4 @@ Subscription migration is finished
         a). ignore group with the same name instead of prompting errors
         b). attach user to the group soon as it's created. (should work without making changes)
 
-
-//DONE
-3. check the websites provided by Ryan
-    http://www.pricetrakker.com/
-    https://www.import.io/
-    http://www.price2spy.com/
-
-    1) check the necessity of verify email addresses on registration.
-
-    2) check the way their registration and payment process work
-
-//DONE
-4. work on subscription management page
-
-    1) view current subscription information
-
-    2) upgrade or downgrade my subscription package
-
-
-5. work on profile management page
-
-//DONE
-6. hide admin sidebar items from client users
+3. Update profile management to use Ajax
