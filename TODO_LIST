@@ -3,13 +3,6 @@ TODO
 
 IMPORTANT:
 
-//quick add subscription status check when user login. (this one needs a middleware)
-subscription check is finished.
-//Now need to handle user re-subscribe.
-re-subscribe is done.
-//Now need to handle upgrade downgrade and cancel.
-Subscription migration is finished
-
 1. show welcome message when user first login (right after register)
 
     1) move the current welcome/success message to a popup

@@ -3,7 +3,8 @@
 
 @section('content')
     <div class="row">
-        <div class="col-sm-6">
+        {{--<div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12">--}}
+        <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Subscription Plans</h3>
@@ -21,7 +22,7 @@
 
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Register</h3>
