@@ -20,8 +20,10 @@ class MessageController extends Controller
     public function welcomeSubscription($raw = 0)
     {
         $user = auth()->user();
-        $subscription = $user->latestValidSubscription();
-        $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+        if (!auth()->user()->isStaff()) {
+            $subscription = $user->latestValidSubscription();
+            $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+        }
         if ($raw == 0) {
             return view('msg.subscription.welcome')->with(compact(['apiSubscription']));
         } else {

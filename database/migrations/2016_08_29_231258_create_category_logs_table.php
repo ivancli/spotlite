@@ -16,8 +16,8 @@ class CreateCategoryLogsTable extends Migration
             $table->bigIncrements('category_log_id');
             $table->integer('category_id')->unsigned()->index();
             $table->foreign('category_id')->references('category_id')->on('categories')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();

@@ -51,6 +51,8 @@
 </div>
 <!-- ./wrapper -->
 
+@include('scripts.variable_setter')
+
 <script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
 
 @yield('scripts')

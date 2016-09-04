@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('account', 'User\AccountController');
 
     /* Group related routes*/
+    Route::get('group/first_login', 'User\GroupController@firstLogin');
     Route::resource('group', 'User\GroupController');
 
     /* User profile related routes*/

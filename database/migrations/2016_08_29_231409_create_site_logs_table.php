@@ -16,8 +16,8 @@ class CreateSiteLogsTable extends Migration
             $table->bigIncrements('site_log_id');
             $table->integer('site_id')->unsigned()->index();
             $table->foreign('site_id')->references('site_id')->on('sites')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();

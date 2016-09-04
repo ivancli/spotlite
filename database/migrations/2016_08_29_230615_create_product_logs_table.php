@@ -16,8 +16,8 @@ class CreateProductLogsTable extends Migration
             $table->bigIncrements('product_log_id');
             $table->integer('product_id')->unsigned()->index();
             $table->foreign('product_id')->references('product_id')->on('products')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();

@@ -16,8 +16,8 @@ class CreateCookieLogsTable extends Migration
             $table->bigIncrements('cookie_log_id');
             $table->integer('cookie_id')->unsigned()->index();
             $table->foreign('cookie_id')->references('cookie_id')->on('cookies')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();

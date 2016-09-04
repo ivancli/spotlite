@@ -12,122 +12,122 @@ class CreateMainTablesForeignKeys extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('category_id')->references('category_id')->on('categories')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
 //        Schema::table('sites', function (Blueprint $table) {
 //            $table->foreign('product_id')->references('product_id')->on('products')
 //                ->onDelete('cascade')
-//                ->onUpdate('no action');
+//                ->onUpdate('cascade');
 //        });
         Schema::table('product_sites', function (Blueprint $table) {
             $table->foreign('product_id')->references('product_id')->on('products')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('product_sites', function (Blueprint $table) {
             $table->foreign('site_id')->references('site_id')->on('sites')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('historical_prices', function (Blueprint $table) {
             $table->foreign('crawler_id')->references('crawler_id')->on('crawlers')
                 ->onDelete('restrict')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('historical_prices', function (Blueprint $table) {
             $table->foreign('site_id')->references('site_id')->on('sites')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('crawlers', function (Blueprint $table) {
             $table->foreign('site_id')->references('site_id')->on('sites')
                 ->onDelete('restrict')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('crawlers', function (Blueprint $table) {
             $table->foreign('cookie_id')->references('cookie_id')->on('cookies')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('crawler_ips', function (Blueprint $table) {
             $table->foreign('crawler_id')->references('crawler_id')->on('crawlers')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('crawler_ips', function (Blueprint $table) {
             $table->foreign('ip_id')->references('ip_id')->on('ips')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('crawler_activity_logs', function (Blueprint $table) {
             $table->foreign('crawler_id')->references('crawler_id')->on('crawlers')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('user_id')->references('user_id')->on('users')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('group_id')->references('group_id')->on('groups')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('report_task_id')->references('report_task_id')->on('report_tasks')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('categories', function (Blueprint $table) {
             $table->foreign('report_task_id')->references('report_task_id')->on('report_tasks')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('reports', function (Blueprint $table) {
             $table->foreign('report_task_id')->references('report_task_id')->on('report_tasks')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
         Schema::table('report_activity_logs', function (Blueprint $table) {
             $table->foreign('report_task_id')->references('report_task_id')->on('report_tasks')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
         Schema::table('user_activity_logs', function (Blueprint $table) {
             $table->foreign('user_id')->references('user_id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
         Schema::table('domains', function(Blueprint $table){
             $table->foreign('cookie_id')->references('cookie_id')->on('cookies')
                 ->onDelete('set null')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('domain_ips', function (Blueprint $table) {
             $table->foreign('domain_id')->references('domain_id')->on('domains')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('domain_ips', function (Blueprint $table) {
             $table->foreign('ip_id')->references('ip_id')->on('ips')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('alerts', function (Blueprint $table) {
             $table->foreign('comparison_site_id')->references('site_id')->on('sites')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('alert_emails', function (Blueprint $table) {
             $table->foreign('alert_id')->references('alert_id')->on('alerts')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
         Schema::table('alert_activity_logs', function (Blueprint $table) {
             $table->foreign('alert_id')->references('alert_id')->on('alerts')
                 ->onDelete('cascade')
-                ->onUpdate('no action');
+                ->onUpdate('cascade');
         });
     }
 
