@@ -16,8 +16,8 @@ class CreateAlertLogsTable extends Migration
             $table->bigIncrements('alert_log_id');
             $table->integer('alert_id')->unsigned()->index();
             $table->foreign('alert_id')->references('alert_id')->on('alerts')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();

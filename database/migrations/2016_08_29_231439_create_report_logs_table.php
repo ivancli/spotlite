@@ -16,8 +16,8 @@ class CreateReportLogsTable extends Migration
             $table->bigIncrements('report_log_id');
             $table->bigInteger('report_id')->unsigned()->index();
             $table->foreign('report_id')->references('report_id')->on('reports')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();

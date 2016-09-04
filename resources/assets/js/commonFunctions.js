@@ -1,3 +1,8 @@
+function welcome(bodyText) {
+    var $modal = popupHTML(title, bodyText, null, "lg");
+    $modal.modal();
+}
+
 /**
  * simulate alert popup
  * @param title
@@ -54,6 +59,20 @@ function confirmP(title, bodyText, btnOpts) {
  * @returns {*|jQuery}
  */
 function popupHTML(title, $content, $footer, dialogSize) {
+    var $header = $("<div>").append(
+        $("<button>").addClass("close").attr({
+            "type": "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+        }).append(
+            $("<span>").attr({
+                "aria-hidden": "true"
+            }).html("&times;")
+        ),
+        $("<h4>").addClass("modal-title").text(title)
+    );
+
+
     if (typeof $footer == 'undefined') {
         $footer = $("<button>").addClass("btn").attr({
             "type": "button",
@@ -76,23 +95,27 @@ function popupHTML(title, $content, $footer, dialogSize) {
             default:
         }
     }
+    var $modal = popupFrame($header, $content, $footer);
+    $modal.find(".modal-dialog").addClass(dialogSize);
+    return $modal;
+}
+
+function popupFrame($header, $content, $footer) {
     return $("<div>").attr("id", randomString(10)).addClass("modal fade popup").append(
-        $("<div>").addClass("modal-dialog " + dialogSize).append(
+        $("<div>").addClass("modal-dialog").append(
             $("<div>").addClass("modal-content").append(
-                $("<div>").addClass("modal-header").append(
-                    $("<button>").addClass("close").attr({
-                        "type": "button",
-                        "data-dismiss": "modal",
-                        "aria-label": "Close"
-                    }).append(
-                        $("<span>").attr({
-                            "aria-hidden": "true"
-                        }).html("&times;")
-                    ),
-                    $("<h4>").addClass("modal-title").text(title)
-                ),
-                $("<div>").addClass("modal-body").append($content),
-                $("<div>").addClass("modal-footer m-0").append($footer)
+                typeof $header != 'undefined' ?
+                    $("<div>").addClass("modal-header").append(
+                        $header
+                    ) : '',
+                typeof $content != 'undefined' ?
+                    $("<div>").addClass("modal-body").append(
+                        $content
+                    ) : '',
+                typeof $footer != 'undefined' ?
+                    $("<div>").addClass("modal-footer").append(
+                        $footer
+                    ) : ''
             )
         )
     );
@@ -111,4 +134,18 @@ function randomString(length, chars) {
     var result = '';
     for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
     return result;
+}
+
+function showLoading() {
+    var $spinner = $("<div>").addClass("spinner").append(
+        $("<div>").addClass("spinner-backdrop"),
+        $("<img>").attr({
+            "src": "/build/images/spinner.gif"
+        }).addClass("spinner-img")
+    );
+    $("body").append($spinner);
+}
+
+function hideLoading() {
+    $(".spinner").remove();
 }

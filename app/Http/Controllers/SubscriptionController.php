@@ -33,7 +33,7 @@ class SubscriptionController extends Controller
 
     /**
      *
-     * @return $this
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function viewProducts()
     {
@@ -58,7 +58,7 @@ class SubscriptionController extends Controller
 
     /**
      * Manage My Subscription - page
-     * @return $this
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -176,7 +176,7 @@ class SubscriptionController extends Controller
                             $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
                             event(new SubscriptionCompleted($sub));
-                            return redirect()->route('msg.subscription.welcome');
+                            return redirect()->route('dashboard.index');
 //                            return redirect()->route('dashboard.index');
                         }
                     } else {

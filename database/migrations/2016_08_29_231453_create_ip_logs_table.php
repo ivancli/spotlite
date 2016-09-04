@@ -16,8 +16,8 @@ class CreateIpLogsTable extends Migration
             $table->bigIncrements('ip_log_id');
             $table->integer('ip_id')->unsigned()->index();
             $table->foreign('ip_id')->references('ip_id')->on('ips')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();

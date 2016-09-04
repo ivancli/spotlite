@@ -16,8 +16,8 @@ class CreateGroupLogsTable extends Migration
             $table->bigIncrements('group_log_id');
             $table->integer('group_id')->unsigned()->index();
             $table->foreign('group_id')->references('group_id')->on('groups')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
             $table->text('content');
             $table->timestamps();
