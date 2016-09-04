@@ -27,3 +27,5 @@ IMPORTANT:
 5. Push logging to queue instead of logging immediately
 
 6. Complete Group CRUD with Ajax functions
+
+7. Create and send welcome email
