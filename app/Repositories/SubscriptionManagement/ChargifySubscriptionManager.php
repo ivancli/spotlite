@@ -21,8 +21,10 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function getProducts()
     {
-        $apiURL = env('CHARGIFY_API_URL') . "products.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+//        $apiURL = env('CHARGIFY_API_URL') . "products.json";
+        $apiURL = config('chargify.api_url') . "products.json";
+//        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $products = $this->sendCurl($apiURL, compact(['userpass']));
         try {
             $products = json_decode($products);
@@ -40,8 +42,10 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function getProduct($product_id)
     {
-        $apiURL = env('CHARGIFY_API_URL') . "products/$product_id.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+//        $apiURL = env('CHARGIFY_API_URL') . "products/$product_id.json";
+        $apiURL = config('chargify.api_url') . "products/$product_id.json";
+//        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $product = $this->sendCurl($apiURL, compact(['userpass']));
         try {
             $product = json_decode($product)->product;
@@ -58,8 +62,10 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function getSubscriptions()
     {
-        $apiURL = env('CHARGIFY_API_URL') . "subscriptions.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+//        $apiURL = env('CHARGIFY_API_URL') . "subscriptions.json";
+        $apiURL = config('chargify.api_url') . "subscriptions.json";
+//        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $subscriptions = $this->sendCurl($apiURL, compact(['userpass']));
         try {
             $subscriptions = json_decode($subscriptions)->subscription;
@@ -77,8 +83,8 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function getSubscription($subscription_id)
     {
-        $apiURL = env('CHARGIFY_API_URL') . "subscriptions/$subscription_id.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $subscription = $this->sendCurl($apiURL, compact(['userpass']));
         try {
             $subscription = json_decode($subscription)->subscription;
@@ -96,8 +102,8 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function storeSubscription($options)
     {
-        $apiURL = env('CHARGIFY_API_URL') . "subscriptions.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $apiURL = config('chargify.api_url') . "subscriptions.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $method = "post";
         $data_type = 'json';
         $fields = $options;
@@ -128,8 +134,8 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function cancelSubscription($subscription_id)
     {
-        $apiURL = env('CHARGIFY_API_URL') . "subscriptions/$subscription_id.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $method = "delete";
         $result = $this->sendCurl($apiURL, compact(['userpass', 'method']));
         try {
@@ -149,8 +155,8 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function previewMigration($subscription_id, $options)
     {
-        $apiURL = env('CHARGIFY_API_URL') . "subscriptions/$subscription_id/migrations/preview.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id/migrations/preview.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $method = "post";
         $data_type = 'json';
         $fields = $options;
@@ -172,8 +178,8 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function setMigration($subscription_id, $options)
     {
-        $apiURL = env('CHARGIFY_API_URL') . "subscriptions/$subscription_id/migrations.json";
-        $userpass = env('CHARGIFY_API_KEY') . ":" . env('CHARGIFY_PASSWORD');
+        $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id/migrations.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $method = "post";
         $data_type = 'json';
         $fields = $options;

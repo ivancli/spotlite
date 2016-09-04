@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\EmailManagement\EmailGenerator;
 use App\Contracts\SubscriptionManagement\SubscriptionManager;
 use App\Models\Subscription;
 use App\Models\User;
@@ -36,16 +37,19 @@ class AuthController extends Controller
     protected $username = 'email';
 
     protected $subscriptionManager;
+    protected $emailGenerator;
 
     /**
      * Create a new authentication controller instance.
      *
      * @param SubscriptionManager $subscriptionManager
+     * @param EmailGenerator $emailGenerator
      */
-    public function __construct(SubscriptionManager $subscriptionManager)
+    public function __construct(SubscriptionManager $subscriptionManager, EmailGenerator $emailGenerator)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
         $this->subscriptionManager = $subscriptionManager;
+        $this->emailGenerator = $emailGenerator;
     }
 
     /**
@@ -85,6 +89,8 @@ class AuthController extends Controller
         if ($role != null) {
             $user->attachRole($role);
         }
+        $this->emailGenerator->sendWelcomeEmail($user);
+//        $this->emailGenerator->sendWelcomeEmail($user);
         if (request()->has('api_product_id')) {
             $product = $this->subscriptionManager->getProduct(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
