@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers\UM;
 
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Invigor\UM\Controllers\UMUserController;
-use Invigor\UM\UMGroup;
 use Invigor\UM\UMPermission;
 use Invigor\UM\UMRole;
 
@@ -79,7 +79,7 @@ class UserController extends UMUserController
             }
         } else {
             $userCount = User::count();
-            $groupCount = UMGroup::count();
+            $groupCount = Group::count();
             $roleCount = UMRole::count();
             $permissionCount = UMPermission::count();
             return view('um.user.index')->with(compact('userCount', 'groupCount', 'roleCount', 'permissionCount'));
@@ -93,7 +93,7 @@ class UserController extends UMUserController
      */
     public function create()
     {
-        $groups = UMGroup::pluck('name', (new UMGroup)->getKeyName());
+        $groups = Group::pluck('name', (new Group)->getKeyName());
         $roles = UMRole::pluck('display_name', (new UMRole())->getKeyName());
         return view('um.user.create')->with(compact(['groups', 'roles']));
     }
@@ -190,7 +190,7 @@ class UserController extends UMUserController
             abort(404);
             return false;
         } else {
-            $groups = UMGroup::pluck('name', (new UMGroup)->getKeyName());
+            $groups = Group::pluck('name', (new Group)->getKeyName());
             $roles = UMRole::pluck('display_name', (new UMRole)->getKeyName());
             return view("um.user.edit")->with(compact(['user', 'groups', 'roles']));
         }

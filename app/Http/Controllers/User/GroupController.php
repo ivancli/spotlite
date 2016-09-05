@@ -24,9 +24,9 @@ use App\Events\Group\GroupStoring;
 use App\Events\Group\GroupUpdated;
 use App\Events\Group\GroupUpdating;
 use App\Http\Controllers\Controller;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Invigor\UM\UMGroup;
 use Validator;
 
 class GroupController extends Controller
@@ -60,7 +60,7 @@ class GroupController extends Controller
 
     public function show($id)
     {
-        $group = UMGroup::findOrFail($id);
+        $group = Group::findOrFail($id);
         event(new GroupSingleViewed($group));
         return view('user.group.show')->with(compact(['group']));
     }
@@ -92,7 +92,7 @@ class GroupController extends Controller
                 return redirect()->route('group.create')->withErrors($validator)->withInput();
             }
         }
-        $group = UMGroup::where("name", $request->get("name"))->first();
+        $group = Group::where("name", $request->get("name"))->first();
         if (!is_null($group)) {
             auth()->user()->groups()->attach($group->getKey());
             event(new GroupAttached($group));
@@ -127,8 +127,8 @@ class GroupController extends Controller
 
     public function edit($id)
     {
-        $group = UMGroup::findOrFail($id);
-        if (!in_array($id, auth()->user()->groups->pluck((new UMGroup)->getKeyName())->toArray())) {
+        $group = Group::findOrFail($id);
+        if (!in_array($id, auth()->user()->groups->pluck((new Group)->getKeyName())->toArray())) {
             abort(403);
             return false;
         }
@@ -139,14 +139,14 @@ class GroupController extends Controller
     public function update(Request $request, $id)
     {
         /*TODO basic validation here*/
-        $group = UMGroup::findOrFail($id);
-        if (!in_array($id, auth()->user()->groups->pluck((new UMGroup)->getKeyName())->toArray())) {
+        $group = Group::findOrFail($id);
+        if (!in_array($id, auth()->user()->groups->pluck((new Group)->getKeyName())->toArray())) {
             abort(403);
             return false;
         }
 
-        if ($group->name != $request->get('name') && !is_null(UMGroup::where('name', $request->get('name'))->first())) {
-            $group = UMGroup::where('name', $request->get('name'))->first();
+        if ($group->name != $request->get('name') && !is_null(Group::where('name', $request->get('name'))->first())) {
+            $group = Group::where('name', $request->get('name'))->first();
             auth()->user()->groups()->detach($id);
             event(new GroupDetached($group));
             auth()->user()->groups()->attach($group->getKey());
@@ -182,13 +182,13 @@ class GroupController extends Controller
     {
         /*TODO check if there are any users attached to this group*/
 
-        $group = UMGroup::findOrFail($id);
-        if (!in_array($id, auth()->user()->groups->pluck((new UMGroup)->getKeyName())->toArray())) {
+        $group = Group::findOrFail($id);
+        if (!in_array($id, auth()->user()->groups->pluck((new Group)->getKeyName())->toArray())) {
             abort(403);
             return false;
         }
 
-        $group = UMGroup::findOrFail($id);
+        $group = Group::findOrFail($id);
         if ($group->users->count() > 1) {
             auth()->user()->groups()->detach($id);
             event(new GroupDetached($group));

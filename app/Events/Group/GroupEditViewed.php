@@ -3,19 +3,21 @@
 namespace App\Events\Group;
 
 use App\Events\Event;
+use App\Models\Group;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Invigor\UM\UMGroup;
 
 class GroupEditViewed extends Event
 {
     use SerializesModels;
 
     public $group;
+
     /**
      * Create a new event instance.
+     * @param Group $group
      */
-    public function __construct(UMGroup $group)
+    public function __construct(Group $group)
     {
         $this->group = $group;
     }

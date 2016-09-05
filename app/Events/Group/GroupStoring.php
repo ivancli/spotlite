@@ -5,7 +5,6 @@ namespace App\Events\Group;
 use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Invigor\UM\UMGroup;
 
 class GroupStoring extends Event
 {

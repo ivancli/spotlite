@@ -48,10 +48,6 @@ class GroupEventSubscriber
     {
         $group = $event->group;
         $this->logger->storeLog("deleting group - {$group->getKey()}");
-
-        DeletedGroup::create(array(
-            "content" => $group->toJson()
-        ));
     }
 
     public function onGroupDetached($event)

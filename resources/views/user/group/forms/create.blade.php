@@ -16,6 +16,7 @@
             hideLoading();
             if (response.status == true) {
 //                alertP("Create Group", "The group has been created.");
+                showLoading();
                 window.location.href = "{{route('group.index')}}";
             } else {
                 if (typeof response.errors != 'undefined') {

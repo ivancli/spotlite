@@ -20,7 +20,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('group_id[]', 'Groups', array('class' => 'control-label')) !!}
-    {!! Form::select('group_id[]', $groups, isset($user) && !is_null($user->groups) ? $user->groups->pluck((new \Invigor\UM\UMGroup())->getKeyName())->toArray() : null, ['class'=>'form-control', 'multiple' => 'multiple', 'size'=>10]) !!}
+    {!! Form::select('group_id[]', $groups, isset($user) && !is_null($user->groups) ? $user->groups->pluck((new \App\Models\Group())->getKeyName())->toArray() : null, ['class'=>'form-control', 'multiple' => 'multiple', 'size'=>10]) !!}
 </div>
 
 <div class="form-group">

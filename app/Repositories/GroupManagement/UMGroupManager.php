@@ -2,7 +2,7 @@
 namespace App\Repositories\GroupManagement;
 
 use App\Contracts\GroupManagement\GroupManager;
-use Invigor\UM\UMGroup;
+use App\Models\Group;
 
 /**
  * Created by PhpStorm.
@@ -19,7 +19,7 @@ class UMGroupManager implements GroupManager
      */
     public function getGroups()
     {
-        return UMGroup::all();
+        return Group::all();
     }
 
     /**
@@ -29,7 +29,7 @@ class UMGroupManager implements GroupManager
      */
     public function getGroup($id)
     {
-        return UMGroup::findOrFail($id);
+        return Group::findOrFail($id);
     }
 
     /**
@@ -40,9 +40,9 @@ class UMGroupManager implements GroupManager
     public function createGroup($options)
     {
         /*TODO implement validation here*/
-        $group = UMGroup::where('name', $options['name'])->first();
+        $group = Group::where('name', $options['name'])->first();
         if (is_null($group)) {
-            $group = UMGroup::create($options);
+            $group = Group::create($options);
         }
         return $group;
     }
@@ -55,7 +55,7 @@ class UMGroupManager implements GroupManager
      */
     public function updateGroup($id, $options)
     {
-        $group = UMGroup::findOrFail($id);
+        $group = Group::findOrFail($id);
         $group->update($options);
         return $group;
     }
@@ -68,7 +68,7 @@ class UMGroupManager implements GroupManager
     public function destroyGroup($id)
     {
         // TODO: Implement destroyGroup() method.
-        $group = UMGroup::findOrFail($id);
+        $group = Group::findOrFail($id);
         $group->delete();
         return true;
     }
