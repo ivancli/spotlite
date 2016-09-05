@@ -9,6 +9,7 @@ class CreateCategoriesTable extends Migration {
 	{
 		Schema::create('categories', function(Blueprint $table) {
 			$table->increments('category_id');
+            $table->integer("user_id")->unsigned();
 			$table->text('category_name');
 			$table->integer('category_order')->unsigned()->nullable();
 			$table->integer('report_task_id')->unsigned()->index()->nullable();
