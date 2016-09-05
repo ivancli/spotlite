@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -58,12 +59,39 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        /*TODO validation here*/
+        $validator = Validator::make($request->all(), [
+            "first_name" => "required|max:255",
+            "last_name" => "required|max:255",
+        ]);
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                $status = false;
+                $errors = $validator->errors()->all();
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+        }
+
+
         $user = User::findOrFail($id);
         event(new ProfileUpdating($user));
         $user->update($request->all());
-        $status = true;
         event(new ProfileUpdated($user));
-        return redirect()->route("profile.index");
+        if ($request->ajax()) {
+            $status = true;
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'user']));
+            } else {
+                return compact(['status', 'user']);
+            }
+        } else {
+            return redirect()->route("profile.index");
+        }
+
     }
 }

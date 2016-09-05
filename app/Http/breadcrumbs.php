@@ -186,3 +186,18 @@ Breadcrumbs::register('account_index', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Account Settings', route('account.index'));
 });
+
+
+/**
+ * Subscription settings
+ */
+Breadcrumbs::register('subscription_index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Subscription', route('subscription.index'));
+});
+Breadcrumbs::register('subscription_edit', function ($breadcrumbs, $subscription) {
+    $breadcrumbs->parent('subscription_index');
+    $breadcrumbs->push('Change My Plan', route('subscription.edit', $subscription->getKey()));
+});
+
+

@@ -1,6 +1,6 @@
 <header class="main-header">
     <!-- Logo -->
-    <a href="../../index2.html" class="logo">
+    <a href="{{route('dashboard.index')}}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><img src="{{asset('build/images/favicon.png')}}" alt="SpotLite" height="50"></span>
         <!-- logo for regular state and mobile devices -->
@@ -31,35 +31,37 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <ul class="spotlite-menu">
-                                    <li>
-                                        <a href="{{route('profile.index')}}">
-                                            <h3>
-                                                Profile
-                                            </h3>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('account.index')}}">
-                                            <h3>
-                                                Account Settings
-                                            </h3>
-                                        </a>
-                                    </li>
-                                    @if(!auth()->user()->isStaff())
+                                    @if(auth()->user()->hasValidSubscription() || auth()->user()->isStaff())
                                         <li>
-                                            <a href="{{route('group.index')}}">
+                                            <a href="{{route('profile.index')}}">
                                                 <h3>
-                                                    Group Management
+                                                    Profile
                                                 </h3>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{route('subscription.index')}}">
+                                            <a href="{{route('account.index')}}">
                                                 <h3>
-                                                    Manage My Subscription
+                                                    Account Settings
                                                 </h3>
                                             </a>
                                         </li>
+                                        @if(!auth()->user()->isStaff())
+                                            <li>
+                                                <a href="{{route('group.index')}}">
+                                                    <h3>
+                                                        Group Management
+                                                    </h3>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('subscription.index')}}">
+                                                    <h3>
+                                                        Manage My Subscription
+                                                    </h3>
+                                                </a>
+                                            </li>
+                                        @endif
                                     @endif
                                     <li>
                                         <a href="{{route('logout')}}">

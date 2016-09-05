@@ -15,7 +15,7 @@
                 </div>
                 <div class="form-group required">
                     {!! Form::label('url', 'URL', array('class' => 'control-label')) !!}
-                    {!! Form::text('url', null, array('class' => 'form-control')) !!}
+                    {!! Form::text('url', $domain, array('class' => 'form-control')) !!}
                 </div>
                 <div class="form-group">
                     {!! Form::label('description', 'Description', array('class' => 'control-label')) !!}
@@ -25,32 +25,35 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-create-group">OK</button>
+                <button class="btn btn-primary" id="btn-create-group" onclick="groupStoreOnClick();">OK</button>
             </div>
         </div>
     </div>
     <script type="text/javascript">
-        $(function () {
-            $("#btn-create-group").on("click", function () {
-                submitGroupStore(function (response) {
-                    if (response.status == true) {
-                        $("#modal-group-store").modal("hide");
+        function groupStoreOnClick() {
+            showLoading();
+            submitGroupStore(function (response) {
+                hideLoading();
+                if (response.status == true) {
+                    $("#modal-group-store").modal("hide");
+                } else {
+                    if (typeof response.errors != 'undefined') {
+                        var $errorContainer = $("#modal-group-store .errors-container");
+                        $errorContainer.empty();
+                        $.each(response.errors, function (index, error) {
+                            $errorContainer.append(
+                                    $("<li>").text(error)
+                            );
+                        });
                     } else {
-                        if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-group-store .errors-container");
-                            $errorContainer.empty();
-                            $.each(response.errors, function (index, error) {
-                                $errorContainer.append(
-                                        $("<li>").text(error)
-                                );
-                            });
-                        }
+                        alertP("Error", "Unable to set group, please try again later.");
                     }
-                }, function (xhr, status, error) {
-                    console.info(xhr);
-                });
+                }
+            }, function (xhr, status, error) {
+                hideLoading();
+                alertP("Error", "Unable to set group, please try again later.");
             });
-        });
+        }
 
         function submitGroupStore(successCallback, errorCallback) {
             $.ajax({

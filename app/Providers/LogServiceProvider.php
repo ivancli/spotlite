@@ -26,6 +26,9 @@ class LogServiceProvider extends ServiceProvider
         $this->app->when('App\Listeners\UserEventSubscriber')
             ->needs('App\Contracts\LogManagement\Logger')
             ->give('App\Repositories\LogManagement\UserActivityLogger');
+        $this->app->when('App\Listeners\GroupEventSubscriber')
+            ->needs('App\Contracts\LogManagement\Logger')
+            ->give('App\Repositories\LogManagement\UserActivityLogger');
         $this->app->when('App\Jobs\LogUserActivity')
             ->needs('App\Contracts\LogManagement\Logger')
             ->give('App\Repositories\LogManagement\UserActivityLogger');

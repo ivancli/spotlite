@@ -1,15 +1,50 @@
-@if(isset($errors))
-    <ul class="text-danger">
-        @foreach ($errors->all('<li>:message</li>') as $message)
-            {!! $message !!}
-        @endforeach
-    </ul>
-@endif
+<ul class="text-danger errors-container">
+</ul>
 
-{!! Form::open(array('route' => array('group.store'), 'method'=>'post')) !!}
+{!! Form::open(array('route' => array('group.store'), 'method'=>'post', 'id'=>'frm-group-store', 'onsubmit' => 'return false;')) !!}
 @include('user.group.forms.group')
 <div class="text-right">
-    {!! Form::submit('Create', ["class"=>"btn btn-primary btn-sm"]) !!}
+    {!! Form::submit('Create', ["class"=>"btn btn-primary btn-sm", "href" => "#", "onclick" => "groupStoreOnClick()"]) !!}
     <a href="{{route('group.index')}}" class="btn btn-default btn-sm">Cancel</a>
 </div>
 {!! Form::close() !!}
+
+<script type="text/javascript">
+    function groupStoreOnClick() {
+        showLoading();
+        submitGroupStore(function (response) {
+            hideLoading();
+            if (response.status == true) {
+//                alertP("Create Group", "The group has been created.");
+                window.location.href = "{{route('group.index')}}";
+            } else {
+                if (typeof response.errors != 'undefined') {
+                    var $errorContainer = $(".errors-container");
+                    $errorContainer.empty();
+                    $.each(response.errors, function (index, error) {
+                        $errorContainer.append(
+                                $("<li>").text(error)
+                        );
+                    });
+                } else {
+                    alertP("Error", "Unable to create group, please try again later.");
+                }
+            }
+
+        }, function (xhr, status, error) {
+            hideLoading();
+            alertP("Error", "Unable to create group, please try again later.");
+        });
+    }
+
+    function submitGroupStore(successCallback, errorCallback) {
+        $.ajax({
+            "url": $("#frm-group-store").attr("action"),
+            "method": "post",
+            "data": $("#frm-group-store").serialize(),
+            "dataType": "json",
+            "success": successCallback,
+            "error": errorCallback
+        })
+    }
+</script>

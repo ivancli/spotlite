@@ -176,7 +176,7 @@ class SubscriptionController extends Controller
                             $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
                             event(new SubscriptionCompleted($sub));
-                            return redirect()->route('dashboard.index');
+                            return redirect()->route('subscription.index');
 //                            return redirect()->route('dashboard.index');
                         }
                     } else {
@@ -222,15 +222,17 @@ class SubscriptionController extends Controller
         return view('subscriptions.edit')->with(compact(['products', 'chosenAPIProductIDs', 'subscription']));
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $subscription = Subscription::findOrFail($id);
         event(new SubscriptionUpdating($subscription));
         $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
-        /*TODO check current subscription has payment method or not*/
+        /*check current subscription has payment method or not*/
         if (is_null($apiSubscription->payment_type)) {
+            //current subscription no payment method
             return $this->store();
         } else {
+            //current subscription has payment method
             $fields = new \stdClass();
             $migration = new \stdClass();
             $migration->product_id = request()->get('api_product_id');
@@ -248,7 +250,16 @@ class SubscriptionController extends Controller
                     }
                     $subscription->save();
                     event(new SubscriptionUpdated($subscription));
-                    return redirect()->route('msg.subscription.update');
+                    if ($request->ajax()) {
+                        $status = true;
+                        if ($request->wantsJson()) {
+                            return response()->json(compact(['status', 'subscription']));
+                        } else {
+                            return compact(['status', 'subscription']);
+                        }
+                    } else {
+                        return redirect()->route('msg.subscription.update');
+                    }
                 }
             }
         }

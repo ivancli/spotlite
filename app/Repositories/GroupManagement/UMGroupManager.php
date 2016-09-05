@@ -40,7 +40,10 @@ class UMGroupManager implements GroupManager
     public function createGroup($options)
     {
         /*TODO implement validation here*/
-        $group = UMGroup::create($options);
+        $group = UMGroup::where('name', $options['name'])->first();
+        if (is_null($group)) {
+            $group = UMGroup::create($options);
+        }
         return $group;
     }
 
@@ -53,7 +56,6 @@ class UMGroupManager implements GroupManager
     public function updateGroup($id, $options)
     {
         $group = UMGroup::findOrFail($id);
-        /*TODO implement validation here*/
         $group->update($options);
         return $group;
     }

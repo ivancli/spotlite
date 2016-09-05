@@ -1,6 +1,9 @@
 @extends('layouts.adminlte')
 @section('title', 'Subscription')
-@section('header_title', "Complete your signup process")
+@section('header_title', "Update Subscription")
+@section('breadcrumbs')
+    {!! Breadcrumbs::render('subscription_edit', $subscription) !!}
+@stop
 @section('content')
     <div class="row">
         <div class="col-sm-12">
@@ -16,9 +19,10 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 text-center">
-                            {!! Form::model($subscription ,array('route' => array('subscription.update', $subscription->getKey()), 'method' => 'put')) !!}
+                            {!! Form::model($subscription ,array('route' => array('subscription.update', $subscription->getKey()), 'method' => 'put', "id" => "frm-subscription-update", "onsubmit"=>"return false;")) !!}
                             <input type="hidden" name="api_product_id" id="txt-api-product-id">
-                            {!! Form::submit('Update Subscription', ["class"=>"btn btn-primary btn-lg", "id" => "btn-subscribe", "disabled" => "disabled"]) !!}
+                            {!! Form::submit('Update Subscription', ["href" => "#", "class"=>"btn btn-primary btn-lg",
+                            "id" => "btn-subscribe", "disabled" => "disabled", "onclick"=>"submitSubscriptionUpdateOnclick();"]) !!}
                             {!! Form::close() !!}
                         </div>
                     </div>
@@ -42,6 +46,50 @@
 
         function updateSubscribeButton() {
             $("#btn-subscribe").prop("disabled", $(".product-container.selected").length == 0 || $(".product-container.selected").hasClass("chosen"));
+        }
+
+        function submitSubscriptionUpdateOnclick() {
+            confirmP("Update Subscription", "Do you want to update your subscription?", {
+                "affirmative": {
+                    "class": "btn-primary",
+                    "callback": function () {
+                        showLoading();
+                        submitSubscriptionUpdate(function (response) {
+                            hideLoading();
+                            if (response.status == true) {
+                                alertP("Updated", "Your subscription plan has been updated.");
+                                $(".product-container.chosen").removeClass("chosen");
+                                $(".product-container.selected").removeClass("selected");
+                                $(".product-container").filter(function () {
+                                    return $(this).attr("data-id") == response.subscription.api_product_id;
+                                }).addClass("chosen");
+                                updateSubscribeButton();
+                            } else {
+                                alertP("Error", "Unable to update your subscription plan, please try again later.")
+                            }
+
+                        }, function (xhr, status, error) {
+                            hideLoading();
+                        })
+                    },
+                    "dismiss": true
+                },
+                "negative": {
+                    "class": "btn-default",
+                    "dismiss": true
+                }
+            });
+        }
+
+        function submitSubscriptionUpdate(successCallback, errorCallback) {
+            $.ajax({
+                "url": $("#frm-subscription-update").attr("action"),
+                "method": "put",
+                "data": $("#frm-subscription-update").serialize(),
+                "dataType": "json",
+                "success": successCallback,
+                "error": errorCallback
+            })
         }
     </script>
 @stop

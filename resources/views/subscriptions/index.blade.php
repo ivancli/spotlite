@@ -1,6 +1,9 @@
 @extends('layouts.adminlte')
-@section('title', "Welcome to SpotLite")
-@section('header_title', "Welcome to SpotLite")
+@section('title', "Manage Subscription")
+@section('header_title', "Manage Subscription")
+@section('breadcrumbs')
+    {!! Breadcrumbs::render('subscription_index') !!}
+@stop
 @section('content')
     <div class="row">
         <div class="col-sm-12">

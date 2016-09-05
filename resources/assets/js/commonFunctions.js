@@ -46,7 +46,7 @@ function confirmP(title, bodyText, btnOpts) {
             })
             .text(typeof btnOpts.negative.text != 'undefined' ? btnOpts.negative.text : 'Cancel')
     );
-    var $modal = popupHTML(title, bodyText, $footer);
+    var $modal = popupHTML(title, bodyText, $footer, "sm");
     $modal.modal();
 }
 
@@ -73,7 +73,7 @@ function popupHTML(title, $content, $footer, dialogSize) {
     );
 
 
-    if (typeof $footer == 'undefined') {
+    if (typeof $footer == 'undefined' || $footer == null) {
         $footer = $("<button>").addClass("btn").attr({
             "type": "button",
             "data-dismiss": "modal"

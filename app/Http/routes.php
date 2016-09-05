@@ -18,21 +18,21 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('msg/subscription/update/{raw?}', 'MessageController@updateSubscription')->name("msg.subscription.update");
 
 
+        /* User profile related routes*/
+        Route::get('profile/edit', 'User\ProfileController@edit')->name('profile.edit');
+        Route::resource('profile', 'User\ProfileController', ['only' => [
+            'index', 'show', 'update',
+        ]]);
+        /* Group related routes*/
+        Route::get('group/first_login', 'User\GroupController@firstLogin');
+        Route::resource('group', 'User\GroupController');
+
+        /* User account related routes */
+        Route::get('account/edit', 'User\AccountController@edit')->name('account.edit');
+        Route::resource('account', 'User\AccountController');
     });
 
-    /* User account related routes */
-    Route::get('account/edit', 'User\AccountController@edit')->name('account.edit');
-    Route::resource('account', 'User\AccountController');
 
-    /* Group related routes*/
-    Route::get('group/first_login', 'User\GroupController@firstLogin');
-    Route::resource('group', 'User\GroupController');
-
-    /* User profile related routes*/
-    Route::get('profile/edit', 'User\ProfileController@edit')->name('profile.edit');
-    Route::resource('profile', 'User\ProfileController', ['only' => [
-        'index', 'show', 'update',
-    ]]);
 
 
     //for those users who registered but not yet subscribe
@@ -44,7 +44,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
 
 
-    /*logging*/
+
+
+
+    /* ADMIN */
+    /* logging */
     Route::resource('log/user_activity', 'Log\UserActivityLogController', ['only' => [
         'index', 'show'
     ]]);
