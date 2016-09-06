@@ -21,15 +21,15 @@
 .product-container.chosen {
     border-color: #24e900;
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(134, 233, 118, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(134, 233, 118, .6);
+    -webkit-box-shadow: inset 0 4px 4px rgba(0, 0, 0, .075), 0 0 10px rgba(134, 233, 118, 0.9);
+    box-shadow: inset 0 4px 4px rgba(0, 0, 0, .075), 0 0 10px rgba(134, 233, 118, .9);
 }
 
 .product-container.selected {
     border-color: #66afe9;
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    -webkit-box-shadow: inset 0 4px 4px rgba(0, 0, 0, .075), 0 0 10px rgba(102, 175, 233, .9);
+    box-shadow: inset 0 4px 4px rgba(0, 0, 0, .075), 0 0 10px rgba(102, 175, 233, .9)
 }
 
 .navbar-nav > .spotlite-user-menu > .dropdown-menu {
