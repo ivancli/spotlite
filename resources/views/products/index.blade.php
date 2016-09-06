@@ -34,11 +34,15 @@
         function appendCreateCategoryBlock() {
             showLoading();
             var $list = $(".list-container")
-            if ($list.find(".category-container.create").length == 0) {
+            if ($list.find(".category-wrapper.create").length == 0) {
                 $.get("{{route('category.create')}}", function (html) {
                     hideLoading();
                     $list.append(html);
+                    $list.find(".category-wrapper.create .category-name").focus();
                 });
+            } else {
+                hideLoading();
+                $list.find(".category-wrapper.create .category-name").focus();
             }
         }
     </script>

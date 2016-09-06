@@ -2,6 +2,7 @@
 namespace App\Repositories\ProductManagement;
 
 use App\Contracts\ProductManagement\CategoryManager;
+use App\Contracts\ProductManagement\ProductManager;
 use App\Models\Category;
 
 /**
@@ -12,6 +13,12 @@ use App\Models\Category;
  */
 class SLCategoryManager implements CategoryManager
 {
+    protected $productManager;
+
+    public function __construct(ProductManager $productManager)
+    {
+        $this->productManager = $productManager;
+    }
 
     public function getCategories()
     {
@@ -33,7 +40,7 @@ class SLCategoryManager implements CategoryManager
 
     public function updateCategory($id, $options)
     {
-        $category = Category::findOrFail($id);
+        $category = $this->getCategory($id);
         $category->update($options);
         return $category;
     }
@@ -41,6 +48,11 @@ class SLCategoryManager implements CategoryManager
     public function deleteCategory($id)
     {
         $category = Category::findOrFail($id);
+        if (!is_null($category->products)) {
+            foreach ($category->products as $product) {
+                $this->productManager->deleteProduct($product->getKey());
+            }
+        }
         $category->delete();
         return true;
     }

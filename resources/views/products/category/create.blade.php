@@ -12,7 +12,7 @@
 
                     {!! Form::open(array('route' => array('category.store'), 'method'=>'post', 'class'=>'frm-add-category', 'onsubmit' => 'btnAddCategoryOnClick(this); return false;')) !!}
                     <div class="input-group sl-input-group">
-                        <input type="text" name="category_name" class="form-control sl-form-control input-sm"
+                        <input type="text" name="category_name" class="form-control sl-form-control input-sm category-name"
                                placeholder="Category Name">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-primary btn-flat btn-sm">Add</button>
@@ -32,7 +32,9 @@
     </div>
     <script type="text/javascript">
         function cancelCreateCategory(el) {
-            $(el).closest(".category-wrapper.create").remove();
+            $(el).closest(".category-wrapper.create").slideUp("fast", function () {
+                $(this).remove();
+            });
         }
 
         function btnAddCategoryOnClick(el) {
@@ -46,10 +48,30 @@
                     hideLoading();
                     console.info(response);
                     if (response.status == true) {
-                        alertP("Create Category", "Category has been created.");
-                        window.location.reload();
+                        if (response.category != null) {
+                            showLoading();
+                            loadSingleCategory(response.category.urls.show, function (html) {
+                                hideLoading();
+                                alertP("Create Category", "Category has been created.");
+                                $(el).closest(".list-container").append(
+                                        html
+                                );
+                                $(el).closest(".category-wrapper.create").remove();
+                            });
+                        } else {
+                            alertP("Create Category", "Category has been created. But encountered error while page being lodaed.", function () {
+                                window.location.reload();
+                            });
+                        }
                     } else {
-                        alertP("Error", "Unable to add category, please try again later.");
+
+                        var errorMsg = "Unable to add category. ";
+                        if (response.errors != null) {
+                            $.each(response.errors, function (index, error) {
+                                errorMsg += error + " ";
+                            })
+                        }
+                        alertP("Error", errorMsg);
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -57,6 +79,10 @@
                     alertP("Error", "Unable to add category, please try again later.");
                 }
             })
+        }
+
+        function loadSingleCategory(url, callback) {
+            $.get(url, callback);
         }
     </script>
 </div>

@@ -102,12 +102,22 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $category = $this->categoryManager->getCategory($id);
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['category']));
+            } else {
+                return view('products.category.partials.single_category')->with(compact(['category']));
+            }
+        } else {
+            return view('products.category.partials.single_category')->with(compact(['category']));
+        }
     }
 
     /**
@@ -130,7 +140,34 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "category_name" => "required|max:255"
+        ]);
+        if ($validator->fails()) {
+            $status = false;
+            $errors = $validator->errors()->all();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+        } else {
+            $category = $this->categoryManager->updateCategory($id, $request->all());
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'category']));
+                } else {
+                    return compact(['status', 'category']);
+                }
+            } else {
+                return redirect()->route('product.index');
+            }
+        }
     }
 
     /**
@@ -142,7 +179,15 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        dd($request->all());
-        $this->categoryManager->deleteCategory($id);
+        $status = $this->categoryManager->deleteCategory($id);
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            return redirect()->route('product.index');
+        }
     }
 }

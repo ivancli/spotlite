@@ -10,32 +10,40 @@ namespace App\Repositories\ProductManagement;
 
 
 use App\Contracts\ProductManagement\SiteManager;
+use App\Models\Site;
 
 class SLSiteManager implements SiteManager
 {
 
     public function getSites()
     {
-        // TODO: Implement getSites() method.
+        $sites = Site::all();
+        return $sites;
     }
 
     public function getSite($id)
     {
-        // TODO: Implement getSite() method.
+        $site = Site::findOrFail($id);
+        return $site;
     }
 
     public function createSite($options)
     {
-        // TODO: Implement createSite() method.
+        $site = Site::create($options);
+        return $site;
     }
 
     public function updateSite($id, $options)
     {
-        // TODO: Implement updateSite() method.
+        $site = $this->getSite($id);
+        $site->update($options);
+        return $site;
     }
 
     public function deleteSite($id)
     {
-        // TODO: Implement deleteSite() method.
+        $site = $this->getSite($id);
+        $site->delete();
+        return true;
     }
 }

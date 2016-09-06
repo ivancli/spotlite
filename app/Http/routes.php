@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::resource('product', 'Product\ProductController');
         Route::resource('category', 'Product\CategoryController');
+        Route::resource('site', 'Product\SiteController');
     });
 
 

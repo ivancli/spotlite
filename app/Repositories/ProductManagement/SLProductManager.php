@@ -32,7 +32,7 @@ class SLProductManager implements ProductManager
 
     public function updateProduct($id, $options)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->getProduct($id);
         $product->update($options);
         return $product;
     }
