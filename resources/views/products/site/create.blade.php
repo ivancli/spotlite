@@ -31,7 +31,7 @@
                     hideLoading();
                     if (response.status == true) {
                         if ($.isFunction(options.callback)) {
-                            options.callback(response.site);
+                            options.callback(response);
                         }
                         $("#modal-site-store").modal("hide");
                     } else {

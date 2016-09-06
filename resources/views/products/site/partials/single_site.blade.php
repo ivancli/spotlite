@@ -1,5 +1,5 @@
 <tr class="site-wrapper">
-    <td>{{$site->site_url}}</td>
+    <td>{{parse_url($site->site_url)['host']}}</td>
     <td>{{$site->recent_price}}</td>
     <td></td>
     <td>{{$site->last_crawled_at}}</td>

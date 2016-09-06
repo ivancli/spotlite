@@ -27,3 +27,5 @@ IMPORTANT:
 5. Push logging to queue instead of logging immediately
 
 6. Update cancel subscription to use ajax.
+
+7. move xpath and other site attributes to pivot table product_sites

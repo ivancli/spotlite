@@ -54,7 +54,7 @@ class SiteController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "site_url" => "required|max:2083"
+            "site_url" => "required|url|max:2083"
         ]);
         if ($validator->fails()) {
             $status = false;
@@ -70,6 +70,11 @@ class SiteController extends Controller
             }
         } else {
             $site = $this->siteManager->createSite($request->all());
+
+            if ($request->has('product_id')) {
+                $site->products()->attach($request->get('product_id'));
+            }
+
             $status = true;
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
@@ -86,12 +91,22 @@ class SiteController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $site = $this->siteManager->getSite($id);
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['site']));
+            } else {
+                return view('products.site.partials.single_site')->with(compact(['site']));
+            }
+        } else {
+            return view('products.site.partials.single_site')->with(compact(['site']));
+        }
     }
 
     /**
