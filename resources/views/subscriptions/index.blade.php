@@ -22,9 +22,13 @@
                         <div class="col-sm-12">
                             <p>You are currently subscribed to <strong>{{$subscription->product->name}}</strong>
                                 package.</p>
-                            <p>Next payment will be processed at
-                                <strong>{{date('Y-m-d H:i:s', strtotime($subscription->next_assessment_at))}}</strong>.
+                            <p>Next payment will be processed on
+                                <strong>{{date('Y-m-d', strtotime($subscription->next_assessment_at))}}</strong>.
                             </p>
+                            @if(!is_null($subscription->trial_ended_at))
+                                <p>Your trial will be ended on
+                                    {{date('Y-m-d', strtotime($subscription->trial_ended_at))}}</p>
+                            @endif
                         </div>
                     </div>
                     {{dump($allSubs)}}

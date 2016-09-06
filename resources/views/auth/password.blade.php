@@ -1,34 +1,36 @@
 @extends('layouts.adminlte')
-@section('title', 'Account Settings')
-@section('header_title', 'Account Settings')
-@section('breadcrumbs')
-    {!! Breadcrumbs::render('account_index') !!}
-@stop
+@section('title', 'Forgot Password')
 @section('content')
     <div class="row">
-        <div class="col-lg-offset-4 col-lg-4 col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8">
+        <div class="col-sm-6">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Update Password</h3>
+                    <h3 class="box-title">Forgot Password</h3>
                 </div>
                 <div class="box-body">
-                    <p>By clicking the update password button, an email with update password link will be sent
-                        to <a href="mailto:{{$user->email}}">{{$user->email}}</a>.</p>
-                    {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
+                    <div class="um-form-container">
+                        <ul class="text-danger errors-container">
+                        </ul>
+                        {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
 
-                    <input type="hidden" name="email" value="{{$user->email}}">
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            {!! Form::submit('Update Password', ["class"=>"btn btn-default btn-sm", "href"=>"#"]) !!}
+                        <div class="form-group required">
+                            {!! Form::label('email', 'Email', array('class' => 'control-label')) !!}
+                            {!! Form::email('email', null, array('class' => 'form-control')) !!}
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 text-right">
+                                {!! Form::submit('Forgot', ["class"=>"btn btn-default btn-sm", "href"=>"#"]) !!}
+                            </div>
+                        </div>
+                        {!! Form::close() !!}
                     </div>
-                    {!! Form::close() !!}
                 </div>
             </div>
         </div>
     </div>
 @stop
+
 @section('scripts')
     <script type="text/javascript">
         function submitForgotPassword() {

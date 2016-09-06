@@ -18,19 +18,19 @@
                         @endif
                         {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login")) !!}
                         @include('auth.forms.login_form')
-                            <div class="row m-b-5">
-                                <div class="col-sm-6">
-                                    <a href="{{route('register.get')}}">Not a member yet? Click here to register.</a>
-                                </div>
-                                <div class="col-sm-6 text-right">
-                                    <a href="#">Forgot password?</a>
-                                </div>
+                        <div class="row m-b-5">
+                            <div class="col-sm-6">
+                                <a href="{{route('register.get')}}">Not a member yet? Click here to register.</a>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12 text-right">
-                                    {!! Form::submit('Login', ["class"=>"btn btn-default btn-sm"]) !!}
-                                </div>
+                            <div class="col-sm-6 text-right">
+                                <a href="{{route('password.get')}}">Forgot password?</a>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 text-right">
+                                {!! Form::submit('Login', ["class"=>"btn btn-default btn-sm"]) !!}
+                            </div>
+                        </div>
                         {!! Form::close() !!}
                     </div>
                 </div>

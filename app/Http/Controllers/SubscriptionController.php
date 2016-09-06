@@ -72,7 +72,7 @@ class SubscriptionController extends Controller
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
         event(new SubscriptionCreating());
         $user = auth()->user();
@@ -85,6 +85,32 @@ class SubscriptionController extends Controller
         $product = $this->subscriptionManager->getProduct($productId);
         if (!is_null($product)) {
             if ($product->require_credit_card) {
+                if (!is_null(auth()->user()->subscriptions->last())) {
+                    $previousSubscription = auth()->user()->subscriptions->last();
+                    $previousAPISubscription = $this->subscriptionManager->getSubscription(auth()->user()->subscriptions->last()->api_subscription_id);
+                    $previousAPICreditCard = $previousAPISubscription->credit_card;
+                    if (!is_null($previousAPICreditCard)) {
+                        if ($previousAPICreditCard->expiration_year > date("Y") || ($previousAPICreditCard->expiration_year == date("Y") && $previousAPICreditCard->expiration_month >= date('n'))) {
+
+                            $fields = new \stdClass();
+                            $subscription = new \stdClass();
+                            $subscription->product_id = $product->id;
+                            $subscription->customer_id = $previousSubscription->api_customer_id;
+                            $subscription->payment_profile_id = $previousAPICreditCard->id;
+                            $fields->subscription = $subscription;
+                            $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
+                            if (isset($result->subscription)) {
+                                $subscription = new Subscription();
+                                $subscription->user_id = auth()->user()->getKey();
+                                $subscription->api_product_id = $result->subscription->product->id;
+                                $subscription->api_subscription_id = $result->subscription->id;
+                                $subscription->api_customer_id = $result->subscription->customer->id;
+                                $subscription->save();
+                                return redirect()->route('subscription.index');
+                            }
+                        }
+                    }
+                }
                 /* redirect to Chargify payment gateway (signup page) */
                 $chargifyLink = array_first($product->public_signup_pages)->url;
                 $verificationCode = str_random(10);
@@ -127,7 +153,7 @@ class SubscriptionController extends Controller
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
                         event(new SubscriptionCompleted($sub));
-                        return redirect()->route('msg.subscription.welcome');
+                        return redirect()->route('subscription.index');
                     } catch (Exception $e) {
                         /*TODO need to handle exception properly*/
                         return $user;
@@ -230,7 +256,7 @@ class SubscriptionController extends Controller
         /*check current subscription has payment method or not*/
         if (is_null($apiSubscription->payment_type)) {
             //current subscription no payment method
-            return $this->store();
+            return $this->store($request);
         } else {
             //current subscription has payment method
             $fields = new \stdClass();

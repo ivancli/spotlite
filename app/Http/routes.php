@@ -62,4 +62,8 @@ Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
 Route::post('register', 'Auth\AuthController@postRegister')->name('register.post');
 
+Route::get('password', 'Auth\PasswordController@getEmail')->name('password.get');
+Route::post('password', 'Auth\PasswordController@postEmail')->name('password.post');
+Route::get('password/reset/{token}', 'Auth\PasswordController@getReset')->name('password.reset.get');
+Route::post('password/reset', 'Auth\PasswordController@postReset')->name('password.reset.post');
 Route::get('logout', 'Auth\AuthController@logout')->name('logout');

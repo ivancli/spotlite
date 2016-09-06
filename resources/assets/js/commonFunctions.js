@@ -7,10 +7,15 @@ function welcome(bodyText) {
  * simulate alert popup
  * @param title
  * @param bodyText
+ * @param callback
  */
-function alertP(title, bodyText) {
+function alertP(title, bodyText, callback) {
     var $modal = popupHTML(title, bodyText, null, "sm");
     $modal.modal();
+
+    if (typeof callback != 'undefined') {
+        $modal.on("hidden.bs.modal", callback)
+    }
 }
 
 /**
