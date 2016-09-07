@@ -15,6 +15,8 @@ interface SiteManager
 
     public function getSite($id);
 
+    public function getSiteByColumn($column, $value);
+
     public function createSite($options);
 
     public function updateSite($id, $options);

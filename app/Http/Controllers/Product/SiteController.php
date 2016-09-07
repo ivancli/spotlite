@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Contracts\ProductManagement\ProductManager;
 use App\Contracts\ProductManagement\SiteManager;
 use App\Http\Controllers\Controller;
+use App\Models\Site;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -23,11 +24,43 @@ class SiteController extends Controller
 
     /**
      * Display a listing of the resource.
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
+    }
+
+    public function getPrices(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "site_url" => "required|url|max:2083"
+        ]);
+        if ($validator->fails()) {
+            $status = false;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status']));
+                } else {
+                    return compact(['status']);
+                }
+            } else {
+                //TODO implement if needed
+            }
+        } else {
+            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'sites']));
+                } else {
+                    return compact(['status', 'sites']);
+                }
+            } else {
+                //TODO implement if needed
+            }
+        }
     }
 
     /**
@@ -69,12 +102,18 @@ class SiteController extends Controller
                 return redirect()->back()->withInput()->withErrors($validator);
             }
         } else {
-            $site = $this->siteManager->createSite($request->all());
+            if ($request->has('site_id')) {
+                $site = $this->siteManager->getSite($request->get('site_id'));
+                if ($request->has('product_id')) {
+                    $site->products()->attach($request->get('product_id'));
+                }
+            } else {
+                $site = $this->siteManager->createSite($request->all());
 
-            if ($request->has('product_id')) {
-                $site->products()->attach($request->get('product_id'));
+                if ($request->has('product_id')) {
+                    $site->products()->attach($request->get('product_id'));
+                }
             }
-
             $status = true;
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
@@ -97,7 +136,12 @@ class SiteController extends Controller
      */
     public function show(Request $request, $id)
     {
+        /* TODO there is yet no way to get around with this, unable to get last attached product_site_id */
+
         $site = $this->siteManager->getSite($id);
+//        if ($request->has('product_id')) {
+//            dump($site->products()->wherePivot("product_id", $request->get('product_id'))->get()->toArray());
+//        }
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['site']));
@@ -135,11 +179,37 @@ class SiteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $site = $this->siteManager->getSite($id);
+        if ($request->has('product_site_id')) {
+            $site->products()->wherePivot("product_site_id", $request->get('product_site_id'))->detach();
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status']));
+                } else {
+                    return compact(['status']);
+                }
+            } else {
+                return redirect()->route('product.index');
+            }
+        } else {
+            $status = false;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status']));
+                } else {
+                    return compact(['status']);
+                }
+            } else {
+                return redirect()->back()->withInput();
+            }
+        }
+
     }
 }

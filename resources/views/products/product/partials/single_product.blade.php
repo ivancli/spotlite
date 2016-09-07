@@ -190,10 +190,18 @@
                                 "callback": function (response) {
                                     if (response.status == true) {
                                         showLoading();
-                                        loadSingleSite(response.site.urls.show, function (singleSite) {
-                                            hideLoading();
-                                            $(el).closest(".product-wrapper").find(".tbl-site tbody").append(singleSite);
-                                        });
+                                        window.location.reload();
+//                                        $.ajax({
+//                                            "url": response.site.urls.show,
+//                                            "method": "get",
+//                                            "data":{
+//                                                "product_id": productID
+//                                            },
+//                                            "success": function(singleSite){
+//                                                hideLoading();
+//                                                $(el).closest(".product-wrapper").find(".tbl-site tbody").append(singleSite);
+//                                            }
+//                                        })
                                     } else {
                                         alertP("Unable to add site, please try again later.");
                                     }
@@ -210,10 +218,6 @@
                     alertP("Error", "Unable to show add site form, please try again later.");
                 }
             });
-        }
-
-        function loadSingleSite(url, callback) {
-            $.get(url, callback);
         }
     </script>
 </table>

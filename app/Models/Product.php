@@ -33,7 +33,7 @@ class Product extends Model
 
     public function sites()
     {
-        return $this->belongsToMany('App\Models\Site', 'product_sites', 'product_id', 'site_id')->withPivot('site_xpath');
+        return $this->belongsToMany('App\Models\Site', 'product_sites', 'product_id', 'site_id')->withPivot('product_site_id');
     }
 
     /**

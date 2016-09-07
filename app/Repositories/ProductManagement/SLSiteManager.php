@@ -27,9 +27,24 @@ class SLSiteManager implements SiteManager
         return $site;
     }
 
+    public function getSiteByColumn($column, $value)
+    {
+        $sites = Site::where($column, $value)->get();
+        return $sites;
+    }
+
     public function createSite($options)
     {
-        $site = Site::create($options);
+        $site = Site::where("site_url", $options['site_url'])->where(function ($query) use ($options) {
+            if (isset($options['site_xpath'])) {
+                $query->where('site_xpath', $options['site_xpath']);
+            } else {
+                $query->whereNull('site_xpath');
+            }
+        })->first();
+        if (is_null($site)) {
+            $site = Site::create($options);
+        }
         return $site;
     }
 

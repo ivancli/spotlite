@@ -13,12 +13,18 @@
                 <input type="hidden" name="product_id" value="{{$product->getKey()}}">
                 <div class="form-group required">
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label', 'placeholder'=>'Enter or copy URL')) !!}
-                    {!! Form::text('site_url', null, array('class' => 'form-control')) !!}
+                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url')) !!}
+                </div>
+                <div class="prices-container" style="display: none;">
+                    <p>Please select a correct price from below: </p>
                 </div>
                 {!! Form::close() !!}
+
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-create-site">OK</button>
+                <button class="btn btn-primary" id="btn-check-price">Check Price</button>
+                <button class="btn btn-primary" id="btn-create-site" style="display: none;">OK</button>
+                <button class="btn btn-warning" id="btn-report-error" style="display: none;">Error</button>
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
         </div>
@@ -51,6 +57,50 @@
                     hideLoading();
                     alertP("Error", "Unable to add site, please try again later.");
                 });
+            });
+            $("#btn-check-price").on("click", function () {
+                getPrices();
+            });
+        }
+
+        function getPrices() {
+            showLoading();
+            $.ajax({
+                "url": "{{route("site.prices")}}",
+                "method": "get",
+                "data": {
+                    "site_url": $("#txt-site-url").val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        if (response.sites.length > 0) {
+                            $.each(response.sites, function (index, site) {
+                                $(".prices-container").append(
+                                        $("<div>").append(
+                                                $("<input>").attr({
+                                                    "type": "radio",
+                                                    "value": site.site_id,
+                                                    "name": "site_id"
+                                                }),
+                                                $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
+                                        )
+                                )
+                            });
+                            $("#btn-check-price").hide();
+                            $(".prices-container").show();
+                            $("#btn-report-error").show();
+                        }
+                        $("#btn-create-site").show();
+                    } else {
+                        alertP("Error", "Unable to get price, please try again later");
+                    }
+                },
+                "error": function () {
+                    hideLoading();
+                    alertP("Error", "Unable to get price, please try again later");
+                }
             })
         }
 
