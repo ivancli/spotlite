@@ -1,9 +1,9 @@
 $(function () {
-    if (typeof user != 'undefined' && typeof user.is_first_login != 'undefined') {
+    if (typeof user != 'undefined' && typeof user.is_first_login != 'undefined' && user.subscriptions.length > 0) {
         if (user.is_first_login == 'y' && localStorage.getItem("met-first-login-welcome-msg-" + user.user_id) != 1) {
             showLoading();
             /*TODO show first login welcome message*/
-            $.get('msg/subscription/welcome/0', function (html) {
+            $.get('/msg/subscription/welcome/0', function (html) {
                 hideLoading();
                 console.info(html);
                 var $modal = popupFrame(html);
