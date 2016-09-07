@@ -1,8 +1,8 @@
 @extends('layouts.adminlte')
-@section('title', 'My Profile')
-@section('header_title', 'My Profile')
+@section('title', 'My Groups')
+@section('header_title', 'My Groups')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('profile_index', $user) !!}
+    {!! Breadcrumbs::render('group', $user) !!}
 @stop
 @section('content')
     <div class="row">
