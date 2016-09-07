@@ -72,6 +72,7 @@
                     },
                     {
                         "name": "parent_perm.name",
+                        "sortable": false,
                         "data": function (data) {
                             if (data.parent_perm != null) {
                                 return $("<div>").append(
