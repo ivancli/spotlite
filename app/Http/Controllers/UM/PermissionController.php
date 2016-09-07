@@ -54,8 +54,8 @@ class PermissionController extends UMPermissionController
     {
         $roles = UMRole::pluck('display_name', (new UMRole())->getKeyName());
         $permissions = UMPermission::pluck('display_name', (new UMPermission())->getKeyName());
-        $roles = array_prepend($roles, array('', ''));
-        $permissions = array_prepend($permissions, array('', ''));
+//        $roles = array_prepend($roles, array('', ''));
+//        $permissions = array_prepend($permissions, array('', ''));
         return view('um.permission.create')->with(compact(['roles', 'permissions']));
     }
 
