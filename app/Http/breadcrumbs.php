@@ -200,4 +200,10 @@ Breadcrumbs::register('subscription_edit', function ($breadcrumbs, $subscription
     $breadcrumbs->push('Change My Plan', route('subscription.edit', $subscription->getKey()));
 });
 
-
+/**
+ * Products
+ */
+Breadcrumbs::register('product_index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Products', route('product.index'));
+});

@@ -14,6 +14,11 @@ class CreateMainTablesForeignKeys extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
+        Schema::table('categories', function (Blueprint $table) {
+            $table->foreign('user_id')->references('user_id')->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
 //        Schema::table('sites', function (Blueprint $table) {
 //            $table->foreign('product_id')->references('product_id')->on('products')
 //                ->onDelete('cascade')
@@ -99,7 +104,7 @@ class CreateMainTablesForeignKeys extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
-        Schema::table('domains', function(Blueprint $table){
+        Schema::table('domains', function (Blueprint $table) {
             $table->foreign('cookie_id')->references('cookie_id')->on('cookies')
                 ->onDelete('set null')
                 ->onUpdate('cascade');
@@ -135,6 +140,9 @@ class CreateMainTablesForeignKeys extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropForeign('products_category_id_foreign');
+        });
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropForeign('categories_user_id_foreign');
         });
 //        Schema::table('sites', function (Blueprint $table) {
 //            $table->dropForeign('sites_product_id_foreign');

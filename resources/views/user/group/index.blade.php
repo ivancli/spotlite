@@ -46,7 +46,6 @@
                             No groups available, <a href="{{route('group.create')}}">click here to add a group</a>.
                         </p>
                     @endif
-
                 </div>
             </div>
         </div>

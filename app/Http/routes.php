@@ -30,9 +30,12 @@ Route::group(['middleware' => ['auth']], function () {
         /* User account related routes */
         Route::get('account/edit', 'User\AccountController@edit')->name('account.edit');
         Route::resource('account', 'User\AccountController');
+
+        Route::resource('product', 'Product\ProductController');
+        Route::resource('category', 'Product\CategoryController');
+        Route::get('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
+        Route::resource('site', 'Product\SiteController');
     });
-
-
 
 
     //for those users who registered but not yet subscribe
@@ -42,9 +45,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('subscription', 'SubscriptionController', ['except' => ['create']]);
 
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
-
-
-
 
 
     /* ADMIN */

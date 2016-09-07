@@ -12,9 +12,7 @@
                     <h3 class="box-title">Current Subscription</h3>
 
                     <div class="box-tools pull-right">
-                        {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'method' => 'delete', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
-                        {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-danger btn-sm"]) !!}
-                        {!! Form::close() !!}
+                        Reference ID: {{$subscription->customer->id}}
                     </div>
                 </div>
                 <div class="box-body">
@@ -38,6 +36,9 @@
                             <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-primary">
                                 Change My Plan
                             </a>
+                            {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'method' => 'delete', 'style'=>'display: inline-block', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
+                            {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-danger"]) !!}
+                            {!! Form::close() !!}
                             {{--<button class="btn btn-default">Update Payment Method</button>--}}
                         </div>
                     </div>

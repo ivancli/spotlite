@@ -40,14 +40,15 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Logs\UserActivityLog', 'user_id', 'user_id');
     }
 
+    public function categories()
+    {
+        return $this->hasMany('App\Models\Category', 'user_id', 'user_id');
+    }
 
-
-
-
-
-
-
-
+    public function products()
+    {
+        return $this->hasMany('App\Models\Product', 'user_id', 'user_id');
+    }
 
 
     /*TODO the following blocks of code need to be refined*/
