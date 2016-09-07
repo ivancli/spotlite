@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="modal-site-store">
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-site-update">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,40 +9,59 @@
             <div class="modal-body">
                 <ul class="text-danger errors-container">
                 </ul>
-                {!! Form::open(array('route' => array('site.store'), 'method'=>'post', "onsubmit"=>"return false", "id"=>"frm-site-store")) !!}
+                {!! Form::model($site, array('route' => array('site.update', $site->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-site-update")) !!}
                 <input type="hidden" name="product_id" value="{{$product->getKey()}}">
+                <input type="hidden" name="product_site_id" value="{{$product_site_id}}">
                 <div class="form-group required">
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label', 'placeholder'=>'Enter or copy URL')) !!}
-                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url')) !!}
+                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'onkeyup'=>'updateEditSiteModelButtonStatus(this)')) !!}
                 </div>
-                <div class="prices-container" style="display: none;">
-                    <p>Please select a correct price from below: </p>
+
+                @if(!is_null($site->recent_price))
+                    <p>Current price: ${{number_format($site->recent_price, 2, '.', ',')}}</p>
+                @endif
+                <div class="prices-container">
+                    @if(isset($sites) && $sites->count() > 0)
+                        <p>Please select a correct price from below: </p>
+                        @foreach($sites as $priceSite)
+                            <div>
+                                <input type="radio" name="site_id"
+                                       value="{{$priceSite->getKey()}}" {{$priceSite->getKey() == $site->getKey() ? 'checked="checked"' : ""}}>
+                                &nbsp;
+                                ${{number_format($priceSite->recent_price, 2, '.', ',')}}
+                            </div>
+                        @endforeach
+                    @else
+                        <p>Price will be available soon.</p>
+                    @endif
                 </div>
                 {!! Form::close() !!}
-
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-check-price">Check Price</button>
-                <button class="btn btn-primary" id="btn-create-site" style="display: none;">OK</button>
-                <button class="btn btn-warning" id="btn-report-error" style="display: none;">Error</button>
+                <button class="btn btn-primary" id="btn-check-price" style="display: none;">Check Price</button>
+                <button class="btn btn-primary" id="btn-edit-site">OK</button>
+
+                <button class="btn btn-warning" id="btn-report-error"
+                        style="{{!isset($sites) || $sites->count() == 0 ? 'display: none;' : ""}}">Error
+                </button>
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
         </div>
     </div>
     <script type="text/javascript">
         function modalReady(options) {
-            $("#btn-create-site").on("click", function () {
+            $("#btn-edit-site").on("click", function () {
                 showLoading();
-                submitSiteStore(function (response) {
+                submitSiteUpdate(function (response) {
                     hideLoading();
                     if (response.status == true) {
                         if ($.isFunction(options.callback)) {
                             options.callback(response);
                         }
-                        $("#modal-site-store").modal("hide");
+                        $("#modal-site-update").modal("hide");
                     } else {
                         if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-site-store .errors-container");
+                            var $errorContainer = $("#modal-site-update .errors-container");
                             $errorContainer.empty();
                             $.each(response.errors, function (index, error) {
                                 $errorContainer.append(
@@ -50,12 +69,12 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to add site, please try again later.");
+                            alertP("Error", "Unable to update this site, please try again later.");
                         }
                     }
                 }, function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to add site, please try again later.");
+                    alertP("Error", "Unable to update this site, please try again later.");
                 });
             });
             $("#btn-check-price").on("click", function () {
@@ -65,16 +84,16 @@
             $("#btn-report-error").on("click", function () {
                 $(".rad-site-id").prop("checked", false);
                 showLoading();
-                submitSiteStore(function (response) {
+                submitSiteUpdate(function (response) {
                     hideLoading();
                     if (response.status == true) {
                         if ($.isFunction(options.callback)) {
                             options.callback(response);
                         }
-                        $("#modal-site-store").modal("hide");
+                        $("#modal-site-update").modal("hide");
                     } else {
                         if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-site-store .errors-container");
+                            var $errorContainer = $("#modal-site-update .errors-container");
                             $errorContainer.empty();
                             $.each(response.errors, function (index, error) {
                                 $errorContainer.append(
@@ -82,14 +101,25 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to add site, please try again later.");
+                            alertP("Error", "Unable to update this site, please try again later.");
                         }
                     }
                 }, function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to add site, please try again later.");
+                    alertP("Error", "Unable to update this site, please try again later.");
                 });
             });
+        }
+
+        function submitSiteUpdate(successCallback, errorCallback) {
+            $.ajax({
+                "url": $("#frm-site-update").attr("action"),
+                "method": "put",
+                "data": $("#frm-site-update").serialize(),
+                "dataType": "json",
+                "success": successCallback,
+                "error": errorCallback
+            })
         }
 
         function getPrices() {
@@ -105,6 +135,9 @@
                     hideLoading();
                     if (response.status == true) {
                         if (response.sites.length > 0) {
+                            $(".prices-container").empty().append(
+                                    $("<p>").text("Please select a correct price from below: ")
+                            );
                             $.each(response.sites, function (index, site) {
                                 $(".prices-container").append(
                                         $("<div>").append(
@@ -112,7 +145,7 @@
                                                     "type": "radio",
                                                     "value": site.site_id,
                                                     "name": "site_id"
-                                                }).addClass("rad-site-id"),
+                                                }),
                                                 "&nbsp;",
                                                 $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
                                         )
@@ -125,7 +158,7 @@
                         }
                         $(".prices-container").show();
                         $("#btn-check-price").hide();
-                        $("#btn-create-site").show();
+                        $("#btn-edit-site").show();
                     } else {
                         alertP("Error", "Unable to get price, please try again later");
                     }
@@ -137,15 +170,17 @@
             })
         }
 
-        function submitSiteStore(successCallback, errorCallback) {
-            $.ajax({
-                "url": $("#frm-site-store").attr("action"),
-                "method": "post",
-                "data": $("#frm-site-store").serialize(),
-                "dataType": "json",
-                "success": successCallback,
-                "error": errorCallback
-            })
+        function updateEditSiteModelButtonStatus(el) {
+            var siteURL = $(el).val();
+            if (siteURL != "{{$site->site_url}}") {
+                $("#btn-check-price").show();
+                $("#btn-edit-site").hide();
+                $("#btn-report-error").hide();
+            }else{
+                $("#btn-check-price").hide();
+                $("#btn-edit-site").show();
+                $("#btn-report-error").show();
+            }
         }
     </script>
 </div>

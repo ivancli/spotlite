@@ -169,8 +169,6 @@
         function showAddSiteForm(el) {
             showLoading();
             var productID = $(el).closest(".product-wrapper").attr("data-product-id");
-
-
             $.ajax({
                 "url": "{{route('site.create')}}",
                 "method": "get",
@@ -191,17 +189,6 @@
                                     if (response.status == true) {
                                         showLoading();
                                         window.location.reload();
-//                                        $.ajax({
-//                                            "url": response.site.urls.show,
-//                                            "method": "get",
-//                                            "data":{
-//                                                "product_id": productID
-//                                            },
-//                                            "success": function(singleSite){
-//                                                hideLoading();
-//                                                $(el).closest(".product-wrapper").find(".tbl-site tbody").append(singleSite);
-//                                            }
-//                                        })
                                     } else {
                                         alertP("Unable to add site, please try again later.");
                                     }

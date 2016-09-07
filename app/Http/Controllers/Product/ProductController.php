@@ -3,6 +3,15 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\ProductManagement\CategoryManager;
 use App\Contracts\ProductManagement\ProductManager;
+use App\Events\Products\Product\ProductCreateViewed;
+use App\Events\Products\Product\ProductDeleted;
+use App\Events\Products\Product\ProductDeleting;
+use App\Events\Products\Product\ProductListViewed;
+use App\Events\Products\Product\ProductSingleViewed;
+use App\Events\Products\Product\ProductStored;
+use App\Events\Products\Product\ProductStoring;
+use App\Events\Products\Product\ProductUpdated;
+use App\Events\Products\Product\ProductUpdating;
 use App\Http\Controllers\Controller;
 
 use App\Models\Category;
@@ -36,6 +45,7 @@ class ProductController extends Controller
     public function index()
     {
         $categories = auth()->user()->categories;
+        event(new ProductListViewed());
         return view('products.index')->with(compact(['categories']));
     }
 
@@ -50,6 +60,7 @@ class ProductController extends Controller
         if ($request->has('category_id')) {
             $category = $this->categoryManager->getCategory($request->get('category_id'));
         }
+        event(new ProductCreateViewed());
         return view('products.product.create')->with(compact(['category']));
     }
 
@@ -77,7 +88,9 @@ class ProductController extends Controller
                 return redirect()->back()->withInput()->withErrors($validator);
             }
         } else {
+            event(new ProductStoring());
             $product = $this->productManager->createProduct($request->all());
+            event(new ProductStored($product));
             $status = true;
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
@@ -103,6 +116,7 @@ class ProductController extends Controller
     public function show(Request $request, $id)
     {
         $product = $this->productManager->getProduct($id);
+        event(new ProductSingleViewed($product));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['product']));
@@ -150,7 +164,10 @@ class ProductController extends Controller
                 return redirect()->back()->withInput()->withErrors($validator);
             }
         } else {
+            $product = $this->productManager->getProduct($id);
+            event(new ProductUpdating($product));
             $product = $this->productManager->updateProduct($id, $request->all());
+            event(new ProductUpdated($product));
             $status = true;
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
@@ -173,7 +190,10 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        $product = $this->productManager->getProduct($id);
+        event(new ProductDeleting($product));
         $status = $this->productManager->deleteProduct($id);
+        event(new ProductDeleted($product));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['status']));

@@ -2,6 +2,14 @@
 namespace App\Http\Controllers\Product;
 
 use App\Contracts\ProductManagement\CategoryManager;
+use App\Events\Products\Category\CategoryCreateViewed;
+use App\Events\Products\Category\CategoryDeleted;
+use App\Events\Products\Category\CategoryDeleting;
+use App\Events\Products\Category\CategorySingleViewed;
+use App\Events\Products\Category\CategoryStored;
+use App\Events\Products\Category\CategoryStoring;
+use App\Events\Products\Category\CategoryUpdated;
+use App\Events\Products\Category\CategoryUpdating;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -41,6 +49,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        event(new CategoryCreateViewed());
         return view('products.category.create');
     }
 
@@ -70,6 +79,7 @@ class CategoryController extends Controller
                 return redirect()->back()->withInput()->withErrors($validator);
             }
         } else {
+            event(new CategoryStoring());
             $currentCategoryNames = auth()->user()->categories->pluck("category_name")->toArray();
             if (in_array($request->get('category_name'), $currentCategoryNames)) {
                 $status = false;
@@ -86,6 +96,7 @@ class CategoryController extends Controller
             } else {
                 $category = $this->categoryManager->createCategory($input);
                 $status = true;
+                event(new CategoryStored($category));
                 if ($request->ajax()) {
                     if ($request->wantsJson()) {
                         return response()->json(compact(['status', 'category']));
@@ -109,6 +120,7 @@ class CategoryController extends Controller
     public function show(Request $request, $id)
     {
         $category = $this->categoryManager->getCategory($id);
+        event(new CategorySingleViewed($category));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['category']));
@@ -157,7 +169,9 @@ class CategoryController extends Controller
             }
         } else {
             $category = $this->categoryManager->updateCategory($id, $request->all());
+            event(new CategoryUpdating($category));
             $status = true;
+            event(new CategoryUpdated($category));
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'category']));
@@ -179,7 +193,11 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        /*TODO do we need delete event here?*/
+        $category = $this->categoryManager->getCategory($id);
+        event(new CategoryDeleting($category));
         $status = $this->categoryManager->deleteCategory($id);
+        event(new CategoryDeleted($category));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['status']));

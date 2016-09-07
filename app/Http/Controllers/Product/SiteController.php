@@ -49,7 +49,9 @@ class SiteController extends Controller
                 //TODO implement if needed
             }
         } else {
-            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
+
+            $sites = Site::where("site_url", $request->get('site_url'))->whereNotNull("recent_price")->get();
+//            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
             $status = true;
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
@@ -156,12 +158,27 @@ class SiteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        $product_site_id = $request->get('product_site_id');
+        $site = $this->siteManager->getSite($id);
+        $product = $site->products()->wherePivot("product_site_id", $product_site_id)->first();
+        $sites = Site::where("site_url", $site->site_url)->whereNotNull("recent_price")->get();
+//        $sites = $this->siteManager->getSiteByColumn('site_url', $site->site_url);
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'site', 'product', 'sites']));
+            } else {
+                return view('products.site.edit')->with(compact(['status', 'site', 'product', 'sites', 'product_site_id']));
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
     }
 
     /**
@@ -173,7 +190,40 @@ class SiteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "product_id" => "required",
+            "product_site_id" => "required"
+        ]);
+        if ($validator->fails()) {
+
+        } else {
+            $originalSite = $this->siteManager->getSite($id);
+            $product_id = $request->get('product_id');
+            $product = $this->productManager->getProduct($product_id);
+            $product_site_id = $request->get('product_site_id');
+            if ($request->has('site_id')) {
+                $newSite = $this->siteManager->getSite($request->get('site_id'));
+            } elseif ($request->has('site_url')) {
+                $newSite = $this->siteManager->createSite(array(
+                    "site_url" => $request->get('site_url'),
+                ));
+            }
+
+            if ($originalSite->getKey() != $newSite->getKey()) {
+                $originalSite->products()->wherePivot("product_site_id", $product_site_id)->detach();
+                $newSite->products()->attach($product->getKey());
+            }
+            $status = true;
+        }
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
     }
 
     /**
