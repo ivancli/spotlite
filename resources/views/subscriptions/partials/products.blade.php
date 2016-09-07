@@ -5,7 +5,7 @@
              data-id="{{$item->product->id}}" style="border: 1px solid lightgrey; border-radius: 20px;">
             <h4 style="text-transform: uppercase; color: #78a300;">{{$item->product->name}}</h4>
             {{--product_id: {{$item->product->id}}--}}
-            <p>{{$item->product->description}}</p>
+            {!! $item->product->description !!}
 
             @if(!is_null($item->product->trial_interval) && $item->product->trial_interval != 0)
                 <p style="color: #78a300;">
