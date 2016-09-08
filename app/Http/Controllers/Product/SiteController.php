@@ -4,6 +4,16 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\ProductManagement\ProductManager;
 use App\Contracts\ProductManagement\SiteManager;
+use App\Events\Products\Site\SiteAttached;
+use App\Events\Products\Site\SiteCreateViewed;
+use App\Events\Products\Site\SiteDetached;
+use App\Events\Products\Site\SiteEditViewed;
+use App\Events\Products\Site\SitePricesViewed;
+use App\Events\Products\Site\SiteSingleViewed;
+use App\Events\Products\Site\SiteStored;
+use App\Events\Products\Site\SiteStoring;
+use App\Events\Products\Site\SiteUpdated;
+use App\Events\Products\Site\SiteUpdating;
 use App\Http\Controllers\Controller;
 use App\Models\Site;
 use Illuminate\Http\Request;
@@ -53,6 +63,7 @@ class SiteController extends Controller
             $sites = Site::where("site_url", $request->get('site_url'))->whereNotNull("recent_price")->get();
 //            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
             $status = true;
+            event(new SitePricesViewed());
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'sites']));
@@ -76,6 +87,7 @@ class SiteController extends Controller
         if ($request->has('product_id')) {
             $product = $this->productManager->getProduct($request->get('product_id'));
         }
+        event(new SiteCreateViewed());
         return view('products.site.create')->with(compact(['product']));
 
     }
@@ -104,6 +116,7 @@ class SiteController extends Controller
                 return redirect()->back()->withInput()->withErrors($validator);
             }
         } else {
+            event(new SiteStoring());
             if ($request->has('site_id')) {
                 $site = $this->siteManager->getSite($request->get('site_id'));
                 if ($request->has('product_id')) {
@@ -117,6 +130,7 @@ class SiteController extends Controller
                 }
             }
             $status = true;
+            event(new SiteStored($site));
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'site']));
@@ -144,6 +158,7 @@ class SiteController extends Controller
 //        if ($request->has('product_id')) {
 //            dump($site->products()->wherePivot("product_id", $request->get('product_id'))->get()->toArray());
 //        }
+        event(new SiteSingleViewed($site));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['site']));
@@ -164,8 +179,10 @@ class SiteController extends Controller
      */
     public function edit(Request $request, $id)
     {
+
         $product_site_id = $request->get('product_site_id');
         $site = $this->siteManager->getSite($id);
+        event(new SiteEditViewed($site));
         $product = $site->products()->wherePivot("product_site_id", $product_site_id)->first();
         $sites = Site::where("site_url", $site->site_url)->whereNotNull("recent_price")->get();
 //        $sites = $this->siteManager->getSiteByColumn('site_url', $site->site_url);
@@ -203,17 +220,24 @@ class SiteController extends Controller
             $product_site_id = $request->get('product_site_id');
             if ($request->has('site_id')) {
                 $newSite = $this->siteManager->getSite($request->get('site_id'));
+
             } elseif ($request->has('site_url')) {
                 $newSite = $this->siteManager->createSite(array(
                     "site_url" => $request->get('site_url'),
                 ));
             }
-
-            if ($originalSite->getKey() != $newSite->getKey()) {
-                $originalSite->products()->wherePivot("product_site_id", $product_site_id)->detach();
-                $newSite->products()->attach($product->getKey());
+            if (isset($newSite)) {
+                event(new SiteUpdating($newSite));
+                if ($originalSite->getKey() != $newSite->getKey()) {
+                    $oldProduct = $originalSite->products()->wherePivot("product_site_id", $product_site_id)->first();
+                    $originalSite->products()->wherePivot("product_site_id", $product_site_id)->detach();
+                    event(new SiteDetached($originalSite, $oldProduct));
+                    $newSite->products()->attach($product->getKey());
+                    event(new SiteAttached($newSite, $product));
+                }
+                $status = true;
+                event(new SiteUpdated($newSite));
             }
-            $status = true;
         }
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -237,7 +261,9 @@ class SiteController extends Controller
     {
         $site = $this->siteManager->getSite($id);
         if ($request->has('product_site_id')) {
+            $oldProduct = $site->products()->wherePivot("product_site_id", $request->get('product_site_id'))->first();
             $site->products()->wherePivot("product_site_id", $request->get('product_site_id'))->detach();
+            event(new SiteDetached($site, $oldProduct));
             $status = true;
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
