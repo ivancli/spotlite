@@ -25,7 +25,7 @@
                         <p>Please select a correct price from below: </p>
                         @foreach($sites as $priceSite)
                             <div>
-                                <input type="radio" name="site_id"
+                                <input type="radio" name="site_id" class="rad-site-id"
                                        value="{{$priceSite->getKey()}}" {{$priceSite->getKey() == $site->getKey() ? 'checked="checked"' : ""}}>
                                 &nbsp;
                                 ${{number_format($priceSite->recent_price, 2, '.', ',')}}
@@ -145,7 +145,7 @@
                                                     "type": "radio",
                                                     "value": site.site_id,
                                                     "name": "site_id"
-                                                }),
+                                                }).addClass("rad-site-id"),
                                                 "&nbsp;",
                                                 $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
                                         )
