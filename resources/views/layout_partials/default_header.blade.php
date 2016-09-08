@@ -23,8 +23,8 @@
                 @if(Auth::check())
                     <li class="dropdown spotlite-user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-user"></i>&nbsp;
                             <span class="hidden-xs">
-                                <i class="fa fa-user"></i>&nbsp;
                                 {{Auth::user()->first_name}} {{Auth::user()->last_name}}
                             </span>
                         </a>
