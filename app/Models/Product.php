@@ -36,9 +36,10 @@ class Product extends Model
         return $this->belongsToMany('App\Models\Site', 'product_sites', 'product_id', 'site_id')->withPivot('product_site_id');
     }
 
-    public function alerts()
+    public function alert()
     {
-        return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'product_id');
+//        return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'product_id');
+        return $this->hasOne('App\Models\Alert', 'alert_owner_id', 'product_id');
     }
 
     /**

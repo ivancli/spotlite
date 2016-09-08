@@ -34,7 +34,7 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary">OK</button>
+                <button class="btn btn-primary" id="btn-update-product-alert">OK</button>
                 <button class="btn btn-danger">Delete</button>
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
@@ -47,16 +47,17 @@
                 "tokenSeparators": [',', ' ', ';'],
                 "placeholder": "Enter Email Address and Press Enter Key"
             });
+            $("#btn-update-product-alert").on("click", submitUpdateProductAlert)
         }
 
-        function submitUpdateProductAlert(callback) {
+        function submitUpdateProductAlert() {
             $.ajax({
                 "url": "{{route('alert.product.update', $product->getKey())}}",
                 "method": "put",
                 "data": $("#frm-alert-product-update").serialize(),
                 "dataType": "json",
                 "success": function (response) {
-
+                    console.info('response', response);
                 },
                 "error": function (xhr, status, error) {
 
