@@ -2340,11 +2340,11 @@
         },
         {
             "name": "invigor/um",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "ssh://git@repo.globalit.net.au:234/srv/repo/git/invigor-user-management",
-                "reference": "8908013026bdbcd55d3be9c5a448bcc72ae9c581"
+                "reference": "7ed28d9fb10d232f9e23957ac5bb0c92f2d062f2"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -2383,7 +2383,7 @@
                 }
             ],
             "description": "User management package",
-            "time": "2016-09-08 00:55:32"
+            "time": "2016-09-08 01:44:02"
         },
         {
             "name": "laravelcollective/html",
