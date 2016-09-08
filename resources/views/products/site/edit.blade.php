@@ -24,11 +24,12 @@
                     @if(isset($sites) && $sites->count() > 0)
                         <p>Please select a correct price from below: </p>
                         @foreach($sites as $priceSite)
-                            <div>
-                                <input type="radio" name="site_id" class="rad-site-id"
-                                       value="{{$priceSite->getKey()}}" {{$priceSite->getKey() == $site->getKey() ? 'checked="checked"' : ""}}>
-                                &nbsp;
-                                ${{number_format($priceSite->recent_price, 2, '.', ',')}}
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="site_id" class="rad-site-id"
+                                           value="{{$priceSite->getKey()}}" {{$priceSite->getKey() == $site->getKey() ? 'checked="checked"' : ""}}>
+                                    ${{number_format($priceSite->recent_price, 2, '.', ',')}}
+                                </label>
                             </div>
                         @endforeach
                     @else
@@ -141,14 +142,15 @@
                             $.each(response.sites, function (index, site) {
                                 $(".prices-container").append(
                                         $("<div>").append(
-                                                $("<input>").attr({
-                                                    "type": "radio",
-                                                    "value": site.site_id,
-                                                    "name": "site_id"
-                                                }).addClass("rad-site-id"),
-                                                "&nbsp;",
-                                                $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
-                                        )
+                                                $("<label>").append(
+                                                        $("<input>").attr({
+                                                            "type": "radio",
+                                                            "value": site.site_id,
+                                                            "name": "site_id"
+                                                        }).addClass("rad-site-id"),
+                                                        $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
+                                                )
+                                        ).addClass("radio")
                                 )
                             });
                             $(".prices-container").show();
@@ -176,7 +178,7 @@
                 $("#btn-check-price").show();
                 $("#btn-edit-site").hide();
                 $("#btn-report-error").hide();
-            }else{
+            } else {
                 $("#btn-check-price").hide();
                 $("#btn-edit-site").show();
                 $("#btn-report-error").show();

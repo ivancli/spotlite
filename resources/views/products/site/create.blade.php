@@ -108,14 +108,15 @@
                             $.each(response.sites, function (index, site) {
                                 $(".prices-container").append(
                                         $("<div>").append(
-                                                $("<input>").attr({
-                                                    "type": "radio",
-                                                    "value": site.site_id,
-                                                    "name": "site_id"
-                                                }).addClass("rad-site-id"),
-                                                "&nbsp;",
-                                                $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
-                                        )
+                                                $("<label>").append(
+                                                        $("<input>").attr({
+                                                            "type": "radio",
+                                                            "value": site.site_id,
+                                                            "name": "site_id"
+                                                        }).addClass("rad-site-id"),
+                                                        $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
+                                                )
+                                        ).addClass("radio")
                                 )
                             });
                             $(".prices-container").show();
