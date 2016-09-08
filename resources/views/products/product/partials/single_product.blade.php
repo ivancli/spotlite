@@ -1,4 +1,5 @@
-<table class="table table-condensed product-wrapper" data-product-id="{{$product->getKey()}}">
+<table class="table table-condensed product-wrapper" data-product-id="{{$product->getKey()}}"
+       data-alert-link="{{$product->urls['alert']}}">
     <thead>
     <tr>
         <th class="shrink product-th">
@@ -26,7 +27,7 @@
             </div>
             {!! Form::close() !!}
             &nbsp;
-            <button class="btn btn-primary btn-xs" onclick="showAddSiteForm(this)">
+            <button class="btn btn-primary btn-xs" onclick="showAddSiteForm(this); return false;">
                 <i class="fa fa-plus"></i> Add Site
             </button>
         </th>
@@ -34,17 +35,17 @@
             <a href="#" class="btn-action">
                 <i class="fa fa-line-chart"></i>
             </a>
-            <a href="#" class="btn-action">
+            <a href="#" class="btn-action" onclick="showProductAlertForm(this); return false;">
                 <i class="fa fa-bell-o"></i>
             </a>
             <a href="#" class="btn-action">
                 <i class="fa fa-envelope-o"></i>
             </a>
-            <a href="#" class="btn-action" onclick="toggleEditProductName(this)">
+            <a href="#" class="btn-action" onclick="toggleEditProductName(this); return false;">
                 <i class="fa fa-pencil-square-o"></i>
             </a>
             {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
-            <a href="#" class="btn-action" onclick="btnDeleteProductOnClick(this)">
+            <a href="#" class="btn-action" onclick="btnDeleteProductOnClick(this); return false;">
                 <i class="glyphicon glyphicon-trash text-danger"></i>
             </a>
             {!! Form::close() !!}
@@ -198,6 +199,48 @@
                     });
                     $modal.on("hidden.bs.modal", function () {
                         $("#modal-site-store").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    alertP("Error", "Unable to show add site form, please try again later.");
+                }
+            });
+        }
+
+        function showProductAlertForm(el) {
+            showLoading();
+            var productID = $(el).closest(".product-wrapper").attr("data-product-id");
+
+            $.ajax({
+                "url": $(el).closest(".product-wrapper").attr("data-alert-link"),
+                "method": "get",
+                "data": {
+                    "product_id": productID
+                },
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal({
+                        "backdrop": "static",
+                        "keyboard": false
+                    });
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+//                                    if (response.status == true) {
+//                                        showLoading();
+//                                        window.location.reload();
+//                                    } else {
+//                                        alertP("Unable to add site, please try again later.");
+//                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-alert-product").remove();
                     });
                 },
                 "error": function (xhr, status, error) {

@@ -31,6 +31,11 @@ class Category extends Model
         return $this->hasMany('App\Models\Product', 'category_id', 'category_id');
     }
 
+    public function alerts()
+    {
+        return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'category_id');
+    }
+
     /**
      * back up category before deleting
      * @return bool|null

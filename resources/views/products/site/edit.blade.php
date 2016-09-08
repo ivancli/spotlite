@@ -79,7 +79,7 @@
                 });
             });
             $("#btn-check-price").on("click", function () {
-                getPrices();
+                getPricesEdit();
             });
 
             $("#btn-report-error").on("click", function () {
@@ -123,7 +123,7 @@
             })
         }
 
-        function getPrices() {
+        function getPricesEdit() {
             showLoading();
             $.ajax({
                 "url": "{{route("site.prices")}}",

@@ -27,6 +27,11 @@ class Site extends Model
         return $this->belongsToMany('App\Models\Product', 'product_sites', 'site_id', 'product_id')->withPivot('product_site_id');
     }
 
+    public function alerts()
+    {
+        return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'site_id');
+    }
+
     /**
      * back up category before deleting
      * @return bool|null

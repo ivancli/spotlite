@@ -36,6 +36,11 @@ class Product extends Model
         return $this->belongsToMany('App\Models\Site', 'product_sites', 'product_id', 'site_id')->withPivot('product_site_id');
     }
 
+    public function alerts()
+    {
+        return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'product_id');
+    }
+
     /**
      * back up category before deleting
      * @return bool|null
@@ -54,6 +59,7 @@ class Product extends Model
             "show" => route("product.show", $this->getKey()),
             "edit" => route("product.edit", $this->getKey()),
             "delete" => route("product.destroy", $this->getKey()),
+            "alert" => route("alert.product.edit", $this->getKey()),
         );
     }
 }

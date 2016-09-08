@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Site;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +17,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        Relation::morphMap([
+            'product' => Product::class,
+            'category' => Category::class,
+            'site' => Site::class
+        ]);
     }
 
     /**
@@ -29,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\ProductManagement\CategoryManager', 'App\Repositories\ProductManagement\SLCategoryManager');
         $this->app->bind('App\Contracts\ProductManagement\ProductManager', 'App\Repositories\ProductManagement\SLProductManager');
         $this->app->bind('App\Contracts\ProductManagement\SiteManager', 'App\Repositories\ProductManagement\SLSiteManager');
+
 
     }
 }
