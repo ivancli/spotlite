@@ -24,7 +24,7 @@
         "phpunit/phpunit": "~4.0",
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*",
-        "invigor/um": "dev-master",
+        "invigor/um": "1.*",
         "driftyco/ionicons": "2.0.1"
     },
     "autoload": {

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6b155741329e4dba022852ccac5f5651",
-    "content-hash": "fad45197d4265a69fac92a3963bef4f1",
+    "hash": "3cc0f351b89927fe61379553fe2e9e17",
+    "content-hash": "f2b61c35be1b926b7299a73ed1a0bd2d",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -2340,11 +2340,11 @@
         },
         {
             "name": "invigor/um",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "ssh://git@repo.globalit.net.au:234/srv/repo/git/invigor-user-management",
-                "reference": "e228c5126052528fe7ca5a05c2be39017262cdf0"
+                "reference": "8908013026bdbcd55d3be9c5a448bcc72ae9c581"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -2383,7 +2383,7 @@
                 }
             ],
             "description": "User management package",
-            "time": "2016-09-07 11:58:50"
+            "time": "2016-09-08 00:55:32"
         },
         {
             "name": "laravelcollective/html",
@@ -3666,9 +3666,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "invigor/um": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
