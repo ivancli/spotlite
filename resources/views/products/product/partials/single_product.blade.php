@@ -71,7 +71,7 @@
                     <tbody>
                     {{--sites here--}}
                     @if(!is_null($product->sites))
-                        @foreach($product->sites as $site)
+                        @foreach($product->productSites as $productSite)
                             @include('products.site.partials.single_site')
                         @endforeach
                     @endif
@@ -171,7 +171,7 @@
             showLoading();
             var productID = $(el).closest(".product-wrapper").attr("data-product-id");
             $.ajax({
-                "url": "{{route('site.create')}}",
+                "url": "{{route('product_site.create')}}",
                 "method": "get",
                 "data": {
                     "product_id": productID
@@ -189,7 +189,12 @@
                                 "callback": function (response) {
                                     if (response.status == true) {
                                         showLoading();
-                                        window.location.reload();
+                                        if(typeof response.productSite != 'undefined'){
+                                            $.get(response.productSite.urls.show, function(html){
+                                                hideLoading();
+                                                $(el).closest(".product-wrapper").find(".tbl-site tbody").append(html);
+                                            });
+                                        }
                                     } else {
                                         alertP("Unable to add site, please try again later.");
                                     }

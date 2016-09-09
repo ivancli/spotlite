@@ -16,7 +16,7 @@ class Alert extends Model
 {
     protected $primaryKey = "alert_id";
     protected $fillable = [
-        "alert_owner_id", "alert_owner_type", "comparison_price_type", "comparison_price", "comparison_site_id"
+        "alert_owner_id", "alert_owner_type", "comparison_price_type", "comparison_price", "comparison_site_id", "operator"
     ];
     public $timestamps = false;
     protected $appends = ["urls"];
@@ -24,6 +24,16 @@ class Alert extends Model
     public function alertable()
     {
         return $this->morphTo("alert_owner", "alert_owner_type");
+    }
+
+    public function excludedSites()
+    {
+        return $this->belongsToMany('App\Models\Site', 'alert_exclude_sites', 'alert_id', 'site_id');
+    }
+
+    public function emails()
+    {
+        return $this->hasMany('App\Models\AlertEmail', 'alert_id', 'alert_id');
     }
 
     /**

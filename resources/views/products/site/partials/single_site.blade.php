@@ -1,19 +1,22 @@
-<tr class="site-wrapper" data-product-site-id="{{$site->pivot->product_site_id}}"
-    data-site-edit-url="{{$site->urls['edit']}}">
-    <td>{{parse_url($site->site_url)['host']}}</td>
-    <td>{{is_null($site->recent_price) ? '' : "$" . number_format($site->recent_price, 2, '.', ',')}}</td>
+<tr class="site-wrapper" data-product-site-id="{{$productSite->getKey()}}"
+    data-site-edit-url="{{$productSite->urls['edit']}}"
+    data-site-alert-url="{{route('alert.site.edit', $productSite->getKey())}}">
+    <td>{{parse_url($productSite->site->site_url)['host']}}</td>
+    <td>{{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}</td>
     <td></td>
-    <td>{{$site->last_crawled_at}}</td>
+    <td>{{$productSite->site->last_crawled_at}}</td>
     <td class="text-right action-cell">
-        <a href="#" class="btn-action">
+        <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;">
             <i class="fa fa-bell-o"></i>
         </a>
         <a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;">
             <i class="fa fa-pencil-square-o"></i>
         </a>
 
-        {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
-        <input type="hidden" name="product_site_id" value="{{$site->pivot->product_site_id}}">
+        {{--TODO not yet finished--}}
+        {{--change the submitting parameters and update the product site controller destroy function--}}
+        {!! Form::model($productSite, array('route' => array('product_site.destroy', $productSite->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
+        {{--<input type="hidden" name="product_site_id" value="{{$site->pivot->product_site_id}}">--}}
         <a href="#" class="btn-action" onclick="btnDeleteSiteOnClick(this); return false;">
             <i class="glyphicon glyphicon-trash text-danger"></i>
         </a>
@@ -79,7 +82,13 @@
                                 "callback": function (response) {
                                     if (response.status == true) {
                                         showLoading();
-                                        window.location.reload();
+                                        console.info('response.productSite', response.productSite);
+                                        if (typeof response.productSite != 'undefined') {
+                                            $.get(response.productSite.urls.show, function (html) {
+                                                hideLoading();
+                                                $(el).closest(".site-wrapper").replaceWith(html);
+                                            });
+                                        }
                                     } else {
                                         alertP("Unable to edit this site, please try again later.");
                                     }
@@ -96,6 +105,49 @@
                     alertP("Error", "Unable to edit this site, please try again later.");
                 }
             })
+        }
+
+        function showSiteAlertForm(el) {
+            showLoading();
+            var productSiteID = $(el).closest(".site-wrapper").attr("data-product-site-id");
+
+            $.ajax({
+                "url": $(el).closest(".site-wrapper").attr("data-site-alert-url"),
+                "method": "get",
+                "data": {
+                    "product_id": productID
+                },
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal({
+                        "backdrop": "static",
+                        "keyboard": false
+                    });
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+
+//                                    if (response.status == true) {
+//                                        showLoading();
+//                                        window.location.reload();
+//                                    } else {
+//                                        alertP("Unable to add site, please try again later.");
+//                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-alert-product").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    alertP("Error", "Unable to show add site form, please try again later.");
+                }
+            });
         }
     </script>
 </tr>

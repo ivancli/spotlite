@@ -39,7 +39,7 @@ elixir(function(mix) {
     ], "public/css/main.css", "./");
     mix.scripts([
         // "node_modules/jquery/dist/jquery.js",
-        'vendor/almasaeed2010/adminlte/plugins/jQuery/jQuery-2.2.3.min.js',
+        'vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js',
         "node_modules/bootstrap/dist/js/bootstrap.js",
         "node_modules/datatables.net/js/jquery.dataTables.js",
         "node_modules/datatables.net-bs/js/dataTables.bootstrap.js",

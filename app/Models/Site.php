@@ -27,9 +27,19 @@ class Site extends Model
         return $this->belongsToMany('App\Models\Product', 'product_sites', 'site_id', 'product_id')->withPivot('product_site_id');
     }
 
+    public function productSite()
+    {
+        return $this->hasMany('App\Models\ProductSite', 'site_id', 'site_id');
+    }
+
     public function alerts()
     {
         return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'site_id');
+    }
+
+    public function excludedByAlerts()
+    {
+        return $this->belongsToMany('App\Models\Alert', 'alert_exclude_sites', 'site_id', 'alert_id');
     }
 
     /**
@@ -48,9 +58,9 @@ class Site extends Model
     public function getUrlsAttribute()
     {
         return array(
-            "show" => route("site.show", $this->getKey()),
-            "edit" => route("site.edit", $this->getKey()),
-            "delete" => route("site.destroy", $this->getKey()),
+//            "show" => route("site.show", $this->getKey()),
+//            "edit" => route("site.edit", $this->getKey()),
+//            "delete" => route("site.destroy", $this->getKey()),
         );
     }
 }

@@ -28,4 +28,8 @@ IMPORTANT:
 
 6. Update cancel subscription to use ajax.
 
-7. move xpath and other site attributes to pivot table product_sites
+7. text ellipses on exclude sides drop down
+
+8. enhance the validator to be more dynamic
+
+9. fucking refactor the whole site and product site stuff

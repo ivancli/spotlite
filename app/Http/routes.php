@@ -35,15 +35,16 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('product', 'Product\ProductController');
         Route::resource('category', 'Product\CategoryController');
         Route::get('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
-        Route::resource('site', 'Product\SiteController');
+//        Route::resource('site', 'Product\SiteController');
+        Route::resource('product_site', 'Product\ProductSiteController');
 
         /*alert routes*/
         Route::get('alert/category/{category_id}/edit', 'Product\AlertController@editCategoryAlert')->name('alert.category.edit');
         Route::put('alert/category/{category_id}', 'Product\AlertController@updateCategoryAlert')->name('alert.category.update');
         Route::get('alert/product/{product_id}/edit', 'Product\AlertController@editProductAlert')->name('alert.product.edit');
         Route::put('alert/product/{product_id}', 'Product\AlertController@updateProductAlert')->name('alert.product.update');
-        Route::get('alert/site/{site_id}/edit', 'Product\AlertController@editSiteAlert')->name('alert.site.edit');
-        Route::put('alert/site/{site_id}', 'Product\AlertController@updateSiteAlert')->name('alert.site.update');
+        Route::get('alert/site/{product_site_id}/edit', 'Product\AlertController@editSiteAlert')->name('alert.site.edit');
+        Route::put('alert/site/{product_site_id}', 'Product\AlertController@updateSiteAlert')->name('alert.site.update');
         Route::resource('alert', 'Product\AlertController');
     });
 

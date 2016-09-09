@@ -31,14 +31,22 @@ class Product extends Model
         return $this->belongsTo('App\Models\Category', 'category_id', 'category_id');
     }
 
+//    public function sites()
+//    {
+//        return $this->belongsToMany('App\Models\Site', 'product_sites', 'product_id', 'site_id')->withPivot('product_site_id');
+//    }
     public function sites()
     {
-        return $this->belongsToMany('App\Models\Site', 'product_sites', 'product_id', 'site_id')->withPivot('product_site_id');
+        return $this->hasManyThrough('App\Models\Site', 'App\Models\ProductSite', 'product_id', 'site_id', 'product_id');
+    }
+
+    public function productSites()
+    {
+        return $this->hasMany('App\Models\ProductSite', 'product_id', 'product_id');
     }
 
     public function alert()
     {
-//        return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'product_id');
         return $this->hasOne('App\Models\Alert', 'alert_owner_id', 'product_id');
     }
 
