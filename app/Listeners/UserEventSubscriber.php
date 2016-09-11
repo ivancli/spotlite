@@ -29,6 +29,7 @@ class UserEventSubscriber
     public function onUserLogin($event)
     {
         $this->userActivityLogger->storeLog("login");
+        dispatch(new LogUserActivity(auth()->user(), "login"));
 //        dispatch(new LogUserActivity(auth()->user(), "login"));
 
         $user = $event->user;
@@ -44,7 +45,7 @@ class UserEventSubscriber
     public function onUserLogout($event)
     {
 //        $this->userActivityLogger->storeLog("logout");
-        dispatch(new LogUserActivity(auth()->user(), $this->userActivityLogger->storeLog("logout")));
+        dispatch(new LogUserActivity(auth()->user(), "logout"));
     }
 
     public function onProfileViewed($event)
