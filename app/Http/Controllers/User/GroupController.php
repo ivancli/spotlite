@@ -23,9 +23,12 @@ use App\Events\Group\GroupStored;
 use App\Events\Group\GroupStoring;
 use App\Events\Group\GroupUpdated;
 use App\Events\Group\GroupUpdating;
+use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\User;
+use App\Validators\User\Group\StoreValidator;
+use App\Validators\User\Group\UpdateValidator;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -71,27 +74,25 @@ class GroupController extends Controller
         return view('user.group.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreValidator $storeValidator, Request $request)
     {
-        /*TODO enhance validator here to user repository pattern*/
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'url' => 'required|url|max:2083',
-            'description' => 'max:255'
-        ]);
-        if ($validator->fails()) {
+
+        try {
+            $storeValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
             if ($request->ajax()) {
-                $status = false;
-                $errors = $validator->errors()->all();
                 if ($request->wantsJson()) {
-                    return response()->json(compact(['errors', 'status']));
+                    return response()->json(compact(['status', 'errors']));
                 } else {
-                    return compact(['errors', 'status']);
+                    return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->route('group.create')->withErrors($validator)->withInput();
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
+
         $group = Group::where("name", $request->get("name"))->first();
         if (!is_null($group)) {
             auth()->user()->groups()->attach($group->getKey());
@@ -136,9 +137,24 @@ class GroupController extends Controller
         return view('user.group.edit')->with(compact(['group']));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        /*TODO basic validation here*/
+        try {
+            $updateValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
         $group = Group::findOrFail($id);
         if (!in_array($id, auth()->user()->groups->pluck((new Group)->getKeyName())->toArray())) {
             abort(403);

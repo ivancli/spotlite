@@ -1,4 +1,11 @@
 $(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+
     if (typeof user != 'undefined' && typeof user.is_first_login != 'undefined' && typeof user.subscriptions != 'undefined' && user.subscriptions.length > 0) {
         if (user.is_first_login == 'y' && localStorage.getItem("met-first-login-welcome-msg-" + user.user_id) != 1) {
             showLoading();

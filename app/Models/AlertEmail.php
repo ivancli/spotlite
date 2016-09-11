@@ -9,6 +9,7 @@
 namespace App\Models;
 
 
+use App\Models\DeletedRecordModels\DeletedAlertEmail;
 use Illuminate\Database\Eloquent\Model;
 
 class AlertEmail extends Model
@@ -21,5 +22,13 @@ class AlertEmail extends Model
     public function alert()
     {
         return $this->belongsTo('App\Models\Alert', 'alert_id', 'alert_id');
+    }
+
+    public function delete()
+    {
+        DeletedAlertEmail::create(array(
+            "content" => $this->toJson()
+        ));
+        return parent::delete();
     }
 }

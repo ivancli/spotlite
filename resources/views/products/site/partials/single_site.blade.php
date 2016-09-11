@@ -1,13 +1,13 @@
 <tr class="site-wrapper" data-product-site-id="{{$productSite->getKey()}}"
     data-site-edit-url="{{$productSite->urls['edit']}}"
-    data-site-alert-url="{{route('alert.site.edit', $productSite->getKey())}}">
+    data-site-alert-url="{{$productSite->urls['alert']}}">
     <td>{{parse_url($productSite->site->site_url)['host']}}</td>
     <td>{{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}</td>
     <td></td>
     <td>{{$productSite->site->last_crawled_at}}</td>
     <td class="text-right action-cell">
         <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;">
-            <i class="fa fa-bell-o"></i>
+            <i class="fa {{!is_null($productSite->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
         </a>
         <a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;">
             <i class="fa fa-pencil-square-o"></i>
@@ -109,14 +109,9 @@
 
         function showSiteAlertForm(el) {
             showLoading();
-            var productSiteID = $(el).closest(".site-wrapper").attr("data-product-site-id");
-
             $.ajax({
                 "url": $(el).closest(".site-wrapper").attr("data-site-alert-url"),
                 "method": "get",
-                "data": {
-                    "product_id": productID
-                },
                 "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
@@ -127,20 +122,21 @@
                     $modal.on("shown.bs.modal", function () {
                         if ($.isFunction(modalReady)) {
                             modalReady({
-                                "callback": function (response) {
-
-//                                    if (response.status == true) {
-//                                        showLoading();
-//                                        window.location.reload();
-//                                    } else {
-//                                        alertP("Unable to add site, please try again later.");
-//                                    }
+                                "updateCallback": function (response) {
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-bell alert-enabled");
+                                    }
+                                },
+                                "deleteCallback": function (response) {
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-bell-o");
+                                    }
                                 }
                             })
                         }
                     });
                     $modal.on("hidden.bs.modal", function () {
-                        $("#modal-alert-product").remove();
+                        $("#modal-alert-product-site").remove();
                     });
                 },
                 "error": function (xhr, status, error) {

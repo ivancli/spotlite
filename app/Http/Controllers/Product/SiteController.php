@@ -14,8 +14,12 @@ use App\Events\Products\Site\SiteStored;
 use App\Events\Products\Site\SiteStoring;
 use App\Events\Products\Site\SiteUpdated;
 use App\Events\Products\Site\SiteUpdating;
+use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\Site;
+use App\Validators\Product\Site\GetPriceValidator;
+use App\Validators\Product\Site\StoreValidator;
+use App\Validators\Product\Site\UpdateValidator;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -42,37 +46,36 @@ class SiteController extends Controller
 
     }
 
-    public function getPrices(Request $request)
+    public function getPrices(GetPriceValidator $getPriceValidator, Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            "site_url" => "required|url|max:2083"
-        ]);
-        if ($validator->fails()) {
+        try {
+            $getPriceValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
-                    return response()->json(compact(['status']));
+                    return response()->json(compact(['status', 'errors']));
                 } else {
-                    return compact(['status']);
+                    return compact(['status', 'errors']);
                 }
             } else {
-                //TODO implement if needed
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
+        $sites = Site::where("site_url", $request->get('site_url'))->whereNotNull("recent_price")->get();
+//            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
+        $status = true;
+        event(new SitePricesViewed());
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'sites']));
+            } else {
+                return compact(['status', 'sites']);
             }
         } else {
-
-            $sites = Site::where("site_url", $request->get('site_url'))->whereNotNull("recent_price")->get();
-//            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
-            $status = true;
-            event(new SitePricesViewed());
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'sites']));
-                } else {
-                    return compact(['status', 'sites']);
-                }
-            } else {
-                //TODO implement if needed
-            }
+            //TODO implement if needed
         }
     }
 
@@ -80,7 +83,7 @@ class SiteController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -95,17 +98,18 @@ class SiteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreValidator $storeValidator
      * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreValidator $storeValidator, Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            "site_url" => "required|url|max:2083"
-        ]);
-        if ($validator->fails()) {
+
+        try {
+            $storeValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
@@ -113,34 +117,35 @@ class SiteController extends Controller
                     return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
-            }
-        } else {
-            event(new SiteStoring());
-            if ($request->has('site_id')) {
-                $site = $this->siteManager->getSite($request->get('site_id'));
-                if ($request->has('product_id')) {
-                    $site->products()->attach($request->get('product_id'));
-                }
-            } else {
-                $site = $this->siteManager->createSite($request->all());
-
-                if ($request->has('product_id')) {
-                    $site->products()->attach($request->get('product_id'));
-                }
-            }
-            $status = true;
-            event(new SiteStored($site));
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'site']));
-                } else {
-                    return compact(['status', 'site']);
-                }
-            } else {
-                return redirect()->route('product.index');
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
+
+        event(new SiteStoring());
+        if ($request->has('site_id')) {
+            $site = $this->siteManager->getSite($request->get('site_id'));
+            if ($request->has('product_id')) {
+                $site->products()->attach($request->get('product_id'));
+            }
+        } else {
+            $site = $this->siteManager->createSite($request->all());
+
+            if ($request->has('product_id')) {
+                $site->products()->attach($request->get('product_id'));
+            }
+        }
+        $status = true;
+        event(new SiteStored($site));
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'site']));
+            } else {
+                return compact(['status', 'site']);
+            }
+        } else {
+            return redirect()->route('product.index');
+        }
+
     }
 
     /**
@@ -148,7 +153,7 @@ class SiteController extends Controller
      *
      * @param Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function show(Request $request, $id)
     {
@@ -175,7 +180,7 @@ class SiteController extends Controller
      *
      * @param Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit(Request $request, $id)
     {
@@ -201,43 +206,51 @@ class SiteController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateValidator $updateValidator
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            "product_id" => "required",
-            "product_site_id" => "required"
-        ]);
-        if ($validator->fails()) {
-
-        } else {
-            $originalSite = $this->siteManager->getSite($id);
-            $product_id = $request->get('product_id');
-            $product = $this->productManager->getProduct($product_id);
-            $product_site_id = $request->get('product_site_id');
-            if ($request->has('site_id')) {
-                $newSite = $this->siteManager->getSite($request->get('site_id'));
-
-            } elseif ($request->has('site_url')) {
-                $newSite = $this->siteManager->createSite(array(
-                    "site_url" => $request->get('site_url'),
-                ));
-            }
-            if (isset($newSite)) {
-                event(new SiteUpdating($newSite));
-                if ($originalSite->getKey() != $newSite->getKey()) {
-                    $oldProduct = $originalSite->products()->wherePivot("product_site_id", $product_site_id)->first();
-                    $originalSite->products()->wherePivot("product_site_id", $product_site_id)->detach();
-                    event(new SiteDetached($originalSite, $oldProduct));
-                    $newSite->products()->attach($product->getKey());
-                    event(new SiteAttached($newSite, $product));
+        try {
+            $updateValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
                 }
-                $status = true;
-                event(new SiteUpdated($newSite));
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
             }
+        }
+        $originalSite = $this->siteManager->getSite($id);
+        $product_id = $request->get('product_id');
+        $product = $this->productManager->getProduct($product_id);
+        $product_site_id = $request->get('product_site_id');
+        if ($request->has('site_id')) {
+            $newSite = $this->siteManager->getSite($request->get('site_id'));
+
+        } elseif ($request->has('site_url')) {
+            $newSite = $this->siteManager->createSite(array(
+                "site_url" => $request->get('site_url'),
+            ));
+        }
+        if (isset($newSite)) {
+            event(new SiteUpdating($newSite));
+            if ($originalSite->getKey() != $newSite->getKey()) {
+                $oldProduct = $originalSite->products()->wherePivot("product_site_id", $product_site_id)->first();
+                $originalSite->products()->wherePivot("product_site_id", $product_site_id)->detach();
+                event(new SiteDetached($originalSite, $oldProduct));
+                $newSite->products()->attach($product->getKey());
+                event(new SiteAttached($newSite, $product));
+            }
+            $status = true;
+            event(new SiteUpdated($newSite));
         }
         if ($request->ajax()) {
             if ($request->wantsJson()) {

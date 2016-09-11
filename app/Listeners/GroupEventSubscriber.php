@@ -1,7 +1,8 @@
 <?php
 namespace App\Listeners;
 
-use App\Contracts\LogManagement\Logger;
+use App\Contracts\LogManagement\UserActivityLogger;
+use App\Jobs\LogUserActivity;
 use App\Models\DeletedRecordModels\DeletedGroup;
 
 //use App\Jobs\LogUserActivity;
@@ -15,85 +16,97 @@ use App\Models\DeletedRecordModels\DeletedGroup;
 class GroupEventSubscriber
 {
 
-    protected $logger;
+    protected $userActivityLogger;
 
-    public function __construct(Logger $logger)
+    public function __construct(UserActivityLogger $userActivityLogger)
     {
-        $this->logger = $logger;
+        $this->userActivityLogger = $userActivityLogger;
     }
 
     public function onFirstLoginViewed($event)
     {
-        $this->logger->storeLog("viewed first login popup");
-    }
+//        $this->userActivityLogger->storeLog("viewed first login popup");
+        dispatch(new LogUserActivity(auth()->user(), "viewed first login popup"));}
 
     public function onGroupAttached($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("attached group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("attached group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "attached group - {$group->getKey()}"));
     }
 
     public function onGroupCreateViewed($event)
     {
-        $this->logger->storeLog("viewed create page of group");
+//        $this->userActivityLogger->storeLog("viewed create page of group");
+        dispatch(new LogUserActivity(auth()->user(), "viewed create page of group"));
     }
 
     public function onGroupDeleted($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("deleted group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("deleted group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "deleted group - {$group->getKey()}"));
     }
 
     public function onGroupDeleting($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("deleting group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("deleting group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "deleting group - {$group->getKey()}"));
     }
 
     public function onGroupDetached($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("detached group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("detached group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "detached group - {$group->getKey()}"));
     }
 
     public function onGroupEditViewed($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("viewed edit page of group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed edit page of group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed edit page of group - {$group->getKey()}"));
     }
 
     public function onGroupListViewed($event)
     {
-        $this->logger->storeLog("viewed list page of group");
+//        $this->userActivityLogger->storeLog("viewed list page of group");
+        dispatch(new LogUserActivity(auth()->user(), "viewed list page of group"));
     }
 
     public function onGroupSingleViewed($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("viewed single page of group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed single page of group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed single page of group - {$group->getKey()}"));
     }
 
     public function onGroupStored($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("stored group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("stored group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "stored group - {$group->getKey()}"));
     }
 
     public function onGroupStoring($event)
     {
-        $this->logger->storeLog("storing group");
+//        $this->userActivityLogger->storeLog("storing group");
+        dispatch(new LogUserActivity(auth()->user(), "storing group"));
     }
 
     public function onGroupUpdated($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("updated group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("updated group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updated group - {$group->getKey()}"));
     }
 
     public function onGroupUpdating($event)
     {
         $group = $event->group;
-        $this->logger->storeLog("updating group - {$group->getKey()}");
+//        $this->userActivityLogger->storeLog("updating group - {$group->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updating group - {$group->getKey()}"));
     }
 
     /**

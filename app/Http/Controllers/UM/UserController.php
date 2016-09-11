@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers\UM;
 
+use App\Exceptions\ValidationException;
 use App\Models\Group;
 use App\Models\User;
+use App\Validators\UM\User\StoreValidator;
+use App\Validators\UM\User\UpdateValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Invigor\UM\Controllers\UMUserController;
@@ -11,13 +14,19 @@ use Invigor\UM\UMRole;
 
 class UserController extends UMUserController
 {
-    public function __construct()
+    protected $storeValidator;
+    protected $updateValidator;
+
+    public function __construct(StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
         parent::__construct();
         $this->middleware('permission:create_user', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_user', ['only' => ['index', 'show']]);
         $this->middleware('permission:update_user', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete_user', ['only' => ['destroy']]);
+
+        $this->storeValidator = $storeValidator;
+        $this->updateValidator = $updateValidator;
     }
 
     /**
@@ -25,7 +34,7 @@ class UserController extends UMUserController
      *
      * @param  Request $request
      * @param  null $format
-     * @return \Illuminate\Http\Response|\stdClass
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View|\stdClass
      * @internal  param null $view
      */
     public function index(Request $request, $format = null)
@@ -88,7 +97,7 @@ class UserController extends UMUserController
 
     /**
      * Show the form for creating a new resource.
-     * @return  \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @internal  param null $view
      */
     public function create()
@@ -103,47 +112,43 @@ class UserController extends UMUserController
      *
      * @param    \Illuminate\Http\Request $request
      * @param  null $route
-     * @return  bool|\Illuminate\Http\Response
+     * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      * @internal  param null $view
      */
     public function store(Request $request, $route = null)
     {
-        /*validation*/
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-        ]);
-        if ($validator->fails()) {
+
+        try {
+            $this->storeValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
+            $errors = $e->getErrors();
             if ($request->ajax()) {
-                $errors = $validator->errors()->all();
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
                 } else {
-                    return $errors;
+                    return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withErrors($validator)->withInput();
+                return redirect()->back()->withInput()->withErrors($errors);
             }
+        }
+
+        /* insert */
+        $user = parent::store($request);
+        if ($user === false) {
+            abort(404);
+            return false;
         } else {
-            /* insert */
-            $user = parent::store($request);
-            if ($user === false) {
-                abort(404);
-                return false;
-            } else {
-                $status = true;
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['user', 'status']));
-                    } else {
-                        return $user;
-                    }
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['user', 'status']));
                 } else {
-                    return redirect()->route('um.user.show', $user->getKey())->with(compact(['user', 'status']));
+                    return $user;
                 }
+            } else {
+                return redirect()->route('um.user.show', $user->getKey())->with(compact(['user', 'status']));
             }
         }
     }
@@ -206,40 +211,37 @@ class UserController extends UMUserController
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $id . ',' . (new User)->getKeyName(),
-            'password' => 'min:6|confirmed',
-        ]);
-        if ($validator->fails()) {
+        try {
+            $input = $request->all();
+            $input['id'] = $id;
+            $this->updateValidator->validate($input);
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
-                    return response()->json(compact(['errors', 'status']));
+                    return response()->json(compact(['status', 'errors']));
                 } else {
-                    return $errors;
+                    return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
+        }
+        $user = parent::update($request, $id);
+        if ($user === false) {
+            abort(404);
+            return false;
         } else {
-            $user = parent::update($request, $id);
-            if ($user === false) {
-                abort(404);
-                return false;
-            } else {
-                $status = true;
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['user', 'status']));
-                    } else {
-                        return $user;
-                    }
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['user', 'status']));
                 } else {
-                    return redirect()->route("um.user.show", $user->getKey())->with(compact(['user', 'status']));
+                    return $user;
                 }
+            } else {
+                return redirect()->route("um.user.show", $user->getKey())->with(compact(['user', 'status']));
             }
         }
     }

@@ -1,9 +1,10 @@
 <?php
 namespace App\Listeners;
 
-use App\Contracts\LogManagement\Logger;
 
 //use App\Jobs\LogUserActivity;
+use App\Contracts\LogManagement\UserActivityLogger;
+use App\Jobs\LogUserActivity;
 
 /**
  * Created by PhpStorm.
@@ -14,21 +15,20 @@ use App\Contracts\LogManagement\Logger;
 class UserEventSubscriber
 {
 
-    protected $logger;
+    protected $userActivityLogger;
 
-    public function __construct(Logger $logger)
+    public function __construct(UserActivityLogger $userActivityLogger)
     {
-        $this->logger = $logger;
+        $this->userActivityLogger = $userActivityLogger;
     }
 
     /**
      * Handle user login events.
      * @param $event
-     * @internal param Logger $logger
      */
     public function onUserLogin($event)
     {
-        $this->logger->storeLog("login");
+        $this->userActivityLogger->storeLog("login");
 //        dispatch(new LogUserActivity(auth()->user(), "login"));
 
         $user = $event->user;
@@ -43,56 +43,64 @@ class UserEventSubscriber
 
     public function onUserLogout($event)
     {
-        $this->logger->storeLog("logout");
-//        dispatch(new LogUserActivity(auth()->user(), "logout"));
+//        $this->userActivityLogger->storeLog("logout");
+        dispatch(new LogUserActivity(auth()->user(), $this->userActivityLogger->storeLog("logout")));
     }
 
     public function onProfileViewed($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("viewed profile of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed profile of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed profile of user_id - {$user->getKey()}"));
     }
 
     public function onProfileEditViewed($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("viewed edit profile of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed edit profile of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed edit profile of user_id - {$user->getKey()}"));
     }
 
     public function onProfileUpdating($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("updating profile of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("updating profile of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updating profile of user_id - {$user->getKey()}"));
     }
 
     public function onProfileUpdated($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("updated profile of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("updated profile of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updated profile of user_id - {$user->getKey()}"));
     }
 
     public function onAccountViewed($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("viewed account of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed account of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed account of user_id - {$user->getKey()}"));
     }
 
     public function onAccountEditViewed($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("viewed edit account of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed edit account of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed edit account of user_id - {$user->getKey()}"));
     }
 
     public function onAccountUpdating($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("updating account of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("updating account of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updating account of user_id - {$user->getKey()}"));
     }
 
     public function onAccountUpdated($event)
     {
         $user = $event->user;
-        $this->logger->storeLog("updated account of user_id - {$user->getKey()}");
+//        $this->userActivityLogger->storeLog("updated account of user_id - {$user->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updated account of user_id - {$user->getKey()}"));
     }
 
     /**

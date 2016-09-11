@@ -19,9 +19,12 @@ use App\Events\Products\Site\SiteSingleViewed;
 use App\Events\Products\Site\SiteStored;
 use App\Events\Products\Site\SiteStoring;
 use App\Events\Products\Site\SiteUpdating;
+use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\ProductSite;
 use App\Models\Site;
+use App\Validators\Product\ProductSite\StoreProductSiteValidator;
+use App\Validators\Product\ProductSite\UpdateProductSiteValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,7 +55,7 @@ class ProductSiteController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -67,17 +70,17 @@ class ProductSiteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreProductSiteValidator $storeProductSiteValidator
      * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductSiteValidator $storeProductSiteValidator, Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            "site_url" => "required|url|max:2083"
-        ]);
-        if ($validator->fails()) {
+        try {
+            $storeProductSiteValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
@@ -85,34 +88,34 @@ class ProductSiteController extends Controller
                     return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
+        event(new SiteStoring());
+        if ($request->has('site_id')) {
+            $productSite = ProductSite::create(array(
+                "site_id" => $request->get('site_id'),
+                "product_id" => $request->get('product_id')
+            ));
+        } else {
+            $site = $this->siteManager->createSite($request->all());
+            event(new SiteStored($site));
+
+            $productSite = ProductSite::create(array(
+                "site_id" => $site->getKey(),
+                "product_id" => $request->get('product_id')
+            ));
+        }
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'productSite']));
+            } else {
+                return compact(['status', 'productSite']);
             }
         } else {
-            event(new SiteStoring());
-            if ($request->has('site_id')) {
-                $productSite = ProductSite::create(array(
-                    "site_id" => $request->get('site_id'),
-                    "product_id" => $request->get('product_id')
-                ));
-            } else {
-                $site = $this->siteManager->createSite($request->all());
-                event(new SiteStored($site));
-
-                $productSite = ProductSite::create(array(
-                    "site_id" => $site->getKey(),
-                    "product_id" => $request->get('product_id')
-                ));
-            }
-            $status = true;
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'productSite']));
-                } else {
-                    return compact(['status', 'productSite']);
-                }
-            } else {
-                return redirect()->route('product.index');
-            }
+            return redirect()->route('product.index');
         }
     }
 
@@ -121,7 +124,7 @@ class ProductSiteController extends Controller
      *
      * @param Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function show(Request $request, $id)
     {
@@ -149,7 +152,7 @@ class ProductSiteController extends Controller
      *
      * @param Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit(Request $request, $id)
     {
@@ -174,12 +177,28 @@ class ProductSiteController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateProductSiteValidator $updateProductSiteValidator
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductSiteValidator $updateProductSiteValidator, Request $request, $id)
     {
+        try {
+            $updateProductSiteValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
         $productSite = $this->productSiteManager->getProductSite($id);
         $originalSite = $productSite->site;
         $oldProduct = $productSite->product;

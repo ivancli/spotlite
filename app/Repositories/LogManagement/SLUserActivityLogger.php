@@ -1,8 +1,8 @@
 <?php
 namespace App\Repositories\LogManagement;
 
+use App\Contracts\LogManagement\UserActivityLogger;
 use App\Filters\QueryFilter;
-use App\Contracts\LogManagement\Logger;
 use App\Models\Logs\UserActivityLog;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
  * Date: 9/1/2016
  * Time: 11:28 AM
  */
-class UserActivityLogger implements Logger
+class SLUserActivityLogger implements UserActivityLogger
 {
     protected $userActivityLog;
     protected $request;

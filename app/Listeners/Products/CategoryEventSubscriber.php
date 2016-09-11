@@ -1,9 +1,10 @@
 <?php
 namespace App\Listeners\Products;
 
-use App\Contracts\LogManagement\Logger;
 
 //use App\Jobs\LogUserActivity;
+use App\Contracts\LogManagement\UserActivityLogger;
+use App\Jobs\LogUserActivity;
 
 /**
  * Created by PhpStorm.
@@ -14,58 +15,66 @@ use App\Contracts\LogManagement\Logger;
 class CategoryEventSubscriber
 {
 
-    protected $logger;
+    protected $userActivityLogger;
 
-    public function __construct(Logger $logger)
+    public function __construct(UserActivityLogger $userActivityLogger)
     {
-        $this->logger = $logger;
+        $this->userActivityLogger = $userActivityLogger;
     }
 
 
     public function onCategoryCreateViewed($event)
     {
-        $this->logger->storeLog("viewed category create form");
+//        $this->userActivityLogger->storeLog("viewed category create form");
+        dispatch(new LogUserActivity(auth()->user(), "viewed category create form"));
     }
 
     public function onCategorySingleViewed($event)
     {
         $category = $event->category;
-        $this->logger->storeLog("viewed single category - {$category->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed single category - {$category->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed single category - {$category->getKey()}"));
     }
 
     public function onCategoryStored($event)
     {
         $category = $event->category;
-        $this->logger->storeLog("stored category - {$category->getKey()}");
+//        $this->userActivityLogger->storeLog("stored category - {$category->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "stored category - {$category->getKey()}"));
     }
 
     public function onCategoryStoring($event)
     {
-        $this->logger->storeLog("storing category");
+        $this->userActivityLogger->storeLog("storing category");
+        dispatch(new LogUserActivity(auth()->user(), "storing category"));
     }
 
     public function onCategoryUpdated($event)
     {
         $category = $event->category;
-        $this->logger->storeLog("updated category - {$category->getKey()}");
+//        $this->userActivityLogger->storeLog("updated category - {$category->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updated category - {$category->getKey()}"));
     }
 
     public function onCategoryUpdating($event)
     {
         $category = $event->category;
-        $this->logger->storeLog("updating category - {$category->getKey()}");
+//        $this->userActivityLogger->storeLog("updating category - {$category->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updating category - {$category->getKey()}"));
     }
 
     public function onCategoryDeleting($event)
     {
         $category = $event->category;
-        $this->logger->storeLog("deleting category - {$category->getKey()}");
+//        $this->userActivityLogger->storeLog("deleting category - {$category->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "deleting category - {$category->getKey()}"));
     }
 
     public function onCategoryDeleted($event)
     {
         $category = $event->category;
-        $this->logger->storeLog("deleted category - {$category->getKey()}");
+//        $this->userActivityLogger->storeLog("deleted category - {$category->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "deleted category - {$category->getKey()}"));
     }
 
     /**

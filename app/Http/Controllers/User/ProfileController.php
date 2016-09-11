@@ -6,8 +6,10 @@ use App\Events\User\Profile\ProfileEditViewed;
 use App\Events\User\Profile\ProfileUpdated;
 use App\Events\User\Profile\ProfileUpdating;
 use App\Events\User\Profile\ProfileViewed;
+use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Validators\User\Profile\UpdateValidator;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -15,7 +17,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('permission:read_user', ['only' => ['show']]);
@@ -23,7 +24,7 @@ class ProfileController extends Controller
 
     /**
      * Edit page of my profile
-     * @return $this
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -42,7 +43,7 @@ class ProfileController extends Controller
     /**
      * Detail page of other users' profile
      * @param $id
-     * @return $this
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($id)
     {
@@ -53,30 +54,28 @@ class ProfileController extends Controller
 
     /**
      * Update my profile
+     * @param UpdateValidator $updateValidator
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            "first_name" => "required|max:255",
-            "last_name" => "required|max:255",
-        ]);
-        if ($validator->fails()) {
+        try {
+            $updateValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
             if ($request->ajax()) {
-                $status = false;
-                $errors = $validator->errors()->all();
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
                 } else {
                     return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
-
 
         $user = User::findOrFail($id);
         event(new ProfileUpdating($user));

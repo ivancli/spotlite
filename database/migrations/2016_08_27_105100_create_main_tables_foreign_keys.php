@@ -120,7 +120,7 @@ class CreateMainTablesForeignKeys extends Migration
                 ->onUpdate('cascade');
         });
         Schema::table('alerts', function (Blueprint $table) {
-            $table->foreign('comparison_site_id')->references('site_id')->on('sites')
+            $table->foreign('comparison_product_site_id')->references('product_site_id')->on('product_sites')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
@@ -205,7 +205,7 @@ class CreateMainTablesForeignKeys extends Migration
             $table->dropForeign('domain_ips_ip_id_foreign');
         });
         Schema::table('alerts', function (Blueprint $table) {
-            $table->dropForeign('alerts_comparison_site_id_foreign');
+            $table->dropForeign('alerts_comparison_product_site_id_foreign');
         });
         Schema::table('alert_emails', function (Blueprint $table) {
             $table->dropForeign('alert_emails_alert_id_foreign');

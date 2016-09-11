@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers\UM;
 
+use App\Exceptions\ValidationException;
 use App\Models\Group;
 use App\Models\User;
+use App\Validators\UM\Group\StoreValidator;
+use App\Validators\UM\Group\UpdateValidator;
 use Illuminate\Support\Facades\Validator;
 use Invigor\UM\Controllers\UMGroupController;
 use Illuminate\Http\Request;
@@ -11,12 +14,18 @@ use Invigor\UM\UMRole;
 
 class GroupController extends UMGroupController
 {
-    public function __construct()
+    protected $storeValidator;
+    protected $updateValidator;
+
+    public function __construct(StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
         $this->middleware('permission:create_group', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_group', ['only' => ['index', 'show']]);
         $this->middleware('permission:update_group', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete_group', ['only' => ['destroy']]);
+
+        $this->storeValidator = $storeValidator;
+        $this->updateValidator = $updateValidator;
     }
 
     /**
@@ -24,7 +33,7 @@ class GroupController extends UMGroupController
      *
      * @param  Request $request
      * @param  null $format
-     * @return  \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Response|static[]
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @internal  param null $view
      */
     public function index(Request $request, $format = null)
@@ -59,45 +68,39 @@ class GroupController extends UMGroupController
      * Store a newly created resource in storage.
      *
      * @param    \Illuminate\Http\Request $request
-     * @return  bool
+     * @return bool|\Illuminate\Http\RedirectResponse
      * @internal  param null $route
      */
     public function store(Request $request)
     {
-        /*validation*/
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:groups|max:255|min:1',
-            'active' => 'boolean',
-            'url' => 'required|url|max:2083|min:1',
-            'description' => 'max:255'
-        ]);
-        if ($validator->fails()) {
+        try {
+            $this->storeValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
+            $errors = $e->getErrors();
             if ($request->ajax()) {
-                $errors = $validator->errors()->all();
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
                 } else {
-                    return $errors;
+                    return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
+        }
+        $group = parent::store($request);
+        if ($group === false) {
+            abort(404);
+            return false;
         } else {
-            $group = parent::store($request);
-            if ($group === false) {
-                abort(404);
-                return false;
-            } else {
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['group', 'status']));
-                    } else {
-                        return $group;
-                    }
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['group', 'status']));
                 } else {
-                    return redirect()->route('um.group.index')->with(compact(['group', 'status']));
+                    return $group;
                 }
+            } else {
+                return redirect()->route('um.group.index')->with(compact(['group', 'status']));
             }
         }
     }
@@ -133,7 +136,7 @@ class GroupController extends UMGroupController
      * Show the form for editing the specified resource.
      *
      * @param    int $id
-     * @return  bool|\Illuminate\Http\Response
+     * @return bool|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      * @internal  param null $view
      */
     public function edit($id)
@@ -152,45 +155,40 @@ class GroupController extends UMGroupController
      *
      * @param    \Illuminate\Http\Request $request
      * @param    int $id
-     * @return  \Illuminate\Http\Response|string
+     * @return \Illuminate\Http\Response|string
      * @internal  param null $route
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255|min:1|unique:groups,name,' . $id . ',group_id',
-            'active' => 'boolean',
-            'url' => 'required|url|max:2083|min:1',
-            'description' => 'max: 2048'
-        ]);
-        if ($validator->fails()) {
+        try {
+            $this->updateValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
-                    return response()->json(compact(['errors', 'status']));
+                    return response()->json(compact(['status', 'errors']));
                 } else {
-                    return $errors;
+                    return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
+        }
+        $group = parent::update($request, $id);
+        if ($group === false) {
+            abort(404);
+            return false;
         } else {
-            $group = parent::update($request, $id);
-            if ($group === false) {
-                abort(404);
-                return false;
-            } else {
-                $status = true;
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['group', 'status']));
-                    } else {
-                        return $group;
-                    }
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['group', 'status']));
                 } else {
-                    return redirect()->route("um.group.index")->with(compact(['group', 'status']));
+                    return $group;
                 }
+            } else {
+                return redirect()->route("um.group.index")->with(compact(['group', 'status']));
             }
         }
     }

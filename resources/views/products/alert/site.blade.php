@@ -1,19 +1,19 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="modal-alert-site">
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-alert-product-site">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{$product->product_name}} Site Price Alert</h4>
+                <h4 class="modal-title">{{$productSite->product->product_name}} Site Price Alert</h4>
             </div>
             <div class="modal-body">
-                <p>{{parse_url($site->site_url)['host']}}</p>
+                <p>{{parse_url($productSite->site->site_url)['host']}}</p>
                 <ul class="text-danger errors-container">
                 </ul>
 
-                {!! Form::model($alert, array('route' => array('alert.site.update', $site->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-site-update")) !!}
-                <input type="hidden" name="alert_owner_id" value="{{$site->getKey()}}">
-                <input type="hidden" name="alert_owner_type" value="site">
+                {!! Form::model($productSite->alert, array('route' => array('alert.product_site.update', $productSite->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-site-update")) !!}
+                <input type="hidden" name="alert_owner_id" value="{{$productSite->getKey()}}">
+                <input type="hidden" name="alert_owner_type" value="product_site">
                 <div class="form-group required">
                     {!! Form::label('comparison_price_type', 'Trigger', array('class' => 'control-label')) !!}
                     {!! Form::select('comparison_price_type', array('specific price' => 'Specific Price', 'my price' => 'My Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
@@ -34,8 +34,10 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-update-site-alert">OK</button>
-                <button class="btn btn-danger">Delete</button>
+                <button class="btn btn-primary" id="btn-update-product-site-alert">OK</button>
+                @if(!is_null($productSite->alert))
+                    <button class="btn btn-danger" id="btn-delete-product-site-alert">Delete</button>
+                @endif
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
         </div>
@@ -56,15 +58,17 @@
                 }
             });
 
-            $("#btn-update-site-alert").on("click", function () {
-                submitUpdateSiteAlert(function (response) {
-                    console.info('response', response);
+            $("#btn-update-product-site-alert").on("click", function () {
+                submitUpdateProductSiteAlert(function (response) {
                     if (response.status == true) {
                         alertP("Create/Update Alert", "Alert has been updated.");
-                        $("#modal-alert-site").modal("hide");
+                        $("#modal-alert-product-site").modal("hide");
+                        if ($.isFunction(options.updateCallback)) {
+                            options.updateCallback(response);
+                        }
                     } else {
                         if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-alert-site .errors-container");
+                            var $errorContainer = $("#modal-alert-product-site .errors-container");
                             $errorContainer.empty();
                             $.each(response.errors, function (index, error) {
                                 $errorContainer.append(
@@ -76,17 +80,55 @@
                         }
                     }
                 })
+            });
+            $("#btn-delete-product-site-alert").on("click", function () {
+
+                confirmP("Delete alert", "Do you want to delete this alert?", {
+                    "affirmative": {
+                        "text": "Delete",
+                        "class": "btn-danger",
+                        "dismiss": true,
+                        "callback": function () {
+                            submitDeleteProductSiteAlert(function (response) {
+                                if (response.status == true) {
+                                    alertP("Delete Alert", "Alert has been deleted.");
+                                    $("#modal-alert-product-site").modal("hide");
+                                    if ($.isFunction(options.deleteCallback)) {
+                                        options.deleteCallback(response);
+                                    }
+                                } else {
+                                    if (typeof response.errors != 'undefined') {
+                                        var $errorContainer = $("#modal-alert-product-site .errors-container");
+                                        $errorContainer.empty();
+                                        $.each(response.errors, function (index, error) {
+                                            $errorContainer.append(
+                                                    $("<li>").text(error)
+                                            );
+                                        });
+                                    } else {
+                                        alertP("Error", "Unable to delete alert, please try again later.");
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    "negative": {
+                        "text": "Cancel",
+                        "class": "btn-default",
+                        "dismiss": true
+                    }
+                });
             })
         }
 
-        function submitUpdateSiteAlert(callback) {
+        function submitUpdateProductSiteAlert(callback) {
             if ($("#sel-price-type").val() == "my price") {
                 $("#txt-comparison-price").remove();
             }
             $.ajax({
-                "url": "{{route('alert.site.update', $site->getKey())}}",
+                "url": "{{route('alert.product_site.update', $productSite->getKey())}}",
                 "method": "put",
-                "data": $("#frm-alert-site-update").serialize(),
+                "data": $("#frm-alert-product-site-update").serialize(),
                 "dataType": "json",
                 "success": function (response) {
                     if ($.isFunction(callback)) {
@@ -94,6 +136,22 @@
                     }
                 },
                 "error": function (xhr, status, error) {
+
+                }
+            })
+        }
+
+        function submitDeleteProductSiteAlert(callback) {
+            $.ajax({
+                "url": "{{route('alert.product_site.destroy', $productSite->getKey())}}",
+                "method": "delete",
+                "dataType": "json",
+                "success": function (response) {
+                    if ($.isFunction(callback)) {
+                        callback(response);
+                    }
+                },
+                "error": function () {
 
                 }
             })

@@ -26,9 +26,9 @@ class Alert extends Model
         return $this->morphTo("alert_owner", "alert_owner_type");
     }
 
-    public function excludedSites()
+    public function excludedProductSites()
     {
-        return $this->belongsToMany('App\Models\Site', 'alert_exclude_sites', 'alert_id', 'site_id');
+        return $this->belongsToMany('App\Models\ProductSite', 'alert_excluded_product_sites', 'alert_id', 'product_site_id');
     }
 
     public function emails()
@@ -42,6 +42,10 @@ class Alert extends Model
      */
     public function delete()
     {
+        /* delete alert emails if there are any */
+        foreach ($this->emails as $email) {
+            $email->delete();
+        }
         DeletedAlert::create(array(
             "content" => $this->toJson()
         ));

@@ -29,12 +29,23 @@ class ProductSite extends Model
         return $this->belongsTo('App\Models\Site', 'site_id', 'site_id');
     }
 
+    public function excludingAlerts()
+    {
+        return $this->belongsToMany('App\Models\Alert', 'alert_excluded_product_sites', 'alert_id', 'product_site_id');
+    }
+
+    public function alert()
+    {
+        return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'product_site_id');
+    }
+
     public function getUrlsAttribute()
     {
         return array(
             "show" => route("product_site.show", $this->getKey()),
             "edit" => route("product_site.edit", $this->getKey()),
             "delete" => route("product_site.destroy", $this->getKey()),
+            "alert" => route("alert.product_site.edit", $this->getKey()),
         );
     }
 }

@@ -241,6 +241,10 @@ a.btn-action.editing i {
     vertical-align: middle;
 }
 
+.alert-enabled {
+    color: #f39c12;
+}
+
 @media screen and (min-width: 768px) {
     .navbar-brand {
         display: none;
@@ -256,3 +260,4 @@ a.btn-action.editing i {
         display: none;
     }
 }
+

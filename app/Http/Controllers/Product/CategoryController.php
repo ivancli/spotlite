@@ -10,8 +10,11 @@ use App\Events\Products\Category\CategoryStored;
 use App\Events\Products\Category\CategoryStoring;
 use App\Events\Products\Category\CategoryUpdated;
 use App\Events\Products\Category\CategoryUpdating;
+use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 
+use App\Validators\Product\Category\StoreValidator;
+use App\Validators\Product\Category\UpdateValidator;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -56,19 +59,36 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreValidator $storeValidator
      * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreValidator $storeValidator, Request $request)
     {
         $input = $request->all();
         $input['user_id'] = auth()->user()->getKey();
-        $validator = Validator::make($input, [
-            "category_name" => "required|max:255"
-        ]);
-        if ($validator->fails()) {
+
+        try {
+            $storeValidator->validate($input);
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
+        event(new CategoryStoring());
+        $currentCategoryNames = auth()->user()->categories->pluck("category_name")->toArray();
+        if (in_array($request->get('category_name'), $currentCategoryNames)) {
+            $status = false;
+            $errors = array("A category with the same name already exists.");
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
@@ -79,33 +99,17 @@ class CategoryController extends Controller
                 return redirect()->back()->withInput()->withErrors($validator);
             }
         } else {
-            event(new CategoryStoring());
-            $currentCategoryNames = auth()->user()->categories->pluck("category_name")->toArray();
-            if (in_array($request->get('category_name'), $currentCategoryNames)) {
-                $status = false;
-                $errors = array("A category with the same name already exists.");
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['status', 'errors']));
-                    } else {
-                        return compact(['status', 'errors']);
-                    }
+            $category = $this->categoryManager->createCategory($input);
+            $status = true;
+            event(new CategoryStored($category));
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'category']));
                 } else {
-                    return redirect()->back()->withInput()->withErrors($validator);
+                    return compact(['status', 'category']);
                 }
             } else {
-                $category = $this->categoryManager->createCategory($input);
-                $status = true;
-                event(new CategoryStored($category));
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['status', 'category']));
-                    } else {
-                        return compact(['status', 'category']);
-                    }
-                } else {
-                    return redirect()->route('product.index');
-                }
+                return redirect()->route('product.index');
             }
         }
     }
@@ -146,18 +150,18 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateValidator $updateValidator
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            "category_name" => "required|max:255"
-        ]);
-        if ($validator->fails()) {
+        try {
+            $updateValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
@@ -165,23 +169,24 @@ class CategoryController extends Controller
                     return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
-            }
-        } else {
-            $category = $this->categoryManager->updateCategory($id, $request->all());
-            event(new CategoryUpdating($category));
-            $status = true;
-            event(new CategoryUpdated($category));
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'category']));
-                } else {
-                    return compact(['status', 'category']);
-                }
-            } else {
-                return redirect()->route('product.index');
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
+
+        $category = $this->categoryManager->updateCategory($id, $request->all());
+        event(new CategoryUpdating($category));
+        $status = true;
+        event(new CategoryUpdated($category));
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'category']));
+            } else {
+                return compact(['status', 'category']);
+            }
+        } else {
+            return redirect()->route('product.index');
+        }
+
     }
 
     /**

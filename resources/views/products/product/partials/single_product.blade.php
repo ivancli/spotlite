@@ -36,7 +36,7 @@
                 <i class="fa fa-line-chart"></i>
             </a>
             <a href="#" class="btn-action" onclick="showProductAlertForm(this); return false;">
-                <i class="fa fa-bell-o"></i>
+                <i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
             </a>
             <a href="#" class="btn-action">
                 <i class="fa fa-envelope-o"></i>
@@ -189,8 +189,8 @@
                                 "callback": function (response) {
                                     if (response.status == true) {
                                         showLoading();
-                                        if(typeof response.productSite != 'undefined'){
-                                            $.get(response.productSite.urls.show, function(html){
+                                        if (typeof response.productSite != 'undefined') {
+                                            $.get(response.productSite.urls.show, function (html) {
                                                 hideLoading();
                                                 $(el).closest(".product-wrapper").find(".tbl-site tbody").append(html);
                                             });
@@ -233,13 +233,15 @@
                     $modal.on("shown.bs.modal", function () {
                         if ($.isFunction(modalReady)) {
                             modalReady({
-                                "callback": function (response) {
-//                                    if (response.status == true) {
-//                                        showLoading();
-//                                        window.location.reload();
-//                                    } else {
-//                                        alertP("Unable to add site, please try again later.");
-//                                    }
+                                "updateCallback": function (response) {
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-bell alert-enabled");
+                                    }
+                                },
+                                "deleteCallback": function (response) {
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-bell-o");
+                                    }
                                 }
                             })
                         }

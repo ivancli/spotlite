@@ -12,9 +12,12 @@ use App\Events\Products\Product\ProductStored;
 use App\Events\Products\Product\ProductStoring;
 use App\Events\Products\Product\ProductUpdated;
 use App\Events\Products\Product\ProductUpdating;
+use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 
 use App\Models\Category;
+use App\Validators\Product\Product\StoreValidator;
+use App\Validators\Product\Product\UpdateValidator;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -40,7 +43,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -53,7 +56,7 @@ class ProductController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(Request $request)
     {
@@ -67,17 +70,18 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreValidator $storeValidator
      * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreValidator $storeValidator, Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            "product_name" => "required|max:255"
-        ]);
-        if ($validator->fails()) {
+
+        try {
+            $storeValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
@@ -85,25 +89,22 @@ class ProductController extends Controller
                     return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
-            }
-        } else {
-            event(new ProductStoring());
-            $product = $this->productManager->createProduct($request->all());
-            event(new ProductStored($product));
-            $status = true;
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'product']));
-                } else {
-                    return compact(['status', 'product']);
-                }
-            } else {
-                return redirect()->route('product.index');
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
-
-
+        event(new ProductStoring());
+        $product = $this->productManager->createProduct($request->all());
+        event(new ProductStored($product));
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'product']));
+            } else {
+                return compact(['status', 'product']);
+            }
+        } else {
+            return redirect()->route('product.index');
+        }
     }
 
     /**
@@ -111,7 +112,7 @@ class ProductController extends Controller
      *
      * @param Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Request $request, $id)
     {
@@ -142,18 +143,18 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateValidator $updateValidator
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            "product_name" => "required|max:255"
-        ]);
-        if ($validator->fails()) {
+        try {
+            $updateValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
@@ -161,23 +162,22 @@ class ProductController extends Controller
                     return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+        $product = $this->productManager->getProduct($id);
+        event(new ProductUpdating($product));
+        $product = $this->productManager->updateProduct($id, $request->all());
+        event(new ProductUpdated($product));
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'product']));
+            } else {
+                return compact(['status', 'product']);
             }
         } else {
-            $product = $this->productManager->getProduct($id);
-            event(new ProductUpdating($product));
-            $product = $this->productManager->updateProduct($id, $request->all());
-            event(new ProductUpdated($product));
-            $status = true;
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'product']));
-                } else {
-                    return compact(['status', 'product']);
-                }
-            } else {
-                return redirect()->route('product.index');
-            }
+            return redirect()->route('product.index');
         }
     }
 

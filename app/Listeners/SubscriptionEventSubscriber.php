@@ -1,7 +1,8 @@
 <?php
 namespace App\Listeners;
 
-use App\Contracts\LogManagement\Logger;
+use App\Contracts\LogManagement\UserActivityLogger;
+use App\Jobs\LogUserActivity;
 
 //use App\Jobs\LogUserActivity;
 
@@ -14,11 +15,11 @@ use App\Contracts\LogManagement\Logger;
 class SubscriptionEventSubscriber
 {
 
-    protected $logger;
+    protected $userActivityLogger;
 
-    public function __construct(Logger $logger)
+    public function __construct(UserActivityLogger $userActivityLogger)
     {
-        $this->logger = $logger;
+        $this->userActivityLogger = $userActivityLogger;
     }
 
 
@@ -28,48 +29,56 @@ class SubscriptionEventSubscriber
      */
     public function onManagementViewed($event)
     {
-        $this->logger->storeLog("viewed subscription management page");
+//        $this->userActivityLogger->storeLog("viewed subscription management page");
+        dispatch(new LogUserActivity(auth()->user(), "viewed subscription management page"));
     }
 
     public function onCreating($event)
     {
-        $this->logger->storeLog("creating subscription");
+//        $this->userActivityLogger->storeLog("creating subscription");
+        dispatch(new LogUserActivity(auth()->user(), "creating subscription"));
     }
 
     public function onCompleted($event)
     {
         $subscription = $event->subscription;
-        $this->logger->storeLog("completed subscription, id: {$subscription->getKey()}");
+//        $this->userActivityLogger->storeLog("completed subscription, id: {$subscription->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "completed subscription, id: {$subscription->getKey()}"));
     }
 
     public function onEditViewed($event)
     {
         $subscription = $event->subscription;
-        $this->logger->storeLog("viewed edit subscription page, id: {$subscription->getKey()}");
+//        $this->userActivityLogger->storeLog("viewed edit subscription page, id: {$subscription->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "viewed edit subscription page, id: {$subscription->getKey()}"));
     }
 
     public function onUpdating($event)
     {
         $subscription = $event->subscription;
-        $this->logger->storeLog("updating subscription, id: {$subscription->getKey()}");
+//        $this->userActivityLogger->storeLog("updating subscription, id: {$subscription->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updating subscription, id: {$subscription->getKey()}"));
     }
 
     public function onUpdated($event)
     {
         $subscription = $event->subscription;
-        $this->logger->storeLog("updated subscription, id: {$subscription->getKey()}");
+//        $this->userActivityLogger->storeLog("updated subscription, id: {$subscription->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "updated subscription, id: {$subscription->getKey()}"));
     }
 
     public function onCancelling($event)
     {
         $subscription = $event->subscription;
-        $this->logger->storeLog("cancelling subscription, id: {$subscription->getKey()}");
+//        $this->userActivityLogger->storeLog("cancelling subscription, id: {$subscription->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "cancelling subscription, id: {$subscription->getKey()}"));
     }
 
     public function onCancelled($event)
     {
         $subscription = $event->subscription;
-        $this->logger->storeLog("cancelled subscription, id: {$subscription->getKey()}");
+//        $this->userActivityLogger->storeLog("cancelled subscription, id: {$subscription->getKey()}");
+        dispatch(new LogUserActivity(auth()->user(), "cancelled subscription, id: {$subscription->getKey()}"));
     }
 
 

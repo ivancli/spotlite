@@ -23,30 +23,8 @@ class LogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->when('App\Listeners\UserEventSubscriber')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
-        $this->app->when('App\Listeners\GroupEventSubscriber')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
-        $this->app->when('App\Jobs\LogUserActivity')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
-        $this->app->when('App\Listeners\SubscriptionEventSubscriber')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
-        $this->app->when('App\Listeners\Products\CategoryEventSubscriber')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
-        $this->app->when('App\Listeners\Products\ProductEventSubscriber')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
-        $this->app->when('App\Listeners\Products\SiteEventSubscriber')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
-        $this->app->when('App\Http\Controllers\Log\UserActivityLogController')
-            ->needs('App\Contracts\LogManagement\Logger')
-            ->give('App\Repositories\LogManagement\UserActivityLogger');
+
+        $this->app->bind('App\Contracts\LogManagement\UserActivityLogger', 'App\Repositories\LogManagement\SLUserActivityLogger');
 
         $this->app->when('App\Http\Controllers\Log\UserActivityLogController')
             ->needs('App\Filters\QueryFilter')

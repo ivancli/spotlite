@@ -10,7 +10,7 @@
                 <ul class="text-danger errors-container">
                 </ul>
 
-                {!! Form::model($alert, array('route' => array('alert.product.update', $product->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-update")) !!}
+                {!! Form::model($product->alert, array('route' => array('alert.product.update', $product->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-update")) !!}
                 <input type="hidden" name="alert_owner_id" value="{{$product->getKey()}}">
                 <input type="hidden" name="alert_owner_type" value="product">
                 <div class="form-group required">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                     {!! Form::label('site_id[]', 'Exclude', array('class' => 'control-label')) !!}
-                    {!! Form::select('site_id[]', $productSites, $excludedSites, array('class' => 'form-control', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
+                    {!! Form::select('site_id[]', $productSites, $excludedProductSites, array('class' => 'form-control', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
                 </div>
                 <div class="form-group required">
                     {!! Form::label('email[]', 'Notify Emails', array('class' => 'control-label')) !!}
@@ -38,7 +38,9 @@
             </div>
             <div class="modal-footer text-right">
                 <button class="btn btn-primary" id="btn-update-product-alert">OK</button>
-                <button class="btn btn-danger">Delete</button>
+                @if(!is_null($product->alert))
+                    <button class="btn btn-danger" id="btn-delete-product-alert">Delete</button>
+                @endif
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
         </div>
@@ -61,10 +63,12 @@
 
             $("#btn-update-product-alert").on("click", function () {
                 submitUpdateProductAlert(function (response) {
-                    console.info('response', response);
                     if (response.status == true) {
                         alertP("Create/Update Alert", "Alert has been updated.");
                         $("#modal-alert-product").modal("hide");
+                        if ($.isFunction(options.updateCallback)) {
+                            options.updateCallback(response);
+                        }
                     } else {
                         if (typeof response.errors != 'undefined') {
                             var $errorContainer = $("#modal-alert-product .errors-container");
@@ -79,6 +83,44 @@
                         }
                     }
                 })
+            });
+            $("#btn-delete-product-alert").on("click", function () {
+
+                confirmP("Delete alert", "Do you want to delete this alert?", {
+                    "affirmative": {
+                        "text": "Delete",
+                        "class": "btn-danger",
+                        "dismiss": true,
+                        "callback": function () {
+                            submitDeleteProductAlert(function (response) {
+                                if (response.status == true) {
+                                    alertP("Delete Alert", "Alert has been deleted.");
+                                    $("#modal-alert-product").modal("hide");
+                                    if ($.isFunction(options.deleteCallback)) {
+                                        options.deleteCallback(response);
+                                    }
+                                } else {
+                                    if (typeof response.errors != 'undefined') {
+                                        var $errorContainer = $("#modal-alert-product .errors-container");
+                                        $errorContainer.empty();
+                                        $.each(response.errors, function (index, error) {
+                                            $errorContainer.append(
+                                                    $("<li>").text(error)
+                                            );
+                                        });
+                                    } else {
+                                        alertP("Error", "Unable to delete alert, please try again later.");
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    "negative": {
+                        "text": "Cancel",
+                        "class": "btn-default",
+                        "dismiss": true
+                    }
+                });
             })
         }
 
@@ -97,6 +139,22 @@
                     }
                 },
                 "error": function (xhr, status, error) {
+
+                }
+            })
+        }
+
+        function submitDeleteProductAlert(callback) {
+            $.ajax({
+                "url": "{{route('alert.product.destroy', $product->getKey())}}",
+                "method": "delete",
+                "dataType": "json",
+                "success": function (response) {
+                    if ($.isFunction(callback)) {
+                        callback(response);
+                    }
+                },
+                "error": function () {
 
                 }
             })

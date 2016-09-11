@@ -1,23 +1,30 @@
 <?php
 namespace App\Http\Controllers\UM;
 
+use App\Exceptions\ValidationException;
 use App\Models\Group;
 use App\Models\User;
+use App\Validators\UM\Role\UpdateValidator;
+use App\Validators\UM\Role\StoreValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Invigor\UM\Controllers\UMRoleController;
 use Invigor\UM\UMPermission;
 use Invigor\UM\UMRole;
 
 class RoleController extends UMRoleController
 {
+    protected $storeValidator;
+    protected $updateValidator;
 
-    public function __construct()
+    public function __construct(StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
         $this->middleware('permission:create_role', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_role', ['only' => ['index', 'show']]);
         $this->middleware('permission:update_role', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete_role', ['only' => ['destroy']]);
+
+        $this->storeValidator = $storeValidator;
+        $this->updateValidator = $updateValidator;
     }
 
     /**
@@ -25,7 +32,7 @@ class RoleController extends UMRoleController
      *
      * @param  Request $request
      * @param  null $format
-     * @return  \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Response|static[]
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Response|\Illuminate\View\View|static[]
      */
     public function index(Request $request, $format = null)
     {
@@ -49,7 +56,7 @@ class RoleController extends UMRoleController
     /**
      * Show the form for creating a new resource.
      *
-     * @return  \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function create()
     {
@@ -61,44 +68,41 @@ class RoleController extends UMRoleController
      * Store a newly created resource in storage.
      *
      * @param    \Illuminate\Http\Request $request
-     * @return  bool|\Illuminate\Http\Response
+     * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        /*validation*/
-        $validator = Validator::make($request->all(), [
-                'name' => 'required|max:255|min:1|unique:roles,name'
-        ]);
-        if ($validator->fails()) {
+        try {
+            $this->storeValidator->validate($request->all());
+        } catch (ValidationException $e) {
             $status = false;
+            $errors = $e->getErrors();
             if ($request->ajax()) {
-                $errors = $validator->errors()->all();
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
                 } else {
-                    return $errors;
+                    return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
-        } else {
-            $role = parent::store($request);
-            if ($role === false) {
-                abort(404);
-                return false;
-            } else {
-                $status = true;
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['role', 'status']));
-                    } else {
-                        return $role;
-                    }
-                } else {
-                    return redirect()->route('um.role.index')->with(compact(['role', 'status']));
-                }
-            }
+        }
 
+        $role = parent::store($request);
+        if ($role === false) {
+            abort(404);
+            return false;
+        } else {
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['role', 'status']));
+                } else {
+                    return $role;
+                }
+            } else {
+                return redirect()->route('um.role.index')->with(compact(['role', 'status']));
+            }
         }
     }
 
@@ -133,7 +137,7 @@ class RoleController extends UMRoleController
      * Show the form for editing the specified resource.
      *
      * @param    int $id
-     * @return  bool|\Illuminate\Http\Response
+     * @return bool|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id)
     {
@@ -156,37 +160,37 @@ class RoleController extends UMRoleController
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-                'name' => 'required|max:255|min:1|unique:roles,name,' . $id . ',role_id',
-        ]);
-        if ($validator->fails()) {
+        try {
+            $input = $request->all();
+            $input['id'] = $id;
+            $this->updateValidator->validate($input);
+        } catch (ValidationException $e) {
             $status = false;
-            $errors = $validator->errors()->all();
+            $errors = $e->getErrors();
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
-                    return response()->json(compact(['errors', 'status']));
+                    return response()->json(compact(['status', 'errors']));
                 } else {
-                    return $errors;
+                    return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
+        }
+        $role = parent::update($request, $id);
+        if ($role === false) {
+            abort(404);
+            return false;
         } else {
-            $role = parent::update($request, $id);
-            if ($role === false) {
-                abort(404);
-                return false;
-            } else {
-                $status = true;
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['role', 'status']));
-                    } else {
-                        return $role;
-                    }
+            $status = true;
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['role', 'status']));
                 } else {
-                    return redirect()->route("um.role.index")->with(compact(['role', 'status']));
+                    return $role;
                 }
+            } else {
+                return redirect()->route("um.role.index")->with(compact(['role', 'status']));
             }
         }
     }

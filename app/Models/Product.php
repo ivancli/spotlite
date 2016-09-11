@@ -47,7 +47,7 @@ class Product extends Model
 
     public function alert()
     {
-        return $this->hasOne('App\Models\Alert', 'alert_owner_id', 'product_id');
+        return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'product_id');
     }
 
     /**
@@ -56,6 +56,10 @@ class Product extends Model
      */
     public function delete()
     {
+        /* delete alert if there are any*/
+        if(!is_null($this->alert)){
+            $this->alert->delete();
+        }
         DeletedProduct::create(array(
             "content" => $this->toJson()
         ));
