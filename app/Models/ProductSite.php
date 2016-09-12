@@ -9,6 +9,7 @@
 namespace App\Models;
 
 
+use App\Filters\QueryFilter;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductSite extends Model
@@ -16,7 +17,6 @@ class ProductSite extends Model
     protected $table = "product_sites";
     protected $primaryKey = "product_site_id";
     protected $fillable = ["product_id", "site_id"];
-    public $timestamps = false;
     public $appends = ["urls"];
 
     public function product()
@@ -37,6 +37,11 @@ class ProductSite extends Model
     public function alert()
     {
         return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'product_site_id');
+    }
+
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
     }
 
     public function getUrlsAttribute()

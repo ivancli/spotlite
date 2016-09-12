@@ -10,10 +10,20 @@ namespace App\Repositories\ProductManagement;
 
 
 use App\Contracts\ProductManagement\ProductSiteManager;
+use App\Filters\QueryFilter;
 use App\Models\ProductSite;
+use Illuminate\Http\Request;
 
 class SLProductSiteManager implements ProductSiteManager
 {
+    protected $productSite;
+    protected $request;
+
+    public function __construct(ProductSite $productSite, Request $request)
+    {
+        $this->productSite = $productSite;
+        $this->request = $request;
+    }
 
     public function getProductSites()
     {
@@ -45,5 +55,24 @@ class SLProductSiteManager implements ProductSiteManager
         $productSite = $this->getProductSite($product_site_id);
         $productSite->delete();
         return true;
+    }
+
+    public function getProductSiteCount(){
+        return $this->productSite->count();
+    }
+
+    public function getDataTablesProductSites(QueryFilter $queryFilter)
+    {
+        $productSites = $this->productSite->filter($queryFilter)->get();
+        $output = new \stdClass();
+        $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
+        $output->recordTotal = $this->getProductSiteCount();
+        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+            $output->recordsFiltered = $productSites->count();
+        } else {
+            $output->recordsFiltered = $this->getProductSiteCount();
+        }
+        $output->data = $productSites->toArray();
+        return $output;
     }
 }

@@ -9,6 +9,8 @@
 namespace App\Contracts\ProductManagement;
 
 
+use App\Filters\QueryFilter;
+
 interface ProductSiteManager
 {
     public function getProductSites();
@@ -20,4 +22,6 @@ interface ProductSiteManager
     public function updateProductSite($product_site_id, $options);
 
     public function deleteProductSite($product_site_id);
+
+    public function getDataTablesProductSites(QueryFilter $queryFilter);
 }

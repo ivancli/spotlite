@@ -39,5 +39,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\ProductManagement\SiteManager', 'App\Repositories\ProductManagement\SLSiteManager');
         $this->app->bind('App\Contracts\ProductManagement\ProductSiteManager', 'App\Repositories\ProductManagement\SLProductSiteManager');
         $this->app->bind('App\Contracts\ProductManagement\AlertManager', 'App\Repositories\ProductManagement\SLAlertManager');
+
+        $this->app->when('App\Http\Controllers\Crawler\ProductSiteController')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\AdminProductSiteFilter');
+        $this->app->when('App\Models\ProductSite')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\AdminProductSiteFilter');
     }
 }

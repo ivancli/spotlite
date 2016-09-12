@@ -245,6 +245,18 @@ a.btn-action.editing i {
     color: #f39c12;
 }
 
+td.ellipsis,
+th.ellipsis {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.float-right {
+    float: right;
+}
+
 @media screen and (min-width: 768px) {
     .navbar-brand {
         display: none;

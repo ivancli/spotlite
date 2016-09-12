@@ -11,6 +11,7 @@ class CreateProductSitesTable extends Migration {
 			$table->increments('product_site_id');
             $table->integer('product_id')->index()->unsigned();
             $table->integer('site_id')->index()->unsigned();
+            $table->timestamps();
 		});
 	}
 
