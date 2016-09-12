@@ -162,6 +162,8 @@ return [
         App\Providers\LogServiceProvider::class,
 
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+
+        Invigor\SLCrawler\SLCrawlerServiceProvider::class,
     ],
 
     /*
@@ -216,6 +218,8 @@ return [
         'Style' => App\Helpers\StyleHelper::class,
 
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
+
+        'SLCrawler' => Invigor\SLCrawler\SLCrawlerFacade::class,
     ],
 
 ];

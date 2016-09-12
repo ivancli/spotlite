@@ -14,9 +14,10 @@ class StoreValidator extends ValidatorAbstract
     /**
      * Get pre-set validation rules
      *
+     * @param null $id
      * @return array
      */
-    protected function getRules()
+    protected function getRules($id = null)
     {
         return array(
             'name' => 'required|max:255',

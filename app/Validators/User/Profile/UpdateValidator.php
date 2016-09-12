@@ -13,9 +13,10 @@ class UpdateValidator extends ValidatorAbstract
     /**
      * Get pre-set validation rules
      *
+     * @param null $id
      * @return array
      */
-    protected function getRules()
+    protected function getRules($id = null)
     {
         return array(
             "first_name" => "required|max:255",

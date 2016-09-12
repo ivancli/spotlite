@@ -23,7 +23,7 @@
                     {!! Form::select('operator', array('<='=>'Equal or Below', '<' => 'Below', '>='=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control sl-form-control']) !!}
                 </div>
                 <div class="form-group required" id="comparison-price-container"
-                     style="{{isset($alert) && $alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">
+                     style="{{isset($productSite->alert) && $productSite->alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">
                     {!! Form::label('comparison_price', 'Price Point', array('class' => 'control-label')) !!}
                     {!! Form::text('comparison_price', null, array('class' => 'form-control sl-form-control', 'id' => 'txt-comparison-price')) !!}
                 </div>
