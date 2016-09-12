@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3cc0f351b89927fe61379553fe2e9e17",
-    "content-hash": "f2b61c35be1b926b7299a73ed1a0bd2d",
+    "hash": "f8d95b701d4b4835d4e1b06021e87648",
+    "content-hash": "ac311a8c87e421309622da29b0a8e8a9",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -2339,6 +2339,59 @@
             "time": "2015-05-11 14:41:42"
         },
         {
+            "name": "invigor/crawler",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ketchol/spotlite-crawler.git",
+                "reference": "831b801afd0323e09259090317b746f511441041"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ketchol/spotlite-crawler/zipball/831b801afd0323e09259090317b746f511441041",
+                "reference": "831b801afd0323e09259090317b746f511441041",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "~5.0",
+                "illuminate/console": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "illuminate/database": "~5.0",
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "~4.1",
+                "sami/sami": "dev-master"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Invigor\\Crawler\\": "src/Crawler/"
+                }
+            },
+            "autoload-dev": {
+                "classmap": [
+                    "tests/Middleware/MiddlewareTest.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Li",
+                    "email": "ivan.li@invigorgroup.com"
+                }
+            ],
+            "description": "Invigor Crawler Package",
+            "support": {
+                "source": "https://github.com/ketchol/spotlite-crawler/tree/master",
+                "issues": "https://github.com/ketchol/spotlite-crawler/issues"
+            },
+            "time": "2016-09-12 07:07:11"
+        },
+        {
             "name": "invigor/um",
             "version": "v1.0.1",
             "source": {
@@ -3666,7 +3719,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "invigor/crawler": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

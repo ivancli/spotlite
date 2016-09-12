@@ -49,6 +49,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('alert/product_site/{product_site_id}', 'Product\AlertController@updateProductSiteAlert')->name('alert.product_site.update');
         Route::delete('alert/product_site/{product_site_id}', 'Product\AlertController@deleteProductSiteAlert')->name('alert.product_site.destroy');
         Route::resource('alert', 'Product\AlertController');
+
+
+        /* admin crawler management */
+        Route::resource('admin/product_site', 'Crawler\ProductSiteController');
     });
 
 

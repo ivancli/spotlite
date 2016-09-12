@@ -163,7 +163,7 @@ return [
 
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
 
-        Invigor\SLCrawler\SLCrawlerServiceProvider::class,
+        Invigor\Crawler\CrawlerServiceProvider::class,
     ],
 
     /*
@@ -219,7 +219,7 @@ return [
 
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
 
-        'SLCrawler' => Invigor\SLCrawler\SLCrawlerFacade::class,
+        'Crawler' => Invigor\Crawler\CrawlerFacade::class,
     ],
 
 ];

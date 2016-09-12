@@ -8,6 +8,10 @@
         {
             "type": "vcs",
             "url": "ssh://git@repo.globalit.net.au:234/srv/repo/git/invigor-user-management"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ketchol/spotlite-crawler.git"
         }
     ],
     "require": {
@@ -25,7 +29,8 @@
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*",
         "invigor/um": "1.*",
-        "driftyco/ionicons": "2.0.1"
+        "driftyco/ionicons": "2.0.1",
+        "invigor/crawler": "dev-master"
     },
     "autoload": {
         "classmap": [
