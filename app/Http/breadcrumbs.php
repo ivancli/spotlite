@@ -216,3 +216,7 @@ Breadcrumbs::register('admin_site', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Site Management', route('admin.site.index'));
 });
+Breadcrumbs::register('admin_domain', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Domain Management', route('admin.domain.index'));
+});

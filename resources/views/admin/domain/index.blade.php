@@ -1,25 +1,23 @@
 @extends('layouts.adminlte')
-@section('title', 'Crawler - Site Management')
-@section('header_title', 'Crawler - Site Management')
+@section('title', 'Crawler - Domain Management')
+@section('header_title', 'Crawler - Domain Management')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('admin_site') !!}
+    {!! Breadcrumbs::render('admin_domain') !!}
 @stop
 @section('content')
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-body">
-                    <table id="tbl-site" class="table table-bordered table-hover table-striped">
+                    <table id="tbl-domain" class="table table-bordered table-hover table-striped">
                         <thead>
                         <tr>
                             <th class="shrink">ID</th>
-                            <th>Created at</th>
-                            <th>Site</th>
-                            <th width="200">URL</th>
-                            <th width="200">xPath</th>
-                            <th>Last Price</th>
-                            <th>Last Crawl</th>
-                            <th>Status</th>
+                            <th>Domain URL</th>
+                            <th>Domain Name</th>
+                            <th>Domain xPath</th>
+                            <th>Crawler Class</th>
+                            <th>Parser Class</th>
                             <th width="70"></th>
                         </tr>
                         </thead>
@@ -34,14 +32,15 @@
 
 @section('scripts')
     <script type="text/javascript">
-        var tblSite = null;
+        var tblDomain = null;
+
         $(function () {
             jQuery.fn.dataTable.Api.register('processing()', function (show) {
                 return this.iterator('table', function (ctx) {
                     ctx.oApi._fnProcessingDisplay(ctx, show);
                 });
             });
-            tblSite = $("#tbl-site").DataTable({
+            tblDomain = $("#tbl-domain").DataTable({
                 "pagingType": "full_numbers",
                 "processing": true,
                 "serverSide": true,
@@ -60,88 +59,46 @@
                 },
                 "columns": [
                     {
-                        "name": "site_id",
-                        "data": "site_id"
+                        "name": "domain_id",
+                        "data": "domain_id"
                     },
                     {
-                        "name": "created_at",
-                        "data": function (data) {
-                            if (data.created_at != null) {
-                                var timestamp = strtotime(data.created_at)
-                                return $("<div>").append(
-                                        $("<div>").text(timestampToDateTimeByFormat(timestamp, "Y-m-d")).attr({
-                                            "title": timestampToDateTimeByFormat(timestamp, "Y-m-d H:i"),
-                                            "data-toggle": "tooltip"
-                                        })
-                                ).html();
-                            } else {
-                                return "";
-                            }
-                        }
+                        "name": "domain_url",
+                        "data": "domain_url" //you might wanna change this to be an anchor
                     },
                     {
-                        "name": "site_url",
-                        "data": function (data) {
-                            return getDomainFromURL(data.site_url);
-                        }
+                        "name": "domain_name",
+                        "data": "domain_name"
                     },
                     {
-                        "name": "site_url",
-                        "data": function (data) {
-                            var url = stripDomainFromURL(data.site_url);
-                            url = url.length > 30 ? url.substr(0, 30) + '…' : url;
-                            return $("<div>").append(
-                                    $("<a>").attr({
-                                        "href": data.site_url,
-                                        "title": data.site_url,
-                                        "target": "_blank",
-                                        "data-toggle": "tooltip"
-                                    }).text(url).addClass("text-muted")
-                            ).html();
-                        }
-                    },
-                    {
-                        "name": "site_xpath",
+                        "name": "domain_xpath",
                         "data": function (data) {
                             console.info(data);
                             return $("<div>").append(
                                     $("<div>").css("padding-right", "20px").append(
-                                            $("<span>").text(data.site_xpath).addClass("lbl-site-xpath"),
+                                            $("<span>").text(data.domain_xpath).addClass("lbl-domain-xpath"),
                                             $("<input>").attr({
                                                 "type": "text",
-                                                "value": data.site_xpath
-                                            }).hide().addClass("txt-site-xpath form-control input-sm"),
+                                                "value": data.domain_xpath
+                                            }).hide().addClass("txt-domain-xpath form-control input-sm"),
                                             $("<a>").attr({
                                                 "href": "#",
                                                 "onclick": "togglexPathInput(this); return false;",
-                                                "data-url": data.urls.admin_update
+                                                "data-url": data.urls.update
                                             }).append(
                                                     $("<i>").addClass("fa fa-pencil float-right text-muted").css("margin-right", "-20px")
                                             )
                                     )
                             ).html();
-
-//                            return data.site_xpath;
                         }
                     },
                     {
-                        "name": "recent_price",
-                        "data": function (data) {
-                            return data.recent_price;
-                        }
+                        "name": "crawler_class",
+                        "data": "crawler_class"
                     },
                     {
-                        "name": "last_crawled_at",
-                        "data": function (data) {
-                            return data.last_crawled_at;
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "sortable": false,
-                        "data": function () {
-                            return ""
-                        }
+                        "name": "parser_class",
+                        "data": "parser_class"
                     },
                     {
                         "class": "text-center",
@@ -149,7 +106,7 @@
                         "data": function (data) {
                             return $("<div>").append(
                                     $("<a>").attr({
-                                        "href": data.site_url,
+                                        "href": data.domain_url,
                                         "target": "_blank"
                                     }).append(
                                             $("<i>").addClass("fa fa-globe")
@@ -157,14 +114,8 @@
                                     "&nbsp;",
                                     $("<a>").attr({
                                         "href": "#",
-                                        "onclick": 'testCrawler(this); return false;',
-                                        "data-url": data.urls.test
-                                    }).append(
-                                            $("<i>").addClass("fa fa-refresh")
-                                    ).addClass("text-muted"),
-                                    "&nbsp;",
-                                    $("<a>").attr({
-                                        "href": "#"
+                                        "data-url": data.urls.delete,
+                                        "onclick": "btnDeleteSiteOnClick(this)"
                                     }).append(
                                             $("<i>").addClass("fa fa-trash-o")
                                     ).addClass("text-muted text-danger")
@@ -176,17 +127,17 @@
         });
 
         function togglexPathInput(el) {
-            var $txt = $(el).closest("tr").find(".txt-site-xpath");
-            var $lbl = $(el).closest("tr").find(".lbl-site-xpath");
+            var $txt = $(el).closest("tr").find(".txt-domain-xpath");
+            var $lbl = $(el).closest("tr").find(".lbl-domain-xpath");
             if ($lbl.is(":visible")) {
                 $lbl.hide();
                 $txt.show();
             } else {
                 /* TODO save xpath */
-                updateXPath($(el).attr("data-url"), {"site_xpath": $txt.val()}, function (response) {
+                updateXPath($(el).attr("data-url"), {"domain_xpath": $txt.val()}, function (response) {
                     console.info('response', response);
-                    $lbl.show().text(response.site.site_xpath);
-                    $txt.hide().val(response.site.site_xpath);
+                    $lbl.show().text(response.domain.domain_xpath);
+                    $txt.hide().val(response.domain.domain_xpath);
                 }, function (response) {
 
                 });
@@ -245,6 +196,43 @@
                 "error": function (xhr, status, error) {
                     hideLoading();
                     alertP("Error", "Unable to test the crawler, please try again later.");
+                }
+            })
+        }
+
+        function btnDeleteSiteOnClick(el) {
+            confirmP("Delete domain", "Do you want to delete all preferences of this domain?", {
+                "affirmative": {
+                    "text": "Delete",
+                    "class": "btn-danger",
+                    "dismiss": true,
+                    "callback": function () {
+                        showLoading();
+                        $.ajax({
+                            "url": $(el).attr("data-url"),
+                            "method": "delete",
+                            "dataType": "json",
+                            "success": function (response) {
+                                hideLoading();
+                                if (response.status == true) {
+                                    alertP("Delete domain", "The domain has been deleted.");
+                                    $(el).closest(".site-wrapper").remove();
+                                    tblDomain.row($(el).closest("tr")).remove().draw();
+                                } else {
+                                    alertP("Error", "Unable to delete domain, please try again later.");
+                                }
+                            },
+                            "error": function (xhr, status, error) {
+                                hideLoading();
+                                alertP("Error", "Unable to delete domain, please try again later.");
+                            }
+                        })
+                    }
+                },
+                "negative": {
+                    "text": "Cancel",
+                    "class": "btn-default",
+                    "dismiss": true
                 }
             })
         }

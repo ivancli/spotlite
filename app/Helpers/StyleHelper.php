@@ -29,7 +29,7 @@ class StyleHelper
     public static function set_active_and($strs, $class = 'active')
     {
         foreach ($strs as $str) {
-            if (!Request::segments()->has($str)) {
+            if (!in_array($str, Request::segments())) {
                 return '';
             }
         }

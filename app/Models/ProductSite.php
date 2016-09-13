@@ -18,6 +18,7 @@ class ProductSite extends Model
     protected $primaryKey = "product_site_id";
     protected $fillable = ["product_id", "site_id"];
     public $appends = ["urls"];
+    public $timestamps = false;
 
     public function product()
     {

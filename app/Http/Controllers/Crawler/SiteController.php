@@ -9,10 +9,12 @@
 namespace App\Http\Controllers\Crawler;
 
 
+use App\Contracts\ProductManagement\DomainManager;
 use App\Contracts\ProductManagement\ProductSiteManager;
 use App\Contracts\ProductManagement\SiteManager;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
+use App\Models\Domain;
 use Illuminate\Http\Request;
 use Invigor\Crawler\Contracts\CrawlerInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
@@ -22,11 +24,13 @@ class SiteController extends Controller
     protected $productSiteManager;
     protected $siteManager;
     protected $queryFilter;
+    protected $domainManager;
 
-    public function __construct(ProductSiteManager $productSiteManager, SiteManager $siteManager, QueryFilter $queryFilter)
+    public function __construct(ProductSiteManager $productSiteManager, SiteManager $siteManager, DomainManager $domainManager, QueryFilter $queryFilter)
     {
         $this->productSiteManager = $productSiteManager;
         $this->siteManager = $siteManager;
+        $this->domainManager = $domainManager;
         $this->queryFilter = $queryFilter;
     }
 
@@ -56,7 +60,30 @@ class SiteController extends Controller
         $crawler->loadHTML();
         $html = $crawler->getHTML();
 
+        if (is_null($html) || strlen($html) == 0) {
+            $status = false;
+            $errors = array("HTML is blank");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                /*TODO implement if needed*/
+            }
+        }
+
         $xpath = $site->site_xpath;
+        if (is_null($xpath)) {
+            $domain_url = parse_url($site->site_url)['host'];
+            $domain = Domain::where('domain_url', $domain_url)->first();
+            if (!is_null($domain)) {
+                $xpath = $domain->domain_xpath;
+            }
+        }
+
+
         $options = array(
             "xpath" => $xpath,
         );
@@ -80,7 +107,7 @@ class SiteController extends Controller
                 }
             } else {
                 $status = false;
-                $errors = "Price is incorrect";
+                $errors = array("The crawled price is incorrect");
                 if ($request->ajax()) {
                     if ($request->wantsJson()) {
                         return response()->json(compact(['status', 'errors']));
@@ -91,12 +118,28 @@ class SiteController extends Controller
                     /*TODO implement if needed*/
                 }
             }
+        } else {
+            $status = false;
+            $errors = array("xPath is incorrect, or the site might be loaded through ajax.");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                /*TODO implement if needed*/
+            }
         }
     }
 
     public function update(Request $request, $site_id)
     {
-        $site = $this->siteManager->updateSite($site_id, $request->all());
+        $input = $request->all();
+        if (isset($input['site_xpath']) && strlen($input['site_xpath']) == 0) {
+            $input['site_xpath'] = null;
+        }
+        $site = $this->siteManager->updateSite($site_id, $input);
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {

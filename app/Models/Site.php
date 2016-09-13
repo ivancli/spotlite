@@ -21,8 +21,6 @@ class Site extends Model
     ];
     protected $appends = ['urls'];
 
-    public $timestamps = false;
-
     public function products()
     {
         return $this->belongsToMany('App\Models\Product', 'product_sites', 'site_id', 'product_id')->withPivot('product_site_id');
@@ -68,9 +66,21 @@ class Site extends Model
     public static function create(array $attributes = [])
     {
         $site = parent::create($attributes);
+
+        /* create one-to-one crawler when site is created */
         Crawler::create(array(
             "site_id" => $site->getKey()
         ));
+
+        /* create domain if the domain of site url does not exist */
+        $newDomain = parse_url($site->site_url)['host'];
+
+        if (Domain::where('domain_url', $newDomain)->count() == 0) {
+            Domain::create(array(
+                "domain_url" => $newDomain
+            ));
+        }
+
         return $site;
     }
 

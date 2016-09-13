@@ -3,33 +3,23 @@ TODO
 
 IMPORTANT:
 
-1. show welcome message when user first login (right after register)
+* 1. Crawler Site Management
+    1) add functions of editing crawler class parser class
+    2) add functions of showing or hiding columns
+    3) store show and hide preference in user preference table
+    4) implement status
+    5) add functions of create site
 
-    1) move the current welcome/success message to a popup
-
-    2) modify the welcome/success message just so it depends on the subscription package
-
-
-2. prompt user if they haven't set up a group
-
-    1) might need to use notification js plugins
-        a). http://ned.im/noty/
-        b). https://notifyjs.com/
-
-    2) modify group CRUD
-        a). ignore group with the same name instead of prompting errors
-        b). attach user to the group soon as it's created. (should work without making changes)
+* 2. hide group popup for the moment.
 
 3. Update profile management to use Ajax
-
-4. Dependency injection in queue job classes
-
-5. Push logging to queue instead of logging immediately
 
 6. Update cancel subscription to use ajax.
 
 7. text ellipses on exclude sides drop down
 
-8. enhance the validator to be more dynamic
+* 8. enhance the validator to be more dynamic
 
-9. fucking refactor the whole site and product site stuff
+9. Create tasks schedulers to perform crawling
+
+* 10. Create events and subscribers for the missing controller actions

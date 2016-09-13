@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Domain;
 use App\Models\ProductSite;
 use App\Models\Site;
 use Exception;
@@ -44,7 +45,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\ProductManagement\SiteManager', 'App\Repositories\ProductManagement\SLSiteManager');
         $this->app->bind('App\Contracts\ProductManagement\ProductSiteManager', 'App\Repositories\ProductManagement\SLProductSiteManager');
         $this->app->bind('App\Contracts\ProductManagement\AlertManager', 'App\Repositories\ProductManagement\SLAlertManager');
+        $this->app->bind('App\Contracts\ProductManagement\DomainManager', 'App\Repositories\ProductManagement\SLDomainManager');
 
+        /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\AdminSiteFilters');
@@ -52,7 +55,21 @@ class AppServiceProvider extends ServiceProvider
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\AdminSiteFilters');
 
+        /* Domain Query Filters */
+        $this->app->when('App\Http\Controllers\Crawler\DomainController')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\AdminDomainFilters');
+        $this->app->when('App\Models\Domain')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\AdminDomainFilters');
 
+
+        /*************************************************************************
+         *                                                                       *
+         * CRAWLER AND PARSER CLASSES DYNAMIC BINDING BASED ON DATABASE RECORD   *
+         *                                                                       *
+         * ***********************************************************************
+         */
         /* dynamic binding for crawler */
         $this->app->bind(CrawlerInterface::class, function ($app) {
             $siteId = $this->app->request->route('site_id');
@@ -67,6 +84,20 @@ class AppServiceProvider extends ServiceProvider
                         }
                     }
                 }
+
+                /*check domain settings*/
+                $domain_url = parse_url($site->site_url)['host'];
+                $domain = Domain::where("domain_url", $domain_url)->first();
+                if (!is_null($domain)) {
+                    if (!is_null($domain->crawler_class)) {
+                        try {
+                            return $app->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
+                        } catch (Exception $e) {
+
+                        }
+                    }
+                }
+
             }
             return $app->make('Invigor\Crawler\Repositories\Crawlers\DefaultCrawler');
         });
@@ -77,9 +108,22 @@ class AppServiceProvider extends ServiceProvider
             if (!is_null($siteId)) {
                 $site = Site::findOrFail($siteId);
                 if (!is_null($site->crawler)) {
-                    if (!is_null($site->crawler->crawler_class)) {
+                    if (!is_null($site->crawler->parser_class)) {
                         try {
                             return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
+                        } catch (Exception $e) {
+
+                        }
+                    }
+                }
+
+                /*check domain settings*/
+                $domain_url = parse_url($site->site_url)['host'];
+                $domain = Domain::where("domain_url", $domain_url)->first();
+                if (!is_null($domain)) {
+                    if (!is_null($domain->parser_class)) {
+                        try {
+                            return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
                         } catch (Exception $e) {
 
                         }

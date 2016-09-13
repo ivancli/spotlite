@@ -51,11 +51,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('alert', 'Product\AlertController');
 
 
-        /* admin crawler management */
-//        Route::post('admin/product_site/test/{product_site_id}', 'Crawler\ProductSiteController@sendTest')->name('admin.product_site.test');
-//        Route::resource('admin/product_site', 'Crawler\ProductSiteController');
-        Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
-        Route::resource('admin/site', 'Crawler\SiteController');
+
     });
 
 
@@ -73,7 +69,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('log/user_activity', 'Log\UserActivityLogController', ['only' => [
         'index', 'show'
     ]]);
-
+    /* admin crawler management */
+    Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
+    Route::resource('admin/site', 'Crawler\SiteController');
+    Route::resource('admin/domain', 'Crawler\DomainController');
 });
 
 /*Auth*/

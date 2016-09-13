@@ -79,7 +79,7 @@ class SLSiteManager implements SiteManager
 
     public function getDataTablesSites(QueryFilter $queryFilter)
     {
-        $sites = $this->site->filter($queryFilter)->get();
+        $sites = $this->site->with("crawler")->filter($queryFilter)->get();
         $output = new \stdClass();
         $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
         $output->recordTotal = $this->getSiteCount();

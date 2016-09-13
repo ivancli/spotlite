@@ -19,7 +19,6 @@ class Crawler extends Model
         "crawler_class", "parser_class", "status", "site_id", "cookie_id", "active_at"
     ];
     public $timestamps = false;
-    protected $appends = ["urls"];
 
     public function site()
     {
