@@ -15,7 +15,7 @@ $(function () {
                 console.info(html);
                 var $modal = popupFrame(html);
                 $modal.modal();
-                $modal.on("hidden.bs.modal", showCreateGroupFirstLogin);
+                // $modal.on("hidden.bs.modal", showCreateGroupFirstLogin);
                 localStorage.setItem("met-first-login-welcome-msg-" + user.user_id, 1);
             });
         }

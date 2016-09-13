@@ -8,9 +8,6 @@ IMPORTANT:
     2) add functions of showing or hiding columns
     3) store show and hide preference in user preference table
     4) implement status
-    5) add functions of create site
-
-* 2. hide group popup for the moment.
 
 3. Update profile management to use Ajax
 

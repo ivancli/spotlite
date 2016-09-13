@@ -47,7 +47,7 @@
                 "serverSide": true,
                 "pageLength": 25,
                 "order": [[0, "asc"]],
-                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'><'col-sm-7'p>>",
+                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
                 "ajax": {
                     "url": "{{route(request()->route()->getName())}}",
                     "data": function (d) {
@@ -164,7 +164,9 @@
                                     ).addClass("text-muted"),
                                     "&nbsp;",
                                     $("<a>").attr({
-                                        "href": "#"
+                                        "href": "#",
+                                        "data-url": data.urls.admin_delete,
+                                        "onclick": "btnDeleteSiteOnClick(this); return false;"
                                     }).append(
                                             $("<i>").addClass("fa fa-trash-o")
                                     ).addClass("text-muted text-danger")
@@ -173,6 +175,13 @@
                     }
                 ]
             });
+
+            $(".toolbar-bottom-left").append(
+                    $("<a>").attr({
+                        "href": "#",
+                        "onclick": "showAddSiteForm(); return false;"
+                    }).addClass("btn btn-default").text("Add Site")
+            )
         });
 
         function togglexPathInput(el) {
@@ -245,6 +254,63 @@
                 "error": function (xhr, status, error) {
                     hideLoading();
                     alertP("Error", "Unable to test the crawler, please try again later.");
+                }
+            })
+        }
+
+        function showAddSiteForm() {
+            $.get("{{route("admin.site.create")}}", function (html) {
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady({
+                            "callback": function (response) {
+                                tblSite.ajax.reload();
+                            }
+                        })
+                    }
+                });
+                $modal.on("hidden.bs.modal", function(){
+                    $(this).remove();
+                });
+            })
+        }
+
+
+        function btnDeleteSiteOnClick(el) {
+            confirmP("Delete site", "Do you want to delete this site?", {
+                "affirmative": {
+                    "text": "Delete",
+                    "class": "btn-danger",
+                    "dismiss": true,
+                    "callback": function () {
+                        showLoading();
+                        $.ajax({
+                            "url": $(el).attr("data-url"),
+                            "method": "delete",
+                            "dataType": "json",
+                            "success": function (response) {
+                                hideLoading();
+                                if (response.status == true) {
+                                    alertP("Delete domain", "The domain has been deleted.");
+                                    $(el).closest(".site-wrapper").remove();
+                                    tblDomain.row($(el).closest("tr")).remove().draw();
+                                } else {
+                                    alertP("Error", "Unable to delete domain, please try again later.");
+                                }
+                            },
+                            "error": function (xhr, status, error) {
+                                hideLoading();
+                                alertP("Error", "Unable to delete domain, please try again later.");
+                            }
+                        })
+                    }
+                },
+                "negative": {
+                    "text": "Cancel",
+                    "class": "btn-default",
+                    "dismiss": true
                 }
             })
         }

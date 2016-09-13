@@ -90,6 +90,7 @@ class Site extends Model
         return array(
             "admin_update" => route("admin.site.update", $this->getKey()),
             "test" => route("admin.site.test", $this->getKey()),
+            "admin_delete" => route("admin.site.destroy", $this->getKey()),
         );
     }
 }

@@ -36,7 +36,7 @@ class CreateMainTablesForeignKeys extends Migration
         });
         Schema::table('historical_prices', function (Blueprint $table) {
             $table->foreign('crawler_id')->references('crawler_id')->on('crawlers')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
         Schema::table('historical_prices', function (Blueprint $table) {
@@ -46,7 +46,7 @@ class CreateMainTablesForeignKeys extends Migration
         });
         Schema::table('crawlers', function (Blueprint $table) {
             $table->foreign('site_id')->references('site_id')->on('sites')
-                ->onDelete('restrict')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
         Schema::table('crawlers', function (Blueprint $table) {

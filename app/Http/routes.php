@@ -73,6 +73,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
     Route::resource('admin/site', 'Crawler\SiteController');
     Route::resource('admin/domain', 'Crawler\DomainController');
+
+
+
+    Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 });
 
 /*Auth*/
@@ -86,4 +90,3 @@ Route::get('password', 'Auth\PasswordController@getEmail')->name('password.get')
 Route::post('password', 'Auth\PasswordController@postEmail')->name('password.post');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset')->name('password.reset.get');
 Route::post('password/reset', 'Auth\PasswordController@postReset')->name('password.reset.post');
-Route::get('logout', 'Auth\AuthController@logout')->name('logout');

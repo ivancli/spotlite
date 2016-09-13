@@ -49,6 +49,31 @@ class SiteController extends Controller
         }
     }
 
+    public function create(Request $request)
+    {
+        if ($request->ajax()) {
+            return view('admin.site.forms.add_site');
+        } else {
+            /*TODO implement this if needed*/
+        }
+    }
+
+    public function store(Request $request)
+    {
+        /*TODO validation here*/
+        $site = $this->siteManager->createSite($request->all());
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'site']));
+            } else {
+                return compact(['status', 'site']);
+            }
+        } else {
+            return redirect()->route('admin.site.index');
+        }
+    }
+
     public function sendTest(Request $request, CrawlerInterface $crawler, ParserInterface $parser, $site_id)
     {
         $site = $this->siteManager->getSite($site_id);
@@ -149,6 +174,24 @@ class SiteController extends Controller
             }
         } else {
             /*TODO implement this if necessary*/
+        }
+    }
+
+    public function destroy(Request $request, $site_id)
+    {
+        $site = $this->siteManager->getSite($site_id);
+        $site->delete();
+        $status = true;
+
+
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            return redirect()->route('admin.site.index');
         }
     }
 }
