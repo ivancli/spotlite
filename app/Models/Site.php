@@ -9,6 +9,7 @@
 namespace App\Models;
 
 
+use App\Filters\QueryFilter;
 use App\Models\DeletedRecordModels\DeletedSite;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,7 @@ class Site extends Model
 {
     protected $primaryKey = "site_id";
     protected $fillable = [
-        "site_url", "recent_price", "last_crawled_at"
+        "site_url", "site_xpath", "recent_price", "last_crawled_at"
     ];
     protected $appends = ['urls'];
 
@@ -47,6 +48,11 @@ class Site extends Model
         return $this->belongsToMany('App\Models\Alert', 'alert_exclude_sites', 'site_id', 'alert_id');
     }
 
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
+    }
+
     /**
      * back up category before deleting
      * @return bool|null
@@ -72,9 +78,8 @@ class Site extends Model
     public function getUrlsAttribute()
     {
         return array(
-//            "show" => route("site.show", $this->getKey()),
-//            "edit" => route("site.edit", $this->getKey()),
-//            "delete" => route("site.destroy", $this->getKey()),
+            "admin_update" => route("admin.site.update", $this->getKey()),
+            "test" => route("admin.site.test", $this->getKey()),
         );
     }
 }

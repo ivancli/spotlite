@@ -39,11 +39,6 @@ class ProductSite extends Model
         return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'product_site_id');
     }
 
-    public function scopeFilter($query, QueryFilter $filters)
-    {
-        return $filters->apply($query);
-    }
-
     public function getUrlsAttribute()
     {
         return array(

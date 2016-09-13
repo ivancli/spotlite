@@ -1,17 +1,16 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Ivan
- * Date: 12/09/2016
- * Time: 10:26 PM
+ * User: ivan.li
+ * Date: 9/13/2016
+ * Time: 12:51 PM
  */
 
 namespace App\Filters;
 
 
-class AdminProductSiteFilter extends QueryFilter
+class AdminSiteFilters extends QueryFilter
 {
-
     /**
      * Setting the offset of the query
      * @param $numberOfRows
@@ -39,11 +38,11 @@ class AdminProductSiteFilter extends QueryFilter
      */
     public function search($keyWord)
     {
-        return $this->builder
-            ->join('sites', 'sites.site_id', '=', 'product_sites.site_id')
-            ->where('product_site_id', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('sites.site_url', 'LIKE', "%{$keyWord['value']}%");
-//        $query->where("site_url", "LIKE", "%{$keyWord['value']}%");
+        return $this->builder->where('site_url', 'LIKE', "%{$keyWord['value']}%")
+            ->orWhere('site_id', 'LIKE', "%{$keyWord['value']}%")
+            ->orWhere('site_xpath', 'LIKE', "%{$keyWord['value']}%")
+            ->orWhere('recent_price', 'LIKE', "%{$keyWord['value']}%")
+            ->orWhere('last_crawled_at', 'LIKE', "%{$keyWord['value']}%");
     }
 
     /**

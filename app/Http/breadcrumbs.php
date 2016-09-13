@@ -212,7 +212,7 @@ Breadcrumbs::register('product_index', function ($breadcrumbs) {
 /**
  * Admin Product Site
  */
-Breadcrumbs::register('admin_product_site', function ($breadcrumbs) {
+Breadcrumbs::register('admin_site', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push('Site Management', route('admin.product_site.index'));
+    $breadcrumbs->push('Site Management', route('admin.site.index'));
 });

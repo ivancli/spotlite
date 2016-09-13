@@ -52,7 +52,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
         /* admin crawler management */
-        Route::resource('admin/product_site', 'Crawler\ProductSiteController');
+//        Route::post('admin/product_site/test/{product_site_id}', 'Crawler\ProductSiteController@sendTest')->name('admin.product_site.test');
+//        Route::resource('admin/product_site', 'Crawler\ProductSiteController');
+        Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
+        Route::resource('admin/site', 'Crawler\SiteController');
     });
 
 

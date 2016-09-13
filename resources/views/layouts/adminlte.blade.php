@@ -65,7 +65,17 @@
 
 @include('scripts.variable_setter')
 
-<script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
+{{--<script type="text/javascript" src="{{elixir('js/main.js')}}"></script>--}}
+<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
+<script type="text/javascript" src="{{asset("build/bootstrap/dist/js/bootstrap.js")}}"></script>
+<script type="text/javascript" src="{{asset("build/datatables.net/js/jquery.dataTables.js")}}"></script>
+<script type="text/javascript" src="{{asset("build/datatables.net-bs/js/dataTables.bootstrap.js")}}"></script>
+<script type="text/javascript" src="{{asset("build/select2/dist/js/select2.js")}}"></script>
+<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/plugins/slimScroll/jquery.slimscroll.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/plugins/fastclick/fastclick.js')}}"></script>
+<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/dist/js/app.js')}}"></script>
+<script type="text/javascript" src="{{asset('build/js/commonFunctions.js')}}"></script>
+<script type="text/javascript" src="{{asset('build/js/spotlite.js')}}"></script>
 
 @yield('scripts')
 

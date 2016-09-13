@@ -45,7 +45,7 @@
                     <ul class="treeview-menu">
                         <li class="{{Style::set_active_starts_with('domain')}}"><a href="{{url('domain')}}"><i
                                         class="fa fa-circle-o"></i> Domains</a></li>
-                        <li class="{{Style::set_active_starts_with('site')}}"><a href="{{route('admin.product_site.index')}}"><i
+                        <li class="{{Style::set_active_starts_with('site')}}"><a href="{{route('admin.site.index')}}"><i
                                         class="fa fa-circle-o"></i> Sites</a></li>
                     </ul>
                 </li>

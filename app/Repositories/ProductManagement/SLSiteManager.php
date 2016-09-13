@@ -10,10 +10,20 @@ namespace App\Repositories\ProductManagement;
 
 
 use App\Contracts\ProductManagement\SiteManager;
+use App\Filters\QueryFilter;
 use App\Models\Site;
+use Illuminate\Http\Request;
 
 class SLSiteManager implements SiteManager
 {
+    protected $site;
+    protected $request;
+
+    public function __construct(Request $request, Site $site)
+    {
+        $this->site = $site;
+        $this->request = $request;
+    }
 
     public function getSites()
     {
@@ -60,5 +70,25 @@ class SLSiteManager implements SiteManager
         $site = $this->getSite($id);
         $site->delete();
         return true;
+    }
+
+    public function getSiteCount()
+    {
+        return $this->site->count();
+    }
+
+    public function getDataTablesSites(QueryFilter $queryFilter)
+    {
+        $sites = $this->site->filter($queryFilter)->get();
+        $output = new \stdClass();
+        $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
+        $output->recordTotal = $this->getSiteCount();
+        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+            $output->recordsFiltered = $sites->count();
+        } else {
+            $output->recordsFiltered = $this->getSiteCount();
+        }
+        $output->data = $sites->toArray();
+        return $output;
     }
 }
