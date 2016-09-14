@@ -71,4 +71,12 @@ interface SubscriptionManager
      * @return mixed
      */
     public function setMigration($subscription_id, $options);
+
+    /**
+     * Generate a link for customers to update their payment method
+     * https://help.chargify.com/public-pages/self-service-pages.html
+     * @param $subscription_id
+     * @return mixed
+     */
+    public function generateUpdatePaymentLink($subscription_id);
 }

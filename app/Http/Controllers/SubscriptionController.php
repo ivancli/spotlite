@@ -67,8 +67,9 @@ class SubscriptionController extends Controller
         $sub = $user->latestValidSubscription();
         $current_sub_id = $user->latestValidSubscription()->api_subscription_id;
         $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
+        $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($current_sub_id);
         event(new SubscriptionManagementViewed());
-        return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription']));
+        return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink']));
     }
 
 

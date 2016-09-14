@@ -33,7 +33,8 @@
                     {{dump($subscription)}}
                     <div class="row">
                         <div class="col-sm-12 text-right">
-                            <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-primary">
+                            <a href="{{$updatePaymentLink}}" target="_blank" class="btn btn-default">Update Payment Details</a>
+                            <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-default">
                                 Change My Plan
                             </a>
                             {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'method' => 'delete', 'style'=>'display: inline-block', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}

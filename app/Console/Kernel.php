@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
+//        $schedule->call(function () {
             $crawlTimes = AppPreference::getCrawlTimes();
             $currentHour = date("H");
             if(in_array($currentHour, $crawlTimes)){
@@ -47,6 +47,6 @@ class Kernel extends ConsoleKernel
                     $crawler->queue();
                 }
             }
-        })->everyMinute();
+//        })->everyMinute();
     }
 }

@@ -6,4 +6,6 @@ return [
     "password" => env("CHARGIFY_PASSWORD", "x"),
 
     "api_url" => env("CHARGIFY_API_URL", "https://gmail-sandbox.chargify.com/"),
+
+    "share_key" => env("CHARGIFY_SHARE_KEY", "RRoBC240A7sHItGX9JT6GgSLuRnUpVCdkDjm1NWSoQ"),
 ];

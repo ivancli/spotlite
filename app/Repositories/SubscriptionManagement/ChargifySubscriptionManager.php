@@ -192,4 +192,18 @@ class ChargifySubscriptionManager implements SubscriptionManager
             return false;
         }
     }
+
+    public function generateToken($str)
+    {
+        return substr(sha1($str), 0, 10);
+    }
+
+    public function generateUpdatePaymentLink($subscription_id)
+    {
+        /* "update_payment--" + subscription id + "--" + share key */
+        $message = "update_payment--$subscription_id--" . config("chargify.share_key");
+        $token = $this->generateToken($message);
+        $link = "https://gmail-sandbox.chargify.com/update_payment/$subscription_id/" . $token;
+        return $link;
+    }
 }
