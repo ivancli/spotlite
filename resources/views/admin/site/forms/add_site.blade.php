@@ -29,7 +29,6 @@
     </div>
     <script type="text/javascript">
         function modalReady(options) {
-
             $("#btn-add-site").on("click", function () {
                 submitAddSite(function (response) {
                     if (response.status == true) {
@@ -55,17 +54,20 @@
         }
 
         function submitAddSite(successCallback, failCallback) {
+            showLoading();
             $.ajax({
                 "url": $("#frm-site-store").attr("action"),
                 "method": $("#frm-site-store").attr("method"),
                 "data": $("#frm-site-store").serialize(),
                 "dataType": "json",
                 "success": function (response) {
+                    hideLoading();
                     if ($.isFunction(successCallback)) {
                         successCallback(response);
                     }
                 },
                 "error": function (xhr, status, error) {
+                    hideLoading();
                     if ($.isFunction(failCallback)) {
                         failCallback(xhr, status, error);
                     }

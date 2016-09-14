@@ -107,32 +107,44 @@ class SiteController extends Controller
                 $xpath = $domain->domain_xpath;
             }
         }
-
-
-        $options = array(
-            "xpath" => $xpath,
-        );
-        $parser->setOptions($options);
-        $parser->setHTML($html);
-        $parser->init();
-        $result = $parser->parseHTML();
-        if (!is_null($result) && is_string($result)) {
-            $price = str_replace('$', '', $result);
-            $price = floatval($price);
-            if ($price > 0) {
-                $status = true;
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['status', 'price']));
+        if($xpath != null){
+            $options = array(
+                "xpath" => $xpath,
+            );
+            $parser->setOptions($options);
+            $parser->setHTML($html);
+            $parser->init();
+            $result = $parser->parseHTML();
+            if (!is_null($result) && is_string($result)) {
+                $price = str_replace('$', '', $result);
+                $price = floatval($price);
+                if ($price > 0) {
+                    $status = true;
+                    if ($request->ajax()) {
+                        if ($request->wantsJson()) {
+                            return response()->json(compact(['status', 'price']));
+                        } else {
+                            return compact(['status', 'price']);
+                        }
                     } else {
-                        return compact(['status', 'price']);
+                        /*TODO implement if needed*/
                     }
                 } else {
-                    /*TODO implement if needed*/
+                    $status = false;
+                    $errors = array("The crawled price is incorrect");
+                    if ($request->ajax()) {
+                        if ($request->wantsJson()) {
+                            return response()->json(compact(['status', 'errors']));
+                        } else {
+                            return compact(['status', 'errors']);
+                        }
+                    } else {
+                        /*TODO implement if needed*/
+                    }
                 }
             } else {
                 $status = false;
-                $errors = array("The crawled price is incorrect");
+                $errors = array("xPath is incorrect, or the site might be loaded through ajax.");
                 if ($request->ajax()) {
                     if ($request->wantsJson()) {
                         return response()->json(compact(['status', 'errors']));
@@ -143,9 +155,9 @@ class SiteController extends Controller
                     /*TODO implement if needed*/
                 }
             }
-        } else {
+        }else{
             $status = false;
-            $errors = array("xPath is incorrect, or the site might be loaded through ajax.");
+            $errors = array("xPath not specified.");
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));

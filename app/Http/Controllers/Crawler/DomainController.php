@@ -43,11 +43,16 @@ class DomainController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            return view('admin.domain.forms.add_domain');
+        } else {
+            /*TODO implement this if needed*/
+        }
     }
 
     /**
@@ -58,7 +63,19 @@ class DomainController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        /*TODO validation here*/
+
+        $domain = $this->domainManager->createDomain($request->all());
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['domain', 'status']));
+            } else {
+                return compact(['domain', 'status']);
+            }
+        } else {
+            return redirect()->route('admin.domain.index');
+        }
     }
 
     /**

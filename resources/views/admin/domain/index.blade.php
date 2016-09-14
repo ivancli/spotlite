@@ -46,7 +46,7 @@
                 "serverSide": true,
                 "pageLength": 25,
                 "order": [[0, "asc"]],
-                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'><'col-sm-7'p>>",
+                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
                 "ajax": {
                     "url": "{{route(request()->route()->getName())}}",
                     "data": function (d) {
@@ -124,6 +124,12 @@
                     }
                 ]
             });
+            $(".toolbar-bottom-left").append(
+                    $("<a>").attr({
+                        "href": "#",
+                        "onclick": "showAddDomainForm(); return false;"
+                    }).addClass("btn btn-default").text("Add Domain")
+            )
         });
 
         function togglexPathInput(el) {
@@ -234,6 +240,28 @@
                     "class": "btn-default",
                     "dismiss": true
                 }
+            })
+        }
+
+        function showAddDomainForm()
+        {
+            showLoading();
+            $.get("{{route("admin.domain.create")}}", function (html) {
+                hideLoading();
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady({
+                            "callback": function (response) {
+                                tblDomain.ajax.reload();
+                            }
+                        })
+                    }
+                });
+                $modal.on("hidden.bs.modal", function(){
+                    $(this).remove();
+                });
             })
         }
     </script>

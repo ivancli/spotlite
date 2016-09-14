@@ -259,7 +259,9 @@
         }
 
         function showAddSiteForm() {
+            showLoading();
             $.get("{{route("admin.site.create")}}", function (html) {
+                hideLoading();
                 var $modal = $(html);
                 $modal.modal();
                 $modal.on("shown.bs.modal", function () {
