@@ -107,7 +107,7 @@ class SiteController extends Controller
                 $xpath = $domain->domain_xpath;
             }
         }
-        if($xpath != null){
+        if ($xpath != null) {
             $options = array(
                 "xpath" => $xpath,
             );
@@ -155,7 +155,7 @@ class SiteController extends Controller
                     /*TODO implement if needed*/
                 }
             }
-        }else{
+        } else {
             $status = false;
             $errors = array("xPath not specified.");
             if ($request->ajax()) {
@@ -177,6 +177,9 @@ class SiteController extends Controller
             $input['site_xpath'] = null;
         }
         $site = $this->siteManager->updateSite($site_id, $input);
+        if ($site->status == 'null_xpath') {
+            $site->statusWaiting();
+        }
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {

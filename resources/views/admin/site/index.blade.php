@@ -127,6 +127,9 @@
                     {
                         "name": "recent_price",
                         "data": function (data) {
+                            if (data.recent_price != null) {
+                                return "$" + parseFloat(data.recent_price).formatMoney();
+                            }
                             return data.recent_price;
                         }
                     },
@@ -137,10 +140,72 @@
                         }
                     },
                     {
+                        "class": "text-center",
                         "name": "status",
                         "sortable": false,
-                        "data": function () {
-                            return ""
+                        "data": function (data) {
+                            var $text = $("<div>");
+                            console.info(data.status);
+                            switch (data.status) {
+                                case "ok":
+                                    $text.append(
+                                            $("<i>").addClass("text-success fa fa-check")
+                                    );
+                                    break;
+                                case "fail_html":
+                                    $text.append(
+                                            $("<i>").addClass("text-danger fa fa-times"),
+                                            "&nbsp;",
+                                            "HTML"
+                                    ).attr({
+                                        "title": "The site/web page is not accessible with current crawler class.",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
+                                case "fail_price":
+                                    $text.append(
+                                            $("<i>").addClass("text-danger fa fa-times"),
+                                            "&nbsp;",
+                                            "Price"
+                                    ).attr({
+                                        "title": "The price is not in a correct format, problem might be from the incorrect xPath.",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
+                                case "fail_xpath":
+                                    $text.append(
+                                            $("<i>").addClass("text-danger fa fa-times"),
+                                            "&nbsp;",
+                                            "xPath"
+                                    ).attr({
+                                        "title": "xPath is pointing to unknown elements which cannot be fetched from HTML code.",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
+                                case "null_xpath":
+                                    $text.append(
+                                            $("<i>").addClass("text-warning fa fa-question"),
+                                            "&nbsp;",
+                                            "xPath"
+                                    ).attr({
+                                        "title": "xPath is not yet defined.",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
+                                case "waiting":
+                                    $text.append(
+                                            $("<i>").addClass("text-muted fa fa-clock-o")
+                                    ).attr({
+                                        "title": "Waiting for crawler to trigger.",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
+                                default:
+                            }
+                            var $output = $("<div>").append(
+                                    $text
+                            );
+                            return $output.html();
                         }
                     },
                     {
@@ -273,7 +338,7 @@
                         })
                     }
                 });
-                $modal.on("hidden.bs.modal", function(){
+                $modal.on("hidden.bs.modal", function () {
                     $(this).remove();
                 });
             })
