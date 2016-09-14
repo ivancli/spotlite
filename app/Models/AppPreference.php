@@ -35,7 +35,10 @@ class AppPreference extends Model
     public static function getPreference($key)
     {
         $pref = (new static)->where("element", $key)->first();
-        return $pref->value;
+        if (!is_null($pref)) {
+            return $pref->value;
+        }
+        return null;
     }
 
 

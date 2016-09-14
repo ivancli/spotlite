@@ -37,16 +37,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//        $schedule->call(function () {
+        $schedule->call(function () {
             $crawlTimes = AppPreference::getCrawlTimes();
-            $currentHour = date("H");
-            if(in_array($currentHour, $crawlTimes)){
+            $currentHour = intval(date("H"));
+            if (in_array($currentHour, $crawlTimes)) {
                 $crawler = $this->crawlerManager->pickCrawler();
                 if (!is_null($crawler)) {
                     dispatch((new CrawlSite($crawler))->onQueue("crawling"));
                     $crawler->queue();
                 }
             }
-//        })->everyMinute();
+        })->everyMinute();
     }
 }

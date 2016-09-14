@@ -132,5 +132,10 @@ class InitialSeeder extends Seeder
 
         //attach permissions
         $superAdmin->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
+
+        DB::table("app_preferences")->insert([
+            "element" => "CRAWL_TIME",
+            "value" => "0,2,4,6,8,10,12,14,16,18,20,22"
+        ]);
     }
 }
