@@ -12,6 +12,7 @@ class CreateHistoricalPricesTable extends Migration {
 			$table->integer('crawler_id')->unsigned()->index();
 			$table->integer('site_id')->unsigned()->index();
             $table->decimal('price', 20, 4);
+            $table->timestamps();
 		});
 	}
 

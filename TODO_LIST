@@ -3,20 +3,29 @@ TODO
 
 IMPORTANT:
 
-* 1. Crawler Site Management
+Crawler Site Management
     1) add functions of editing crawler class parser class
     2) add functions of showing or hiding columns
     3) store show and hide preference in user preference table
-    4) implement status
+    * 4) implement status
+    * 5) sort out domain management and user report error stuff
 
-3. Update profile management to use Ajax
+Create tasks schedulers to perform crawling
 
-6. Update cancel subscription to use ajax.
+Create events and subscribers for the missing controller actions
 
-7. text ellipses on exclude sides drop down
+enhance the validator to be more dynamic
 
-* 8. enhance the validator to be more dynamic
 
-9. Create tasks schedulers to perform crawling
 
-* 10. Create events and subscribers for the missing controller actions
+
+
+
+
+Kernel dependency injection
+
+Update cancel subscription to use ajax.
+
+Update profile management to use Ajax
+
+text ellipses on exclude sides drop down

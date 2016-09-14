@@ -15,7 +15,7 @@ class CreateCrawlersTable extends Migration
             $table->enum('status', array('picked', 'queuing', 'running'))->nullable();
             $table->integer('site_id')->unsigned()->index();
             $table->integer('cookie_id')->unsigned()->nullable()->index();
-            $table->timestamp('active_at')->nullable();
+            $table->timestamp('last_active_at')->nullable();
         });
     }
 

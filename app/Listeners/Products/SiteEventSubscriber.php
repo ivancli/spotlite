@@ -27,13 +27,13 @@ class SiteEventSubscriber
         $site = $event->site;
         $product = $event->product;
 //        $this->userActivityLogger->storeLog("attached product - {$product->getKey()} and site - {$site->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "attached product - {$product->getKey()} and site - {$site->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "attached product - {$product->getKey()} and site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSiteCreateViewed($event)
     {
 //        $this->userActivityLogger->storeLog("viewed create site page");
-        dispatch(new LogUserActivity(auth()->user(), "viewed create site page"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed create site page"))->onQueue("logging"));
     }
 
     public function onSiteDetached($event)
@@ -41,54 +41,54 @@ class SiteEventSubscriber
         $site = $event->site;
         $product = $event->product;
 //        $this->userActivityLogger->storeLog("detached product - {$product->getKey()} and site - {$site->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "detached product - {$product->getKey()} and site - {$site->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "detached product - {$product->getKey()} and site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSiteEditViewed($event)
     {
         $site = $event->site;
 //        $this->userActivityLogger->storeLog("viewed site edit page - {$site->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "viewed site edit page - {$site->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed site edit page - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSitePricesViewed($event)
     {
 //        $this->userActivityLogger->storeLog("viewed site prices list");
-        dispatch(new LogUserActivity(auth()->user(), "viewed site prices list"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed site prices list"))->onQueue("logging"));
     }
 
     public function onSiteSingleViewed($event)
     {
         $site = $event->site;
 //        $this->userActivityLogger->storeLog("viewed single site - {$site->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "viewed single site - {$site->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed single site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSiteStored($event)
     {
         $site = $event->site;
 //        $this->userActivityLogger->storeLog("stored site - {$site->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "stored site - {$site->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "stored site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSiteStoring($event)
     {
 //        $this->userActivityLogger->storeLog("storing site");
-        dispatch(new LogUserActivity(auth()->user(), "storing site"));
+        dispatch((new LogUserActivity(auth()->user(), "storing site"))->onQueue("logging"));
     }
 
     public function onSiteUpdated($event)
     {
         $site = $event->site;
 //        $this->userActivityLogger->storeLog("updated site - {$site->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updated site - {$site->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updated site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSiteUpdating($event)
     {
         $site = $event->site;
 //        $this->userActivityLogger->storeLog("updating site - {$site->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updating site - {$site->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updating site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     /**

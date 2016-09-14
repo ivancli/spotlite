@@ -26,26 +26,26 @@ class ProductEventSubscriber
     public function onProductCreateViewed($event)
     {
 //        $this->userActivityLogger->storeLog("viewed product create form");
-        dispatch(new LogUserActivity(auth()->user(), "viewed product create form"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed product create form"))->onQueue("logging"));
     }
 
     public function onProductDeleted($event)
     {
         $product = $event->product;
 //        $this->userActivityLogger->storeLog("deleted product - {$product->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "deleted product - {$product->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "deleted product - {$product->getKey()}"))->onQueue("logging"));
     }
 
     public function onProductDeleting($event)
     {
         $product = $event->product;
-        dispatch(new LogUserActivity(auth()->user(), "deleting product - {$product->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "deleting product - {$product->getKey()}"))->onQueue("logging"));
 //        $this->userActivityLogger->storeLog("deleting product - {$product->getKey()}");
     }
 
     public function onProductListViewed($event)
     {
-        dispatch(new LogUserActivity(auth()->user(), "viewed product list page"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed product list page"))->onQueue("logging"));
 //        $this->userActivityLogger->storeLog("viewed product list page");
     }
 
@@ -53,34 +53,34 @@ class ProductEventSubscriber
     {
         $product = $event->product;
 //        $this->userActivityLogger->storeLog("viewed single product - {$product->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "viewed single product - {$product->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed single product - {$product->getKey()}"))->onQueue("logging"));
     }
 
     public function onProductStored($event)
     {
         $product = $event->product;
 //        $this->userActivityLogger->storeLog("stored product - {$product->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "stored product - {$product->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "stored product - {$product->getKey()}"))->onQueue("logging"));
     }
 
     public function onProductStoring($event)
     {
 //        $this->userActivityLogger->storeLog("storing product");
-        dispatch(new LogUserActivity(auth()->user(), "storing product"));
+        dispatch((new LogUserActivity(auth()->user(), "storing product"))->onQueue("logging"));
     }
 
     public function onProductUpdated($event)
     {
         $product = $event->product;
 //        $this->userActivityLogger->storeLog("updated product - {$product->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updated product - {$product->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updated product - {$product->getKey()}"))->onQueue("logging"));
     }
 
     public function onProductUpdating($event)
     {
         $product = $event->product;
 //        $this->userActivityLogger->storeLog("updating product - {$product->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updating product - {$product->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updating product - {$product->getKey()}"))->onQueue("logging"));
     }
 
 

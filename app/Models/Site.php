@@ -19,7 +19,7 @@ class Site extends Model
     protected $fillable = [
         "site_url", "site_xpath", "recent_price", "last_crawled_at"
     ];
-    protected $appends = ['urls'];
+    protected $appends = ['urls', 'domain'];
 
     public function products()
     {
@@ -92,5 +92,47 @@ class Site extends Model
             "test" => route("admin.site.test", $this->getKey()),
             "admin_delete" => route("admin.site.destroy", $this->getKey()),
         );
+    }
+
+    public function getDomainAttribute()
+    {
+        return parse_url($this->site_url)['host'];
+    }
+
+    public function statusOK()
+    {
+        $this->status = "ok";
+        $this->save();
+    }
+
+
+    public function statusFailHtml()
+    {
+        $this->status = "fail_html";
+        $this->save();
+    }
+
+    public function statusFailPrice()
+    {
+        $this->status = "fail_price";
+        $this->save();
+    }
+
+    public function statusFailXpath()
+    {
+        $this->status = "fail_xpath";
+        $this->save();
+    }
+
+    public function statusNullXpath()
+    {
+        $this->status = "null_xpath";
+        $this->save();
+    }
+
+    public function statusWaiting()
+    {
+        $this->status = "waiting";
+        $this->save();
     }
 }

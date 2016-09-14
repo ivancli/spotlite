@@ -46,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\ProductManagement\ProductSiteManager', 'App\Repositories\ProductManagement\SLProductSiteManager');
         $this->app->bind('App\Contracts\ProductManagement\AlertManager', 'App\Repositories\ProductManagement\SLAlertManager');
         $this->app->bind('App\Contracts\ProductManagement\DomainManager', 'App\Repositories\ProductManagement\SLDomainManager');
+        $this->app->bind('App\Contracts\CrawlerManagement\CrawlerManager', 'App\Repositories\CrawlerManagement\SLCrawlerManager');
 
         /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')
@@ -97,7 +98,6 @@ class AppServiceProvider extends ServiceProvider
                         }
                     }
                 }
-
             }
             return $app->make('Invigor\Crawler\Repositories\Crawlers\DefaultCrawler');
         });

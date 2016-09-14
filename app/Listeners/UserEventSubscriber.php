@@ -29,8 +29,8 @@ class UserEventSubscriber
     public function onUserLogin($event)
     {
         $this->userActivityLogger->storeLog("login");
-        dispatch(new LogUserActivity(auth()->user(), "login"));
-//        dispatch(new LogUserActivity(auth()->user(), "login"));
+        dispatch((new LogUserActivity(auth()->user(), "login"))->onQueue("logging"));
+//        dispatch((new LogUserActivity(auth()->user(), "login"))->onQueue("logging));
 
         $user = $event->user;
         $user->last_login = date('Y-m-d H:i:s');
@@ -45,63 +45,63 @@ class UserEventSubscriber
     public function onUserLogout($event)
     {
 //        $this->userActivityLogger->storeLog("logout");
-        dispatch(new LogUserActivity(auth()->user(), "logout"));
+        dispatch((new LogUserActivity(auth()->user(), "logout"))->onQueue("logging"));
     }
 
     public function onProfileViewed($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("viewed profile of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "viewed profile of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed profile of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     public function onProfileEditViewed($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("viewed edit profile of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "viewed edit profile of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed edit profile of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     public function onProfileUpdating($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("updating profile of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updating profile of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updating profile of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     public function onProfileUpdated($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("updated profile of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updated profile of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updated profile of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     public function onAccountViewed($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("viewed account of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "viewed account of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed account of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     public function onAccountEditViewed($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("viewed edit account of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "viewed edit account of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "viewed edit account of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     public function onAccountUpdating($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("updating account of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updating account of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updating account of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     public function onAccountUpdated($event)
     {
         $user = $event->user;
 //        $this->userActivityLogger->storeLog("updated account of user_id - {$user->getKey()}");
-        dispatch(new LogUserActivity(auth()->user(), "updated account of user_id - {$user->getKey()}"));
+        dispatch((new LogUserActivity(auth()->user(), "updated account of user_id - {$user->getKey()}"))->onQueue("logging"));
     }
 
     /**
