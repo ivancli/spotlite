@@ -21,3 +21,18 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'verification_code' => str_random(100)
     ];
 });
+
+$factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+    return [
+        "user_id"=> 1,
+        "category_name"=> str_random(10),
+    ];
+});
+
+$factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
+    return [
+        "product_name"=> str_random(10),
+        "user_id" => 1,
+    ];
+});
+

@@ -1,5 +1,6 @@
 <?php
 namespace App\Contracts\ProductManagement;
+use App\Filters\QueryFilter;
 
 /**
  * Created by PhpStorm.
@@ -13,9 +14,13 @@ interface CategoryManager
 
     public function getCategory($id);
 
+    public function getCategoriesCount();
+
     public function createCategory($options);
 
     public function updateCategory($id, $options);
 
     public function deleteCategory($id);
+
+    public function lazyLoadCategories(QueryFilter $queryFilter);
 }

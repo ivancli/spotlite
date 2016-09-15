@@ -13,7 +13,7 @@
             <span class="info-box-icon bg-red"><i class="fa fa-shopping-cart"></i></span>
             <div class="info-box-content">
                 <span class="info-box-text">Products</span>
-                <span class="info-box-number">{{isset($products) ? $products->count() : 0}}</span>
+                <span class="info-box-number">{{isset($productCount) ? $productCount : 0}}</span>
             </div>
         </div>
     </div>

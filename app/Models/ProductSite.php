@@ -16,7 +16,7 @@ class ProductSite extends Model
 {
     protected $table = "product_sites";
     protected $primaryKey = "product_site_id";
-    protected $fillable = ["product_id", "site_id"];
+    protected $fillable = ["product_id", "site_id", "my_price"];
     public $appends = ["urls"];
     public $timestamps = false;
 
@@ -45,6 +45,7 @@ class ProductSite extends Model
         return array(
             "show" => route("product_site.show", $this->getKey()),
             "edit" => route("product_site.edit", $this->getKey()),
+            "update" => route("product_site.my_price", $this->getKey()),
             "delete" => route("product_site.destroy", $this->getKey()),
             "alert" => route("alert.product_site.edit", $this->getKey()),
         );

@@ -26,6 +26,7 @@ class SLProductManager implements ProductManager
 
     public function createProduct($options)
     {
+        $options['user_id'] = auth()->user()->getKey();
         $product = Product::create($options);
         return $product;
     }
@@ -42,5 +43,10 @@ class SLProductManager implements ProductManager
         $product = Product::findOrFail($id);
         $product->delete();
         return true;
+    }
+
+    public function getProductsCount()
+    {
+        return auth()->user()->products->count();
     }
 }

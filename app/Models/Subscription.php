@@ -24,6 +24,11 @@ class Subscription extends Model
         return $this->belongsTo('App\Models\User', 'user_id', 'user_id');
     }
 
+    public function subscriptionDetails()
+    {
+        return $this->hasMany('App\Models\SubscriptionDetail', 'subscription_id', 'subscription_id');
+    }
+
     public function isValid()
     {
         if (!is_null($this->expiry_date)) {

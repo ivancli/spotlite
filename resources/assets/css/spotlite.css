@@ -257,6 +257,28 @@ th.ellipsis {
     float: right;
 }
 
+.text-muted-further {
+    color: #bbb;
+}
+
+.break-word {
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+}
+
+.xpath-wrapper {
+    padding-right: 20px;
+    position: relative;
+}
+
+.btn-edit-xpath {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 @media screen and (min-width: 768px) {
     .navbar-brand {
         display: none;

@@ -325,7 +325,6 @@ function btnAddProductOnClick(el) {
         "dataType": "json",
         "success": function (response) {
             hideLoading();
-            console.info(response);
             if (response.status == true) {
                 if (response.product != null) {
                     showLoading();
@@ -381,7 +380,6 @@ function btnAddCategoryOnClick(el) {
         "dataType": "json",
         "success": function (response) {
             hideLoading();
-            console.info(response);
             if (response.status == true) {
                 if (response.category != null) {
                     showLoading();

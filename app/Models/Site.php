@@ -91,6 +91,7 @@ class Site extends Model
             "admin_update" => route("admin.site.update", $this->getKey()),
             "test" => route("admin.site.test", $this->getKey()),
             "admin_delete" => route("admin.site.destroy", $this->getKey()),
+            "admin_crawler_edit" => route("admin.crawler.edit", $this->crawler->getKey()),
         );
     }
 

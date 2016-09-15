@@ -38,11 +38,23 @@ class AdminSiteFilters extends QueryFilter
      */
     public function search($keyWord)
     {
-        return $this->builder->where('site_url', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('site_id', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('site_xpath', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('recent_price', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('last_crawled_at', 'LIKE', "%{$keyWord['value']}%");
+        return $this->builder->where(function ($query) use ($keyWord) {
+            $query->where('site_url', 'LIKE', "%{$keyWord['value']}%")
+                ->orWhere('site_id', 'LIKE', "%{$keyWord['value']}%")
+                ->orWhere('site_xpath', 'LIKE', "%{$keyWord['value']}%")
+                ->orWhere('recent_price', 'LIKE', "%{$keyWord['value']}%")
+                ->orWhere('last_crawled_at', 'LIKE', "%{$keyWord['value']}%");
+        });
+//        return $this->builder->where('site_url', 'LIKE', "%{$keyWord['value']}%")
+//            ->orWhere('site_id', 'LIKE', "%{$keyWord['value']}%")
+//            ->orWhere('site_xpath', 'LIKE', "%{$keyWord['value']}%")
+//            ->orWhere('recent_price', 'LIKE', "%{$keyWord['value']}%")
+//            ->orWhere('last_crawled_at', 'LIKE', "%{$keyWord['value']}%");
+    }
+
+    public function status($status)
+    {
+        return $this->builder->where('status', $status);
     }
 
     /**

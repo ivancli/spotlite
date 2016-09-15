@@ -1,9 +1,14 @@
 <tr class="site-wrapper" data-product-site-id="{{$productSite->getKey()}}"
     data-site-edit-url="{{$productSite->urls['edit']}}"
-    data-site-alert-url="{{$productSite->urls['alert']}}">
+    data-site-alert-url="{{$productSite->urls['alert']}}"
+    data-site-update-url="{{$productSite->urls['update']}}">
     <td>{{parse_url($productSite->site->site_url)['host']}}</td>
     <td>{{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}</td>
-    <td></td>
+    <td>
+        <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;">
+            <i class="fa fa-check-circle-o {{$productSite->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
+        </a>
+    </td>
     <td>{{$productSite->site->last_crawled_at}}</td>
     <td class="text-right action-cell">
         <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;">
@@ -82,7 +87,6 @@
                                 "callback": function (response) {
                                     if (response.status == true) {
                                         showLoading();
-                                        console.info('response.productSite', response.productSite);
                                         if (typeof response.productSite != 'undefined') {
                                             $.get(response.productSite.urls.show, function (html) {
                                                 hideLoading();
@@ -144,6 +148,38 @@
                     alertP("Error", "Unable to show add site form, please try again later.");
                 }
             });
+        }
+
+        function toggleMyPrice(el) {
+            var myPrice = $(el).find("i").hasClass("text-primary") ? "n" : "y";
+            showLoading();
+
+            $.ajax({
+                "url": $(el).find("i").closest(".site-wrapper").attr("data-site-update-url"),
+                "method": "put",
+                "data": {
+                    "my_price": myPrice
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        if ($(el).find("i").hasClass("text-primary")) {
+                            $(el).find("i").removeClass("text-primary").addClass("text-muted-further")
+                        } else {
+                            $(el).closest(".product-wrapper").find(".btn-my-price i").removeClass("text-primary").addClass("text-muted-further")
+                            $(el).find("i").removeClass("text-muted-further").addClass("text-primary")
+
+                        }
+                    } else {
+                        alertP("Error", "unable to set my price, please try again later.");
+                    }
+                },
+                "error": function () {
+                    hideLoading();
+                    alertP("Error", "unable to set my price, please try again later.");
+                }
+            })
         }
     </script>
 </tr>

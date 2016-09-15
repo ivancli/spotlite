@@ -9,6 +9,7 @@
 namespace App\Models;
 
 
+use App\Filters\QueryFilter;
 use App\Models\DeletedRecordModels\DeletedCategory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,6 +35,11 @@ class Category extends Model
     public function alerts()
     {
         return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'category_id');
+    }
+
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
     }
 
     /**

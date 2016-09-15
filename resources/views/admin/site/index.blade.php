@@ -8,6 +8,27 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-solid">
+                <div class="box-body toolbar">
+                    <div class="form-inline">
+                        Filter by status &nbsp;
+                        <select id="sel-status-filter" class="form-control sl-form-control"
+                                onchange="reloadSiteTable();">
+                            <option value=""></option>
+                            <option value="ok">OK</option>
+                            <option value="fail_html">No HTML</option>
+                            <option value="fail_price">Incorrect Price Format</option>
+                            <option value="fail_xpath">Incorrect xPath</option>
+                            <option value="null_xpath">No xPath</option>
+                            <option value="waiting">Waiting</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-solid">
                 <div class="box-body">
                     <table id="tbl-site" class="table table-bordered table-hover table-striped">
                         <thead>
@@ -20,7 +41,7 @@
                             <th>Last Price</th>
                             <th>Last Crawl</th>
                             <th>Status</th>
-                            <th width="70"></th>
+                            <th width="100"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,6 +72,11 @@
                 "ajax": {
                     "url": "{{route(request()->route()->getName())}}",
                     "data": function (d) {
+                        if ($("#sel-status-filter").val() != "") {
+                            var statusSearch = $("#sel-status-filter").val();
+                            d.status = statusSearch;
+                        }
+
                         $.each(d.order, function (index, order) {
                             if (typeof d.columns[d.order[index].column] != "undefined") {
                                 d.order[index].column = d.columns[d.order[index].column].name;
@@ -72,7 +98,7 @@
                                         $("<div>").text(timestampToDateTimeByFormat(timestamp, "Y-m-d")).attr({
                                             "title": timestampToDateTimeByFormat(timestamp, "Y-m-d H:i"),
                                             "data-toggle": "tooltip"
-                                        })
+                                        }).addClass("text-right")
                                 ).html();
                             } else {
                                 return "";
@@ -101,23 +127,25 @@
                         }
                     },
                     {
+                        "class": "break-word",
                         "name": "site_xpath",
                         "data": function (data) {
-                            console.info(data);
                             return $("<div>").append(
-                                    $("<div>").css("padding-right", "20px").append(
-                                            $("<span>").text(data.site_xpath).addClass("lbl-site-xpath"),
-                                            $("<input>").attr({
-                                                "type": "text",
-                                                "value": data.site_xpath
-                                            }).hide().addClass("txt-site-xpath form-control input-sm"),
+                                    $("<div>").addClass("xpath-wrapper").append(
+                                            $("<div>").append(
+                                                    $("<span>").text(data.site_xpath).addClass("lbl-site-xpath"),
+                                                    $("<input>").attr({
+                                                        "type": "text",
+                                                        "value": data.site_xpath
+                                                    }).hide().addClass("txt-site-xpath form-control input-sm")
+                                            ),
                                             $("<a>").attr({
                                                 "href": "#",
                                                 "onclick": "togglexPathInput(this); return false;",
                                                 "data-url": data.urls.admin_update
                                             }).append(
-                                                    $("<i>").addClass("fa fa-pencil float-right text-muted").css("margin-right", "-20px")
-                                            )
+                                                    $("<i>").addClass("fa fa-pencil text-muted")
+                                            ).addClass("btn-edit-xpath")
                                     )
                             ).html();
 
@@ -128,7 +156,11 @@
                         "name": "recent_price",
                         "data": function (data) {
                             if (data.recent_price != null) {
-                                return "$" + parseFloat(data.recent_price).formatMoney();
+                                return $("<div>").append(
+                                        $("<div>").append(
+                                                "$" + parseFloat(data.recent_price).formatMoney()
+                                        ).addClass("text-right")
+                                ).html();
                             }
                             return data.recent_price;
                         }
@@ -136,7 +168,12 @@
                     {
                         "name": "last_crawled_at",
                         "data": function (data) {
-                            return data.last_crawled_at;
+                            //data.last_crawled_at;
+                            return $("<div>").append(
+                                    $("<div>").append(
+                                            data.last_crawled_at
+                                    ).addClass("text-right")
+                            ).html();
                         }
                     },
                     {
@@ -145,7 +182,6 @@
                         "sortable": false,
                         "data": function (data) {
                             var $text = $("<div>");
-                            console.info(data.status);
                             switch (data.status) {
                                 case "ok":
                                     $text.append(
@@ -215,25 +251,41 @@
                             return $("<div>").append(
                                     $("<a>").attr({
                                         "href": data.site_url,
-                                        "target": "_blank"
+                                        "target": "_blank",
+                                        "title": "Go to the site",
+                                        "data-toggle": "tooltip"
                                     }).append(
-                                            $("<i>").addClass("fa fa-globe")
+                                            $("<i>").addClass("glyphicon glyphicon-globe")
+                                    ).addClass("text-muted"),
+                                    "&nbsp;",
+                                    $("<a>").attr({
+                                        "href": "#",
+                                        "onclick": 'showEditCrawlerForm(this); return false;',
+                                        "title": "Edit crawler",
+                                        "data-toggle": "tooltip",
+                                        "data-url": data.urls.admin_crawler_edit
+                                    }).append(
+                                            $("<i>").addClass("glyphicon glyphicon-cog")
                                     ).addClass("text-muted"),
                                     "&nbsp;",
                                     $("<a>").attr({
                                         "href": "#",
                                         "onclick": 'testCrawler(this); return false;',
-                                        "data-url": data.urls.test
+                                        "data-url": data.urls.test,
+                                        "title": "Test crawl",
+                                        "data-toggle": "tooltip"
                                     }).append(
-                                            $("<i>").addClass("fa fa-refresh")
+                                            $("<i>").addClass("glyphicon glyphicon-refresh")
                                     ).addClass("text-muted"),
                                     "&nbsp;",
                                     $("<a>").attr({
                                         "href": "#",
                                         "data-url": data.urls.admin_delete,
-                                        "onclick": "btnDeleteSiteOnClick(this); return false;"
+                                        "onclick": "btnDeleteSiteOnClick(this); return false;",
+                                        "title": "Delete this site",
+                                        "data-toggle": "tooltip"
                                     }).append(
-                                            $("<i>").addClass("fa fa-trash-o")
+                                            $("<i>").addClass("glyphicon glyphicon-trash")
                                     ).addClass("text-muted text-danger")
                             ).html()
                         }
@@ -258,7 +310,6 @@
             } else {
                 /* TODO save xpath */
                 updateXPath($(el).attr("data-url"), {"site_xpath": $txt.val()}, function (response) {
-                    console.info('response', response);
                     $lbl.show().text(response.site.site_xpath);
                     $txt.hide().val(response.site.site_xpath);
                 }, function (response) {
@@ -305,7 +356,6 @@
                 "dataType": "json",
                 "success": function (response) {
                     hideLoading();
-                    console.info(response);
                     if (response.status == true) {
                         alertP("Crawler Test", "The crawled price is $" + response.price);
                     } else {
@@ -326,6 +376,27 @@
         function showAddSiteForm() {
             showLoading();
             $.get("{{route("admin.site.create")}}", function (html) {
+                hideLoading();
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady({
+                            "callback": function (response) {
+                                tblSite.ajax.reload();
+                            }
+                        })
+                    }
+                });
+                $modal.on("hidden.bs.modal", function () {
+                    $(this).remove();
+                });
+            })
+        }
+
+        function showEditCrawlerForm(el) {
+            showLoading();
+            $.get($(el).attr("data-url"), function (html) {
                 hideLoading();
                 var $modal = $(html);
                 $modal.modal();
@@ -380,6 +451,10 @@
                     "dismiss": true
                 }
             })
+        }
+
+        function reloadSiteTable() {
+            tblSite.ajax.reload();
         }
     </script>
 @stop

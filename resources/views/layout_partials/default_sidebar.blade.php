@@ -43,11 +43,12 @@
                         <span>Crawler Management</span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{Style::set_active_and(array('admin', 'domain'))}}">
-                            <a href="{{route('admin.domain.index')}}">
-                                <i class="fa fa-circle-o"></i> Domains
-                            </a>
-                        </li>
+                        {{--TODO enable this in the second phase--}}
+                        {{--<li class="{{Style::set_active_and(array('admin', 'domain'))}}">--}}
+                            {{--<a href="{{route('admin.domain.index')}}">--}}
+                                {{--<i class="fa fa-circle-o"></i> Domains--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                         <li class="{{Style::set_active_and(array('admin', 'site'))}}">
                             <a href="{{route('admin.site.index')}}">
                                 <i class="fa fa-circle-o"></i> Sites

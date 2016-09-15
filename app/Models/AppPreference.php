@@ -28,6 +28,7 @@ class AppPreference extends Model
             ));
         } else {
             $pref->value = $value;
+            $pref->save();
         }
         return $pref;
     }
@@ -46,6 +47,13 @@ class AppPreference extends Model
     {
         $crawlTimes = (new static)->getPreference("CRAWL_TIME");
         $times = explode(',', $crawlTimes);
+        return $times;
+    }
+
+    public static function getUserSyncTimes()
+    {
+        $userSyncTimes = (new static)->getPreference("USER_SYNC_TIME");
+        $times = explode(',', $userSyncTimes);
         return $times;
     }
 }

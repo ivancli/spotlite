@@ -11,7 +11,8 @@
             <div class="input-group sl-input-group">
                 <input type="hidden" name="category_id" value="{{$category->getKey()}}">
                 <input type="text" name="product_name" class="form-control sl-form-control input-sm product-name"
-                       placeholder="Product Name">
+                       placeholder="Product Name"
+                       onkeyup="if(event.keyCode == 27){cancelCreateProduct(this)}">
                 <span class="input-group-btn">
                             <button type="submit" class="btn btn-primary btn-flat btn-sm">Add</button>
                         </span>
@@ -41,7 +42,6 @@
             "dataType": "json",
             "success": function (response) {
                 hideLoading();
-                console.info(response);
                 if (response.status == true) {
                     if (response.product != null) {
                         showLoading();

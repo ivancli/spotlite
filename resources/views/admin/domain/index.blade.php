@@ -73,7 +73,6 @@
                     {
                         "name": "domain_xpath",
                         "data": function (data) {
-                            console.info(data);
                             return $("<div>").append(
                                     $("<div>").css("padding-right", "20px").append(
                                             $("<span>").text(data.domain_xpath).addClass("lbl-domain-xpath"),
@@ -141,7 +140,6 @@
             } else {
                 /* TODO save xpath */
                 updateXPath($(el).attr("data-url"), {"domain_xpath": $txt.val()}, function (response) {
-                    console.info('response', response);
                     $lbl.show().text(response.domain.domain_xpath);
                     $txt.hide().val(response.domain.domain_xpath);
                 }, function (response) {
@@ -188,7 +186,6 @@
                 "dataType": "json",
                 "success": function (response) {
                     hideLoading();
-                    console.info(response);
                     if (response.status == true) {
                         alertP("Crawler Test", "The crawled price is $" + response.price);
                     } else {

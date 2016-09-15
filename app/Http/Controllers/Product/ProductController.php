@@ -13,6 +13,7 @@ use App\Events\Products\Product\ProductStoring;
 use App\Events\Products\Product\ProductUpdated;
 use App\Events\Products\Product\ProductUpdating;
 use App\Exceptions\ValidationException;
+use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 
 use App\Models\Category;
@@ -33,23 +34,42 @@ class ProductController extends Controller
 {
     protected $productManager;
     protected $categoryManager;
+    protected $filter;
 
-    public function __construct(ProductManager $productManager, CategoryManager $categoryManager)
+    public function __construct(ProductManager $productManager, CategoryManager $categoryManager, QueryFilter $filter)
     {
         $this->productManager = $productManager;
         $this->categoryManager = $categoryManager;
+        $this->filter = $filter;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = auth()->user()->categories;
-        event(new ProductListViewed());
-        return view('products.index')->with(compact(['categories']));
+        if ($request->ajax()) {
+            $data = $this->categoryManager->lazyLoadCategories($this->filter);
+            $html = "";
+            foreach ($data->categories as $category) {
+                $html .= view("products.category.partials.single_category")->with(compact(['category']));
+            }
+            $data->categoriesHTML = $html;
+            $data->status = true;
+            if ($request->wantsJson()) {
+                return response()->json($data);
+            } else {
+                return $html;
+            }
+        } else {
+            $categories = auth()->user()->categories;
+            $productCount = $this->productManager->getProductsCount();
+            event(new ProductListViewed());
+            return view('products.index')->with(compact(['categories', 'productCount']));
+        }
     }
 
     /**

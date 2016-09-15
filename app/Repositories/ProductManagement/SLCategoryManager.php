@@ -3,7 +3,9 @@ namespace App\Repositories\ProductManagement;
 
 use App\Contracts\ProductManagement\CategoryManager;
 use App\Contracts\ProductManagement\ProductManager;
+use App\Filters\QueryFilter;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 /**
  * Created by PhpStorm.
@@ -14,10 +16,12 @@ use App\Models\Category;
 class SLCategoryManager implements CategoryManager
 {
     protected $productManager;
+    protected $request;
 
-    public function __construct(ProductManager $productManager)
+    public function __construct(ProductManager $productManager, Request $request)
     {
         $this->productManager = $productManager;
+        $this->request = $request;
     }
 
     public function getCategories()
@@ -30,6 +34,11 @@ class SLCategoryManager implements CategoryManager
     {
         $category = Category::findOrFail($id);
         return $category;
+    }
+
+    public function getCategoriesCount()
+    {
+        return auth()->user()->categories->count();
     }
 
     public function createCategory($options)
@@ -55,5 +64,19 @@ class SLCategoryManager implements CategoryManager
         }
         $category->delete();
         return true;
+    }
+
+    public function lazyLoadCategories(QueryFilter $queryFilter)
+    {
+        $categoryBuilder = auth()->user()->categories()->filter($queryFilter);
+        if (!$this->request->has('order')) {
+            $categoryBuilder->orderBy('category_order', 'asc')->orderBy('category_id');
+        }
+        $categories = $categoryBuilder->get();
+        $output = new \stdClass();
+        $output->recordTotal = $this->getCategoriesCount();
+        $output->recordFiltered = $categories->count();
+        $output->categories = $categories;
+        return $output;
     }
 }

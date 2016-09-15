@@ -12,7 +12,6 @@ $(function () {
             /*TODO show first login welcome message*/
             $.get('/msg/subscription/welcome/0', function (html) {
                 hideLoading();
-                console.info(html);
                 var $modal = popupFrame(html);
                 $modal.modal();
                 // $modal.on("hidden.bs.modal", showCreateGroupFirstLogin);

@@ -201,7 +201,7 @@ class ProductSiteController extends Controller
         }
         $productSite = $this->productSiteManager->getProductSite($id);
         $originalSite = $productSite->site;
-        $oldProduct = $productSite->product;
+//        $oldProduct = $productSite->product;
 
         /** if user has chosen a price */
         if ($request->has('site_id')) {
@@ -230,6 +230,34 @@ class ProductSiteController extends Controller
         } else {
             /*TODO implement this if necessary*/
         }
+    }
+
+    public function setMyPrice(Request $request, $product_site_id)
+    {
+        /*TODO validate my price from request*/
+
+        $productSite = $this->productSiteManager->getProductSite($product_site_id);
+        $myPrice = $request->get("my_price");
+        if ($myPrice == "y") {
+            $allProductSitesOfThisProduct = $productSite->product->productSites;
+            foreach ($allProductSitesOfThisProduct as $otherProductSite) {
+                $otherProductSite->my_price = "n";
+                $otherProductSite->save();
+            }
+        }
+        $productSite->my_price = $myPrice;
+        $productSite->save();
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'productSite']));
+            } else {
+                return compact(['status', 'productSite']);
+            }
+        } else {
+            /*TODO implement this if needed*/
+        }
+
     }
 
     /**

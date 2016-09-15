@@ -33,7 +33,12 @@
                     {{dump($subscription)}}
                     <div class="row">
                         <div class="col-sm-12 text-right">
-                            <a href="{{$updatePaymentLink}}" target="_blank" class="btn btn-default">Update Payment Details</a>
+                            <a href="{{$portalLink}}" target="_blank" class="btn btn-default">
+                                Access Chargify Billing Portal
+                            </a>
+                            <a href="{{$updatePaymentLink}}" target="_blank" class="btn btn-default">
+                                Update Payment Details
+                            </a>
                             <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-default">
                                 Change My Plan
                             </a>

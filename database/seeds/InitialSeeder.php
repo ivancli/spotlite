@@ -9,8 +9,8 @@ class InitialSeeder extends Seeder
     public function run()
     {
         $userId = DB::table('users')->insertGetId([
-                'email' => 'admin@um.dev',
-                'password' => bcrypt('secret'),
+            'email' => 'admin@um.dev',
+            'password' => bcrypt('secret'),
         ]);
 
         $superAdmin = new \Invigor\UM\UMRole();
@@ -19,8 +19,8 @@ class InitialSeeder extends Seeder
         $superAdmin->save();
 
         DB::table('role_user')->insert([
-                'user_id' => $userId,
-                'role_id' => $superAdmin->role_id,
+            'user_id' => $userId,
+            'role_id' => $superAdmin->role_id,
         ]);
 
         /* parent permissions */
@@ -136,6 +136,10 @@ class InitialSeeder extends Seeder
         DB::table("app_preferences")->insert([
             "element" => "CRAWL_TIME",
             "value" => "0,2,4,6,8,10,12,14,16,18,20,22"
+        ]);
+        DB::table("app_preferences")->insert([
+            "element" => "USER_SYNC_TIME",
+            "value" => "0,4,8,12,16,20",
         ]);
     }
 }

@@ -64,6 +64,13 @@ class AppServiceProvider extends ServiceProvider
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\AdminDomainFilters');
 
+        /* Category Query Filters */
+        $this->app->when('App\Http\Controllers\Product\ProductController')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\CategoryFilters');
+        $this->app->when('App\Models\Category')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\CategoryFilters');
 
         /*************************************************************************
          *                                                                       *

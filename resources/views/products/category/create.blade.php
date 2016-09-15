@@ -12,8 +12,10 @@
 
                     {!! Form::open(array('route' => array('category.store'), 'method'=>'post', 'class'=>'frm-add-category', 'onsubmit' => 'btnAddCategoryOnClick(this); return false;')) !!}
                     <div class="input-group sl-input-group">
-                        <input type="text" name="category_name" class="form-control sl-form-control input-sm category-name"
-                               placeholder="Category Name">
+                        <input type="text" name="category_name"
+                               class="form-control sl-form-control input-sm category-name"
+                               placeholder="Category Name"
+                               onkeyup="if(event.keyCode == 27){cancelCreateCategory(this)}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-primary btn-flat btn-sm">Add</button>
                         </span>
@@ -46,16 +48,17 @@
                 "dataType": "json",
                 "success": function (response) {
                     hideLoading();
-                    console.info(response);
                     if (response.status == true) {
                         if (response.category != null) {
                             showLoading();
                             loadSingleCategory(response.category.urls.show, function (html) {
                                 hideLoading();
                                 alertP("Create Category", "Category has been created.");
-                                $(el).closest(".list-container").append(
-                                        html
-                                );
+                                if (theEnd) {
+                                    $(el).closest(".list-container").append(
+                                            html
+                                    );
+                                }
                                 $(el).closest(".category-wrapper.create").remove();
                             });
                         } else {

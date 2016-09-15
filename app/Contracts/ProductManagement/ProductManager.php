@@ -17,4 +17,6 @@ interface ProductManager
     public function updateProduct($id, $options);
 
     public function deleteProduct($id);
+
+    public function getProductsCount();
 }

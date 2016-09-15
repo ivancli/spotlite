@@ -1,5 +1,6 @@
 <?php
 namespace App\Contracts\SubscriptionManagement;
+use App\Models\Subscription;
 
 /**
  * Created by PhpStorm.
@@ -79,4 +80,12 @@ interface SubscriptionManager
      * @return mixed
      */
     public function generateUpdatePaymentLink($subscription_id);
+
+    /**
+     * (Generate) Retrieve billing portal link
+     * https://www.chargify.com/tutorials/billing-portal/
+     * @param Subscription $subscription
+     * @return mixed
+     */
+    public function getBillingPortalLink(Subscription $subscription);
 }

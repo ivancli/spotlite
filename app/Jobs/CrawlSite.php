@@ -37,10 +37,11 @@ class CrawlSite extends Job implements ShouldQueue
         if (!is_null($this->crawler->crawler_class)) {
             $crawler_class = $this->crawler->crawler_class;
         } else {
-            $domain = Domain::where("domain_url", $this->crawler->site->domain)->first();
-            if (!is_null($domain) && !is_null($domain->crawler_class)) {
-                $crawler_class = $domain->crawler_class;
-            }
+            /*TODO enable domain in the second phase*/
+//            $domain = Domain::where("domain_url", $this->crawler->site->domain)->first();
+//            if (!is_null($domain) && !is_null($domain->crawler_class)) {
+//                $crawler_class = $domain->crawler_class;
+//            }
         }
         app()->bind('Invigor\Crawler\Contracts\CrawlerInterface', 'Invigor\Crawler\Repositories\Crawlers\\' . $crawler_class);
 
@@ -48,10 +49,11 @@ class CrawlSite extends Job implements ShouldQueue
         if (!is_null($this->crawler->parser_class)) {
             $parser_class = $this->crawler->parser_class;
         } else {
-            $domain = Domain::where("domain_url", $this->crawler->site->domain)->first();
-            if (!is_null($domain) && !is_null($domain->parser_class)) {
-                $parser_class = $domain->parser_class;
-            }
+            /*TODO enable domain in the second phase*/
+//            $domain = Domain::where("domain_url", $this->crawler->site->domain)->first();
+//            if (!is_null($domain) && !is_null($domain->parser_class)) {
+//                $parser_class = $domain->parser_class;
+//            }
         }
 
         app()->bind('Invigor\Crawler\Contracts\ParserInterface', 'Invigor\Crawler\Repositories\Parsers\\' . $parser_class);

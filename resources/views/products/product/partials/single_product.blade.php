@@ -57,7 +57,7 @@
     <tr>
         <td></td>
         <td colspan="2" class="table-container">
-            <div id="product-{{$product->getKey()}}" class="collapse in" aria-expanded="true">
+            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in" aria-expanded="true">
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
@@ -179,10 +179,7 @@
                 "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
-                    $modal.modal({
-                        "backdrop": "static",
-                        "keyboard": false
-                    });
+                    $modal.modal();
                     $modal.on("shown.bs.modal", function () {
                         if ($.isFunction(modalReady)) {
                             modalReady({

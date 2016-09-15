@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('category', 'Product\CategoryController');
         Route::get('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
 //        Route::resource('site', 'Product\SiteController');
+        Route::put("product_site/{product_site_id}/my_price", 'Product\ProductSiteController@setMyPrice')->name('product_site.my_price');
         Route::resource('product_site', 'Product\ProductSiteController');
 
         /*alert routes*/
@@ -49,7 +50,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('alert/product_site/{product_site_id}', 'Product\AlertController@updateProductSiteAlert')->name('alert.product_site.update');
         Route::delete('alert/product_site/{product_site_id}', 'Product\AlertController@deleteProductSiteAlert')->name('alert.product_site.destroy');
         Route::resource('alert', 'Product\AlertController');
-
 
 
     });
@@ -72,8 +72,8 @@ Route::group(['middleware' => ['auth']], function () {
     /* admin crawler management */
     Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
     Route::resource('admin/site', 'Crawler\SiteController');
+    Route::resource('admin/crawler', 'Crawler\CrawlerController');
     Route::resource('admin/domain', 'Crawler\DomainController');
-
 
 
     Route::get('logout', 'Auth\AuthController@logout')->name('logout');

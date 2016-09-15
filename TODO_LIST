@@ -16,8 +16,9 @@ Create events and subscribers for the missing controller actions
 
 enhance the validator to be more dynamic
 
+* Load Product Banner partial through ajax
 
-
+* Add shortcut keys to xpath editor in crawler site management
 
 
 
@@ -29,3 +30,9 @@ Update cancel subscription to use ajax.
 Update profile management to use Ajax
 
 text ellipses on exclude sides drop down
+
+
+
+if categories are not all loaded, add a new category, it appears in between.
+The new category should appear at the end of record
+need to check if current list has been fully loaded, if not, do nothing.

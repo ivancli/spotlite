@@ -65,11 +65,17 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $allSubs = $user->subscriptions;
         $sub = $user->latestValidSubscription();
-        $current_sub_id = $user->latestValidSubscription()->api_subscription_id;
+        $current_sub_id = $sub->api_subscription_id;
         $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
+
+        $portalEnabled = !is_null($subscription->customer->portal_customer_created_at);
+        if ($portalEnabled) {
+            $portalLink = $this->subscriptionManager->getBillingPortalLink($sub);
+        }
+
         $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($current_sub_id);
         event(new SubscriptionManagementViewed());
-        return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink']));
+        return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink']));
     }
 
 

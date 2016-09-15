@@ -112,6 +112,10 @@
 
         function appendCreateProductBlock(el) {
             showLoading();
+            var $categoryCollapsible = $(el).closest(".category-wrapper").find(".collapsible-category-div");
+            if ($categoryCollapsible.attr("aria-expanded") == "false") {
+                $categoryCollapsible.addClass("in").attr("aria-expanded", true);
+            }
             var $div = $(el).closest(".tbl-category").find("tbody .collapsible-category-div");
             var categoryID = $(el).closest(".category-wrapper").attr("data-category-id");
             if ($div.find(".product-wrapper.create").length == 0) {
@@ -123,7 +127,7 @@
                     },
                     "success": function (html) {
                         hideLoading();
-                        $div.append(html);
+                        $div.prepend(html);
                         $div.find(".product-wrapper.create .product-name").focus();
                     }
                 });
