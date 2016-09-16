@@ -133,13 +133,47 @@ class InitialSeeder extends Seeder
         //attach permissions
         $superAdmin->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
 
+
+        /* CRAWLING CHECKPOINT */
         DB::table("app_preferences")->insert([
             "element" => "CRAWL_TIME",
             "value" => "0,2,4,6,8,10,12,14,16,18,20,22"
         ]);
+
         DB::table("app_preferences")->insert([
-            "element" => "USER_SYNC_TIME",
+            "element" => "CRAWL_RESERVED",
+            "value" => "n",
+        ]);
+        DB::table("app_preferences")->insert([
+            "element" => "CRAWL_RESERVED_BY",
+            "value" => null,
+        ]);
+        DB::table("app_preferences")->insert([
+            "element" => "CRAWL_LAST_RESERVED_AT",
+            "value" => null,
+        ]);
+
+
+
+        /* SYNC USER CHECKPOINT*/
+
+        DB::table("app_preferences")->insert([
+            "element" => "SYNC_TIME",
             "value" => "0,4,8,12,16,20",
         ]);
+
+        DB::table("app_preferences")->insert([
+            "element" => "SYNC_RESERVED",
+            "value" => "n",
+        ]);
+        DB::table("app_preferences")->insert([
+            "element" => "SYNC_RESERVED_BY",
+            "value" => null,
+        ]);
+        DB::table("app_preferences")->insert([
+            "element" => "SYNC_LAST_RESERVED_AT",
+            "value" => null,
+        ]);
+
     }
 }

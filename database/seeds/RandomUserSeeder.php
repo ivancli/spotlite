@@ -5,9 +5,8 @@ use Illuminate\Support\Facades\DB;
 
 class RandomUserSeeder extends Seeder
 {
-
     public function run()
     {
-        factory(App\Models\User::class, 123)->create();
+        factory(App\Models\User::class, 290)->create();
     }
 }

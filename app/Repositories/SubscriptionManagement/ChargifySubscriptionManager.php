@@ -5,6 +5,7 @@ use App\Contracts\SubscriptionManagement\SubscriptionManager;
 use App\Libraries\CommonFunctions;
 use App\Models\Subscription;
 use App\Models\SubscriptionDetail;
+use App\Models\User;
 use Exception;
 
 /**
@@ -268,5 +269,18 @@ class ChargifySubscriptionManager implements SubscriptionManager
         } else {
             return $billingPortalLink->value;
         }
+    }
+
+    /**
+     * Synchronise user subscription status
+     * @param User $user
+     * @return mixed
+     */
+    public function syncUserSubscription(User $user)
+    {
+        $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
+        file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($user) . "\r\n");
+
+
     }
 }

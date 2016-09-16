@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Contracts\CrawlerManagement\CrawlerManager;
 use App\Jobs\CrawlSite;
+use App\Jobs\SyncUser;
 use App\Models\AppPreference;
 use App\Models\User;
 use App\Repositories\CrawlerManagement\SLCrawlerManager;
@@ -44,33 +45,60 @@ class Kernel extends ConsoleKernel
          */
         $schedule->call(function () {
 
-            $crawlTimes = AppPreference::getCrawlTimes();
-            $currentHour = intval(date("H"));
-            if (in_array($currentHour, $crawlTimes)) {
-                $crawler = $this->crawlerManager->pickCrawler();
-                if (!is_null($crawler)) {
-                    dispatch((new CrawlSite($crawler))->onQueue("crawling"));
-                    $crawler->queue();
+            $lastReservedAt = AppPreference::getCrawlLastReservedAt();
+
+            if (AppPreference::getCrawlReserved() == 'n' && (is_null($lastReservedAt) || intval((time() - strtotime($lastReservedAt)) / 3600) != 0)) {
+                /*reserve the task*/
+                AppPreference::setCrawlReserved();
+                AppPreference::setCrawlLastReservedAt();
+
+                /* get the designed crawl time */
+                $crawlTimes = AppPreference::getCrawlTimes();
+                $currentHour = intval(date("H"));
+
+                /* in the designed crawl time? */
+                if (in_array($currentHour, $crawlTimes)) {
+
+                    $crawlers = $this->crawlerManager->getCrawlers();
+
+                    foreach ($crawlers as $crawler) {
+                        if (is_null($crawler->last_active_at) || intval((time() - strtotime($crawler->last_active_at)) / 3600) != 0) {
+                            dispatch((new CrawlSite($crawler))->onQueue("crawling"));
+                            $crawler->queue();
+                        } else {
+                            /*log the skipped crawler*/
+                            $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
+                            file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($crawler) . "\r\n");
+                        }
+                    }
+                    AppPreference::setCrawlReserved('n');
                 }
             }
-        })->everyMinute();
+            sleep(1);
+        })->everyMinute()->name("crawl-sites");
 
+
+        /**
+         * Sync user task
+         */
         $schedule->call(function () {
-            /*testing*/
-            $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
-            file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s'));
-            return;
+            $lastReservedAt = AppPreference::getSyncLastReservedAt();
+            if (AppPreference::getSyncReserved() == 'n' && (is_null($lastReservedAt) || intval((time() - strtotime($lastReservedAt)) / 3600) != 0)) {
+                /*reserve the task*/
+                AppPreference::setSyncReserved();
+                AppPreference::setSyncLastReservedAt();
 
-            $userSyncTime = AppPreference::getUserSyncTimes();
-            $currentHour = intval(date("H"));
-            if (in_array($currentHour, $userSyncTime)) {
-                $users = User::all();
-                if (!is_null($crawler)) {
-                    dispatch((new CrawlSite($crawler))->onQueue("crawling"));
-                    $crawler->queue();
+                $userSyncTime = AppPreference::getSyncTimes();
+                $currentHour = intval(date("H"));
+                if (in_array($currentHour, $userSyncTime)) {
+                    $users = User::all();
+                    foreach ($users as $user) {
+                        dispatch((new SyncUser($user))->onQueue("syncing"));
+                    }
                 }
             }
-        })->everyMinute()->withoutOverlapping();
+            sleep(1);
+        })->everyMinute()->name("sync-users");
         /**
          * User
          */

@@ -20,7 +20,8 @@ class SLCrawlerManager implements CrawlerManager
 {
     public function getCrawlers()
     {
-        // TODO: Implement getCrawlers() method.
+        $crawlers = Crawler::all();
+        return $crawlers;
     }
 
     public function getCrawler($crawler_id)
@@ -88,7 +89,7 @@ class SLCrawlerManager implements CrawlerManager
 
         if (is_null($html) || strlen($html) == 0) {
             /*TODO handle error, page not crawled*/
-            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/ivan.log', "unable to crawl the web page");
+            $site->statusFailHTML();
         }
 
         $xpath = $site->site_xpath;
@@ -125,17 +126,14 @@ class SLCrawlerManager implements CrawlerManager
                 } else {
                     /*TODO handle error, price is incorrect*/
                     $site->statusFailPrice();
-                    file_put_contents('/home/vagrant/Code/spotlite/storage/logs/ivan.log', "price is incorrect");
                 }
             } else {
                 /*TODO handle error, xpath is incorrect*/
                 $site->statusFailXpath();
-                file_put_contents('/home/vagrant/Code/spotlite/storage/logs/ivan.log', "xpath is incorrect");
             }
         } else {
             /*TODO handle error, cannot find xpath*/
             $site->statusNullXpath();
-            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/ivan.log', "cannot find xpath");
         }
         $crawler->resetStatus();
     }

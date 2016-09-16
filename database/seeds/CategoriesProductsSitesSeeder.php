@@ -13,5 +13,8 @@ class CategoriesProductsSitesSeeder extends DatabaseSeeder
         factory(App\Models\Category::class, 50)->create()->each(function ($category) {
             $category->products()->save(factory(App\Models\Product::class)->make());
         });
+        factory(App\Models\Site::class, 5000)->create()->each(function ($site) {
+            $site->crawler()->save(factory(App\Models\Crawler::class)->make());
+        });
     }
 }

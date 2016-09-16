@@ -1,6 +1,8 @@
 <?php
 namespace App\Contracts\SubscriptionManagement;
+
 use App\Models\Subscription;
+use App\Models\User;
 
 /**
  * Created by PhpStorm.
@@ -88,4 +90,11 @@ interface SubscriptionManager
      * @return mixed
      */
     public function getBillingPortalLink(Subscription $subscription);
+
+    /**
+     * Synchronise user subscription status
+     * @param User $user
+     * @return mixed
+     */
+    public function syncUserSubscription(User $user);
 }
