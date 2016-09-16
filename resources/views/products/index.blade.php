@@ -58,9 +58,8 @@
             }, function (xhr, status, error) {
 
             });
-
-            window.onscroll = function (ev) {
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            $(window).scroll(function() {
+                if(Math.round($(window).scrollTop() + $(window).height()) == $(document).height()) {
                     if (!theEnd) {
                         loadCategories(start, initLength, function (response) {
                             $(".list-container").append(response.categoriesHTML);
@@ -69,7 +68,18 @@
                         });
                     }
                 }
-            };
+            });
+//            window.onscroll = function (ev) {
+//                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+//                    if (!theEnd) {
+//                        loadCategories(start, initLength, function (response) {
+//                            $(".list-container").append(response.categoriesHTML);
+//                        }, function (xhr, status, error) {
+//
+//                        });
+//                    }
+//                }
+//            };
         });
 
         function appendCreateCategoryBlock() {

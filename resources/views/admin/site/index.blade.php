@@ -136,6 +136,7 @@
                                                     $("<span>").text(data.site_xpath).addClass("lbl-site-xpath"),
                                                     $("<input>").attr({
                                                         "type": "text",
+                                                        "onkeyup": "if(event.keyCode == 27) togglexPathInput(this); return false;",
                                                         "value": data.site_xpath
                                                     }).hide().addClass("txt-site-xpath form-control input-sm")
                                             ),
@@ -306,15 +307,20 @@
             var $lbl = $(el).closest("tr").find(".lbl-site-xpath");
             if ($lbl.is(":visible")) {
                 $lbl.hide();
-                $txt.show();
+                $txt.show().focus();
             } else {
-                /* TODO save xpath */
-                updateXPath($(el).attr("data-url"), {"site_xpath": $txt.val()}, function (response) {
-                    $lbl.show().text(response.site.site_xpath);
-                    $txt.hide().val(response.site.site_xpath);
-                }, function (response) {
+                if ($(el).attr("data-url")) {
+                    /* TODO save xpath */
+                    updateXPath($(el).attr("data-url"), {"site_xpath": $txt.val()}, function (response) {
+                        $lbl.show().text(response.site.site_xpath);
+                        $txt.hide().val(response.site.site_xpath);
+                    }, function (response) {
 
-                });
+                    });
+                } else {
+                    $lbl.show();
+                    $txt.hide().val($lbl.text());
+                }
             }
         }
 

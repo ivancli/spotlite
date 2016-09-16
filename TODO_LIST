@@ -36,3 +36,6 @@ text ellipses on exclude sides drop down
 if categories are not all loaded, add a new category, it appears in between.
 The new category should appear at the end of record
 need to check if current list has been fully loaded, if not, do nothing.
+
+
+check if task scheduler provide callback for skipped operation
