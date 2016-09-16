@@ -37,10 +37,9 @@ class SubscriptionController extends Controller
      */
     public function viewProducts()
     {
-        $chosenAPIProductIDs = array();
-        $validSubscriptions = auth()->user()->validSubscriptions();
-        foreach ($validSubscriptions as $subscription) {
-            $chosenAPIProductIDs[] = $subscription->api_product_id;
+        $subscription = auth()->user()->validSubscription();
+        if (!is_null($subscription)) {
+            $chosenAPIProductID = $subscription->api_product_id;
         }
 
         /*load all products/services*/
@@ -48,12 +47,12 @@ class SubscriptionController extends Controller
 
         /* remove the trail/free product for the existing subscriber */
         foreach ($products as $index => $product) {
-            if (auth()->user()->subscriptions->count() != 0 && $product->product->price_in_cents == 0) {
+            if (!is_null($subscription) && $product->product->price_in_cents == 0) {
                 unset($products[$index]);
             }
         }
         event(new SubscriptionViewed());
-        return view('subscriptions.subscription_plans')->with(compact(['products', 'chosenAPIProductIDs']));
+        return view('subscriptions.subscription_plans')->with(compact(['products', 'chosenAPIProductID']));
     }
 
     /**
@@ -63,21 +62,21 @@ class SubscriptionController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $allSubs = $user->subscriptions;
-        $sub = $user->latestValidSubscription();
-        $current_sub_id = $sub->api_subscription_id;
-        $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
+        $sub = $user->validSubscription();
+        if (!is_null($sub)) {
+            $current_sub_id = $sub->api_subscription_id;
+            $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
 
-        $portalEnabled = !is_null($subscription->customer->portal_customer_created_at);
-        if ($portalEnabled) {
-            $portalLink = $this->subscriptionManager->getBillingPortalLink($sub);
+            $portalEnabled = !is_null($subscription->customer->portal_customer_created_at);
+            if ($portalEnabled) {
+                $portalLink = $this->subscriptionManager->getBillingPortalLink($sub);
+            }
+
+            $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($current_sub_id);
+            event(new SubscriptionManagementViewed());
+            return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink']));
         }
-
-        $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($current_sub_id);
-        event(new SubscriptionManagementViewed());
-        return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink']));
     }
-
 
     public function store(Request $request)
     {
@@ -92,13 +91,12 @@ class SubscriptionController extends Controller
         $product = $this->subscriptionManager->getProduct($productId);
         if (!is_null($product)) {
             if ($product->require_credit_card) {
-                if (!is_null(auth()->user()->subscriptions->last())) {
-                    $previousSubscription = auth()->user()->subscriptions->last();
-                    $previousAPISubscription = $this->subscriptionManager->getSubscription(auth()->user()->subscriptions->last()->api_subscription_id);
+                if (!is_null(auth()->user()->subscription)) {
+                    $previousSubscription = auth()->user()->subscription;
+                    $previousAPISubscription = $this->subscriptionManager->getSubscription($previousSubscription->api_subscription_id);
                     $previousAPICreditCard = $previousAPISubscription->credit_card;
                     if (!is_null($previousAPICreditCard)) {
                         if ($previousAPICreditCard->expiration_year > date("Y") || ($previousAPICreditCard->expiration_year == date("Y") && $previousAPICreditCard->expiration_month >= date('n'))) {
-
                             $fields = new \stdClass();
                             $subscription = new \stdClass();
                             $subscription->product_id = $product->id;
@@ -107,12 +105,13 @@ class SubscriptionController extends Controller
                             $fields->subscription = $subscription;
                             $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
                             if (isset($result->subscription)) {
-                                $subscription = new Subscription();
-                                $subscription->user_id = auth()->user()->getKey();
-                                $subscription->api_product_id = $result->subscription->product->id;
-                                $subscription->api_subscription_id = $result->subscription->id;
-                                $subscription->api_customer_id = $result->subscription->customer->id;
-                                $subscription->save();
+//                                $subscription = new Subscription();
+//                                $subscription->user_id = auth()->user()->getKey();
+                                $previousSubscription->api_product_id = $result->subscription->product->id;
+                                $previousSubscription->api_subscription_id = $result->subscription->id;
+                                $previousSubscription->api_customer_id = $result->subscription->customer->id;
+                                $previousSubscription->cancelled_at = null;
+                                $previousSubscription->save();
                                 return redirect()->route('subscription.index');
                             }
                         }
@@ -187,8 +186,8 @@ class SubscriptionController extends Controller
 
                         $subscription_id = $request->get('id');
                         $subscription = $this->subscriptionManager->getSubscription($subscription_id);
-                        if ($user->latestValidSubscription() != false) {
-                            $sub = $user->latestValidSubscription();
+                        if (!is_null($user->validSubscription())) {
+                            $sub = $user->validSubscription();
                             $expiry_datetime = $subscription->expires_at;
                             $sub->api_product_id = $subscription->product->id;
                             $sub->api_customer_id = $subscription->customer->id;
@@ -232,14 +231,10 @@ class SubscriptionController extends Controller
     public function edit($id)
     {
 
-        $subscription = auth()->user()->latestValidSubscription();
+        $subscription = auth()->user()->validSubscription();
         /*TODO validate the $subscription*/
 
-        $chosenAPIProductIDs = array();
-        $validSubscriptions = auth()->user()->validSubscriptions();
-        foreach ($validSubscriptions as $validSubscription) {
-            $chosenAPIProductIDs[] = $validSubscription->api_product_id;
-        }
+        $chosenAPIProductID = $subscription->api_product_id;
 
         //load all products from Chargify
 //        $products = $this->getProducts();
@@ -247,12 +242,12 @@ class SubscriptionController extends Controller
 
         /* remove the trail/free product for the existing subscriber */
         foreach ($products as $index => $product) {
-            if (auth()->user()->subscriptions->count() != 0 && $product->product->price_in_cents == 0) {
+            if (!is_null(auth()->user()->subscription) && $product->product->price_in_cents == 0) {
                 unset($products[$index]);
             }
         }
         event(new SubscriptionEditViewed($subscription));
-        return view('subscriptions.edit')->with(compact(['products', 'chosenAPIProductIDs', 'subscription']));
+        return view('subscriptions.edit')->with(compact(['products', 'chosenAPIProductID', 'subscription']));
     }
 
     public function update(Request $request, $id)

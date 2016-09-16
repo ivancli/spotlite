@@ -17,8 +17,6 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'last_name' => $faker->lastName,
         'email' => $faker->safeEmail,
         'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
-        'verification_code' => str_random(100)
     ];
 });
 
@@ -36,3 +34,15 @@ $factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
     ];
 });
 
+
+$factory->define(App\Models\Site::class, function (Faker\Generator $faker) {
+    return [
+        "site_url"=> "http://www.myer.com.au/shop/mystore/home-appliances/dyson-213552-01-small-ball-allergy-upright-vacuum-cleaner%3A-nickel-satin-blue",
+        "site_xpath" => '//*[@id="WC_CachedProductOnlyDisplay_div_4"]/span',
+    ];
+});
+
+$factory->define(App\Models\Crawler::class, function (Faker\Generator $faker) {
+    return [
+    ];
+});

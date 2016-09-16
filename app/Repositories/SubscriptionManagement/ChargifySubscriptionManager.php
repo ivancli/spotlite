@@ -5,6 +5,7 @@ use App\Contracts\SubscriptionManagement\SubscriptionManager;
 use App\Libraries\CommonFunctions;
 use App\Models\Subscription;
 use App\Models\SubscriptionDetail;
+use App\Models\User;
 use Exception;
 
 /**
@@ -221,10 +222,7 @@ class ChargifySubscriptionManager implements SubscriptionManager
         $billingPortalLink = SubscriptionDetail::getDetail($subscription->getKey(), "BILLING_PORTAL_LINK");
         $billingPortalExpiry = SubscriptionDetail::getDetail($subscription->getKey(), "BILLING_PORTAL_EXPIRY");
         $billingPortalFetchCount = SubscriptionDetail::getDetail($subscription->getKey(), "BILLING_PORTAL_Fetch_Count");
-//        dump($billingPortalLink);
-//        dump($billingPortalExpiry);
-//        dump(is_null($billingPortalLink));
-        if (is_null($billingPortalLink->value) || strtotime($billingPortalExpiry->value) < time()) {
+        if (is_null($billingPortalLink) || is_null($billingPortalLink->value) || is_null($billingPortalExpiry) || strtotime($billingPortalExpiry->value) < time()) {
             /*TODO request a new link*/
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
             $customer_id = $apiSubscription->customer->id;
@@ -267,6 +265,34 @@ class ChargifySubscriptionManager implements SubscriptionManager
             }
         } else {
             return $billingPortalLink->value;
+        }
+    }
+
+    /**
+     * Synchronise user subscription status
+     * @param User $user
+     * @return mixed
+     */
+    public function syncUserSubscription(User $user)
+    {
+        $subscription = $user->subscription;
+        if (!is_null($subscription)) {
+            $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
+
+            if (!is_null($apiSubscription->canceled_at)) {
+                $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
+            } else {
+                $subscription->cancelled_at = null;
+            }
+            if (!is_null($apiSubscription->expires_at)) {
+                $subscription->expiry_date = date('Y-m-d h:i:s', strtotime($apiSubscription->expires_at));
+            } else {
+                $subscription->expiry_date = null;
+            }
+            if (!is_null($apiSubscription->product)) {
+                $subscription->api_product_id = $apiSubscription->product->id;
+            }
+            $subscription->save();
         }
     }
 }

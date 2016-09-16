@@ -4,6 +4,19 @@
 @section('breadcrumbs')
     {!! Breadcrumbs::render('product_index') !!}
 @stop
+@section('links')
+    <style>
+        .list-container .btn-category-dragger {
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            /* Required to make elements draggable in old WebKit */
+            -khtml-user-drag: element;
+            -webkit-user-drag: element;
+        }
+    </style>
+@stop
 @section('content')
     @include('products.partials.banner_stats')
     <div class="row">
@@ -34,9 +47,6 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 list-container">
-                            {{--@foreach($categories as $category)--}}
-                            {{--@include('products.category.partials.single_category')--}}
-                            {{--@endforeach--}}
                         </div>
                     </div>
                 </div>
@@ -52,7 +62,67 @@
         var initLength = 10;
         var theEnd = false;
 
+
+        /**
+         * drag and drop source
+         */
+        var drag_source = null;
+        var draggedType = null;
+
         $(function () {
+
+            /**
+             * category drag and drop
+             */
+
+            $(".list-container").on("dragstart", ".category-wrapper", function (e) {
+                var target = this;
+                target.opacity = '0.4';
+                drag_source = target;
+                console.info('e', e);
+                e.originalEvent.dataTransfer.setData('text/html', $("<div>").append($(this).innerHTML).html());
+            });
+            $(".list-container").on("dragover", ".category-wrapper", function (e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            });
+            $(".list-container").on("dragenter", ".category-wrapper", function (e) {
+                $(this).addClass("over");
+            });
+            $(".list-container").on("dragleave", ".category-wrapper", function (e) {
+                $(this).removeClass("over");
+            });
+            $(".list-container").on("dragend", ".category-wrapper", function (e) {
+                $(this).removeClass("over");
+            });
+            $(".list-container").on("drop", ".category-wrapper", function (e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                if (drag_source != target) {
+                    drag_source.innerHTML = this.innerHTML;
+                    target.innerHTML = e.originalEvent.dataTransfer.getData('text/html');
+                }
+                return false;
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             loadCategories(start, initLength, function (response) {
                 $(".list-container").append(response.categoriesHTML);
             }, function (xhr, status, error) {

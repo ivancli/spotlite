@@ -13,7 +13,7 @@ class CreateAppPreferencesTable extends Migration
     public function up()
     {
         Schema::create('app_preferences', function (Blueprint $table) {
-            $table->increments('app_preferences_id');
+            $table->increments('app_preference_id');
             $table->string('element', 255)->unique();
             $table->text('value')->nullable();
             $table->timestamps();

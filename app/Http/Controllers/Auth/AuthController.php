@@ -120,7 +120,7 @@ class AuthController extends Controller
                 $fields->subscription = $subscription;
 
                 $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
-                if ($result != null) {
+                if (!is_null($result)) {
                     /* clear verification code*/
                     $user->verification_code = null;
                     $user->save();
