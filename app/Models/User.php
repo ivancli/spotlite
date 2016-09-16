@@ -51,8 +51,6 @@ class User extends Authenticatable
     }
 
 
-    /*TODO the following blocks of code need to be refined*/
-
     public function cachedSubscription()
     {
         $userPrimaryKey = $this->primaryKey;
@@ -70,7 +68,7 @@ class User extends Authenticatable
 
     public function hasValidSubscription()
     {
-        return !is_null($this->subscription) && $this->subscription->isValid();
+        return !is_null($this->cachedSubscription()) && $this->cachedSubscription()->isValid();
     }
 
     public function isStaff()
@@ -80,12 +78,18 @@ class User extends Authenticatable
 
     public function validSubscription()
     {
-        if (!is_null($this->subscription)) {
-            return $this->subscription->isValid() ? $this->subscription : null;
+        if (!is_null($this->cachedSubscription())) {
+            return $this->cachedSubscription()->isValid() ? $this->cachedSubscription() : null;
         } else {
             return null;
         }
     }
 
-    /*TODO the code above need to be refined*/
+
+    public function save(array $options = [])
+    {
+        $result = parent::save($options);
+        Cache::tags(config()->get('user_subscription'))->flush();
+        return $result;
+    }
 }

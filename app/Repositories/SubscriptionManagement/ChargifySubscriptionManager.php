@@ -222,9 +222,6 @@ class ChargifySubscriptionManager implements SubscriptionManager
         $billingPortalLink = SubscriptionDetail::getDetail($subscription->getKey(), "BILLING_PORTAL_LINK");
         $billingPortalExpiry = SubscriptionDetail::getDetail($subscription->getKey(), "BILLING_PORTAL_EXPIRY");
         $billingPortalFetchCount = SubscriptionDetail::getDetail($subscription->getKey(), "BILLING_PORTAL_Fetch_Count");
-//        dump($billingPortalLink);
-//        dump($billingPortalExpiry);
-//        dump(is_null($billingPortalLink));
         if (is_null($billingPortalLink) || is_null($billingPortalLink->value) || is_null($billingPortalExpiry) || strtotime($billingPortalExpiry->value) < time()) {
             /*TODO request a new link*/
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
@@ -282,8 +279,6 @@ class ChargifySubscriptionManager implements SubscriptionManager
         if (!is_null($subscription)) {
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
 
-            $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
-            file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($apiSubscription) . "\r\n");
             if (!is_null($apiSubscription->canceled_at)) {
                 $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
             } else {

@@ -1,10 +1,10 @@
-<div class="row category-wrapper" data-category-id="{{$category->getKey()}}">
+<div class="row category-wrapper" data-category-id="{{$category->getKey()}}" draggable="true">
     <div class="col-sm-7">
         <table class="table table-condensed tbl-category">
             <thead>
             <tr>
                 <th class="shrink category-th">
-                    <a class="btn-collapse" href="#category-{{$category->getKey()}}" role="button"
+                    <a class="btn-collapse btn-category-dragger" href="#category-{{$category->getKey()}}" role="button"
                        data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
                        aria-controls="category-{{$category->getKey()}}">
                         <i class="glyphicon glyphicon-menu-hamburger"></i>
@@ -12,8 +12,7 @@
                 </th>
                 <th class="category-th">
                     <a class="text-muted category-name-link" href="#category-{{$category->getKey()}}" role="button"
-                       data-toggle="collapse"
-                       data-parent="#accordion" aria-expanded="true"
+                       data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
                        aria-controls="category-{{$category->getKey()}}">{{$category->category_name}}</a>
                     {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style'=>'display: none;')) !!}
                     <div class="input-group sl-input-group">

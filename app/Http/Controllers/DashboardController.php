@@ -25,11 +25,6 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $subscriptions = request()->user()->subscriptions;
-        foreach ($subscriptions as $subscription) {
-            $apiSub = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
-        }
-
         return view('dashboard.index');
     }
 }
