@@ -225,7 +225,7 @@ class ChargifySubscriptionManager implements SubscriptionManager
 //        dump($billingPortalLink);
 //        dump($billingPortalExpiry);
 //        dump(is_null($billingPortalLink));
-        if (is_null($billingPortalLink->value) || strtotime($billingPortalExpiry->value) < time()) {
+        if (is_null($billingPortalLink) || is_null($billingPortalLink->value) || is_null($billingPortalExpiry) || strtotime($billingPortalExpiry->value) < time()) {
             /*TODO request a new link*/
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
             $customer_id = $apiSubscription->customer->id;
@@ -278,9 +278,26 @@ class ChargifySubscriptionManager implements SubscriptionManager
      */
     public function syncUserSubscription(User $user)
     {
-        $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
-        file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($user) . "\r\n");
+        $subscription = $user->subscription;
+        if (!is_null($subscription)) {
+            $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
 
-
+            $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
+            file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($apiSubscription) . "\r\n");
+            if (!is_null($apiSubscription->canceled_at)) {
+                $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
+            } else {
+                $subscription->cancelled_at = null;
+            }
+            if (!is_null($apiSubscription->expires_at)) {
+                $subscription->expiry_date = date('Y-m-d h:i:s', strtotime($apiSubscription->expires_at));
+            } else {
+                $subscription->expiry_date = null;
+            }
+            if (!is_null($apiSubscription->product)) {
+                $subscription->api_product_id = $apiSubscription->product->id;
+            }
+            $subscription->save();
+        }
     }
 }

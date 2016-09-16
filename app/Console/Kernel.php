@@ -96,6 +96,7 @@ class Kernel extends ConsoleKernel
                         dispatch((new SyncUser($user))->onQueue("syncing"));
                     }
                 }
+                AppPreference::setSyncReserved('n');
             }
             sleep(1);
         })->everyMinute()->name("sync-users");

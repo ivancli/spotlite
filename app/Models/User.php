@@ -30,9 +30,9 @@ class User extends Authenticatable
         'password', 'remember_token', 'verification_code',
     ];
 
-    public function subscriptions()
+    public function subscription()
     {
-        return $this->hasMany('App\Models\Subscription', 'user_id', 'user_id');
+        return $this->hasOne('App\Models\Subscription', 'user_id', 'user_id');
     }
 
     public function activityLogs()
@@ -56,9 +56,9 @@ class User extends Authenticatable
     public function cachedSubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-        $cacheKey = 'subscriptions_for_user_' . $this->$userPrimaryKey;
-        return Cache::tags("user_subscriptions")->remember($cacheKey, config()->get('cache.ttl'), function () {
-            return $this->subscriptions()->get();
+        $cacheKey = 'subscription_for_user_' . $this->$userPrimaryKey;
+        return Cache::tags("user_subscription")->remember($cacheKey, config()->get('cache.ttl'), function () {
+            return $this->subscription;
         });
     }
 
@@ -70,22 +70,7 @@ class User extends Authenticatable
 
     public function hasValidSubscription()
     {
-        $subscriptions = $this->cachedSubscription();
-        $isValid = false;
-        foreach ($subscriptions as $subscription) {
-            $expiryValid = false;
-            $cancelledValid = false;
-            if (is_null($subscription->expiry_date) || strtotime($subscription->expiry_date) > time()) {
-                $expiryValid = true;
-            }
-            if (is_null($subscription->cancelled_at) || strtotime($subscription->cancelled_at) > time()) {
-                $cancelledValid = true;
-            }
-            if ($expiryValid && $cancelledValid) {
-                $isValid = true;
-            }
-        }
-        return $isValid;
+        return !is_null($this->subscription) && $this->subscription->isValid();
     }
 
     public function isStaff()
@@ -93,38 +78,12 @@ class User extends Authenticatable
         return $this->hasRole(['super_admin', 'tier_1', 'tier_2']);
     }
 
-    public function validSubscriptions()
+    public function validSubscription()
     {
-        $subscriptions = array();
-        foreach ($this->subscriptions as $subscription) {
-            if ($subscription->isValid()) {
-                $subscriptions[] = $subscription;
-            }
-        }
-        return $subscriptions;
-    }
-
-    public function latestValidSubscription()
-    {
-        $subscription = $this->subscriptions->last();
-        $isValid = true;
-        if (!is_null($subscription)) {
-            if (!is_null($subscription->expiry_at)) {
-                if (strtotime($subscription->expiry_at) < time()) {
-                    $isValid = false;
-                }
-            } elseif (!is_null($subscription->cancelled_at)) {
-                if (strtotime($subscription->cancelled_at) < time()) {
-                    $isValid = false;
-                }
-            }
-            if ($isValid == true) {
-                return $subscription;
-            } else {
-                return false;
-            }
+        if (!is_null($this->subscription)) {
+            return $this->subscription->isValid() ? $this->subscription : null;
         } else {
-            return false;
+            return null;
         }
     }
 

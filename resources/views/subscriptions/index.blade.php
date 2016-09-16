@@ -29,7 +29,7 @@
                             @endif
                         </div>
                     </div>
-                    {{dump($allSubs)}}
+                    {{dump($sub)}}
                     {{dump($subscription)}}
                     <div class="row">
                         <div class="col-sm-12 text-right">
@@ -45,7 +45,6 @@
                             {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'method' => 'delete', 'style'=>'display: inline-block', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
                             {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-danger"]) !!}
                             {!! Form::close() !!}
-                            {{--<button class="btn btn-default">Update Payment Method</button>--}}
                         </div>
                     </div>
                 </div>
