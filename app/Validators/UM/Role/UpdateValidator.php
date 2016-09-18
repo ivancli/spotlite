@@ -26,4 +26,14 @@ class UpdateValidator extends ValidatorAbstract
             'name' => 'required|max:255|min:1|unique:roles,name,' . $id . ',role_id',
         );
     }
+
+    protected function getMessages()
+    {
+        return array(
+            "name.required" => "Role name is required.",
+            "name.max" => "Role name accepts maximum 255 characters",
+            "name.min" => "Role name is required.",
+            "name.unique" => "Role name already exists",
+        );
+    }
 }

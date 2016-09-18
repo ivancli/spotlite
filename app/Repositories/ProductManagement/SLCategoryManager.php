@@ -30,9 +30,13 @@ class SLCategoryManager implements CategoryManager
         return $categories;
     }
 
-    public function getCategory($id)
+    public function getCategory($id, $fail = true)
     {
-        $category = Category::findOrFail($id);
+        if ($fail === true) {
+            $category = Category::findOrFail($id);
+        } else {
+            $category = Category::find($id);
+        }
         return $category;
     }
 
@@ -43,6 +47,12 @@ class SLCategoryManager implements CategoryManager
 
     public function createCategory($options)
     {
+        $greatestOrder = $this->getGreatestCategoryOrder();
+        if (!is_null($greatestOrder)) {
+            $options['category_order'] = $greatestOrder + 1;
+        } else {
+            $options['category_order'] = 1;
+        }
         $category = Category::create($options);
         return $category;
     }
@@ -78,5 +88,10 @@ class SLCategoryManager implements CategoryManager
         $output->recordFiltered = $categories->count();
         $output->categories = $categories;
         return $output;
+    }
+
+    public function getGreatestCategoryOrder()
+    {
+        return Category::max('category_order');
     }
 }

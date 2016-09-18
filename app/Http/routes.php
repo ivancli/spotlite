@@ -13,33 +13,64 @@
 
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['subs']], function () {
+
         Route::get('/', 'DashboardController@index')->name("dashboard.index");
+
+
         Route::get('msg/subscription/welcome/{raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
         Route::get('msg/subscription/update/{raw?}', 'MessageController@updateSubscription')->name("msg.subscription.update");
 
 
-        /* User profile related routes*/
+        /**
+         * User Profile Related Routes
+         */
         Route::get('profile/edit', 'User\ProfileController@edit')->name('profile.edit');
-        Route::resource('profile', 'User\ProfileController', ['only' => [
-            'index', 'show', 'update',
+        Route::resource('profile', 'User\ProfileController', ['except' => [
+            'create', 'store', 'destroy', 'edit'
         ]]);
-        /* Group related routes*/
+
+
+        /**
+         * Group Related Routes
+         */
         Route::get('group/first_login', 'User\GroupController@firstLogin');
         Route::resource('group', 'User\GroupController');
 
-        /* User account related routes */
-        Route::get('account/edit', 'User\AccountController@edit')->name('account.edit');
-        Route::resource('account', 'User\AccountController');
 
-        /* Product related routes */
-        Route::resource('product', 'Product\ProductController');
-        Route::resource('category', 'Product\CategoryController');
+        /**
+         * User Account Related Routes
+         */
+//        Route::get('account/edit', 'User\AccountController@edit')->name('account.edit');
+        Route::resource('account', 'User\AccountController', ['except' => [
+            'create', 'store', 'destroy', 'edit'
+        ]]);
+
+
+        /**
+         * Product Related Routes
+         */
+        //product routes
+        Route::put('product/order', 'Product\ProductController@updateOrder')->name('product.order');
+        Route::resource('product', 'Product\ProductController', ['except' => [
+            'edit'
+        ]]);
+        //category routes
+        Route::put('category/order', 'Product\CategoryController@updateOrder')->name('category.order');
+        Route::resource('category', 'Product\CategoryController', ['except' => [
+            'index', 'edit'
+        ]]);
+        //site routes
         Route::get('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
-//        Route::resource('site', 'Product\SiteController');
+        //product site routes
         Route::put("product_site/{product_site_id}/my_price", 'Product\ProductSiteController@setMyPrice')->name('product_site.my_price');
-        Route::resource('product_site', 'Product\ProductSiteController');
+        Route::resource('product_site', 'Product\ProductSiteController', ['except' => [
+            'index'
+        ]]);
 
-        /*alert routes*/
+
+        /**
+         * Alert Related Routes
+         */
         Route::get('alert/category/{category_id}/edit', 'Product\AlertController@editCategoryAlert')->name('alert.category.edit');
         Route::put('alert/category/{category_id}', 'Product\AlertController@updateCategoryAlert')->name('alert.category.update');
         Route::delete('alert/category/{category_id}', 'Product\AlertController@deleteCategoryAlert')->name('alert.category.destroy');
@@ -49,17 +80,22 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('alert/product_site/{product_site_id}/edit', 'Product\AlertController@editProductSiteAlert')->name('alert.product_site.edit');
         Route::put('alert/product_site/{product_site_id}', 'Product\AlertController@updateProductSiteAlert')->name('alert.product_site.update');
         Route::delete('alert/product_site/{product_site_id}', 'Product\AlertController@deleteProductSiteAlert')->name('alert.product_site.destroy');
-        Route::resource('alert', 'Product\AlertController');
 
 
     });
 
 
+    /**
+     * Subscription Related Routes
+     */
     //for those users who registered but not yet subscribe
-    /* Subscription related routes*/
     Route::get('subscription/back', 'SubscriptionController@viewProducts')->name('subscription.back');
+    //redirect route for chargify sign up page
     Route::get('subscription/finalise', 'SubscriptionController@finalise')->name('subscription.finalise');
-    Route::resource('subscription', 'SubscriptionController', ['except' => ['create']]);
+    Route::resource('subscription', 'SubscriptionController', ['except' => [
+        'create', 'show'
+    ]]);
+
 
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
 
@@ -69,17 +105,26 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('log/user_activity', 'Log\UserActivityLogController', ['only' => [
         'index', 'show'
     ]]);
+
     /* admin crawler management */
     Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
-    Route::resource('admin/site', 'Crawler\SiteController');
-    Route::resource('admin/crawler', 'Crawler\CrawlerController');
-    Route::resource('admin/domain', 'Crawler\DomainController');
+    Route::resource('admin/site', 'Crawler\SiteController', ['except' => [
+        'show', 'edit'
+    ]]);
+    Route::resource('admin/crawler', 'Crawler\CrawlerController', ['only' => [
+        'edit', 'update'
+    ]]);
+    Route::resource('admin/domain', 'Crawler\DomainController', ['except' => [
+        'show', 'edit'
+    ]]);
 
 
     Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 });
 
-/*Auth*/
+/**
+ * Auth Related Routes
+ */
 Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 

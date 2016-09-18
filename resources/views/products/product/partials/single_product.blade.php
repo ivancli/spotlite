@@ -3,7 +3,7 @@
     <thead>
     <tr>
         <th class="shrink product-th">
-            <a class="btn-collapse" href="#product-{{$product->getKey()}}" role="button" data-toggle="collapse"
+            <a class="btn-collapse btn-product-dragger" href="#product-{{$product->getKey()}}" role="button" data-toggle="collapse"
                data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}">
                 <i class="glyphicon glyphicon-menu-hamburger"></i>
             </a>
@@ -71,7 +71,7 @@
                     <tbody>
                     {{--sites here--}}
                     @if(!is_null($product->sites))
-                        @foreach($product->productSites as $productSite)
+                        @foreach($product->productSites()->orderBy('my_price', 'asc')->orderBy('product_site_id')->get() as $productSite)
                             @include('products.site.partials.single_site')
                         @endforeach
                     @endif

@@ -40,4 +40,14 @@ class UpdateValidator extends ValidatorAbstract
             'name' => 'required|max:255|min:1|unique:permissions,name,' . $id . ',permission_id',
         );
     }
+
+    protected function getMessages()
+    {
+        return array(
+            "name.required" => "Permission name is required.",
+            "name.max" => "Permission name accepts maximum 255 characters.",
+            "name.min" => "Permission name is required.",
+            "name.unique" => "Permission name already exists.",
+        );
+    }
 }

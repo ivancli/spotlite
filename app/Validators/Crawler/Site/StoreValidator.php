@@ -1,14 +1,15 @@
 <?php
-namespace App\Validators\Product\Site;
+namespace App\Validators\Crawler\Site;
+
 use App\Validators\ValidatorAbstract;
 
 /**
  * Created by PhpStorm.
  * User: Ivan
- * Date: 11/09/2016
- * Time: 7:40 PM
+ * Date: 18/09/2016
+ * Time: 4:37 PM
  */
-class GetPriceValidator extends ValidatorAbstract
+class StoreValidator extends ValidatorAbstract
 {
 
     /**
@@ -20,7 +21,7 @@ class GetPriceValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-            "site_url" => "required|url|max:2083"
+            "site_url" => "required|max:2083|url",
         );
     }
 

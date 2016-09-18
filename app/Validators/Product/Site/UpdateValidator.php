@@ -27,4 +27,12 @@ class UpdateValidator extends ValidatorAbstract
             "product_site_id" => "required"
         );
     }
+
+    protected function getMessages()
+    {
+        return array(
+            "product_id" => "Product ID is required.",
+            "Product Site ID" => "Product Site ID is required."
+        );
+    }
 }

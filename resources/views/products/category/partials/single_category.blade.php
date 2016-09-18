@@ -1,5 +1,5 @@
 <div class="row category-wrapper" data-category-id="{{$category->getKey()}}" draggable="true">
-    <div class="col-sm-7">
+    <div class="col-sm-12">
         <table class="table table-condensed tbl-category">
             <thead>
             <tr>
@@ -59,8 +59,8 @@
                 <td colspan="2" class="table-container">
                     <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
                          aria-expanded="true">
-                        @if(!is_null($category->products))
-                            @foreach($category->products as $product)
+                        @if($category->products->count() > 0)
+                            @foreach($category->products()->orderBy('product_order')->orderBy('product_id')->get() as $product)
                                 @include('products.product.partials.single_product')
                             @endforeach
                         @endif
@@ -71,6 +71,32 @@
         </table>
     </div>
     <script type="text/javascript">
+
+        var productDrake{{$category->getKey()}} = null;
+
+        $(function () {
+
+            productDrake{{$category->getKey()}} = dragula([$("#category-{{$category->getKey()}}").get(0)], {
+                moves: function (el, container, handle) {
+                    return $(handle).hasClass("btn-product-dragger") || $(handle).closest(".btn-product-dragger").length > 0;
+                }
+            }).on('drop', function (el, target, source, sibling) {
+                updateProductOrder({{$category->getKey()}});
+            });
+
+
+            /** enable scrolling when dragging*/
+            autoScroller([window], {
+                margin: 20,
+                pixels: 20,
+                scrollWhenOutside: true,
+                autoScroll: function () {
+                    //Only scroll when the pointer is down, and there is a child being dragged.
+                    return this.down && productDrake{{$category->getKey()}}.dragging;
+                }
+            });
+        });
+
         function btnDeleteCategoryOnClick(el) {
             confirmP("Delete Category", "Do you want to delete this category?", {
                 "affirmative": {
@@ -180,5 +206,47 @@
             });
         }
 
+        function assignProductOrderNumber(category_id) {
+            $(".category-wrapper").filter(function () {
+                return $(this).attr("data-category-id") == category_id;
+            }).find(".product-wrapper").each(function (index) {
+                $(this).attr("data-order", index + 1);
+            });
+        }
+
+        function updateProductOrder(category_id) {
+            assignProductOrderNumber(category_id);
+            var orderList = [];
+            $(".category-wrapper").filter(function () {
+                return $(this).attr("data-category-id") == category_id;
+            }).find(".product-wrapper").filter(function () {
+                return !$(this).hasClass("gu-mirror");
+            }).each(function () {
+                if ($(this).attr("data-product-id")) {
+                    var productId = $(this).attr("data-product-id");
+                    var productOrder = parseInt($(this).attr("data-order"));
+                    orderList.push({
+                        "product_id": productId,
+                        "product_order": productOrder
+                    });
+                }
+            });
+            $.ajax({
+                "url": "{{route('product.order')}}",
+                "method": "put",
+                "data": {
+                    "order": orderList
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    if (response.status == false) {
+                        alertP("Error", "Unable to update product order, please try again later.");
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    alertP("Error", "Unable to update product order, please try again later.");
+                }
+            })
+        }
     </script>
 </div>

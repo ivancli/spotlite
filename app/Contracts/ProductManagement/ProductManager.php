@@ -10,7 +10,7 @@ interface ProductManager
 {
     public function getProducts();
 
-    public function getProduct($id);
+    public function getProduct($id, $fail = true);
 
     public function createProduct($options);
 

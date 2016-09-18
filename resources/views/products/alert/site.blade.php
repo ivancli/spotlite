@@ -122,6 +122,7 @@
         }
 
         function submitUpdateProductSiteAlert(callback) {
+            showLoading();
             if ($("#sel-price-type").val() == "my price") {
                 $("#txt-comparison-price").remove();
             }
@@ -131,28 +132,33 @@
                 "data": $("#frm-alert-product-site-update").serialize(),
                 "dataType": "json",
                 "success": function (response) {
+                    hideLoading();
                     if ($.isFunction(callback)) {
                         callback(response);
                     }
                 },
                 "error": function (xhr, status, error) {
-
+                    hideLoading();
+                    alertP("Error", "Unable to update site alert, please try again later.");
                 }
             })
         }
 
         function submitDeleteProductSiteAlert(callback) {
+            showLoading();
             $.ajax({
                 "url": "{{route('alert.product_site.destroy', $productSite->getKey())}}",
                 "method": "delete",
                 "dataType": "json",
                 "success": function (response) {
+                    hideLoading();
                     if ($.isFunction(callback)) {
                         callback(response);
                     }
                 },
                 "error": function () {
-
+                    hideLoading();
+                    alertP("Error", "Unable to delete site alert, please try again later.");
                 }
             })
         }

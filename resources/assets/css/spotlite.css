@@ -279,6 +279,18 @@ th.ellipsis {
     right: 0;
 }
 
+.category-wrapper.moving {
+    opacity: 0.9;
+}
+
+.category-wrapper.moving .tbl-category {
+    border: 1px dashed darkgrey;
+}
+
+.btn-category-dragger, .btn-product-dragger {
+    cursor: move;
+}
+
 @media screen and (min-width: 768px) {
     .navbar-brand {
         display: none;

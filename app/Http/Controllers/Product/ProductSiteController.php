@@ -42,16 +42,6 @@ class ProductSiteController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @param Request $request

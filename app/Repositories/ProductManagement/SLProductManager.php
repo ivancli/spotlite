@@ -18,9 +18,13 @@ class SLProductManager implements ProductManager
         return $products;
     }
 
-    public function getProduct($id)
+    public function getProduct($id, $fail = true)
     {
-        $product = Product::findOrFail($id);
+        if ($fail === true) {
+            $product = Product::findOrFail($id);
+        } else {
+            $product = Product::find($id);
+        }
         return $product;
     }
 

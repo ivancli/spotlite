@@ -36,16 +36,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -96,7 +86,7 @@ class CategoryController extends Controller
                     return compact(['status', 'errors']);
                 }
             } else {
-                return redirect()->back()->withInput()->withErrors($validator);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         } else {
             $category = $this->categoryManager->createCategory($input);
@@ -119,7 +109,7 @@ class CategoryController extends Controller
      *
      * @param Request $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function show(Request $request, $id)
     {
@@ -134,17 +124,6 @@ class CategoryController extends Controller
         } else {
             return view('products.category.partials.single_category')->with(compact(['category']));
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -187,6 +166,33 @@ class CategoryController extends Controller
             return redirect()->route('product.index');
         }
 
+    }
+
+    public function updateOrder(Request $request)
+    {
+        /*TODO validation here*/
+        $status = false;
+        if ($request->has('order')) {
+            $order = $request->get('order');
+            foreach ($order as $key => $ord) {
+                $category = $this->categoryManager->getCategory($ord['category_id'], false);
+                if (!is_null($category) && intval($ord['category_order']) != 0) {
+                    $category->category_order = intval($ord['category_order']);
+                    $category->save();
+                }
+            }
+            $status = true;
+        }
+
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if needed*/
+        }
     }
 
     /**

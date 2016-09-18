@@ -21,6 +21,7 @@ elixir.extend('remove', function(path) {
  */
 
 elixir(function(mix) {
+    mix.browserSync();
     mix.remove([
         'public/css',
         'public/js',
@@ -35,6 +36,7 @@ elixir(function(mix) {
         'node_modules/font-awesome/css/font-awesome.css',
         'vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css',
         'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.css',
+        'node_modules/dragula/dist/dragula.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.scripts([
@@ -47,6 +49,8 @@ elixir(function(mix) {
         'vendor/almasaeed2010/adminlte/plugins/slimScroll/jquery.slimscroll.min.js',
         'vendor/almasaeed2010/adminlte/plugins/fastclick/fastclick.js',
         'vendor/almasaeed2010/adminlte/dist/js/app.js',
+        'node_modules/dragula/dist/dragula.js',
+        'node_modules/dom-autoscroller/dist/dom-autoscroller.js',
         'resources/assets/js/commonFunctions.js',
         'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");

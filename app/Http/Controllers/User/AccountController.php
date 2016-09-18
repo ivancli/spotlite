@@ -28,12 +28,6 @@ class AccountController extends Controller
         return view('user.account.show')->with(compact(['user']));
     }
 
-    public function edit()
-    {
-        $user = auth()->user();
-        return view('user.account.edit')->with(compact(['user']));
-    }
-
     public function update(Request $request, $id)
     {
         /*TODO validation here*/

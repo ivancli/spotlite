@@ -30,7 +30,8 @@ abstract class ValidatorAbstract
     public function validate(array $data, $throw = true)
     {
         $rules = $this->getRules();
-        $validation = $this->validator->make($data, $rules);
+        $messages = $this->getMessages();
+        $validation = $this->validator->make($data, $rules, $messages);
         if ($validation->fails()) {
             if ($throw) {
                 throw new ValidationException($validation->messages());
@@ -48,4 +49,9 @@ abstract class ValidatorAbstract
      * @return array
      */
     abstract protected function getRules($id = null);
+
+    protected function getMessages()
+    {
+        return [];
+    }
 }

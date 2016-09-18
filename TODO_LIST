@@ -39,3 +39,8 @@ need to check if current list has been fully loaded, if not, do nothing.
 
 
 check if task scheduler provide callback for skipped operation
+
+
+
+
+*handle method not allowed exception

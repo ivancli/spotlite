@@ -1,5 +1,6 @@
 <?php
 namespace App\Contracts\ProductManagement;
+
 use App\Filters\QueryFilter;
 
 /**
@@ -12,7 +13,7 @@ interface CategoryManager
 {
     public function getCategories();
 
-    public function getCategory($id);
+    public function getCategory($id, $fail = true);
 
     public function getCategoriesCount();
 
@@ -23,4 +24,6 @@ interface CategoryManager
     public function deleteCategory($id);
 
     public function lazyLoadCategories(QueryFilter $queryFilter);
+
+    public function getGreatestCategoryOrder();
 }

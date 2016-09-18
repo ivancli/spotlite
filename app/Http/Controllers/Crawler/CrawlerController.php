@@ -40,7 +40,6 @@ class CrawlerController extends Controller
             $input['parser_class'] = null;
         }
 
-
         $crawler = $this->crawlerManager->getCrawler($crawler_id);
         $crawler = $this->crawlerManager->updateCrawler($crawler_id, $request->all());
         $status = true;

@@ -150,17 +150,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param UpdateValidator $updateValidator
@@ -198,6 +187,33 @@ class ProductController extends Controller
             }
         } else {
             return redirect()->route('product.index');
+        }
+    }
+
+    public function updateOrder(Request $request)
+    {
+        /*TODO validation here*/
+        $status = false;
+        if ($request->has('order')) {
+            $order = $request->get('order');
+            foreach ($order as $key => $ord) {
+                $product = $this->productManager->getProduct($ord['product_id'], false);
+                if (!is_null($product) && intval($ord['product_order']) != 0) {
+                    $product->product_order = intval($ord['product_order']);
+                    $product->save();
+                }
+            }
+            $status = true;
+        }
+
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if needed*/
         }
     }
 

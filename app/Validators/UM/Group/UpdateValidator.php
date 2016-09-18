@@ -44,4 +44,20 @@ class UpdateValidator extends ValidatorAbstract
             'description' => 'max: 2048'
         );
     }
+
+    protected function getMessages()
+    {
+        return array(
+            "name.required" => "Group name is required.",
+            "name.unique" => "Group name already exists.",
+            "name.max" => "Group name accepts maximum 255 characters.",
+            "name.min" => "Group name is required.",
+            "active.boolean" => "Is group active?",
+            "url.required" => "Group URL is required.",
+            "url.url" => "Please provide a valid Group URL.",
+            "url.max" => "Group URL accepts maximum 2083 characters.",
+            "url.min" => "Group URL is required.",
+            "description" => "Description accepts maximum 255 characters."
+        );
+    }
 }

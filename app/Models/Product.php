@@ -16,7 +16,7 @@ class Product extends Model
 {
     protected $primaryKey = "product_id";
     protected $fillable = [
-        "product_name", "category_id", "user_id", "group_id", "product_orders", "report_task_id"
+        "product_name", "category_id", "user_id", "group_id", "product_order", "report_task_id"
     ];
     public $timestamps = false;
     protected $appends = ["urls"];
@@ -70,7 +70,6 @@ class Product extends Model
     {
         return array(
             "show" => route("product.show", $this->getKey()),
-            "edit" => route("product.edit", $this->getKey()),
             "delete" => route("product.destroy", $this->getKey()),
             "alert" => route("alert.product.edit", $this->getKey()),
         );

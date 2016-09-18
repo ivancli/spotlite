@@ -43,4 +43,20 @@ class UpdateValidator extends ValidatorAbstract
             'password' => 'min:6|confirmed',
         );
     }
+
+    protected function getMessages()
+    {
+        return array(
+            "first_name.required" => "First name is required.",
+            "first_name.max" => "First name accepts maximum 255 characters.",
+            "last_name.required" => "Last name is required.",
+            "last_name.max" => "Last name accepts maximum 255 characters.",
+            "email.required" => "Email is required.",
+            "email.email" => "Please enter a valid email address.",
+            "email.max" => "Email accepts maximum 255 characters.",
+            "email.unique" => "Email already exists.",
+            "password.required" => "Password is required.",
+            "password.min" => "Password is required.",
+        );
+    }
 }

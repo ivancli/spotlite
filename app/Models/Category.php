@@ -59,7 +59,6 @@ class Category extends Model
     {
         return array(
             "show" => route("category.show", $this->getKey()),
-            "edit" => route("category.edit", $this->getKey()),
             "delete" => route("category.destroy", $this->getKey()),
         );
     }

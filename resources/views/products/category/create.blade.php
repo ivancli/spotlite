@@ -1,10 +1,10 @@
 <div class="row category-wrapper create">
-    <div class="col-sm-7">
+    <div class="col-sm-12">
         <table class="table table-condensed tbl-category">
             <thead>
             <tr>
                 <th class="shrink hamburger-container">
-                    <a class="btn-collapse" href="#">
+                    <a class="btn-collapse" href="#" ondragstart="return false;">
                         <i class="glyphicon glyphicon-menu-hamburger"></i>
                     </a>
                 </th>

@@ -12,9 +12,12 @@ namespace App\Http\Controllers\Crawler;
 use App\Contracts\ProductManagement\DomainManager;
 use App\Contracts\ProductManagement\ProductSiteManager;
 use App\Contracts\ProductManagement\SiteManager;
+use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Domain;
+use App\Validators\Crawler\Site\StoreValidator;
+use App\Validators\Crawler\Site\UpdateValidator;
 use Illuminate\Http\Request;
 use Invigor\Crawler\Contracts\CrawlerInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
@@ -26,12 +29,20 @@ class SiteController extends Controller
     protected $queryFilter;
     protected $domainManager;
 
-    public function __construct(ProductSiteManager $productSiteManager, SiteManager $siteManager, DomainManager $domainManager, QueryFilter $queryFilter)
+    protected $storeValidator;
+    protected $updateValidator;
+
+    public function __construct(ProductSiteManager $productSiteManager, SiteManager $siteManager,
+                                DomainManager $domainManager, QueryFilter $queryFilter,
+                                StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
         $this->productSiteManager = $productSiteManager;
         $this->siteManager = $siteManager;
         $this->domainManager = $domainManager;
         $this->queryFilter = $queryFilter;
+
+        $this->storeValidator = $storeValidator;
+        $this->updateValidator = $updateValidator;
     }
 
 
@@ -60,7 +71,22 @@ class SiteController extends Controller
 
     public function store(Request $request)
     {
-        /*TODO validation here*/
+        try {
+            $this->storeValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
         $site = $this->siteManager->createSite($request->all());
         $status = true;
         if ($request->ajax()) {
@@ -170,8 +196,31 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * At the moment, update function is used in updating xpath, no site_url required.
+     *
+     * @param Request $request
+     * @param $site_id
+     * @return array|\Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $site_id)
     {
+//        try {
+//            $this->updateValidator->validate($request->all());
+//        } catch (ValidationException $e) {
+//            $status = false;
+//            $errors = $e->getErrors();
+//            if ($request->ajax()) {
+//                if ($request->wantsJson()) {
+//                    return response()->json(compact(['status', 'errors']));
+//                } else {
+//                    return compact(['status', 'errors']);
+//                }
+//            } else {
+//                return redirect()->back()->withInput()->withErrors($errors);
+//            }
+//        }
+
         $input = $request->all();
         if (isset($input['site_xpath']) && strlen($input['site_xpath']) == 0) {
             $input['site_xpath'] = null;
