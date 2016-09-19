@@ -51,7 +51,7 @@
 
 @section('scripts')
 
-    <script type="text/javascript" src="{{elixir('js/highcharts.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/highcharts.js')}}"></script>
     <script type="text/javascript">
         var start = 0;
         var length = 5;

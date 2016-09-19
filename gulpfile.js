@@ -26,7 +26,7 @@ elixir(function(mix) {
         'public/css',
         'public/js',
         'public/fonts',
-        'public/build'
+        'public/images'
     ]);
     mix.styles([
         "node_modules/bootstrap/dist/css/bootstrap.css",
@@ -59,11 +59,9 @@ elixir(function(mix) {
     ], "public/js/highcharts.js", "./");
 
     /* copy images */
-    mix.copy('resources/assets/images', 'public/build/images');
+    mix.copy('resources/assets/images', 'public/images');
 
-    mix.copy("node_modules/bootstrap/dist/fonts", "public/build/fonts/");
-    mix.copy("node_modules/font-awesome/fonts", "public/build/fonts/");
-    mix.copy('vendor/driftyco/ionicons/fonts', 'public/build/fonts/');
-
-    mix.version(['css', 'js'])
+    mix.copy("node_modules/bootstrap/dist/fonts", "public/fonts/");
+    mix.copy("node_modules/font-awesome/fonts", "public/fonts/");
+    mix.copy('vendor/driftyco/ionicons/fonts', 'public/fonts/');
 });

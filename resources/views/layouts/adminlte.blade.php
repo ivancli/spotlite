@@ -1,13 +1,4 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: ivan.li
- * Date: 8/16/2016
- * Time: 2:45 PM
- */
-?>
-
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -16,8 +7,8 @@
     <title>@yield('title') - SpotLite</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" type="image/x-icon" href="{{asset('build/images/favicon.ico')}}"/>
-    <link rel="stylesheet" href="{{elixir('css/main.css')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
+    <link rel="stylesheet" href="{{asset('css/main.css')}}">
 
     @yield('links')
 
@@ -65,17 +56,7 @@
 
 @include('scripts.variable_setter')
 
-<script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
-{{--<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset("build/bootstrap/dist/js/bootstrap.js")}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset("build/datatables.net/js/jquery.dataTables.js")}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset("build/datatables.net-bs/js/dataTables.bootstrap.js")}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset("build/select2/dist/js/select2.js")}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/plugins/slimScroll/jquery.slimscroll.min.js')}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/plugins/fastclick/fastclick.js')}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset('build/almasaeed2010/adminlte/dist/js/app.js')}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset('build/js/commonFunctions.js')}}"></script>--}}
-{{--<script type="text/javascript" src="{{asset('build/js/spotlite.js')}}"></script>--}}
+<script type="text/javascript" src="{{asset('js/main.js')}}"></script>
 
 @yield('scripts')
 
