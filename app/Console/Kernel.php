@@ -45,8 +45,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
 
             $lastReservedAt = AppPreference::getCrawlLastReservedAt();
-
-            if (AppPreference::getCrawlReserved() == 'n' && (is_null($lastReservedAt) || intval((time() - strtotime($lastReservedAt)) / 3600) != 0)) {
+            $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
+            $currentRoundedHours = date("Y-m-d H:00:00");
+            if (AppPreference::getCrawlReserved() == 'n' && (is_null($lastReservedAt) || intval((strtotime($currentRoundedHours) - strtotime($lastReservedRoundedHours)) / 3600) > 0)) {
                 /*reserve the task*/
                 AppPreference::setCrawlReserved();
                 AppPreference::setCrawlLastReservedAt();
