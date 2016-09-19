@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SubscriptionDetail extends Model
 {
-    protected $primaryKey = "subscription_details";
+    protected $table = "subscription_details";
+    protected $primaryKey = "subscription_detail_id";
     protected $fillable = [
         "element", "value", "subscription_id"
     ];
@@ -32,5 +33,15 @@ class SubscriptionDetail extends Model
     public static function getDetail($subscription_id, $key)
     {
         return (new static)->where("subscription_id", $subscription_id)->where("element", $key)->first();
+    }
+
+    public static function getCreditCardExpiryYear($subscription_id)
+    {
+        return (new static)->getDetail($subscription_id, "CREDIT_CARD_EXPIRY_YEAR");
+    }
+
+    public static function getCreditCardExpiryMonth($subscription_id)
+    {
+        return (new static)->getDetail($subscription_id, "CREDIT_CARD_EXPIRY_MONTH");
     }
 }

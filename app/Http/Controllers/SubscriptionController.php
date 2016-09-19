@@ -63,6 +63,7 @@ class SubscriptionController extends Controller
     {
         $user = auth()->user();
         $sub = $user->validSubscription();
+        $this->subscriptionManager->updateCreditCardDetails($sub);
         if (!is_null($sub)) {
             $current_sub_id = $sub->api_subscription_id;
             $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
@@ -194,6 +195,7 @@ class SubscriptionController extends Controller
                             $sub->api_subscription_id = $subscription->id;
                             $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
+                            $this->subscriptionManager->updateCreditCardDetails($sub);
                             event(new SubscriptionUpdated($sub));
                             return redirect()->route('msg.subscription.update');
 //                            }
@@ -207,6 +209,7 @@ class SubscriptionController extends Controller
                             $sub->api_subscription_id = $subscription->id;
                             $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
+                            $this->subscriptionManager->updateCreditCardDetails($sub);
                             event(new SubscriptionCompleted($sub));
                             return redirect()->route('subscription.index');
 //                            return redirect()->route('dashboard.index');
@@ -226,6 +229,20 @@ class SubscriptionController extends Controller
             }
 
         }
+    }
+
+    public function externalUpdate(Request $request)
+    {
+//        dd($request->server('HTTP_REFERER'));
+        /*TODO validation here*/
+        $ref = json_decode($request->get('ref'));
+        $user_id = $ref->user_id;
+
+        if (auth()->user()->getKey() != $user_id) {
+            abort(403);
+        }
+        $this->subscriptionManager->syncUserSubscription(auth()->user());
+        return redirect()->route('subscription.index');
     }
 
     public function edit($id)

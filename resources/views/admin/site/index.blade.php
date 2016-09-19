@@ -136,7 +136,7 @@
                                                     $("<span>").text(data.site_xpath).addClass("lbl-site-xpath"),
                                                     $("<input>").attr({
                                                         "type": "text",
-                                                        "onkeyup": "if(event.keyCode == 27) togglexPathInput(this); return false;",
+                                                        "onkeyup": "if(event.keyCode == 27) togglexPathInput(this); if(event.keyCode == 13) togglexPathInput($(this).closest('.xpath-wrapper').find('[data-url]').get(0));  return false;",
                                                         "value": data.site_xpath
                                                     }).hide().addClass("txt-site-xpath form-control input-sm")
                                             ),

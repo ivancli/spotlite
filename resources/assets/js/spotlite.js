@@ -6,8 +6,23 @@ $(function () {
     });
 
 
-    if (typeof user != 'undefined' && typeof user.is_first_login != 'undefined' && typeof user.subscriptions != 'undefined' && user.subscriptions.length > 0) {
-        if (user.is_first_login == 'y' && localStorage.getItem("met-first-login-welcome-msg-" + user.user_id) != 1) {
+    var today = timestampToDateTimeByFormat(new Date().getTime() / 1000, 'Y-m-d');
+
+
+
+    if (typeof user != 'undefined' && typeof user.is_first_login != 'undefined' && user.subscription != null) {
+        /* clean up unused localStorage */
+        $.each(localStorage, function (key, value) {
+            if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.startsWith("met-first-login-welcome-msg-")) {
+                localStorage.removeItem(key);
+            }
+            if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.startsWith("met-cc-expiry-msg-")) {
+                localStorage.removeItem(key);
+            }
+        });
+        if ((typeof user.preferences == 'undefined' || user.preferences.DONT_SHOW_WELCOME != 1)
+            && user.is_first_login == 'y'
+            && localStorage.getItem("met-first-login-welcome-msg-" + today + "-" + user.user_id) != 1) {
             showLoading();
             /*TODO show first login welcome message*/
             $.get('/msg/subscription/welcome/0', function (html) {
@@ -15,10 +30,24 @@ $(function () {
                 var $modal = popupFrame(html);
                 $modal.modal();
                 // $modal.on("hidden.bs.modal", showCreateGroupFirstLogin);
-                localStorage.setItem("met-first-login-welcome-msg-" + user.user_id, 1);
+
+                $modal.on("hidden.bs.modal", function () {
+                    if (cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+                        localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
+                        showCreditCardExpiry();
+                    }
+                });
+                localStorage.setItem("met-first-login-welcome-msg-" + today + "-" + user.user_id, 1);
             });
         }
+    } else {
+        if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+            localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
+            showCreditCardExpiry();
+        }
     }
+
+
 });
 
 function showCreateGroupFirstLogin() {
@@ -33,5 +62,14 @@ function showCreateGroupFirstLogin() {
         $modal.on("hidden.bs.modal", function () {
             $("#modal-group-store").remove();
         });
+    });
+}
+
+function showCreditCardExpiry() {
+    showLoading();
+    $.get('/msg/subscription/cc_expiring/0', function (html) {
+        hideLoading();
+        var $modal = popupFrame(html);
+        $modal.modal();
     });
 }

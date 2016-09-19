@@ -31,7 +31,15 @@
                 [If we are giving tutorial to user, we might need to following two buttons.]
             </p>
 
-            &nbsp;
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" onclick="updateDontShowWelcomePage(this)"> Don't show again
+                        </label>
+                    </div>
+                </div>
+            </div>
             <p class="text-center" style="padding: 20px">
                 <button class="btn btn-default" title="Close this popup" data-dismiss="modal">No, thanks
                 </button>
@@ -41,4 +49,28 @@
             </p>
         </div>
     </div>
+    <script type="text/javascript">
+        $(function () {
+
+        });
+
+        function updateDontShowWelcomePage(el) {
+            $.ajax({
+                "url": "/preference/DONT_SHOW_WELCOME/" + ($(el).prop("checked") ? 1 : 0),
+                "method": "put",
+                "dataType": "json",
+                "success": function (response) {
+                    console.info('response', response);
+                    if (response.status == true) {
+
+                    } else {
+                        alertP("Error", "Unable to update preference, please try again later.");
+                    }
+                },
+                "error": function () {
+                    alertP("Error", "Unable to update preference, please try again later.");
+                }
+            })
+        }
+    </script>
 </div>

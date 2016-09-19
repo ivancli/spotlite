@@ -33,7 +33,7 @@
                 </th>
 
                 <th class="text-right action-cell category-th">
-                    <a href="#" class="btn-action">
+                    <a href="#" class="btn-action" onclick="showCategoryChart(this)">
                         <i class="fa fa-line-chart"></i>
                     </a>
                     <a href="#" class="btn-action">
@@ -247,6 +247,10 @@
                     alertP("Error", "Unable to update product order, please try again later.");
                 }
             })
+        }
+
+        function showCategoryChart(el){
+            $.get("{{}}")
         }
     </script>
 </div>

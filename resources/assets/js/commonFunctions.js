@@ -385,3 +385,34 @@ function timestampToDateTimeByFormat(timestamp, format) {
     }
     return formattedDate;
 }
+
+// String.prototype.startsWith = function(needle)
+// {
+//     return(this.indexOf(needle) == 0);
+// };
+//
+//
+// var Preloader = new function () {
+//     var _this,
+//         _pContainer,
+//         _preloader;
+//     this.init = function () {
+//         _this = this;
+//         _preloader = $('.coll-site-preloader');
+//
+//         // prepare remove
+//         $wndw.load(_this.load)
+//
+//     };
+//     this.load = function () {
+//
+//         $('.wrapper.common').css('visibility', 'visible')
+//
+//         _preloader.animate({
+//             opacity: 0
+//         }, 500, "linear", function () {
+//             $(this).remove();
+//         });
+//     };
+// };
+// Preloader.init();

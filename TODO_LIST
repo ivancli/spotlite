@@ -4,26 +4,18 @@ TODO
 IMPORTANT:
 
 Crawler Site Management
-    1) add functions of editing crawler class parser class
     2) add functions of showing or hiding columns
     3) store show and hide preference in user preference table
-    * 4) implement status
     * 5) sort out domain management and user report error stuff
 
-Create tasks schedulers to perform crawling
 
 Create events and subscribers for the missing controller actions
 
-enhance the validator to be more dynamic
-
 * Load Product Banner partial through ajax
 
-* Add shortcut keys to xpath editor in crawler site management
+* When update product banner partial stats after added category and product
 
 
-
-
-Kernel dependency injection
 
 Update cancel subscription to use ajax.
 
@@ -33,14 +25,15 @@ text ellipses on exclude sides drop down
 
 
 
-if categories are not all loaded, add a new category, it appears in between.
-The new category should appear at the end of record
-need to check if current list has been fully loaded, if not, do nothing.
-
-
 check if task scheduler provide callback for skipped operation
 
 
 
 
 *handle method not allowed exception
+
+
+*test update credit card detail popup
+
+
+*CHECK LIMITATION OF TIMES OF GENERATING UPDATE PAYMENT DETAILS LINK

@@ -7,7 +7,14 @@
 @section('content')
     Blank page
 
-    @if(isset($login) && $login === true)
-        Yo, u just logged in.
-    @endif
+
+    <div class="coll-site-preloader">
+        <div class="coll-preloader-container">
+            <div class="spinner">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+            </div>
+        </div>
+    </div>
+
 @stop

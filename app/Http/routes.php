@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('msg/subscription/welcome/{raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
         Route::get('msg/subscription/update/{raw?}', 'MessageController@updateSubscription')->name("msg.subscription.update");
+        Route::get('msg/subscription/cc_expiring/{raw?}', 'MessageController@notifyCreditCardExpiringSoon')->name('msg.subscription.cc_expiring');
 
 
         /**
@@ -44,6 +45,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('account', 'User\AccountController', ['except' => [
             'create', 'store', 'destroy', 'edit'
         ]]);
+
+        /**
+         * User Preferences Related Routes
+         */
+        Route::put('preference/{element}/{value}', 'User\UserPreferenceController@updatePreference')->name('preference.update');
 
 
         /**
@@ -92,6 +98,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('subscription/back', 'SubscriptionController@viewProducts')->name('subscription.back');
     //redirect route for chargify sign up page
     Route::get('subscription/finalise', 'SubscriptionController@finalise')->name('subscription.finalise');
+    Route::get('subscription/update', 'SubscriptionController@externalUpdate')->name('subscription.external_update');
     Route::resource('subscription', 'SubscriptionController', ['except' => [
         'create', 'show'
     ]]);

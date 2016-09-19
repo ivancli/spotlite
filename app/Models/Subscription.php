@@ -38,6 +38,23 @@ class Subscription extends Model
         }
     }
 
+    public function creditCardExpiringWithinMonthOrExpired($month = 1)
+    {
+//        if ($previousAPICreditCard->expiration_year > date("Y") || ($previousAPICreditCard->expiration_year == date("Y") && $previousAPICreditCard->expiration_month >= date('n'))) {
+        $exYear = SubscriptionDetail::getCreditCardExpiryYear($this->getKey());
+        $exMonth = SubscriptionDetail::getCreditCardExpiryMonth($this->getKey());
+        $yearDiff = -1;
+        $monthDiff = -1;
+        if (!is_null($exYear)) {
+            $yearDiff = date("Y") - $exYear->value;
+        }
+        if (!is_null($exMonth)) {
+            $monthDiff = date("n") - $exMonth->value;
+        }
+        $totalDiff = $yearDiff * 12 + $monthDiff;
+        return $totalDiff * -1 <= $month;
+    }
+
     public function save(array $options = [])
     {
         $result = parent::save($options);

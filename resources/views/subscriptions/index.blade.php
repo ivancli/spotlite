@@ -33,9 +33,11 @@
                     {{dump($subscription)}}
                     <div class="row">
                         <div class="col-sm-12 text-right">
-                            <a href="{{$portalLink}}" target="_blank" class="btn btn-default">
-                                Access Chargify Billing Portal
-                            </a>
+                            @if(isset($portalLink))
+                                <a href="{{$portalLink}}" class="btn btn-default">
+                                    Access Chargify Billing Portal
+                                </a>
+                            @endif
                             <a href="{{$updatePaymentLink}}" target="_blank" class="btn btn-default">
                                 Update Payment Details
                             </a>

@@ -277,6 +277,9 @@ class ChargifySubscriptionManager implements SubscriptionManager
     {
         $subscription = $user->subscription;
         if (!is_null($subscription)) {
+
+            $this->updateCreditCardDetails($subscription);
+
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
 
             if (!is_null($apiSubscription->canceled_at)) {
@@ -294,5 +297,37 @@ class ChargifySubscriptionManager implements SubscriptionManager
             }
             $subscription->save();
         }
+    }
+
+    public function updateCreditCardDetails(Subscription $subscription)
+    {
+        $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
+        $creditCard = $apiSubscription->credit_card;
+        $expiryYear = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_YEAR');
+        $expiryMonth = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_MONTH');
+
+        if (is_null($expiryYear) || is_null($expiryMonth)) {
+            if (is_null($expiryYear)) {
+                $expiryYear = SubscriptionDetail::create(array(
+                    "element" => "CREDIT_CARD_EXPIRY_YEAR",
+                    "value" => $creditCard->expiration_year,
+                    "subscription_id" => $subscription->getKey()
+                ));
+            }
+            if (is_null($expiryMonth)) {
+                $expiryMonth = SubscriptionDetail::create(array(
+                    "element" => "CREDIT_CARD_EXPIRY_MONTH",
+                    "value" => $creditCard->expiration_month,
+                    "subscription_id" => $subscription->getKey()
+                ));
+            }
+        } else {
+            $expiryYear->value = $creditCard->expiration_year;
+            $expiryYear->save();
+            $expiryMonth->value = $creditCard->expiration_month;
+            $expiryMonth->save();
+        }
+
+        return compact(['expiryYear', 'expiryMonth']);
     }
 }

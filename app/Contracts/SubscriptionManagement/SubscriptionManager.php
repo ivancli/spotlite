@@ -97,4 +97,6 @@ interface SubscriptionManager
      * @return mixed
      */
     public function syncUserSubscription(User $user);
+
+    public function updateCreditCardDetails(Subscription $subscription);
 }

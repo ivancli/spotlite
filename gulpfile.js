@@ -54,6 +54,9 @@ elixir(function(mix) {
         'resources/assets/js/commonFunctions.js',
         'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");
+    mix.scripts([
+        "node_modules/highcharts/highcharts.js"
+    ], "public/js/highcharts.js", "./");
 
     /* copy images */
     mix.copy('resources/assets/images', 'public/build/images');

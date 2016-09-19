@@ -39,7 +39,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
         /**
          * Crawling task
          */
@@ -58,7 +57,6 @@ class Kernel extends ConsoleKernel
 
                 /* in the designed crawl time? */
                 if (in_array($currentHour, $crawlTimes)) {
-
                     $crawlers = $this->crawlerManager->getCrawlers();
 
                     foreach ($crawlers as $crawler) {
@@ -66,9 +64,9 @@ class Kernel extends ConsoleKernel
                             dispatch((new CrawlSite($crawler))->onQueue("crawling"));
                             $crawler->queue();
                         } else {
-                            /*log the skipped crawler*/
-                            $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
-                            file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($crawler) . "\r\n");
+//                            /*log the skipped crawler*/
+//                            $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
+//                            file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($crawler) . "\r\n");
                         }
                     }
                     AppPreference::setCrawlReserved('n');

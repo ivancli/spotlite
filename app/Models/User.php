@@ -30,9 +30,18 @@ class User extends Authenticatable
         'password', 'remember_token', 'verification_code',
     ];
 
+    protected $appends = [
+        'preferences'
+    ];
+
     public function subscription()
     {
         return $this->hasOne('App\Models\Subscription', 'user_id', 'user_id');
+    }
+
+    public function preferences()
+    {
+        return $this->hasMany('App\Models\UserPreference', 'user_id', 'user_id');
     }
 
     public function activityLogs()
@@ -63,7 +72,6 @@ class User extends Authenticatable
     public function needSubscription()
     {
         return !$this->isStaff() && !$this->hasValidSubscription();
-
     }
 
     public function hasValidSubscription()
@@ -85,6 +93,12 @@ class User extends Authenticatable
         }
     }
 
+    public function getPreferencesAttribute()
+    {
+        $prefObjects = $this->preferences()->get();
+        $preferences = $prefObjects->pluck('value', 'element')->all();
+        return $preferences;
+    }
 
     public function save(array $options = [])
     {

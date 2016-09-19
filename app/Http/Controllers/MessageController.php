@@ -21,7 +21,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
         if (!auth()->user()->isStaff()) {
-            $subscription = $user->latestValidSubscription();
+            $subscription = $user->validSubscription();
             $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
         }
         if ($raw == 0) {
@@ -34,7 +34,7 @@ class MessageController extends Controller
     public function updateSubscription($raw = 0)
     {
         $user = auth()->user();
-        $subscription = $user->latestValidSubscription();
+        $subscription = $user->validSubscription();
         $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
         if ($raw == 0) {
             return view('msg.subscription.welcome')->with(compact(['apiSubscription']));
@@ -57,6 +57,18 @@ class MessageController extends Controller
         } else {
             abort(403);
             return false;
+        }
+    }
+
+    public function notifyCreditCardExpiringSoon($raw = 0)
+    {
+        $apiSubscriptionId = auth()->user()->validSubscription()->api_subscription_id;
+        $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($apiSubscriptionId);
+
+        if ($raw == 0) {
+            return view('msg.subscription.credit_card_expiry')->with(compact(['updatePaymentLink']));
+        } else {
+            /*TODO implement this if needed*/
         }
     }
 }
