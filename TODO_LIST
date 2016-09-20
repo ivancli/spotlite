@@ -9,6 +9,14 @@ Crawler Site Management
     * 5) sort out domain management and user report error stuff
 
 
+* Create admin page for app preferences
+
+* report
+
+* alert back-end
+
+* create chart data generator (difficult)
+
 Create events and subscribers for the missing controller actions
 
 * Load Product Banner partial through ajax

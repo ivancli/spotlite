@@ -48,6 +48,7 @@ class ProductSite extends Model
             "update" => route("product_site.my_price", $this->getKey()),
             "delete" => route("product_site.destroy", $this->getKey()),
             "alert" => route("alert.product_site.edit", $this->getKey()),
+            "chart" => route("chart.product_site.index", $this->getKey()),
         );
     }
 }

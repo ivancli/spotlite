@@ -145,7 +145,7 @@ function showLoading() {
     var $spinner = $("<div>").addClass("spinner").append(
         $("<div>").addClass("spinner-backdrop"),
         $("<img>").attr({
-            "src": "/build/images/spinner.gif"
+            "src": "/images/spinner.gif"
         }).addClass("spinner-img")
     );
     $("body").append($spinner);

@@ -2,10 +2,10 @@
     <!-- Logo -->
     <a href="{{route('dashboard.index')}}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><img src="{{asset('build/images/favicon.png')}}" alt="SpotLite" height="50"></span>
+        <span class="logo-mini"><img src="{{asset('images/favicon.png')}}" alt="SpotLite" height="50"></span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg">
-            <img src="{{asset('build/images/logo-fixed.png')}}" alt="SpotLite" height="50">
+            <img src="{{asset('images/logo-fixed.png')}}" alt="SpotLite" height="50">
         </span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->

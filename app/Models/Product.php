@@ -72,6 +72,7 @@ class Product extends Model
             "show" => route("product.show", $this->getKey()),
             "delete" => route("product.destroy", $this->getKey()),
             "alert" => route("alert.product.edit", $this->getKey()),
+            "chart" => route("chart.product.index", $this->getKey()),
         );
     }
 }

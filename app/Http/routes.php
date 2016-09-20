@@ -88,6 +88,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('alert/product_site/{product_site_id}', 'Product\AlertController@deleteProductSiteAlert')->name('alert.product_site.destroy');
 
 
+        /**
+         * Chart Related Routes
+         */
+        Route::get('chart/category/{category_id}', 'Product\ChartController@categoryIndex')->name('chart.category.index');
+        Route::get('chart/product/{product_id}', 'Product\ChartController@productIndex')->name('chart.product.index');
+        Route::get('chart/product_site/{product_site_id}', 'Product\ChartController@productSiteIndex')->name('chart.product_site.index');
     });
 
 

@@ -21,7 +21,6 @@ elixir.extend('remove', function(path) {
  */
 
 elixir(function(mix) {
-    mix.browserSync();
     mix.remove([
         'public/css',
         'public/js',
@@ -55,7 +54,9 @@ elixir(function(mix) {
         'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");
     mix.scripts([
-        "node_modules/highcharts/highcharts.js"
+        "node_modules/highcharts/highcharts.js",
+        "node_modules/highcharts/highcharts-more.js",
+        "node_modules/highcharts/modules/exporting.js"
     ], "public/js/highcharts.js", "./");
 
     /* copy images */

@@ -32,7 +32,7 @@
             </button>
         </th>
         <th class="text-right action-cell product-th">
-            <a href="#" class="btn-action">
+            <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;">
                 <i class="fa fa-line-chart"></i>
             </a>
             <a href="#" class="btn-action" onclick="showProductAlertForm(this); return false;">
@@ -251,6 +251,23 @@
                     hideLoading();
                     alertP("Error", "Unable to show add site form, please try again later.");
                 }
+            });
+        }
+
+        function showProductChart(url) {
+            showLoading();
+            $.get(url, function (html) {
+                hideLoading();
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady()
+                    }
+                });
+                $modal.on("hidden.bs.modal", function () {
+                    $(this).remove();
+                });
             });
         }
     </script>

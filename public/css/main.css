@@ -13202,6 +13202,23 @@ th.ellipsis {
     cursor: move;
 }
 
+.highcharts-contextmenu hr {
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+@media (min-width: 992px) {
+    .modal-xl {
+        width: 900px;
+    }
+}
+
+@media (min-width: 1360px) {
+    .modal-xl {
+        width: 1300px;
+    }
+}
+
 @media screen and (min-width: 768px) {
     .navbar-brand {
         display: none;
@@ -13217,9 +13234,6 @@ th.ellipsis {
         display: none;
     }
 }
-
-
-
 
 /*preloader*/
 /*

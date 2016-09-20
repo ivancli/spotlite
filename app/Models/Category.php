@@ -60,6 +60,7 @@ class Category extends Model
         return array(
             "show" => route("category.show", $this->getKey()),
             "delete" => route("category.destroy", $this->getKey()),
+            "chart" => route("chart.category.index", $this->getKey()),
         );
     }
 }

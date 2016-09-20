@@ -75,6 +75,12 @@ class SLCrawlerManager implements CrawlerManager
 
     public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass)
     {
+        /*TODO check once again to prevent duplication*/
+
+        if (!$crawler->lastCrawlerWithinHour()) {
+            return false;
+        }
+
         $crawler->status = "running";
         $crawler->save();
 
@@ -121,6 +127,11 @@ class SLCrawlerManager implements CrawlerManager
 
                     $site->recent_price = $price;
                     $site->last_crawled_at = $historicalPrice->created_at;
+
+                    if (!$crawler->lastCrawlerWithinHour()) {
+                        return false;
+                    }
+
                     $site->save();
                     $site->statusOK();
                 } else {

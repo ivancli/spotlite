@@ -67,4 +67,10 @@ class Crawler extends Model
         $this->last_active_at = new Carbon;
         $this->save();
     }
+
+    public function lastCrawlerWithinHour($hour = 1)
+    {
+        $hourDiff = (strtotime(date('Y-m-d H:00:00', strtotime($this->site->last_crawled_at))) - strtotime(date('Y-m-d H:00:00'))) / 3600;
+        return $hourDiff < $hour;
+    }
 }

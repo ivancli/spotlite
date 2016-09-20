@@ -11,6 +11,9 @@
     </td>
     <td>{{$productSite->site->last_crawled_at}}</td>
     <td class="text-right action-cell">
+        <a href="#" class="btn-action" onclick="showProductSiteChart('{{$productSite->urls['chart']}}'); return false;">
+            <i class="fa fa-line-chart"></i>
+        </a>
         <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;">
             <i class="fa {{!is_null($productSite->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
         </a>
@@ -180,6 +183,23 @@
                     alertP("Error", "unable to set my price, please try again later.");
                 }
             })
+        }
+
+        function showProductSiteChart(url) {
+            showLoading();
+            $.get(url, function (html) {
+                hideLoading();
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady()
+                    }
+                });
+                $modal.on("hidden.bs.modal", function () {
+                    $(this).remove();
+                });
+            });
         }
     </script>
 </tr>

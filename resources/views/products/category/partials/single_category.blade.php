@@ -33,7 +33,7 @@
                 </th>
 
                 <th class="text-right action-cell category-th">
-                    <a href="#" class="btn-action" onclick="showCategoryChart(this)">
+                    <a href="#" class="btn-action" onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
                         <i class="fa fa-line-chart"></i>
                     </a>
                     <a href="#" class="btn-action">
@@ -163,7 +163,7 @@
         }
 
         function toggleEditCategoryName(el) {
-            var $tbl = $(el).closest(".tbl-category")
+            var $tbl = $(el).closest(".tbl-category");
             if ($(el).hasClass("editing")) {
                 $(el).removeClass("editing");
                 $tbl.find(".category-name-link").show();
@@ -249,8 +249,21 @@
             })
         }
 
-        function showCategoryChart(el){
-            $.get("{{}}")
+        function showCategoryChart(url) {
+            showLoading();
+            $.get(url, function (html) {
+                hideLoading();
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady()
+                    }
+                });
+                $modal.on("hidden.bs.modal", function () {
+                    $(this).remove();
+                });
+            });
         }
     </script>
 </div>
