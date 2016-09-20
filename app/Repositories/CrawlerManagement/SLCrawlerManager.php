@@ -2,6 +2,11 @@
 namespace App\Repositories\CrawlerManagement;
 
 use App\Contracts\CrawlerManagement\CrawlerManager;
+use App\Events\Products\Crawler\CrawlerFinishing;
+use App\Events\Products\Crawler\CrawlerLoadingHTML;
+use App\Events\Products\Crawler\CrawlerLoadingPrice;
+use App\Events\Products\Crawler\CrawlerRunning;
+use App\Events\Products\Crawler\CrawlerSavingPrice;
 use App\Models\Crawler;
 use App\Models\Domain;
 use App\Models\HistoricalPrice;
@@ -80,7 +85,7 @@ class SLCrawlerManager implements CrawlerManager
         if (!$crawler->lastCrawlerWithinHour()) {
             return false;
         }
-
+        event(new CrawlerRunning($crawler));
         $crawler->status = "running";
         $crawler->save();
 
@@ -89,6 +94,7 @@ class SLCrawlerManager implements CrawlerManager
             "url" => $site->site_url,
         );
         $crawlerClass->setOptions($options);
+        event(new CrawlerLoadingHTML($crawler));
         $crawlerClass->loadHTML();
         $html = $crawlerClass->getHTML();
 
@@ -112,6 +118,7 @@ class SLCrawlerManager implements CrawlerManager
             $parserClass->setOptions($options);
             $parserClass->setHTML($html);
             $parserClass->init();
+            event(new CrawlerLoadingPrice($crawler));
             $result = $parserClass->parseHTML();
             if (!is_null($result) && is_string($result)) {
                 $price = str_replace('$', '', $result);
@@ -134,9 +141,10 @@ class SLCrawlerManager implements CrawlerManager
                     if (!$crawler->lastCrawlerWithinHour()) {
                         return false;
                     }
-
+                    event(new CrawlerSavingPrice($crawler));
                     $site->save();
                     $site->statusOK();
+                    event(new CrawlerFinishing($crawler));
                 } else {
                     /*TODO handle error, price is incorrect*/
                     $site->statusFailPrice();

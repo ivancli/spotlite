@@ -34,7 +34,7 @@ class UpdateProductSiteAlertValidator extends ValidatorAbstract
         return array(
             "comparison_price_type.required" => "Trigger is required.",
             "operator.required" => "Trend is required.",
-            "comparison_price.required" => "Price point is required.",
+            "comparison_price.required_if" => "Price point is required.",
             "comparison_price.numeric" => "Price point is not in a correct format.",
             "email.required" => "Please provide at least 1 email address to be notified.",
             "email.*.email" => "Please enter a valid email address."

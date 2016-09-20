@@ -45,4 +45,20 @@ class SLAlertManager implements AlertManager
         $alert = $this->getAlert($alert_id);
         $alert->delete();
     }
+
+    public function triggerProductAlert(Alert $alert)
+    {
+        // TODO: Implement triggerProductAlert() method.
+
+        /*check prices of sites*/
+        /*check user*/
+        /*push email to queue*/
+    }
+
+    public function triggerProductSiteAlert(Alert $alert)
+    {
+        /*check prices of site or my price*/
+        /*check user*/
+        /*push email to queue*/
+    }
 }

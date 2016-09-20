@@ -8,7 +8,7 @@
             {{parse_url($productSite->site->site_url)['path']}}
         </a>
     </td>
-    <td >
+    <td>
         {{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}
     </td>
     <td class="text-center">
@@ -22,7 +22,9 @@
         @endif
     </td>
     <td align="center">
-        <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;">
+
+        <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;"
+           data-alert-is-subjected-my-price="{{$productSite->alert['comparison_price_type'] == 'my price' ? 'y' : 'n'}}">
             <i class="fa fa-check-circle-o {{$productSite->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
         </a>
     </td>
@@ -178,6 +180,28 @@
         }
 
         function toggleMyPrice(el) {
+            if ($(el).attr("data-alert-is-subjected-my-price") == 'y' && !$(el).find("i").hasClass("text-primary")) {
+                confirmP("My Price", "The alert of this site is subjected to 'My Price'. Setting this site to be 'My Price' will disable the alert. Do you want to set this site as 'My Price'?", {
+                    "affirmative": {
+                        "text": "Yes",
+                        "class": "btn-primary",
+                        "dismiss": true,
+                        "callback": function () {
+                            submitToggleMyPrice(el);
+                        }
+                    },
+                    "negative": {
+                        "text": "Cancel",
+                        "class": "btn-default",
+                        "dismiss": true
+                    }
+                });
+            } else {
+                submitToggleMyPrice(el);
+            }
+        }
+
+        function submitToggleMyPrice(el) {
             var myPrice = $(el).find("i").hasClass("text-primary") ? "n" : "y";
             showLoading();
 

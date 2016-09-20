@@ -220,3 +220,8 @@ Breadcrumbs::register('admin_domain', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Domain Management', route('admin.domain.index'));
 });
+Breadcrumbs::register('admin_preference', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('App Preferences', route('admin.app_preference.index'));
+});
+

@@ -9,6 +9,8 @@
 namespace App\Contracts\ProductManagement;
 
 
+use App\Models\Alert;
+
 interface AlertManager
 {
     public function getAlerts();
@@ -21,4 +23,7 @@ interface AlertManager
 
     public function deleteAlert($alert_id);
 
+    public function triggerProductAlert(Alert $alert);
+
+    public function triggerProductSiteAlert(Alert $alert);
 }

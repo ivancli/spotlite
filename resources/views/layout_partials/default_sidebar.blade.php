@@ -26,17 +26,22 @@
                 </li>
 
                 {{--<li class="treeview {{Style::set_active_starts_with(array('group.'))}}">--}}
-                    {{--<a href="#">--}}
-                        {{--<i class="fa fa-users"></i>--}}
-                        {{--<span>Group Management</span>--}}
-                    {{--</a>--}}
-                    {{--<ul class="treeview-menu">--}}
-                        {{--<li class="{{Style::set_active('dashboard')}}"><a href="{{url('alert')}}"><i--}}
-                                        {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
-                    {{--</ul>--}}
+                {{--<a href="#">--}}
+                {{--<i class="fa fa-users"></i>--}}
+                {{--<span>Group Management</span>--}}
+                {{--</a>--}}
+                {{--<ul class="treeview-menu">--}}
+                {{--<li class="{{Style::set_active('dashboard')}}"><a href="{{url('alert')}}"><i--}}
+                {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
+                {{--</ul>--}}
                 {{--</li>--}}
             @endif
             @if(auth()->check() && auth()->user()->isStaff())
+                <li>
+                    <a href="{{route("admin.app_preference.index")}}"><i class="fa fa-gears"></i>
+                        <span>App Preferences</span>
+                    </a>
+                </li>
                 <li class="treeview {{Style::set_active_starts_with('admin')}}">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
@@ -45,9 +50,9 @@
                     <ul class="treeview-menu">
                         {{--TODO enable this in the second phase--}}
                         {{--<li class="{{Style::set_active_and(array('admin', 'domain'))}}">--}}
-                            {{--<a href="{{route('admin.domain.index')}}">--}}
-                                {{--<i class="fa fa-circle-o"></i> Domains--}}
-                            {{--</a>--}}
+                        {{--<a href="{{route('admin.domain.index')}}">--}}
+                        {{--<i class="fa fa-circle-o"></i> Domains--}}
+                        {{--</a>--}}
                         {{--</li>--}}
                         <li class="{{Style::set_active_and(array('admin', 'site'))}}">
                             <a href="{{route('admin.site.index')}}">

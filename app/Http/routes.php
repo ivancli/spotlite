@@ -130,7 +130,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/domain', 'Crawler\DomainController', ['except' => [
         'show', 'edit'
     ]]);
-
+    /* admin app preferences management */
+    Route::put('admin/app_preference/all', 'Admin\AppPreferenceController@update')->name('admin.app_preference.update');
+    Route::resource('admin/app_preference', 'Admin\AppPreferenceController', ['except' => [
+        'update'
+    ]]);
 
     Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 });
