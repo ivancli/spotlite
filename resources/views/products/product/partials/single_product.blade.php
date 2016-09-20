@@ -62,13 +62,20 @@
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th>Site</th>
-                        <th class="hidden-sm hidden-xs">Path</th>
-                        <th>Price</th>
-                        <th></th>
-                        <th class="text-center" width="100">My Price</th>
-                        <th>Last Update</th>
-                        <th></th>
+                        <th width="15%">Site</th>
+                        <th width="30%" class="hidden-sm hidden-xs">Path</th>
+                        <th width="9%">Price</th>
+                        <th width="9%"></th>
+                        <th class="text-center" width="7%">My Price</th>
+                        <th width="15%">Last Update</th>
+                        <th width="15%"></th>
+                        {{--<th >Site</th>--}}
+                        {{--<th  class="hidden-sm hidden-xs">Path</th>--}}
+                        {{--<th>Price</th>--}}
+                        {{--<th></th>--}}
+                        {{--<th class="text-center" width="100">My Price</th>--}}
+                        {{--<th >Last Update</th>--}}
+                        {{--<th ></th>--}}
                     </tr>
                     </thead>
                     <tbody>
