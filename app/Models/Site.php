@@ -17,7 +17,7 @@ class Site extends Model
 {
     protected $primaryKey = "site_id";
     protected $fillable = [
-        "site_url", "site_xpath", "recent_price", "last_crawled_at"
+        "site_url", "site_xpath", "recent_price", "last_crawled_at", "price_diff"
     ];
     protected $appends = ['urls', 'domain'];
 

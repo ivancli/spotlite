@@ -3,7 +3,8 @@
     <thead>
     <tr>
         <th class="shrink product-th">
-            <a class="btn-collapse btn-product-dragger" href="#product-{{$product->getKey()}}" role="button" data-toggle="collapse"
+            <a class="btn-collapse btn-product-dragger" href="#product-{{$product->getKey()}}" role="button"
+               data-toggle="collapse"
                data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}">
                 <i class="glyphicon glyphicon-menu-hamburger"></i>
             </a>
@@ -20,10 +21,10 @@
                        class="form-control sl-form-control input-sm product-name"
                        value="{{$product->product_name}}">
                 <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary btn-flat btn-sm">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                        </span>
+                    <button type="submit" class="btn btn-primary btn-flat btn-sm">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </span>
             </div>
             {!! Form::close() !!}
             &nbsp;
@@ -62,8 +63,10 @@
                     <thead>
                     <tr>
                         <th>Site</th>
+                        <th class="hidden-sm hidden-xs">Path</th>
                         <th>Price</th>
-                        <th>My Price</th>
+                        <th></th>
+                        <th class="text-center" width="100">My Price</th>
                         <th>Last Update</th>
                         <th></th>
                     </tr>

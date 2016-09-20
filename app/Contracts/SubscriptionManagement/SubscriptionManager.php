@@ -47,10 +47,11 @@ interface SubscriptionManager
 
     /**
      * Update an existing subscription in Payment Management Site
+     * @param $subscription_id
      * @param $options
      * @return mixed
      */
-    public function updateSubscription($options);
+    public function updateSubscription($subscription_id, $options);
 
     /**
      * Cancel an existing subscription in Payment Management Site

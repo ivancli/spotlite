@@ -16,8 +16,9 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 text-center">
-                            {!! Form::open(array('route' => 'subscription.store', 'method' => 'post')) !!}
+                            {!! Form::open(array('route' => 'subscription.store', 'method' => 'post', 'onsubmit'=>'$("#txt-coupon-code").val($("#visual-coupon-code").val());')) !!}
                             <input type="hidden" name="api_product_id" id="txt-api-product-id">
+                            <input type="hidden" name="coupon_code" id="txt-coupon-code">
                             {!! Form::submit('Subscribe Now', ["class"=>"btn btn-primary btn-lg", "id" => "btn-subscribe", "disabled" => "disabled"]) !!}
                             {!! Form::close() !!}
                         </div>

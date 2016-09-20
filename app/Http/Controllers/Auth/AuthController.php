@@ -94,7 +94,7 @@ class AuthController extends Controller
         if (request()->has('api_product_id')) {
             $product = $this->subscriptionManager->getProduct(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
-
+            $coupon_code = request()->get('coupon_code');
             if ($requireCreditCard == true) {
                 /* REQUIRED CREDIT CARD */
                 $reference = array(
@@ -102,7 +102,7 @@ class AuthController extends Controller
                     "verification_code" => $verificationCode
                 );
                 $encryptedReference = rawurlencode(json_encode($reference));
-                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}";
+                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$coupon_code}";
 
                 $this->redirectTo = $chargifyLink;
             } else {
@@ -112,6 +112,7 @@ class AuthController extends Controller
                 $fields = new \stdClass();
                 $subscription = new \stdClass();
                 $subscription->product_id = $product->id;
+                $subscription->coupon_code = $coupon_code;
                 $customer_attributes = new \stdClass();
                 $customer_attributes->first_name = $data['first_name'];
                 $customer_attributes->last_name = $data['last_name'];

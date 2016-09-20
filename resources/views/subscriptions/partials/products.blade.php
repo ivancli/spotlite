@@ -1,6 +1,6 @@
 @if(!is_null($products))
     @foreach($products as $item)
-        <div class="product-container {{isset($chosenAPIProductID) && $item->product->id == $chosenAPIProductID ? 'chosen': ''}}"
+        <div class="product-container m-b-10 {{isset($chosenAPIProductID) && $item->product->id == $chosenAPIProductID ? 'chosen': ''}}"
              data-link="{{array_first($item->product->public_signup_pages)->url}}"
              data-id="{{$item->product->id}}" style="border: 1px solid lightgrey; border-radius: 20px;">
             <h4 style="text-transform: uppercase; color: #78a300;">{{$item->product->name}}</h4>
@@ -30,4 +30,14 @@
             </div>
         </div>
     @endforeach
+
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <div class="form-group form-inline">
+                <label for="" class="sl-control-label">Have a Coupon Code?</label>
+                &nbsp;
+                <input type="text" class="form-control sl-form-control" id="visual-coupon-code">
+            </div>
+        </div>
+    </div>
 @endif

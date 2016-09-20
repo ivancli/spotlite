@@ -36,10 +36,11 @@
                                 @endforeach
                             </ul>
                         @endif
-                        {!! Form::open(array('route' => 'register.post', 'method' => 'post', "id" => "frm-register")) !!}
+                        {!! Form::open(array('route' => 'register.post', 'method' => 'post', "id" => "frm-register", "onsubmit" => "$('#txt-coupon-code').val($('#visual-coupon-code').val())")) !!}
                         @include('auth.forms.register_form')
                         <input type="hidden" name="signup_link" id="txt-signup-link">
                         <input type="hidden" name="api_product_id" id="txt-api-product-id">
+                        <input type="hidden" name="coupon_code" id="txt-coupon-code">
                         <div class="row m-b-5">
                             <div class="col-sm-6">
                                 <a href="{{route('login.get')}}">Already have an account? Click here to login</a>

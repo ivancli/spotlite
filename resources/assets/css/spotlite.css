@@ -146,6 +146,10 @@ td.shrink, th.shrink {
     z-index: 99999;
 }
 
+.sl-control-label {
+    font-weight: normal;
+}
+
 .sl-form-control {
     width: auto;
 }
@@ -295,6 +299,10 @@ th.ellipsis {
     margin-top: 7px;
     margin-bottom: 7px;
 }
+
+/*.site-wrapper td:not(:last-child){*/
+    /*border: 1px solid #e6e6e6 !important;*/
+/*}*/
 
 @media (min-width: 992px) {
     .modal-xl {

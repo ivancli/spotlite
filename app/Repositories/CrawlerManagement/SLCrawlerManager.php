@@ -125,6 +125,9 @@ class SLCrawlerManager implements CrawlerManager
                         "price" => $price
                     ));
 
+                    if (!is_null($site->recent_price)) {
+                        $site->price_diff = $price - $site->recent_price;
+                    }
                     $site->recent_price = $price;
                     $site->last_crawled_at = $historicalPrice->created_at;
 

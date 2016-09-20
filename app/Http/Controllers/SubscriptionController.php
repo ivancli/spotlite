@@ -89,6 +89,7 @@ class SubscriptionController extends Controller
             return false;
         }
         $productId = request()->get('api_product_id');
+        $couponCode = $request->get('coupon_code');
         $product = $this->subscriptionManager->getProduct($productId);
         if (!is_null($product)) {
             if ($product->require_credit_card) {
@@ -103,6 +104,7 @@ class SubscriptionController extends Controller
                             $subscription->product_id = $product->id;
                             $subscription->customer_id = $previousSubscription->api_customer_id;
                             $subscription->payment_profile_id = $previousAPICreditCard->id;
+                            $subscription->coupon_code = $couponCode;
                             $fields->subscription = $subscription;
                             $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
                             if (isset($result->subscription)) {
@@ -128,7 +130,7 @@ class SubscriptionController extends Controller
                     "verification_code" => $verificationCode
                 );
                 $encryptedReference = rawurlencode(json_encode($reference));
-                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}";
+                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}";
                 return redirect()->to($chargifyLink);
             } else {
                 /* create subscription in Chargify by using its API */
@@ -272,6 +274,27 @@ class SubscriptionController extends Controller
         $subscription = Subscription::findOrFail($id);
         event(new SubscriptionUpdating($subscription));
         $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+
+        if ($request->has('coupon_code')) {
+            $fields = new \stdClass();
+            $updatedSubscription = new \stdClass();
+            $updatedSubscription->coupon_code = $request->get('coupon_code');
+            $fields->subscription = $updatedSubscription;
+            $result = $this->subscriptionManager->updateSubscription($apiSubscription->id, json_encode($fields));
+            if ($result == false) {
+                if ($request->ajax()) {
+                    $status = false;
+                    if ($request->wantsJson()) {
+                        return response()->json(compact(['status']));
+                    } else {
+                        return compact(['status']);
+                    }
+                } else {
+                    return redirect()->back();
+                }
+            }
+        }
+        $coupon_code = $request->get('coupon_code');
         /*check current subscription has payment method or not*/
         if (is_null($apiSubscription->payment_type)) {
             //current subscription no payment method
@@ -281,6 +304,7 @@ class SubscriptionController extends Controller
             $fields = new \stdClass();
             $migration = new \stdClass();
             $migration->product_id = request()->get('api_product_id');
+            $migration->include_coupons = 1;
             $fields->migration = $migration;
 
             $result = $this->subscriptionManager->setMigration($apiSubscription->id, json_encode($fields));

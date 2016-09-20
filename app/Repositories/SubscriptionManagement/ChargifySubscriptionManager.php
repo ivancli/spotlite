@@ -122,12 +122,25 @@ class ChargifySubscriptionManager implements SubscriptionManager
 
     /**
      * Update an existing subscription in Payment Management Site
+     * @param $subscription_id
      * @param $options
      * @return mixed
      */
-    public function updateSubscription($options)
+    public function updateSubscription($subscription_id, $options)
     {
-        // TODO: Implement updateSubscription() method.
+        $apiURL = config('chargify.api_url') . "subscriptions/{$subscription_id}.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $method = "put";
+        $data_type = 'json';
+        $fields = $options;
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
     }
 
     /**

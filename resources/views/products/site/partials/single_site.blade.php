@@ -3,13 +3,33 @@
     data-site-alert-url="{{$productSite->urls['alert']}}"
     data-site-update-url="{{$productSite->urls['update']}}">
     <td>{{parse_url($productSite->site->site_url)['host']}}</td>
-    <td>{{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}</td>
+    <td class="hidden-sm hidden-xs">
+        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted">
+            {{parse_url($productSite->site->site_url)['path']}}
+        </a>
+    </td>
     <td>
+        {{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}
+    </td>
+    <td class="text-center">
+        @if(!is_null($productSite->site->price_diff) && $productSite->site->price_diff != 0)
+            <i class="glyphicon {{$productSite->site->price_diff > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
+            ${{number_format(abs($productSite->site->price_diff), 2, '.', ',')}}
+        @else
+            -
+        @endif
+    </td>
+    <td align="center">
         <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;">
             <i class="fa fa-check-circle-o {{$productSite->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
         </a>
     </td>
-    <td>{{$productSite->site->last_crawled_at}}</td>
+    <td>
+        <div title="{{$productSite->site->last_crawled_at}}" data-toggle="tooltip">
+            {{date("Y-m-d", strtotime($productSite->site->last_crawled_at))}}
+            <span class="hidden-xs hidden-sm">{{date("H:i:s", strtotime($productSite->site->last_crawled_at))}}</span>
+        </div>
+    </td>
     <td class="text-right action-cell">
         <a href="#" class="btn-action" onclick="showProductSiteChart('{{$productSite->urls['chart']}}'); return false;">
             <i class="fa fa-line-chart"></i>
