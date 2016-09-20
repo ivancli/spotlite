@@ -10,8 +10,13 @@ Crawler Site Management
 
 
 ******SLAlertManager.php
+*complete product alert
 
-* Create admin page for app preferences
+* retrieve all historical price for chart
+
+* create crawler and alert log for front-end
+
+
 
 * report
 
