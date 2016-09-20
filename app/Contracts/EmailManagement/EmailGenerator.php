@@ -1,6 +1,7 @@
 <?php
 namespace App\Contracts\EmailManagement;
 use App\Models\User;
+use DaveJamesMiller\Breadcrumbs\View;
 
 /**
  * Created by PhpStorm.
@@ -11,4 +12,6 @@ use App\Models\User;
 interface EmailGenerator
 {
     public function sendWelcomeEmail(User $user);
+
+    public function sendMail($view, array $data = array(), User $user, $subject);
 }

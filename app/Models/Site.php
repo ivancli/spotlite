@@ -31,7 +31,7 @@ class Site extends Model
         return $this->hasOne('App\Models\Crawler', 'site_id', 'site_id');
     }
 
-    public function productSite()
+    public function productSites()
     {
         return $this->hasMany('App\Models\ProductSite', 'site_id', 'site_id');
     }

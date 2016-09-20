@@ -11,6 +11,7 @@ namespace App\Jobs;
 
 use App\Contracts\ProductManagement\AlertManager;
 use App\Models\Alert;
+use App\Models\Crawler;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -19,15 +20,15 @@ class AlertUser extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    protected $alert;
+    protected $crawler;
 
     /**
      * Create a new job instance.
-     * @param Alert $alert
+     * @param Crawler $crawler
      */
-    public function __construct(Alert $alert)
+    public function __construct(Crawler $crawler)
     {
-        $this->alert = $alert;
+        $this->crawler = $crawler;
     }
 
     /**
@@ -36,14 +37,19 @@ class AlertUser extends Job implements ShouldQueue
      */
     public function handle(AlertManager $alertManager)
     {
-        switch ($this->alert->alert_owner_type) {
-            case "product_site":
-                $alertManager->triggerProductSiteAlert($this->alert);
-                break;
-            case "product":
-                $alertManager->triggerProductAlert($this->alert);
-                break;
-            default:
+        $site = $this->crawler->site;
+
+        $productSites = $site->productSites;
+        foreach ($productSites as $productSite) {
+            switch ($productSite->alert['alert_owner_type']) {
+                case "product_site":
+                    $alertManager->triggerProductSiteAlert($productSite->alert);
+                    break;
+                case "product":
+                    $alertManager->triggerProductAlert($productSite->alert);
+                    break;
+                default:
+            }
         }
     }
 }

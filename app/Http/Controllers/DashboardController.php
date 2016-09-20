@@ -10,7 +10,9 @@ namespace App\Http\Controllers;
 
 
 use App\Contracts\SubscriptionManagement\SubscriptionManager;
+use App\Events\Products\Crawler\CrawlerFinishing;
 use App\Models\AppPreference;
+use App\Models\Crawler;
 use Invigor\Crawler\Repositories\DefaultCrawler;
 
 class DashboardController extends Controller

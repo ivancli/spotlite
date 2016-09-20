@@ -36,7 +36,7 @@ class CrawlerEventSubscriber
     public function onCrawlerFinishing($event)
     {
         $crawler = $event->crawler;
-        dispatch((new AlertUser($crawler)));
+        dispatch((new AlertUser($crawler))->onQueue("alerting"));
 //        dispatch((new LogUserActivity(auth()->user(), "updating product - {$product->getKey()}"))->onQueue("logging"));
     }
 

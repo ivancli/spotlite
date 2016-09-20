@@ -10,6 +10,7 @@ namespace App\Repositories\ProductManagement;
 
 
 use App\Contracts\ProductManagement\AlertManager;
+use App\Jobs\SendMail;
 use App\Models\Alert;
 
 class SLAlertManager implements AlertManager
@@ -48,17 +49,61 @@ class SLAlertManager implements AlertManager
 
     public function triggerProductAlert(Alert $alert)
     {
-        // TODO: Implement triggerProductAlert() method.
-
-        /*check prices of sites*/
-        /*check user*/
-        /*push email to queue*/
+        $product = $alert->alertable;
+        $productSites = $product->productSites;
     }
 
     public function triggerProductSiteAlert(Alert $alert)
     {
-        /*check prices of site or my price*/
-        /*check user*/
-        /*push email to queue*/
+        $productSite = $alert->alertable;
+        if (is_null($productSite)) {
+            return false;
+        }
+        $site = $productSite->site;
+        $product = $productSite->product;
+
+        $myProductSite = $product->productSites()->where("my_price", "y")->first();
+
+
+        if ($alert->comparison_price_type == 'my price') {
+            if (is_null($myProductSite)) {
+                return false;
+            }
+            /* the alert site is my site, no need to compare or notify */
+            if($myProductSite->site->getKey() == $site->getKey()){
+                return false;
+            }
+            $comparisonPrice = $myProductSite->site->recent_price;
+        } else {
+            $comparisonPrice = $alert->comparison_price;
+        }
+        if (is_null($comparisonPrice)) {
+            return false;
+        }
+
+        $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
+        if ($alertUser) {
+            dispatch((new SendMail('products.alert.email.site', compact(['alert', 'myProductSite']), $product->user, 'SpotLite - Site Price Alert'))->onQueue("mailing"));
+        }
+    }
+
+    private function comparePrices($priceA, $priceB, $operator)
+    {
+        switch ($operator) {
+            case "=<":
+                return $priceA <= $priceB;
+                break;
+            case "<":
+                return $priceA < $priceB;
+                break;
+            case "=>":
+                return $priceA >= $priceB;
+                break;
+            case ">":
+                return $priceA > $priceB;
+                break;
+            default:
+                return false;
+        }
     }
 }
