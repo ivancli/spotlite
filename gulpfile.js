@@ -3,8 +3,8 @@ var elixir = require('laravel-elixir');
 var gulp = require('gulp');
 var task = elixir.Task;
 
-elixir.extend('remove', function(path) {
-    new task('remove', function() {
+elixir.extend('remove', function (path) {
+    new task('remove', function () {
         return del(path);
     });
 });
@@ -20,7 +20,7 @@ elixir.extend('remove', function(path) {
  |
  */
 
-elixir(function(mix) {
+elixir(function (mix) {
     mix.remove([
         'public/css',
         'public/js',
@@ -38,6 +38,9 @@ elixir(function(mix) {
         'node_modules/dragula/dist/dragula.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
+    mix.styles([
+        'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css'
+    ], "public/css/product.css", "./");
     mix.scripts([
         // "node_modules/jquery/dist/jquery.js",
         'vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js',
@@ -56,8 +59,10 @@ elixir(function(mix) {
     mix.scripts([
         "node_modules/highcharts/highcharts.js",
         "node_modules/highcharts/highcharts-more.js",
-        "node_modules/highcharts/modules/exporting.js"
-    ], "public/js/highcharts.js", "./");
+        "node_modules/highcharts/modules/exporting.js",
+        'vendor/almasaeed2010/adminlte/plugins/daterangepicker/moment.js',
+        'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js'
+    ], "public/js/product.js", "./");
 
     /* copy images */
     mix.copy('resources/assets/images', 'public/images');

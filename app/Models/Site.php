@@ -46,6 +46,11 @@ class Site extends Model
         return $this->belongsToMany('App\Models\Alert', 'alert_exclude_sites', 'site_id', 'alert_id');
     }
 
+    public function historicalPrices()
+    {
+        return $this->hasMany('App\Models\HistoricalPrice', 'site_id', 'site_id');
+    }
+
     public function scopeFilter($query, QueryFilter $filters)
     {
         return $filters->apply($query);

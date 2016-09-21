@@ -14,6 +14,7 @@ use App\Contracts\ProductManagement\ProductManager;
 use App\Contracts\ProductManagement\ProductSiteManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChartController extends Controller
 {
@@ -30,22 +31,68 @@ class ChartController extends Controller
 
     public function categoryIndex(Request $request, $category_id)
     {
-        $category = $this->categoryManager->getCategory($category_id);
 
-        return view('charts.category.index')->with(compact(['category']));
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                /*TODO validate start date and end date and resolution*/
+
+//                $startDateTime = intval($request->get('start_date'));
+//                $endDateTime = intval($request->get('end_date'));
+                $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
+                $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
+                $category = $this->categoryManager->getCategory($category_id);
+                foreach ($category->products as $product) {
+                    $sites = $product->sites;
+                    foreach ($sites as $site) {
+//                        $historicalPrices = $site->historicalPrices;
+                        DB::enableQueryLog();
+                        $historicalPrices = $site->historicalPrices()->whereRaw("historical_prices.created_at BETWEEN '?' AND '?'", array($startDateTime, $endDateTime))->get();
+                        dump(DB::getQueryLog());
+                        dump($historicalPrices->count());
+                        foreach ($historicalPrices as $historicalPrice) {
+//                            dump($historicalPrice->price);
+                        }
+                    }
+                }
+
+
+            } else {
+                $category = $this->categoryManager->getCategory($category_id);
+                return view('charts.category.index')->with(compact(['category']));
+            }
+        } else {
+            $category = $this->categoryManager->getCategory($category_id);
+            return view('charts.category.index')->with(compact(['category']));
+        }
     }
 
     public function productIndex(Request $request, $product_id)
     {
-        $product = $this->productManager->getProduct($product_id);
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
 
-        return view('charts.product.index')->with(compact(['product']));
+            } else {
+                $product = $this->productManager->getProduct($product_id);
+                return view('charts.product.index')->with(compact(['product']));
+            }
+        } else {
+            $product = $this->productManager->getProduct($product_id);
+            return view('charts.product.index')->with(compact(['product']));
+        }
     }
 
     public function productSiteIndex(Request $request, $product_site_id)
     {
-        $productSite = $this->productSiteManager->getProductSite($product_site_id);
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
 
-        return view('charts.site.index')->with(compact(['productSite']));
+            } else {
+                $productSite = $this->productSiteManager->getProductSite($product_site_id);
+                return view('charts.site.index')->with(compact(['productSite']));
+            }
+        } else {
+            $productSite = $this->productSiteManager->getProductSite($product_site_id);
+            return view('charts.site.index')->with(compact(['productSite']));
+        }
     }
 }

@@ -1,5 +1,8 @@
 @extends('layouts.adminlte')
 @section('title', 'Products')
+@section('links')
+    <link rel="stylesheet" href="{{asset('css/product.css')}}">
+@stop
 @section('header_title', "Products")
 @section('breadcrumbs')
     {!! Breadcrumbs::render('product_index') !!}
@@ -51,7 +54,7 @@
 
 @section('scripts')
 
-    <script type="text/javascript" src="{{asset('js/highcharts.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/product.js')}}"></script>
     <script type="text/javascript">
         var start = 0;
         var length = 5;
