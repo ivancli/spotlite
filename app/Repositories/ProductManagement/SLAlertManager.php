@@ -10,8 +10,10 @@ namespace App\Repositories\ProductManagement;
 
 
 use App\Contracts\ProductManagement\AlertManager;
+use App\Jobs\LogUserActivity;
 use App\Jobs\SendMail;
 use App\Models\Alert;
+use App\Models\User;
 
 class SLAlertManager implements AlertManager
 {
@@ -50,13 +52,64 @@ class SLAlertManager implements AlertManager
     public function triggerProductAlert(Alert $alert)
     {
         $product = $alert->alertable;
+
         $productSites = $product->productSites;
+
+        $myProductSite = $product->productSites()->where("my_price", "y")->first();
+
+        if ($alert->comparison_price_type == 'my price') {
+
+            if (is_null($myProductSite)) {
+                return false;
+            }
+
+            $comparisonPrice = $myProductSite->site->recent_price;
+
+
+            /* the alert site is my site, no need to compare or notify */
+        } else {
+            $comparisonPrice = $alert->comparison_price;
+        }
+
+        if (is_null($comparisonPrice)) {
+            return false;
+        }
+
+        $alertingProductSites = array();
+
+        foreach ($productSites as $productSite) {
+
+            /*TODO review necessity*/
+            if ($productSite->site->status != 'ok') {
+                break;
+            }
+
+            if ($alert->comparison_price_type == 'my price' && $myProductSite->site->getKey() == $productSite->site->getKey()) {
+                break;
+            }
+
+            $alertUser = $this->comparePrices($productSite->site->recent_price, $comparisonPrice, $alert->operator);
+
+            if ($alertUser) {
+                $alertingProductSites[] = $productSite;
+            }
+
+        }
+
+        $emails = $alert->emails;
+        foreach ($emails as $email) {
+            dispatch((new SendMail('products.alert.email.product', compact(['alert', 'alertingProductSites', 'myProductSite']), $email, 'SpotLite - Product Price Alert'))->onQueue("mailing"));
+        }
     }
 
     public function triggerProductSiteAlert(Alert $alert)
     {
         $productSite = $alert->alertable;
         if (is_null($productSite)) {
+            return false;
+        }
+        /*TODO review necessity*/
+        if ($productSite->site->status != 'ok') {
             return false;
         }
         $site = $productSite->site;
@@ -70,7 +123,7 @@ class SLAlertManager implements AlertManager
                 return false;
             }
             /* the alert site is my site, no need to compare or notify */
-            if($myProductSite->site->getKey() == $site->getKey()){
+            if ($myProductSite->site->getKey() == $site->getKey()) {
                 return false;
             }
             $comparisonPrice = $myProductSite->site->recent_price;
@@ -82,8 +135,12 @@ class SLAlertManager implements AlertManager
         }
 
         $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
+
         if ($alertUser) {
-            dispatch((new SendMail('products.alert.email.site', compact(['alert', 'myProductSite']), $product->user, 'SpotLite - Site Price Alert'))->onQueue("mailing"));
+            $emails = $alert->emails;
+            foreach ($emails as $email) {
+                dispatch((new SendMail('products.alert.email.site', compact(['alert', 'myProductSite']), $email, 'SpotLite - Site Price Alert'))->onQueue("mailing"));
+            }
         }
     }
 

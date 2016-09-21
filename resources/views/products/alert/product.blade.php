@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group required">
                     {!! Form::label('operator', 'Trend', array('class' => 'control-label')) !!}
-                    {!! Form::select('operator', array('<='=>'Equal or Below', '<' => 'Below', '>='=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control sl-form-control']) !!}
+                    {!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control sl-form-control']) !!}
                 </div>
                 <div class="form-group required" id="comparison-price-container"
                      style="{{isset($product->alert) && $product->alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">

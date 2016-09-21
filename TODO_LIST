@@ -52,3 +52,13 @@ check if task scheduler provide callback for skipped operation
 
 
 *CHECK LIMITATION OF TIMES OF GENERATING UPDATE PAYMENT DETAILS LINK
+
+
+
+
+
+
+
+
+
+when 2 sites under the same product finished crawling, it trigger alert events two times, the product alert runs twice, need to deduplicate
