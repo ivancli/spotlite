@@ -10,34 +10,40 @@ namespace App\Listeners\Products;
 
 
 use App\Jobs\AlertUser;
+use App\Jobs\LogCrawlerActivity;
 
 class CrawlerEventSubscriber
 {
     public function onCrawlerSavingPrice($event)
     {
         $crawler = $event->crawler;
+        dispatch((new LogCrawlerActivity($crawler, array("type" => 'saving_price')))->onQueue("logging"));
+
     }
 
     public function onCrawlerRunning($event)
     {
         $crawler = $event->crawler;
+        dispatch((new LogCrawlerActivity($crawler, array("type" => 'running')))->onQueue("logging"));
     }
 
     public function onCrawlerLoadingPrice($event)
     {
         $crawler = $event->crawler;
+        dispatch((new LogCrawlerActivity($crawler, array("type" => 'loading_price')))->onQueue("logging"));
     }
 
     public function onCrawlerLoadingHTML($event)
     {
         $crawler = $event->crawler;
+        dispatch((new LogCrawlerActivity($crawler, array("type" => 'loading_html')))->onQueue("logging"));
     }
 
     public function onCrawlerFinishing($event)
     {
         $crawler = $event->crawler;
         dispatch((new AlertUser($crawler))->onQueue("alerting"));
-//        dispatch((new LogUserActivity(auth()->user(), "updating product - {$product->getKey()}"))->onQueue("logging"));
+        dispatch((new LogCrawlerActivity($crawler, array("type" => 'finished')))->onQueue("logging"));
     }
 
 

@@ -18,7 +18,7 @@ class CreateCrawlerLogsTable extends Migration
             $table->foreign('crawler_id')->references('crawler_id')->on('crawlers')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->enum('type', array('c', 'u', 'd', 'r'))->comment = "c=create, u=update, d=delete, r=restore";
+            $table->text('type');
             $table->text('content');
             $table->timestamps();
         });

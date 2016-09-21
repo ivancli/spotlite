@@ -25,6 +25,7 @@ class LogServiceProvider extends ServiceProvider
     {
 
         $this->app->bind('App\Contracts\LogManagement\UserActivityLogger', 'App\Repositories\LogManagement\SLUserActivityLogger');
+        $this->app->bind('App\Contracts\LogManagement\CrawlerLogger', 'App\Repositories\LogManagement\SLCrawlerLogger');
 
         $this->app->when('App\Http\Controllers\Log\UserActivityLogController')
             ->needs('App\Filters\QueryFilter')
