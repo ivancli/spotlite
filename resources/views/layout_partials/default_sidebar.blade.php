@@ -37,12 +37,12 @@
                 {{--</li>--}}
             @endif
             @if(auth()->check() && auth()->user()->isStaff())
-                <li>
+                <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
                     <a href="{{route("admin.app_preference.index")}}"><i class="fa fa-gears"></i>
                         <span>App Preferences</span>
                     </a>
                 </li>
-                <li class="treeview {{Style::set_active_starts_with('admin')}}">
+                <li class="treeview {{Style::set_active_and(array('admin', 'site'))}}">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
                         <span>Crawler Management</span>

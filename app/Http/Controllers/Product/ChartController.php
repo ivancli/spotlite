@@ -41,19 +41,38 @@ class ChartController extends Controller
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
                 $category = $this->categoryManager->getCategory($category_id);
+                $categoryPrices = array();
                 foreach ($category->products as $product) {
-                    $sites = $product->sites;
-                    foreach ($sites as $site) {
-//                        $historicalPrices = $site->historicalPrices;
-                        DB::enableQueryLog();
-                        $historicalPrices = $site->historicalPrices()->whereRaw("historical_prices.created_at BETWEEN '?' AND '?'", array($startDateTime, $endDateTime))->get();
-                        dump(DB::getQueryLog());
-                        dump($historicalPrices->count());
+                    $productPrices = array();
+                    $productSites = $product->productSites;
+                    foreach ($productSites as $productSite) {
+                        $sitePrices = array();
+                        $historicalPrices = $productSite->site->historicalPrices()->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
                         foreach ($historicalPrices as $historicalPrice) {
-//                            dump($historicalPrice->price);
+                            switch ($request->get('resolution')) {
+                                case "weekly":
+                                    $date = date('Y-W', strtotime($historicalPrice->created_at));
+                                    break;
+                                case "monthly":
+                                    $date = date('Y-m', strtotime($historicalPrice->created_at));
+                                    break;
+                                case "daily":
+                                default:
+                                    $date = date('Y-m-d', strtotime($historicalPrice->created_at));
+                            }
+                            $sitePrices[$date] [] = $historicalPrice->price;
+                            unset($date);
+                        }
+
+                        foreach ($sitePrices as $date => $sitePrice) {
+                            $sum = array_sum($sitePrice);
+                            $count = count($sitePrice);
+                            $productPrices[$date][] = $sum/$count;
                         }
                     }
+                    $categoryPrices[$product->getKey()] = $productPrices;
                 }
+                dump($categoryPrices);
 
 
             } else {
