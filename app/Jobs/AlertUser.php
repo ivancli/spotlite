@@ -41,7 +41,7 @@ class AlertUser extends Job implements ShouldQueue
 
         $productSites = $site->productSites;
         foreach ($productSites as $productSite) {
-            if(!is_null($productSite->alert)){
+            if (!is_null($productSite->alert)) {
                 $productSite->alert->last_active_at = date("Y-m-d H:i:s");
                 $productSite->alert->save();
                 switch ($productSite->alert->alert_owner_type) {
@@ -63,9 +63,18 @@ class AlertUser extends Job implements ShouldQueue
             $allCrawled = true;
             $sites = $product->sites;
             foreach ($sites as $site) {
-                if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
-                    $allCrawled = false;
-                    break;
+                $excludedProductSites = $product->alert->excludedProductSites;
+                $excluded = false;
+                foreach ($excludedProductSites as $excludedProductSite) {
+                    if ($excludedProductSite->site->getKey() == $site->getKey()) {
+                        $excluded = true;
+                    }
+                }
+                if (!$excluded) {
+                    if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
+                        $allCrawled = false;
+                        break;
+                    }
                 }
             }
             if ($allCrawled == true && !$product->alert->lastActiveWithinHour()) {

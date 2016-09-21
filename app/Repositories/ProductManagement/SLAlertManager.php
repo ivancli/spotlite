@@ -79,13 +79,24 @@ class SLAlertManager implements AlertManager
 
         foreach ($productSites as $productSite) {
 
+            $excludedProductSites = $alert->excludedProductSites;
+            $excluded = false;
+            foreach ($excludedProductSites as $excludedProductSite) {
+                if ($excludedProductSite->site->getKey() == $productSite->site->getKey()) {
+                    $excluded = true;
+                }
+            }
+            if ($excluded) {
+                continue;
+            }
+
             /*TODO review necessity*/
             if ($productSite->site->status != 'ok') {
-                break;
+                continue;
             }
 
             if ($alert->comparison_price_type == 'my price' && $myProductSite->site->getKey() == $productSite->site->getKey()) {
-                break;
+                continue;
             }
 
             $alertUser = $this->comparePrices($productSite->site->recent_price, $comparisonPrice, $alert->operator);
@@ -93,9 +104,11 @@ class SLAlertManager implements AlertManager
             if ($alertUser) {
                 $alertingProductSites[] = $productSite;
             }
-
         }
 
+        if(count($alertingProductSites) == 0){
+            return false;
+        }
         $emails = $alert->emails;
         foreach ($emails as $email) {
             dispatch((new SendMail('products.alert.email.product', compact(['alert', 'alertingProductSites', 'myProductSite']), $email, 'SpotLite - Product Price Alert'))->onQueue("mailing"));
