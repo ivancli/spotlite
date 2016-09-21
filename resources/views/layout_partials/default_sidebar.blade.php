@@ -95,6 +95,11 @@
                         <span>System Log Management</span>
                     </a>
                     <ul class="treeview-menu">
+                        <li class="{{Style::set_active_starts_with('log.crawler_activity')}}">
+                            <a href="{{route('log.crawler_activity.index')}}">
+                                <i class="fa fa-gear"></i> Crawler Logs
+                            </a>
+                        </li>
                         <li class="{{Style::set_active_starts_with('log.user_activity')}}">
                             <a href="{{route('log.user_activity.index')}}">
                                 <i class="fa fa-map-o"></i> User Activity Logs

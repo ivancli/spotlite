@@ -118,6 +118,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('log/user_activity', 'Log\UserActivityLogController', ['only' => [
         'index', 'show'
     ]]);
+    Route::resource('log/crawler_activity', 'Log\CrawlerActivityLogController', ['only' => [
+        'index'
+    ]]);
 
     /* admin crawler management */
     Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');

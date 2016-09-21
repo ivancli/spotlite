@@ -17,33 +17,33 @@ class CrawlerEventSubscriber
     public function onCrawlerSavingPrice($event)
     {
         $crawler = $event->crawler;
-        dispatch((new LogCrawlerActivity($crawler, array("type" => 'saving_price')))->onQueue("logging"));
+        dispatch((new LogCrawlerActivity($crawler, array("status" => 'validated')))->onQueue("logging"));
 
     }
 
     public function onCrawlerRunning($event)
     {
         $crawler = $event->crawler;
-        dispatch((new LogCrawlerActivity($crawler, array("type" => 'running')))->onQueue("logging"));
+        dispatch((new LogCrawlerActivity($crawler, array("status" => 'started')))->onQueue("logging"));
     }
 
     public function onCrawlerLoadingPrice($event)
     {
         $crawler = $event->crawler;
-        dispatch((new LogCrawlerActivity($crawler, array("type" => 'loading_price')))->onQueue("logging"));
+        dispatch((new LogCrawlerActivity($crawler, array("status" => 'crawled')))->onQueue("logging"));
     }
 
     public function onCrawlerLoadingHTML($event)
     {
         $crawler = $event->crawler;
-        dispatch((new LogCrawlerActivity($crawler, array("type" => 'loading_html')))->onQueue("logging"));
+        dispatch((new LogCrawlerActivity($crawler, array("status" => 'prepared')))->onQueue("logging"));
     }
 
     public function onCrawlerFinishing($event)
     {
         $crawler = $event->crawler;
         dispatch((new AlertUser($crawler))->onQueue("alerting"));
-        dispatch((new LogCrawlerActivity($crawler, array("type" => 'finished')))->onQueue("logging"));
+        dispatch((new LogCrawlerActivity($crawler, array("status" => 'finished')))->onQueue("logging"));
     }
 
 

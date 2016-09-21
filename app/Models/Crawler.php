@@ -26,6 +26,12 @@ class Crawler extends Model
         return $this->belongsTo('App\Models\Site', 'site_id', 'site_id');
     }
 
+    public function activityLogs()
+    {
+        return $this->hasMany('App\Models\Logs\CrawlerActivityLog', 'crawler_id', 'crawler_id');
+    }
+
+
     /**
      * back up category before deleting
      * @return bool|null

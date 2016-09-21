@@ -9,7 +9,7 @@
 namespace App\Jobs;
 
 
-use App\Contracts\LogManagement\CrawlerLogger;
+use App\Contracts\LogManagement\CrawlerActivityLogger;
 use App\Models\Crawler;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -36,11 +36,10 @@ class LogCrawlerActivity extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     * @param CrawlerLogger $crawlerLogger
-     * @internal param UserActivityLogger $userActivityLogger
+     * @param CrawlerActivityLogger $crawlerActivityLogger
      */
-    public function handle(CrawlerLogger $crawlerLogger)
+    public function handle(CrawlerActivityLogger $crawlerActivityLogger)
     {
-        $crawlerLogger->storeLog($this->options, $this->crawler);
+        $crawlerActivityLogger->storeLog($this->options, $this->crawler);
     }
 }

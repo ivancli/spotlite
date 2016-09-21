@@ -12,11 +12,11 @@ namespace App\Models\Logs;
 use App\Filters\QueryFilter;
 use Illuminate\Database\Eloquent\Model;
 
-class CrawlerLog extends Model
+class CrawlerActivityLog extends Model
 {
-    protected $primaryKey = "crawler_log_id";
+    protected $primaryKey = "crawler_activity_log_id";
     protected $fillable = [
-        'crawler_id', 'type', 'content',
+        'crawler_id', 'status', 'message',
     ];
 
     public function crawler()

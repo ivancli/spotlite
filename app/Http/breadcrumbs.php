@@ -139,6 +139,10 @@ Breadcrumbs::register('user_activity_log', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('User Activity Log', route('log.user_activity.index'));
 });
+Breadcrumbs::register('crawler_activity_log', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Crawler Activity Log', route('log.crawler_activity.index'));
+});
 
 /**
  * Profile

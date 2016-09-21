@@ -12,7 +12,7 @@ namespace App\Contracts\LogManagement;
 use App\Filters\QueryFilter;
 use App\Models\Crawler;
 
-interface CrawlerLogger
+interface CrawlerActivityLogger
 {
     /**
      * get all logs

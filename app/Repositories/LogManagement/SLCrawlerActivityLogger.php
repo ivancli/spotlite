@@ -9,18 +9,21 @@
 namespace App\Repositories\LogManagement;
 
 
-use App\Contracts\LogManagement\CrawlerLogger;
+use App\Contracts\LogManagement\CrawlerActivityLogger;
 use App\Filters\QueryFilter;
 use App\Models\Crawler;
-use App\Models\Logs\CrawlerLog;
+use App\Models\Logs\CrawlerActivityLog;
+use Illuminate\Http\Request;
 
-class SLCrawlerLogger implements CrawlerLogger
+class SLCrawlerActivityLogger implements CrawlerActivityLogger
 {
-    protected $crawlerLog;
+    protected $crawlerActivityLog;
+    protected $request;
 
-    public function __construct(CrawlerLog $crawlerLog)
+    public function __construct(CrawlerActivityLog $crawlerActivityLog, Request $request)
     {
-        $this->crawlerLog = $crawlerLog;
+        $this->crawlerActivityLog = $crawlerActivityLog;
+        $this->request = $request;
     }
 
     /**
@@ -39,7 +42,22 @@ class SLCrawlerLogger implements CrawlerLogger
      */
     public function getDataTablesLogs(QueryFilter $filters)
     {
-        // TODO: Implement getDataTablesLogs() method.
+        $logs = $this->crawlerActivityLog->filter($filters)->get();
+        $output = new \stdClass();
+        $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
+        $output->recordTotal = $this->getLogCount();
+        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+            $output->recordsFiltered = $logs->count();
+        } else {
+            $output->recordsFiltered = $this->getLogCount();
+        }
+        $output->data = $logs->toArray();
+        return $output;
+    }
+
+    public function getLogCount()
+    {
+        return $this->crawlerActivityLog->count();
     }
 
     /**
@@ -50,7 +68,7 @@ class SLCrawlerLogger implements CrawlerLogger
      */
     public function getLog($log_id, $haltOrFail = false)
     {
-        // TODO: Implement getLog() method.
+        return $haltOrFail ? $this->crawlerActivityLog->findOrFail($log_id) : $this->crawlerActivityLog->find($log_id);
     }
 
     /**
@@ -61,18 +79,18 @@ class SLCrawlerLogger implements CrawlerLogger
      */
     public function storeLog($options, Crawler $crawler = null)
     {
-        $content = array(
+        $message = array(
             "crawler_id" => $crawler->getKey(),
             "url" => $crawler->site->site_url,
-            "xpath" => $crawler->site->xpath
+            "xpath" => $crawler->site->site_xpath
         );
 
         $fields = array(
             "crawler_id" => $crawler->getKey(),
-            "type" => $options['type'],
-            "content" => json_encode($content),
+            "status" => $options['status'],
+            "message" => json_encode($message),
         );
-        $log = $this->crawlerLog->create($fields);
+        $log = $this->crawlerActivityLog->create($fields);
         return $log;
     }
 
@@ -89,7 +107,7 @@ class SLCrawlerLogger implements CrawlerLogger
         $fields = array(
             "crawler_id" => $crawler->getKey(),
             "type" => $options['type'],
-            "content" => $crawler->toJson(),
+            "message" => $crawler->toJson(),
         );
         $log->update($fields);
         return $log;
