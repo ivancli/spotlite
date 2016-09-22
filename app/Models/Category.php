@@ -37,6 +37,12 @@ class Category extends Model
         return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'category_id');
     }
 
+    public function reportTask()
+    {
+        return $this->morphOne('App\Models\ReportTask', 'report_task_owner', null, null, 'category_id');
+    }
+
+
     public function scopeFilter($query, QueryFilter $filters)
     {
         return $filters->apply($query);
@@ -61,6 +67,7 @@ class Category extends Model
             "show" => route("category.show", $this->getKey()),
             "delete" => route("category.destroy", $this->getKey()),
             "chart" => route("chart.category.index", $this->getKey()),
+            "report_task" => route("report_task.category.edit", $this->getKey()),
         );
     }
 }

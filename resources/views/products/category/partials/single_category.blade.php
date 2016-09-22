@@ -1,4 +1,5 @@
-<div class="row category-wrapper" data-category-id="{{$category->getKey()}}" draggable="true">
+<div class="row category-wrapper" data-category-id="{{$category->getKey()}}" draggable="true"
+     data-report-task-link="{{$category->urls['report_task']}}">
     <div class="col-sm-12">
         <table class="table table-condensed tbl-category">
             <thead>
@@ -33,7 +34,8 @@
                 </th>
 
                 <th class="text-right action-cell category-th">
-                    <a href="#" class="btn-action" onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
+                    <a href="#" class="btn-action"
+                       onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
                         <i class="fa fa-line-chart"></i>
                     </a>
                     <a href="#" class="btn-action">
@@ -263,6 +265,46 @@
                 $modal.on("hidden.bs.modal", function () {
                     $(this).remove();
                 });
+            });
+        }
+
+
+        function showCategoryReportTaskForm(el) {
+            showLoading();
+            $.ajax({
+                "url": $(el).closest(".category-wrapper").attr("data-report-task-link"),
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal({
+                        "backdrop": "static",
+                        "keyboard": false
+                    });
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "updateCallback": function (response) {
+//                                    if (response.status == true) {
+//                                        $(el).find("i").removeClass().addClass("fa fa-bell alert-enabled");
+//                                    }
+                                },
+                                "deleteCallback": function (response) {
+//                                    if (response.status == true) {
+//                                        $(el).find("i").removeClass().addClass("fa fa-bell-o");
+//                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-report-task-category").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    alertP("Error", "Unable to show edit report form, please try again later.");
+                }
             });
         }
     </script>

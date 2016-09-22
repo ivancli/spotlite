@@ -50,6 +50,11 @@ class Product extends Model
         return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'product_id');
     }
 
+    public function reportTask()
+    {
+        return $this->morphOne('App\Models\ReportTask', 'report_task_owner', null, null, 'product_id');
+    }
+
     /**
      * back up category before deleting
      * @return bool|null
@@ -73,6 +78,7 @@ class Product extends Model
             "delete" => route("product.destroy", $this->getKey()),
             "alert" => route("alert.product.edit", $this->getKey()),
             "chart" => route("chart.product.index", $this->getKey()),
+            "report_task" => route("report_task.product.edit", $this->getKey()),
         );
     }
 }

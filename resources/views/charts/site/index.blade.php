@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="modal-product-chart">
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-product-site-chart">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-body" style="background-color: #f5f5f5;">
@@ -11,17 +11,54 @@
                             <div class="box-body">
                                 <div class="row m-b-10">
                                     <div class="col-sm-12">
-                                        <form action="" class="form-horizontal">
+                                        <form action="" class="form-horizontal" id="frm-product-site-chart-characteristics">
                                             <div class="form-group required">
                                                 <label class="col-sm-4 control-label">Timespan</label>
                                                 <div class="col-sm-8">
-                                                    <select name="" id="" class="form-control"></select>
+                                                    <select id="sel-timespan" name="timespan" class="form-control"
+                                                            onchange="timespanOnChange(this)">
+                                                        <option value="this_week">This week</option>
+                                                        <option value="last_week">Last week</option>
+                                                        <option value="last_7_days">Last 7 days</option>
+                                                        <option value="this_month">This month</option>
+                                                        <option value="last_month">Last month</option>
+                                                        <option value="last_30_days">Last 30 days</option>
+                                                        <option value="this_quarter">This quarter</option>
+                                                        <option value="last_quarter">Last quarter</option>
+                                                        <option value="last_90_days">Last 90 days</option>
+                                                        <option value="custom">Custom</option>
+                                                    </select>
                                                 </div>
+                                            </div>
+                                            <div class="form-group show-when-custom" style="display: none;">
+                                                <label class="col-sm-4 control-label">Date range:</label>
+
+                                                <div class="col-sm-8">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text" class="form-control pull-right"
+                                                               name="date_range"
+                                                               id="txt-date-range" readonly="readonly">
+                                                        <input type="hidden" name="start_date"
+                                                               id="txt-product-site-chart-start-date">
+                                                        <input type="hidden" name="end_date"
+                                                               id="txt-product-site-chart-end-date">
+                                                    </div>
+                                                </div>
+                                                <!-- /.input group -->
                                             </div>
                                             <div class="form-group required">
                                                 <label class="col-sm-4 control-label">Period Resolution</label>
                                                 <div class="col-sm-8">
-                                                    <select name="" id="" class="form-control"></select>
+                                                    <select id="sel-period-resolution" name="resolution"
+                                                            class="form-control"
+                                                            onchange="periodResolutionOnChange(this)">
+                                                        <option value="daily">Daily</option>
+                                                        <option value="weekly">Weekly</option>
+                                                        <option value="monthly">Monthly</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </form>
@@ -29,7 +66,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-primary">Generate Chart</button>
+                                        <button class="btn btn-primary" onclick="loadProductSiteChartData()">Generate
+                                            Chart
+                                        </button>
                                         <button class="btn btn-default" data-dismiss="modal">Cancel</button>
                                     </div>
                                 </div>
@@ -48,49 +87,26 @@
     </div>
 
     <script>
+        var productSiteChart = null;
+
         function modalReady() {
-
-            var averages1 = [
-                [1246406400000, 1.5],
-                [1246492800000, 2.1],
-                [1246579200000, 3],
-                [1246665600000, 3.8],
-                [1246752000000, 1.4],
-                [1246838400000, 1.3],
-                [1246924800000, 8.3],
-                [1247011200000, 5.4],
-                [1247097600000, 6.4],
-                [1247184000000, 7.7],
-                [1247270400000, 7.5],
-                [1247356800000, 7.6],
-                [1247443200000, 7.7],
-                [1247529600000, 6.8],
-                [1247616000000, 7.7],
-                [1247702400000, 6.3],
-                [1247788800000, 7.8],
-                [1247875200000, 8.1],
-                [1247961600000, 7.2],
-                [1248048000000, 4.4],
-                [1248134400000, 3.7],
-                [1248220800000, 5.7],
-                [1248307200000, 4.6],
-                [1248393600000, 5.3],
-                [1248480000000, 5.3],
-                [1248566400000, 5.8],
-                [1248652800000, 5.2],
-                [1248739200000, 4.8],
-                [1248825600000, 4.4],
-                [1248912000000, 5],
-                [1248998400000, 3.6]
-            ];
-
-            $('#chart-container').highcharts({
+            $("#txt-date-range").daterangepicker({
+                "maxDate": moment()
+            }).on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+                $("#txt-product-site-chart-start-date").val(picker.startDate.format('X'));
+                $("#txt-product-site-chart-end-date").val(picker.endDate.format('X'));
+            });
+            productSiteChart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'chart-container'
+                },
                 title: {
-                    text: 'Monthly Average Temperature',
+                    text: '{{parse_url($productSite->site->site_url)['host']}}',
                     x: -20 //center
                 },
                 subtitle: {
-                    text: 'Source: WorldClimate.com',
+                    text: '{{$productSite->product->product_name}}',
                     x: -20
                 },
                 xAxis: {
@@ -109,17 +125,116 @@
                 tooltip: {
                     valuePrefix: '$'
                 },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle',
-                    borderWidth: 0
-                },
-                series: [{
-                    name: 'Tokyo',
-                    data: averages1
-                }]
+                series: []
             });
+        }
+
+
+        function timespanOnChange(el) {
+            updateShowWhenCustomElements();
+        }
+
+        function periodResolutionOnChange(el) {
+
+        }
+
+        function updateShowWhenCustomElements() {
+            if ($("#sel-timespan").val() == "custom") {
+                $(".show-when-custom").slideDown();
+            } else {
+                $(".show-when-custom").slideUp();
+            }
+        }
+
+        function loadProductSiteChartData() {
+            var startDate = null;
+            var endDate = null;
+            switch ($("#sel-timespan").val()) {
+                case "this_week":
+                    startDate = moment().startOf('isoweek').format("X");
+                    endDate = moment().format("X");
+                    break;
+                case "last_week":
+                    startDate = moment().subtract(1, 'week').startOf('isoweek').format("X");
+                    endDate = moment().subtract(1, 'week').endOf('isoweek').format("X");
+                    break;
+                case "last_7_days":
+                    startDate = moment().subtract(7, 'day').format("X");
+                    endDate = moment().format("X");
+                    break;
+                case "this_month":
+                    startDate = moment().startOf("month").format("X");
+                    endDate = moment().format("X");
+                    break;
+                case "last_month":
+                    startDate = moment().subtract(1, 'month').startOf("month").format("X");
+                    endDate = moment().subtract(1, 'month').endOf("month").format("X");
+                    break;
+                case "last_30_days":
+                    startDate = moment().subtract(30, 'day').format("X");
+                    endDate = moment().format("X");
+                    break;
+                case "this_quarter":
+                    startDate = moment().startOf("quarter").format("X");
+                    endDate = moment().format("X");
+                    break;
+                case "last_quarter":
+                    startDate = moment().subtract(1, 'quarter').startOf("quarter").format("X");
+                    endDate = moment().subtract(1, 'quarter').endOf("quarter").format("X");
+                    break;
+                case "last_90_days":
+                    startDate = moment().subtract(90, 'day').format("X");
+                    endDate = moment().format("X");
+                    break;
+                case "custom":
+                default:
+                    startDate = $("#txt-product-site-chart-start-date").val();
+                    endDate = $("#txt-product-site-chart-end-date").val();
+            }
+
+            if (startDate == null || endDate == null) {
+                alertP("Error", "Please select the start date and end date for the timespan.");
+                return false;
+            }
+
+            $("#txt-product-site-chart-start-date").val(startDate);
+            $("#txt-product-site-chart-end-date").val(endDate);
+
+            productSiteChart.showLoading();
+            $.ajax({
+                "url": "{{$productSite->urls['chart']}}",
+                "method": "get",
+                "data": $("#frm-product-site-chart-characteristics").serialize(),
+                "dataType": "json",
+                "success": function (response) {
+                    if (response.status == true) {
+                        removeSeries();
+
+                        console.info("called");
+                        $.each(response.data, function (siteId, site) {
+                            console.info(site);
+                            productSiteChart.addSeries({
+                                name: site.name + " Average",
+                                data: site.average,
+                                tooltip: {
+                                    pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>${point.y:,.2f}</b><br/>'
+                                }
+                            });
+
+                            productSiteChart.redraw();
+                            productSiteChart.hideLoading();
+                        });
+                    }
+                },
+                "error": function (xhr, status, error) {
+
+                }
+            })
+        }
+
+        function removeSeries() {
+            while (productSiteChart.series.length > 0)
+                productSiteChart.series[0].remove(true);
         }
     </script>
 </div>

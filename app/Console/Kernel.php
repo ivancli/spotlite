@@ -65,15 +65,12 @@ class Kernel extends ConsoleKernel
                             dispatch((new CrawlSite($crawler))->onQueue("crawling"));
                             $crawler->queue();
                         } else {
-//                            /*log the skipped crawler*/
-//                            $content = file_get_contents(base_path('storage/logs/') . "ivan.log");
-//                            file_put_contents(base_path('storage/logs/') . "ivan.log", $content . "\r\n" . date('Y-m-d h:i:s') . json_encode($crawler) . "\r\n");
+
                         }
                     }
                 }
                 AppPreference::setCrawlReserved('n');
             }
-            sleep(1);
         })->everyMinute()->name("crawl-sites");
 
 
@@ -97,7 +94,6 @@ class Kernel extends ConsoleKernel
                 }
                 AppPreference::setSyncReserved('n');
             }
-            sleep(1);
         })->everyMinute()->name("sync-users");
         /**
          * User

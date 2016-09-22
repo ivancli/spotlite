@@ -89,6 +89,16 @@ Route::group(['middleware' => ['auth']], function () {
 
 
         /**
+         * Report Related Routes
+         */
+        Route::get('report/category/{category_id}/edit', 'Product\ReportTaskController@editCategoryReport')->name('report_task.category.edit');
+        Route::put('report/category/{category_id}', 'Product\ReportTaskController@updateCategoryReport')->name('report_task.category.update');
+        Route::delete('report/category/{category_id}', 'Product\ReportTaskController@deleteCategoryReport')->name('report_task.category.destroy');
+        Route::get('report/product/{product_id}/edit', 'Product\ReportTaskController@editProductReport')->name('report_task.product.edit');
+        Route::put('report/product/{product_id}', 'Product\ReportTaskController@updateProductReport')->name('report_task.product.update');
+        Route::delete('report/product/{product_id}', 'Product\ReportTaskController@deleteProductReport')->name('report_task.product.destroy');
+
+        /**
          * Chart Related Routes
          */
         Route::get('chart/category/{category_id}', 'Product\ChartController@categoryIndex')->name('chart.category.index');
