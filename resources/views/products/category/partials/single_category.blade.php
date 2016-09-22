@@ -41,7 +41,7 @@
                     <a href="#" class="btn-action">
                         <i class="fa fa-bell-o"></i>
                     </a>
-                    <a href="#" class="btn-action">
+                    <a href="#" class="btn-action" onclick="showCategoryReportTaskForm(this)">
                         <i class="fa fa-envelope-o"></i>
                     </a>
                     <a href="#" class="btn-action" onclick="toggleEditCategoryName(this)">
