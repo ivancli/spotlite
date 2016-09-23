@@ -7,7 +7,6 @@
 @section('content')
     Blank page
 
-
     {{--<div class="coll-site-preloader">--}}
         {{--<div class="coll-preloader-container">--}}
             {{--<div class="spinner">--}}

@@ -15,7 +15,7 @@ class ReportTask extends Model
 {
     protected $primaryKey = "report_task_id";
     protected $fillable = [
-        "report_task_owner_type", "report_task_owner_id", "frequency", "date", "day", "time", "weekday_only", "delivery_method", "status"
+        "report_task_owner_type", "report_task_owner_id", "frequency", "date", "day", "time", "weekday_only", "delivery_method", "file_type", "status", "last_sent_at"
     ];
     public $timestamps = false;
 
@@ -27,5 +27,11 @@ class ReportTask extends Model
     public function emails()
     {
         return $this->hasMany('App\Models\ReportEmail', 'report_task_id', 'report_task_id');
+    }
+
+    public function setLastSentStamp()
+    {
+        $this->last_sent_at = date("Y-m-d H:i:s");
+        $this->save();
     }
 }

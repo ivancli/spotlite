@@ -1,6 +1,8 @@
 <?php
 namespace App\Contracts\EmailManagement;
+
 use App\Models\AlertEmail;
+use App\Models\ReportEmail;
 use App\Models\User;
 use DaveJamesMiller\Breadcrumbs\View;
 
@@ -15,4 +17,6 @@ interface EmailGenerator
     public function sendWelcomeEmail(User $user);
 
     public function sendMail($view, array $data = array(), AlertEmail $alertEmail, $subject);
+
+    public function sendReport($view, array $data = array(), ReportEmail $alertEmail, $subject, array $attachment = array());
 }

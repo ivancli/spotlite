@@ -3,6 +3,7 @@ namespace App\Repositories\EmailManagement;
 
 use App\Contracts\EmailManagement\EmailGenerator;
 use App\Models\AlertEmail;
+use App\Models\ReportEmail;
 use App\Models\User;
 use DaveJamesMiller\Breadcrumbs\View;
 use Illuminate\Support\Facades\Mail;
@@ -29,6 +30,18 @@ class SpotLiteEmailGenerator implements EmailGenerator
         Mail::send($view, $data, function ($m) use ($alertEmail, $subject) {
             $m->from(config('mail.from.address'), config('mail.from.name'));
             $m->to($alertEmail->alert_email_address)->subject($subject);
+        });
+    }
+
+    public function sendReport($view, array $data = array(), ReportEmail $reportEmail, $subject, array $attachment = array())
+    {
+        Mail::send($view, $data, function ($m) use ($reportEmail, $subject, $attachment) {
+            $m->from(config('mail.from.address'), config('mail.from.name'));
+            $m->to($reportEmail->report_email_address)->subject($subject);
+
+            if (isset($attachment['data']) && $attachment['file_name']) {
+                $m->attachData($attachment['data'], $attachment['file_name']);
+            }
         });
     }
 }

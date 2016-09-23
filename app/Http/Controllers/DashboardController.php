@@ -10,8 +10,6 @@ namespace App\Http\Controllers;
 
 
 use App\Contracts\SubscriptionManagement\SubscriptionManager;
-use App\Models\Product;
-use App\Models\ProductSite;
 
 class DashboardController extends Controller
 {

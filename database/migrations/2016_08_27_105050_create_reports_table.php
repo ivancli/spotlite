@@ -10,7 +10,7 @@ class CreateReportsTable extends Migration {
 		Schema::create('reports', function(Blueprint $table) {
 			$table->bigIncrements('report_id');
 			$table->integer('report_task_id')->unsigned()->index();
-//			$table->binary('content')->nullable();
+            $table->timestamps();
 		});
 		DB::statement("ALTER TABLE reports ADD content MEDIUMBLOB NOT NULL AFTER report_task_id");
 	}

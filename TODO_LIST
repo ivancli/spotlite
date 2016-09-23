@@ -8,6 +8,13 @@ Crawler Site Management
     3) store show and hide preference in user preference table
     * 5) sort out domain management and user report error stuff
 
+* enhance send mail to make it more generic
+
+* adapt send report to use send mail function
+
+
+
+
 
 ******SLAlertManager.php
 *complete product alert

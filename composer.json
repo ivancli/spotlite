@@ -24,7 +24,8 @@
         "invigor/um": "1.*",
         "maatwebsite/excel": "~2.1.0",
         "invigor/crawler": "dev-master",
-        "driftyco/ionicons": "2.0.1"
+        "driftyco/ionicons": "2.0.1",
+        "mpdf/mpdf": "~5.7.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

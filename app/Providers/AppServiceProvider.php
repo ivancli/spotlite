@@ -46,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\ProductManagement\ProductSiteManager', 'App\Repositories\ProductManagement\SLProductSiteManager');
         $this->app->bind('App\Contracts\ProductManagement\AlertManager', 'App\Repositories\ProductManagement\SLAlertManager');
         $this->app->bind('App\Contracts\ProductManagement\ReportTaskManager', 'App\Repositories\ProductManagement\SLReportTaskManager');
+        $this->app->bind('App\Contracts\ProductManagement\ReportManager', 'App\Repositories\ProductManagement\SLReportManager');
         $this->app->bind('App\Contracts\ProductManagement\DomainManager', 'App\Repositories\ProductManagement\SLDomainManager');
         $this->app->bind('App\Contracts\CrawlerManagement\CrawlerManager', 'App\Repositories\CrawlerManagement\SLCrawlerManager');
 

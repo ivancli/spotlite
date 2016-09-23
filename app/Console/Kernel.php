@@ -4,8 +4,10 @@ namespace App\Console;
 
 use App\Contracts\CrawlerManagement\CrawlerManager;
 use App\Jobs\CrawlSite;
+use App\Jobs\SendReport;
 use App\Jobs\SyncUser;
 use App\Models\AppPreference;
+use App\Models\ReportTask;
 use App\Models\User;
 use App\Repositories\CrawlerManagement\SLCrawlerManager;
 use Illuminate\Console\Scheduling\Schedule;
@@ -111,6 +113,43 @@ class Kernel extends ConsoleKernel
                 AppPreference::setReportReserved();
                 AppPreference::setReportLastReservedAt();
 //                        dispatch((new ReportUser($user))->onQueue("syncing"));
+
+                /*LOOP THROUGH ALL REPORT TASKS AND TRIGGER THE DUE REPORT TASKS*/
+                $reportTasks = ReportTask::all();
+
+                foreach ($reportTasks as $reportTask) {
+
+                    /*TODO change the following checking to be inside switch statement */
+                    /*
+                     * TODO checking should be based on the frequency
+                     *  
+                     */
+                    $lastSentAt = date("Y-m-d 00:00:00", strtotime($reportTask->last_sent_at));
+                    $currentRoundedDate = date("Y-m-d 00:00:00");
+                    /*if last sent date is 1 day behind current date*/
+                    if (intval((strtotime($lastSentAt) - strtotime($currentRoundedDate)) / 3600) > 0) {
+
+                        switch ($reportTask->frequency) {
+                            case "daily":
+                                $currentRoundedMinute = date("H:i:00");
+                                if($reportTask->time == $currentRoundedMinute){
+                                    $reportTask->setLastSentStamp();
+                                    dispatch((new SendReport($reportTask)));
+                                }
+                                break;
+                            case "weekly":
+                                break;
+                            case "monthly":
+                                break;
+                            default:
+                                return false;
+                        }
+
+
+                    }
+                }
+
+
                 file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " report called" . "\r\n");
                 AppPreference::setReportReserved('n');
             }
