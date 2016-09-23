@@ -42,7 +42,7 @@
                         <i class="fa fa-bell-o"></i>
                     </a>
                     <a href="#" class="btn-action" onclick="showCategoryReportTaskForm(this)">
-                        <i class="fa fa-envelope-o"></i>
+                        <i class="fa {{!is_null($category->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
                     </a>
                     <a href="#" class="btn-action" onclick="toggleEditCategoryName(this)">
                         <i class="fa fa-pencil-square-o"></i>
@@ -277,22 +277,19 @@
                 "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
-                    $modal.modal({
-                        "backdrop": "static",
-                        "keyboard": false
-                    });
+                    $modal.modal();
                     $modal.on("shown.bs.modal", function () {
                         if ($.isFunction(modalReady)) {
                             modalReady({
                                 "updateCallback": function (response) {
-//                                    if (response.status == true) {
-//                                        $(el).find("i").removeClass().addClass("fa fa-bell alert-enabled");
-//                                    }
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-envelope text-success");
+                                    }
                                 },
                                 "deleteCallback": function (response) {
-//                                    if (response.status == true) {
-//                                        $(el).find("i").removeClass().addClass("fa fa-bell-o");
-//                                    }
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-envelope-o");
+                                    }
                                 }
                             })
                         }

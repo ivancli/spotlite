@@ -9,37 +9,78 @@
             <div class="modal-body">
                 <ul class="text-danger errors-container">
                 </ul>
+                {!! Form::model($category->reportTask, array('route' => array('report_task.category.update', $category->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-category-report-update")) !!}
+                <input type="hidden" name="report_task_owner_id" value="{{$category->getKey()}}">
+                <input type="hidden" name="report_task_owner_type" value="category">
+                <div class="form-group required">
+                    {!! Form::label('frequency', 'Frequency', array('class' => 'control-label')) !!}
+                    {!! Form::select('frequency', array("daily" => "Daily", "weekly"=>"Weekly", "monthly"=>"Monthly"), null, ['class'=>'form-control sl-form-control', 'onclick'=>'updateSubElements(this)']) !!}
+                </div>
+                {{--TODO delivery date time--}}
 
-                {!! Form::model($product->alert, array('route' => array('alert.product.update', $product->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-update")) !!}
-                <input type="hidden" name="alert_owner_id" value="{{$product->getKey()}}">
-                <input type="hidden" name="alert_owner_type" value="product">
+                <div class="form-group show-on-daily">
+                    {!! Form::label('weekday_only', 'Weekday Only', array('class' => 'control-label')) !!}
+                    {!! Form::checkbox('weekday_only', "yes") !!}
+                </div>
+
+                <div class="form-group required show-on-daily">
+                    {!! Form::label('time', 'Delivery Time', array('class' => 'control-label')) !!}
+                    {!! Form::select('time', array(
+                    "00:00:00"=>"12:00am",
+                    "1:00:00"=>"1:00am",
+                    "2:00:00"=>"2:00am",
+                    "3:00:00"=>"3:00am",
+                    "4:00:00"=>"4:00am",
+                    "5:00:00"=>"5:00am",
+                    "6:00:00"=>"6:00am",
+                    "7:00:00"=>"7:00am",
+                    "8:00:00"=>"8:00am",
+                    "9:00:00"=>"9:00am",
+                    "10:00:00"=>"10:00am",
+                    "11:00:00"=>"11:00am",
+                    "12:00:00"=>"12:00pm",
+                    "13:00:00"=>"1:00pm",
+                    "14:00:00"=>"2:00pm",
+                    "15:00:00"=>"3:00pm",
+                    "16:00:00"=>"4:00pm",
+                    "17:00:00"=>"5:00pm",
+                    "18:00:00"=>"6:00pm",
+                    "19:00:00"=>"7:00pm",
+                    "20:00:00"=>"8:00pm",
+                    "21:00:00"=>"9:00pm",
+                    "22:00:00"=>"10:00pm",
+                    "23:00:00"=>"11:00pm",
+                    ), null, ['class'=>'form-control sl-form-control']) !!}
+                </div>
+
+                <div class="form-group required show-on-weekly" style="display: none;">
+                    {!! Form::label('day', 'Delivery Day', array('class' => 'control-label')) !!}
+                    {!! Form::select('day', array(
+                    "1" => "Monday",
+                    "2" => "Tuesday",
+                    "3" => "Wednesday",
+                    "4" => "Thursday",
+                    "5" => "Friday",
+                    "6" => "Saturday",
+                    "7" => "Sunday",
+                    ), null, ['class'=>'form-control sl-form-control']) !!}
+                </div>
+
+                <div class="form-group required show-on-monthly" style="display: none;">
+                    {!! Form::label('date', 'Delivery Date', array('class' => 'control-label')) !!}
+                    {!! Form::text('date', null, ['class'=>'form-control sl-form-control', 'data-toggle'=>'datepicker']) !!}
+                </div>
+
                 <div class="form-group required">
-                    {!! Form::label('comparison_price_type', 'Trigger', array('class' => 'control-label')) !!}
-                    {!! Form::select('comparison_price_type', array('specific price' => 'Specific Price', 'my price' => 'My Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
-                </div>
-                <div class="form-group required">
-                    {!! Form::label('operator', 'Trend', array('class' => 'control-label')) !!}
-                    {!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control sl-form-control']) !!}
-                </div>
-                <div class="form-group required" id="comparison-price-container"
-                     style="{{isset($product->alert) && $product->alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">
-                    {!! Form::label('comparison_price', 'Price Point', array('class' => 'control-label')) !!}
-                    {!! Form::text('comparison_price', null, array('class' => 'form-control sl-form-control', 'id' => 'txt-comparison-price')) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::label('site_id[]', 'Exclude', array('class' => 'control-label')) !!}
-                    {!! Form::select('site_id[]', $productSites, $excludedProductSites, array('class' => 'form-control', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
-                </div>
-                <div class="form-group required">
-                    {!! Form::label('email[]', 'Notify Emails', array('class' => 'control-label')) !!}
+                    {!! Form::label('email[]', 'Add Email', array('class' => 'control-label')) !!}
                     {!! Form::select('email[]', $emails, $emails, ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email']) !!}
                 </div>
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-update-product-alert">OK</button>
-                @if(!is_null($product->alert))
-                    <button class="btn btn-danger" id="btn-delete-product-alert">Delete</button>
+                <button class="btn btn-primary" id="btn-update-category-report">OK</button>
+                @if(!is_null($category->reportTask))
+                    <button class="btn btn-danger" id="btn-delete-category-report">Delete</button>
                 @endif
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
@@ -47,31 +88,26 @@
     </div>
     <script type="text/javascript">
         function modalReady(options) {
-            $("#sel-site").select2();
             $("#sel-email").select2({
                 "tags": true,
                 "tokenSeparators": [',', ' ', ';'],
                 "placeholder": "Enter Email Address and Press Enter Key"
             });
-            $("#sel-price-type").on("change", function () {
-                if ($(this).val() == "my price") {
-                    $("#comparison-price-container").slideUp();
-                } else {
-                    $("#comparison-price-container").slideDown();
-                }
-            });
 
-            $("#btn-update-product-alert").on("click", function () {
-                submitUpdateProductAlert(function (response) {
+            $('input[data-toggle=datepicker]').datepicker({});
+            updateSubElements($("#frequency").get(0));
+
+            $("#btn-update-category-report").on("click", function () {
+                submitEditReportTask(function (response) {
                     if (response.status == true) {
-                        alertP("Create/Update Alert", "Alert has been updated.");
-                        $("#modal-alert-product").modal("hide");
+                        alertP("Create/Update Report Schedule", "Report has been scheduled.");
+                        $("#modal-report-task-category").modal("hide");
                         if ($.isFunction(options.updateCallback)) {
                             options.updateCallback(response);
                         }
                     } else {
                         if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-alert-product .errors-container");
+                            var $errorContainer = $("#modal-report-task-category .errors-container");
                             $errorContainer.empty();
                             $.each(response.errors, function (index, error) {
                                 $errorContainer.append(
@@ -84,24 +120,25 @@
                     }
                 })
             });
-            $("#btn-delete-product-alert").on("click", function () {
 
-                confirmP("Delete alert", "Do you want to delete this alert?", {
+            $("#btn-delete-category-report").on("click", function () {
+
+                confirmP("Delete Report Schedule", "Do you want to delete this report schedule?", {
                     "affirmative": {
                         "text": "Delete",
                         "class": "btn-danger",
                         "dismiss": true,
                         "callback": function () {
-                            submitDeleteProductAlert(function (response) {
+                            submitDeleteCategoryReportTask(function (response) {
                                 if (response.status == true) {
-                                    alertP("Delete Alert", "Alert has been deleted.");
-                                    $("#modal-alert-product").modal("hide");
+                                    alertP("Delete Report Schedule", "Report schedule has been deleted.");
+                                    $("#modal-report-task-category").modal("hide");
                                     if ($.isFunction(options.deleteCallback)) {
                                         options.deleteCallback(response);
                                     }
                                 } else {
                                     if (typeof response.errors != 'undefined') {
-                                        var $errorContainer = $("#modal-alert-product .errors-container");
+                                        var $errorContainer = $("#modal-report-task-category .errors-container");
                                         $errorContainer.empty();
                                         $.each(response.errors, function (index, error) {
                                             $errorContainer.append(
@@ -109,7 +146,7 @@
                                             );
                                         });
                                     } else {
-                                        alertP("Error", "Unable to delete alert, please try again later.");
+                                        alertP("Error", "Unable to delete caetegory report schedule, please try again later.");
                                     }
                                 }
                             });
@@ -124,33 +161,10 @@
             })
         }
 
-        function submitUpdateProductAlert(callback) {
-            showLoading();
-            if ($("#sel-price-type").val() == "my price") {
-                $("#txt-comparison-price").remove();
-            }
-            $.ajax({
-                "url": "{{route('alert.product.update', $product->getKey())}}",
-                "method": "put",
-                "data": $("#frm-alert-product-update").serialize(),
-                "dataType": "json",
-                "success": function (response) {
-                    hideLoading();
-                    if ($.isFunction(callback)) {
-                        callback(response);
-                    }
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    alertP("Error", "Unable to update product alert, please try again later.");
-                }
-            })
-        }
-
-        function submitDeleteProductAlert(callback) {
+        function submitDeleteCategoryReportTask(callback) {
             showLoading();
             $.ajax({
-                "url": "{{route('alert.product.destroy', $product->getKey())}}",
+                "url": "{{route('report_task.category.destroy', $category->getKey())}}",
                 "method": "delete",
                 "dataType": "json",
                 "success": function (response) {
@@ -161,7 +175,45 @@
                 },
                 "error": function () {
                     hideLoading();
-                    alertP("Error", "Unable to delete product alert, please try again later.");
+                    alertP("Error", "Unable to delete category report schedule, please try again later.");
+                }
+            })
+        }
+
+        function updateSubElements(el) {
+            switch ($(el).val()) {
+                case 'daily':
+                    $(".show-on-daily").slideDown();
+                    $(".show-on-weekly, .show-on-monthly").slideUp();
+                    break;
+                case 'weekly':
+                    $(".show-on-weekly").slideDown();
+                    $(".show-on-daily, .show-on-monthly").slideUp();
+                    break;
+                case 'monthly':
+                    $(".show-on-monthly").slideDown();
+                    $(".show-on-daily, .show-on-weekly").slideUp();
+                    break;
+                default:
+            }
+        }
+
+        function submitEditReportTask(callback) {
+            showLoading();
+            $.ajax({
+                "url": "{{route('report_task.category.update', $category->getKey())}}",
+                "method": "put",
+                "data": $("#frm-category-report-update").serialize(),
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if ($.isFunction(callback)) {
+                        callback(response);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    alertP("Error", "Unable to update product alert, please try again later.");
                 }
             })
         }

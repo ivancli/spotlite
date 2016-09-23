@@ -20,17 +20,18 @@
         "almasaeed2010/adminlte": "~2.0",
         "predis/predis": "^1.1",
         "davejamesmiller/laravel-breadcrumbs": "^3.0",
-        "guzzlehttp/guzzle": "~5.3|~6.0"
+        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "invigor/um": "1.*",
+        "maatwebsite/excel": "~2.1.0",
+        "invigor/crawler": "dev-master",
+        "driftyco/ionicons": "2.0.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
         "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*",
-        "invigor/um": "1.*",
-        "driftyco/ionicons": "2.0.1",
-        "invigor/crawler": "dev-master"
+        "symfony/dom-crawler": "2.8.*|3.0.*"
     },
     "autoload": {
         "classmap": [

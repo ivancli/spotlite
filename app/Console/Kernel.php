@@ -79,7 +79,9 @@ class Kernel extends ConsoleKernel
          */
         $schedule->call(function () {
             $lastReservedAt = AppPreference::getSyncLastReservedAt();
-            if (AppPreference::getSyncReserved() == 'n' && (is_null($lastReservedAt) || intval((time() - strtotime($lastReservedAt)) / 3600) != 0)) {
+            $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
+            $currentRoundedHours = date("Y-m-d H:00:00");
+            if (AppPreference::getSyncReserved() == 'n' && (is_null($lastReservedAt) || intval((strtotime($currentRoundedHours) - strtotime($lastReservedRoundedHours)) / 3600) > 0)) {
                 /*reserve the task*/
                 AppPreference::setSyncReserved();
                 AppPreference::setSyncLastReservedAt();
@@ -95,8 +97,23 @@ class Kernel extends ConsoleKernel
                 AppPreference::setSyncReserved('n');
             }
         })->everyMinute()->name("sync-users");
+
         /**
-         * User
+         * Report task
          */
+
+        $schedule->call(function () {
+            $lastReservedAt = AppPreference::getReportLastReservedAt();
+            $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
+            $currentRoundedHours = date("Y-m-d H:00:00");
+            if (AppPreference::getReportReserved() == 'n' && (is_null($lastReservedAt) || intval((strtotime($currentRoundedHours) - strtotime($lastReservedRoundedHours)) / 3600) > 0)) {
+                /*reserve the task*/
+                AppPreference::setReportReserved();
+                AppPreference::setReportLastReservedAt();
+//                        dispatch((new ReportUser($user))->onQueue("syncing"));
+                file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " report called" . "\r\n");
+                AppPreference::setReportReserved('n');
+            }
+        })->everyMinute()->name("reports");
     }
 }

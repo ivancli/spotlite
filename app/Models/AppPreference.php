@@ -108,4 +108,31 @@ class AppPreference extends Model
         $syncLastReservedAt = (new static)->setPreference("SYNC_LAST_RESERVED_AT", date("Y-m-d H:i:s"));
         return $syncLastReservedAt->value;
     }
+
+    /* REPORT settings */
+
+    public static function getReportReserved()
+    {
+        $reportReserved = (new static)->getPreference("REPORT_RESERVED");
+        return $reportReserved;
+    }
+
+    public static function setReportReserved($status = "y")
+    {
+        $reportReserved = (new static)->setPreference("REPORT_RESERVED", $status);
+        return $reportReserved;
+    }
+
+    public static function getReportLastReservedAt()
+    {
+        $reportLastReservedAt = (new static)->getPreference("REPORT_LAST_RESERVED_AT");
+        return $reportLastReservedAt;
+    }
+
+    public static function setReportLastReservedAt()
+    {
+        $reportLastReservedAt = (new static)->setPreference("REPORT_LAST_RESERVED_AT", date("Y-m-d H:i:s"));
+        return $reportLastReservedAt->value;
+    }
+
 }

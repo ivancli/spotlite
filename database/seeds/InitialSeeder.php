@@ -175,5 +175,21 @@ class InitialSeeder extends Seeder
             "value" => null,
         ]);
 
+
+        /* REPORT CHECKPOINT*/
+
+        DB::table("app_preferences")->insert([
+            "element" => "REPORT_RESERVED",
+            "value" => "n",
+        ]);
+        DB::table("app_preferences")->insert([
+            "element" => "REPORT_RESERVED_BY",
+            "value" => null,
+        ]);
+        DB::table("app_preferences")->insert([
+            "element" => "REPORT_LAST_RESERVED_AT",
+            "value" => null,
+        ]);
+
     }
 }

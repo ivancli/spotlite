@@ -164,6 +164,8 @@ return [
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
 
         Invigor\Crawler\CrawlerServiceProvider::class,
+
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
     /*
@@ -220,6 +222,8 @@ return [
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
 
         'Crawler' => Invigor\Crawler\CrawlerFacade::class,
+
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

@@ -11,18 +11,29 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\ProductManagement\CategoryManager;
 use App\Contracts\ProductManagement\ProductManager;
+use App\Contracts\ProductManagement\ReportTaskManager;
+use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
+use App\Models\ReportEmail;
+use App\Validators\Product\ReportTask\UpdateCategoryReportValidator;
+use App\Validators\Product\ReportTask\UpdateProductReportValidator;
 use Illuminate\Http\Request;
 
 class ReportTaskController extends Controller
 {
     protected $categoryManager;
     protected $productManager;
+    protected $reportTaskManager;
+    protected $updateCategoryReportValidator;
+    protected $updateProductReportValidator;
 
-    public function __construct(CategoryManager $categoryManager, ProductManager $productManager)
+    public function __construct(CategoryManager $categoryManager, ProductManager $productManager, ReportTaskManager $reportTaskManager, UpdateCategoryReportValidator $updateCategoryReportValidator, UpdateProductReportValidator $updateProductReportValidator)
     {
         $this->categoryManager = $categoryManager;
         $this->productManager = $productManager;
+        $this->reportTaskManager = $reportTaskManager;
+        $this->updateCategoryReportValidator = $updateCategoryReportValidator;
+        $this->updateProductReportValidator = $updateProductReportValidator;
     }
 
     /**
@@ -35,7 +46,12 @@ class ReportTaskController extends Controller
     public function editCategoryReport(Request $request, $category_id)
     {
         $category = $this->categoryManager->getCategory($category_id);
-        return view('products.report.category')->with(compact(['category']));
+        if (!is_null($category->reportTask)) {
+            $emails = $category->reportTask->emails->pluck('report_email_address', 'report_email_address')->toArray();
+        } else {
+            $emails = array();
+        }
+        return view('products.report.category')->with(compact(['category', 'emails']));
     }
 
     /**
@@ -43,16 +59,88 @@ class ReportTaskController extends Controller
      *
      * @param Request $request
      * @param $category_id
+     * @return array|bool|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function updateCategoryReport(Request $request, $category_id)
     {
+        try {
+            $this->updateCategoryReportValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
 
+        if ($request->get('report_task_owner_id') != $category_id) {
+            abort(404);
+            return false;
+        }
+        if ($request->get('report_task_owner_type') != 'category') {
+            abort(404);
+            return false;
+        }
+
+        $category = $this->categoryManager->getCategory($category_id);
+
+        if (is_null($category->reportTask)) {
+            $reportTask = $this->reportTaskManager->storeReportTask($request->all());
+        } else {
+            $reportTask = $category->reportTask;
+            $this->reportTaskManager->updateReportTask($reportTask->getKey(), $request->all());
+        }
+
+        $reportEmails = array();
+        foreach ($reportTask->emails as $email) {
+            $email->delete();
+        }
+        if ($request->has('email')) {
+            foreach ($request->get('email') as $email) {
+                $reportEmail = ReportEmail::create(array(
+                    "report_task_id" => $reportTask->getKey(),
+                    "report_email_address" => $email
+                ));
+                $reportEmails[] = $reportEmail;
+            }
+        }
+
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'reportTask', 'reportEmails']));
+            } else {
+                return compact(['status', 'reportTask', 'reportEmails']);
+            }
+        } else {
+            /*TODO implement this if needed*/
+        }
     }
 
     public function deleteCategoryReport(Request $request, $category_id)
     {
         $category = $this->categoryManager->getCategory($category_id);
 
+        if (!is_null($category->reportTask)) {
+            $this->reportTaskManager->deleteReportTask($category->reportTask->getKey());
+        }
+        $status = true;
+
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
     }
 
     /**
@@ -65,16 +153,93 @@ class ReportTaskController extends Controller
     public function editProductReport(Request $request, $product_id)
     {
         $product = $this->productManager->getProduct($product_id);
-        return view('products.report.product')->with(compact(['product']));
+        if (!is_null($product->reportTask)) {
+            $emails = $product->reportTask->emails->pluck('report_email_address', 'report_email_address')->toArray();
+        } else {
+            $emails = array();
+        }
+        return view('products.report.product')->with(compact(['product', 'emails']));
     }
 
-    public function updateProductReport()
+    public function updateProductReport(Request $request, $product_id)
     {
+        try {
+            $this->updateProductReportValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
 
+        if ($request->get('report_task_owner_id') != $product_id) {
+            abort(404);
+            return false;
+        }
+        if ($request->get('report_task_owner_type') != 'product') {
+            abort(404);
+            return false;
+        }
+
+        $product = $this->productManager->getProduct($product_id);
+
+        if (is_null($product->reportTask)) {
+            $reportTask = $this->reportTaskManager->storeReportTask($request->all());
+        } else {
+            $reportTask = $product->reportTask;
+            $this->reportTaskManager->updateReportTask($reportTask->getKey(), $request->all());
+        }
+
+        $reportEmails = array();
+        foreach ($reportTask->emails as $email) {
+            $email->delete();
+        }
+        if ($request->has('email')) {
+            foreach ($request->get('email') as $email) {
+                $reportEmail = ReportEmail::create(array(
+                    "report_task_id" => $reportTask->getKey(),
+                    "report_email_address" => $email
+                ));
+                $reportEmails[] = $reportEmail;
+            }
+        }
+
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'reportTask', 'reportEmails']));
+            } else {
+                return compact(['status', 'reportTask', 'reportEmails']);
+            }
+        } else {
+            /*TODO implement this if needed*/
+        }
     }
 
     public function deleteProductReport(Request $request, $product_id)
     {
         $product = $this->productManager->getProduct($product_id);
+
+        if (!is_null($product->reportTask)) {
+            $this->reportTaskManager->deleteReportTask($product->reportTask->getKey());
+        }
+        $status = true;
+
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
     }
 }

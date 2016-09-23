@@ -13212,7 +13212,7 @@ th.ellipsis {
 }
 
 /*.site-wrapper td:not(:last-child){*/
-    /*border: 1px solid #e6e6e6 !important;*/
+/*border: 1px solid #e6e6e6 !important;*/
 /*}*/
 
 @media (min-width: 992px) {
@@ -13286,6 +13286,10 @@ ______________________________________________________________
     border-radius: 100%;
     -webkit-animation: scaleout 1.0s infinite ease-in-out;
     animation: scaleout 1.0s infinite ease-in-out;
+}
+
+.datepicker {
+    z-index: 9999 !important;
 }
 
 @-webkit-keyframes scaleout {

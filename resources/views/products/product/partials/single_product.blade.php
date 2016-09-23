@@ -1,5 +1,6 @@
 <table class="table table-condensed product-wrapper" data-product-id="{{$product->getKey()}}"
-       data-alert-link="{{$product->urls['alert']}}">
+       data-alert-link="{{$product->urls['alert']}}"
+       data-report-task-link="{{$product->urls['report_task']}}">
     <thead>
     <tr>
         <th class="shrink product-th">
@@ -39,8 +40,8 @@
             <a href="#" class="btn-action" onclick="showProductAlertForm(this); return false;">
                 <i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
             </a>
-            <a href="#" class="btn-action">
-                <i class="fa fa-envelope-o"></i>
+            <a href="#" class="btn-action" onclick="showProductReportTaskForm(this)">
+                <i class="fa {{!is_null($product->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
             </a>
             <a href="#" class="btn-action" onclick="toggleEditProductName(this); return false;">
                 <i class="fa fa-pencil-square-o"></i>
@@ -278,6 +279,42 @@
                 $modal.on("hidden.bs.modal", function () {
                     $(this).remove();
                 });
+            });
+        }
+
+        function showProductReportTaskForm(el) {
+            showLoading();
+            $.ajax({
+                "url": $(el).closest(".product-wrapper").attr("data-report-task-link"),
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "updateCallback": function (response) {
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-envelope text-success");
+                                    }
+                                },
+                                "deleteCallback": function (response) {
+                                    if (response.status == true) {
+                                        $(el).find("i").removeClass().addClass("fa fa-envelope-o");
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-report-task-product").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    alertP("Error", "Unable to show edit report form, please try again later.");
+                }
             });
         }
     </script>

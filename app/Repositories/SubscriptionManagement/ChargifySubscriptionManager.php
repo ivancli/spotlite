@@ -315,6 +315,9 @@ class ChargifySubscriptionManager implements SubscriptionManager
     public function updateCreditCardDetails(Subscription $subscription)
     {
         $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
+        if (is_null($apiSubscription) || $apiSubscription == false) {
+            return false;
+        }
         $creditCard = $apiSubscription->credit_card;
         $expiryYear = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_YEAR');
         $expiryMonth = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_MONTH');

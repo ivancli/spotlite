@@ -39,6 +39,7 @@ elixir(function (mix) {
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.styles([
+        'vendor/almasaeed2010/adminlte/plugins/datepicker/datepicker3.css',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css'
     ], "public/css/product.css", "./");
     mix.scripts([
@@ -60,6 +61,7 @@ elixir(function (mix) {
         "node_modules/highcharts/highcharts.js",
         "node_modules/highcharts/highcharts-more.js",
         "node_modules/highcharts/modules/exporting.js",
+        'vendor/almasaeed2010/adminlte/plugins/datepicker/bootstrap-datepicker.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/moment.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js'
     ], "public/js/product.js", "./");
