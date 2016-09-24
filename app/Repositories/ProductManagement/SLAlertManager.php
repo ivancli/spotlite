@@ -106,12 +106,18 @@ class SLAlertManager implements AlertManager
             }
         }
 
-        if(count($alertingProductSites) == 0){
+        if (count($alertingProductSites) == 0) {
             return false;
         }
         $emails = $alert->emails;
         foreach ($emails as $email) {
-            dispatch((new SendMail('products.alert.email.product', compact(['alert', 'alertingProductSites', 'myProductSite']), $email, 'SpotLite - Product Price Alert'))->onQueue("mailing"));
+            dispatch((new SendMail('products.alert.email.product',
+                compact(['alert', 'alertingProductSites', 'myProductSite']),
+                array(
+                    "email" => $email,
+                    "subject" => 'SpotLite - Product Price Alert'
+                )
+            ))->onQueue("mailing"));
         }
     }
 
@@ -152,7 +158,12 @@ class SLAlertManager implements AlertManager
         if ($alertUser) {
             $emails = $alert->emails;
             foreach ($emails as $email) {
-                dispatch((new SendMail('products.alert.email.site', compact(['alert', 'myProductSite']), $email, 'SpotLite - Site Price Alert'))->onQueue("mailing"));
+                dispatch((new SendMail('products.alert.email.site',
+                    compact(['alert', 'myProductSite']),
+                    array(
+                        "email" => $email->alert_email_address,
+                        "subject" => 'SpotLite - Site Price Alert'
+                    )))->onQueue("mailing"));
             }
         }
     }

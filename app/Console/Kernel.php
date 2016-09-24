@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel
          * Crawling task
          */
         $schedule->call(function () {
-
+            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " crawling called" . "\r\n");
             $lastReservedAt = AppPreference::getCrawlLastReservedAt();
             $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
             $currentRoundedHours = date("Y-m-d H:00:00");
@@ -80,6 +80,7 @@ class Kernel extends ConsoleKernel
          * Sync user task
          */
         $schedule->call(function () {
+            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " sync user called" . "\r\n");
             $lastReservedAt = AppPreference::getSyncLastReservedAt();
             $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
             $currentRoundedHours = date("Y-m-d H:00:00");
@@ -105,6 +106,8 @@ class Kernel extends ConsoleKernel
          */
 
         $schedule->call(function () {
+            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " report called" . "\r\n");
+            /* check in every hour */
             $lastReservedAt = AppPreference::getReportLastReservedAt();
             $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
             $currentRoundedHours = date("Y-m-d H:00:00");
@@ -112,45 +115,67 @@ class Kernel extends ConsoleKernel
                 /*reserve the task*/
                 AppPreference::setReportReserved();
                 AppPreference::setReportLastReservedAt();
-//                        dispatch((new ReportUser($user))->onQueue("syncing"));
 
                 /*LOOP THROUGH ALL REPORT TASKS AND TRIGGER THE DUE REPORT TASKS*/
                 $reportTasks = ReportTask::all();
 
                 foreach ($reportTasks as $reportTask) {
+                    switch ($reportTask->frequency) {
+                        case "daily":
+                            //check report not yet sent today
+                            $lastSentAt = date("Y-m-d 00:00:00", strtotime($reportTask->last_sent_at));
+                            $currentRoundedDate = date("Y-m-d 00:00:00");
 
-                    /*TODO change the following checking to be inside switch statement */
-                    /*
-                     * TODO checking should be based on the frequency
-                     *  
-                     */
-                    $lastSentAt = date("Y-m-d 00:00:00", strtotime($reportTask->last_sent_at));
-                    $currentRoundedDate = date("Y-m-d 00:00:00");
-                    /*if last sent date is 1 day behind current date*/
-                    if (intval((strtotime($lastSentAt) - strtotime($currentRoundedDate)) / 3600) > 0) {
-
-                        switch ($reportTask->frequency) {
-                            case "daily":
-                                $currentRoundedMinute = date("H:i:00");
-                                if($reportTask->time == $currentRoundedMinute){
-                                    $reportTask->setLastSentStamp();
-                                    dispatch((new SendReport($reportTask)));
+                            /*if last sent date is at least 1 day ahead current date*/
+                            if (is_null($reportTask->last_sent_at) || (intval((strtotime($currentRoundedDate) - strtotime($lastSentAt)) / 3600) > 0)) {
+                                $lastSentRoundedDay = date("N", strtotime($reportTask->last_sent_at));
+                                if (($lastSentRoundedDay == 6 || $lastSentRoundedDay == 7) && $reportTask->weekday_only == 'yes') {
+                                    continue;
                                 }
-                                break;
-                            case "weekly":
-                                break;
-                            case "monthly":
-                                break;
-                            default:
-                                return false;
-                        }
+                                /*
+                                 * precision set to be HOUR
+                                 * replace 00 with i to increase precision to be MINUTE
+                                 */
+                                // check report time = current time
+                                $currentRoundedMinute = date("H:00:00");
+                                if ($reportTask->time == $currentRoundedMinute) {
+                                    $reportTask->setLastSentStamp();
+                                    dispatch((new SendReport($reportTask))->onQueue("reporting"));
+                                }
+                            }
+                            break;
+                        case "weekly":
+                            // check report not yet sent this week
+                            $lastSentAt = date('Y-\WW', strtotime($reportTask->last_sent_at));
+                            $currentRoundedWeek = date('Y-\WW');
+                            if (is_null($reportTask->last_sent_at) || (intval((strtotime($currentRoundedWeek) - strtotime($lastSentAt)) / 3600) > 0)) {
+                                $currentRoundedDay = date("N");
 
+                                // check report day = current day
+                                if ($reportTask->day == $currentRoundedDay) {
+                                    $reportTask->setLastSentStamp();
+                                    dispatch((new SendReport($reportTask))->onQueue("reporting"));
+                                }
+                            }
+                            break;
+                        case "monthly":
+                            // check report not yet sent this month
+                            $lastSentAt = date('Y-m', strtotime($reportTask->last_sent_at));
+                            $currentRoundedMonth = date('Y-m');
+                            if (is_null($reportTask->last_sent_at) || (intval((strtotime($currentRoundedMonth) - strtotime($lastSentAt)) / 3600) > 0)) {
 
+                                // check report date = current date
+                                $currentRoundedDate = date("d");
+                                if ($reportTask->date == $currentRoundedDate) {
+                                    $reportTask->setLastSentStamp();
+                                    dispatch((new SendReport($reportTask))->onQueue("reporting"));
+                                }
+                            }
+                            break;
+                        default:
+                            return false;
                     }
                 }
-
-
-                file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " report called" . "\r\n");
                 AppPreference::setReportReserved('n');
             }
         })->everyMinute()->name("reports");

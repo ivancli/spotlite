@@ -14,7 +14,6 @@ use App\Contracts\SubscriptionManagement\SubscriptionManager;
 class DashboardController extends Controller
 {
     protected $subscriptionManager;
-    protected $emailGenerator;
 
     public function __construct(SubscriptionManager $subscriptionManager)
     {

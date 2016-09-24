@@ -10,10 +10,7 @@ namespace App\Jobs;
 
 
 use App\Contracts\EmailManagement\EmailGenerator;
-use App\Models\AlertEmail;
-use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\View\View;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
@@ -21,24 +18,31 @@ class SendMail extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    protected $alertEmail;
+    protected $options;
     protected $view;
     protected $data;
-    protected $subject;
 
     /**
      * Create a new job instance.
      * @param $view
      * @param array $data
-     * @param AlertEmail $alertEmail
-     * @param $subject
+     * @param array $options
      */
-    public function __construct($view, array $data = array(), AlertEmail $alertEmail, $subject)
+    public function __construct($view, array $data = array(), array $options = array())
     {
-        $this->alertEmail = $alertEmail;
         $this->view = $view;
-        $this->subject = $subject;
         $this->data = $data;
+
+        /*
+         * options include:
+             * email
+             * first_name
+             * last_name
+             * subject
+             * optional attachment
+             * attachment data needs to be in base64 encoded, since data would be transferred through in database queue.
+         * */
+        $this->options = $options;
     }
 
     /**
@@ -47,6 +51,6 @@ class SendMail extends Job implements ShouldQueue
      */
     public function handle(EmailGenerator $emailGenerator)
     {
-        $emailGenerator->sendMail($this->view, $this->data, $this->alertEmail, $this->subject);
+        $emailGenerator->sendMail($this->view, $this->data, $this->options);
     }
 }

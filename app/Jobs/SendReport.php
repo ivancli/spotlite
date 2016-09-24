@@ -46,25 +46,35 @@ class SendReport extends Job implements ShouldQueue
                 $report = $reportTaskManager->generateCategoryReport($this->reportTask);
                 $category = $this->reportTask->reportable;
                 $fileName = str_replace(' ', '_', $category->category_name) . "_category_report" . "." . $this->reportTask->file_type;
+                $subject = $category->category_name;
                 break;
             case "product":
                 $report = $reportTaskManager->generateProductReport($this->reportTask);
                 $product = $this->reportTask->reportable;
+                $subject = $product->product_name;
                 $fileName = str_replace(' ', '_', $product->product_name) . "_product_report" . "." . $this->reportTask->file_type;
                 break;
             default:
                 $fileName = "filename.txt";
+                $subject = "";
         }
 
         if (isset($report) && !is_null($report)) {
             $attachment = array(
-                "data" => base64_decode($report->content),
-                "file_name" => $fileName
+                "data" => $report->content,
+                "file_name" => date("Ymd") . $fileName
             );
 
             foreach ($this->reportTask->emails as $email) {
                 /* TODO generate email with attachment and send to user */
-                $emailGenerator->sendReport("products.report.email.category", compact(['report']), $email->report_email_address, "Yo, sup man", $attachment);
+
+                dispatch((new SendMail('products.report.email.category',
+                    compact(['report']),
+                    array(
+                        "email" => $email->report_email_address,
+                        "subject" => "SpotLite - $subject Category Report",
+                        "attachment" => $attachment
+                    )))->onQueue("mailing"));
             }
         }
 

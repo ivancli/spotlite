@@ -16,7 +16,6 @@ interface EmailGenerator
 {
     public function sendWelcomeEmail(User $user);
 
-    public function sendMail($view, array $data = array(), AlertEmail $alertEmail, $subject);
-
-    public function sendReport($view, array $data = array(), ReportEmail $alertEmail, $subject, array $attachment = array());
+//    public function sendMail($view, array $data = array(), AlertEmail $alertEmail, $subject);
+    public function sendMail($view, array $data = array(), array $options = array());
 }

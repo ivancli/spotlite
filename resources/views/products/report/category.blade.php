@@ -94,7 +94,7 @@
                 "placeholder": "Enter Email Address and Press Enter Key"
             });
 
-            $('input[data-toggle=datepicker]').datepicker({});
+//            $('input[data-toggle=datepicker]').datepicker({});
             updateSubElements($("#frequency").get(0));
 
             $("#btn-update-category-report").on("click", function () {

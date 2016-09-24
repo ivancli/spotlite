@@ -25,23 +25,36 @@ class SpotLiteEmailGenerator implements EmailGenerator
         });
     }
 
-    public function sendMail($view, array $data = array(), AlertEmail $alertEmail, $subject)
+//    public function sendMail($view, array $data = array(), AlertEmail $alertEmail, $subject)
+//    {
+//        Mail::send($view, $data, function ($m) use ($alertEmail, $subject) {
+//            $m->from(config('mail.from.address'), config('mail.from.name'));
+//            $m->to($alertEmail->alert_email_address)->subject($subject);
+//        });
+//    }
+    public function sendMail($view, array $data = array(), array $options = array())
     {
-        Mail::send($view, $data, function ($m) use ($alertEmail, $subject) {
+        dump($options);
+        Mail::send($view, $data, function ($m) use ($options) {
             $m->from(config('mail.from.address'), config('mail.from.name'));
-            $m->to($alertEmail->alert_email_address)->subject($subject);
-        });
-    }
+            $m->to($options['email'], (isset($options['first_name']) && isset($options['last_name'])) ? "{$options['first_name']}  {$options['last_name']}" : null)
+                ->subject($options['subject']);
 
-    public function sendReport($view, array $data = array(), ReportEmail $reportEmail, $subject, array $attachment = array())
-    {
-        Mail::send($view, $data, function ($m) use ($reportEmail, $subject, $attachment) {
-            $m->from(config('mail.from.address'), config('mail.from.name'));
-            $m->to($reportEmail->report_email_address)->subject($subject);
-
-            if (isset($attachment['data']) && $attachment['file_name']) {
-                $m->attachData($attachment['data'], $attachment['file_name']);
+            if (isset($options['attachment'])) {
+                $m->attachData(base64_decode($options['attachment']['data']), $options['attachment']['file_name']);
             }
         });
     }
+
+//    public function sendReport($view, array $data = array(), ReportEmail $reportEmail, $subject, array $attachment = array())
+//    {
+//        Mail::send($view, $data, function ($m) use ($reportEmail, $subject, $attachment) {
+//            $m->from(config('mail.from.address'), config('mail.from.name'));
+//            $m->to($reportEmail->report_email_address)->subject($subject);
+//
+//            if (isset($attachment['data']) && $attachment['file_name']) {
+//                $m->attachData($attachment['data'], $attachment['file_name']);
+//            }
+//        });
+//    }
 }
