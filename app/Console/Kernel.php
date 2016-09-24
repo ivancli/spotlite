@@ -45,7 +45,6 @@ class Kernel extends ConsoleKernel
          * Crawling task
          */
         $schedule->call(function () {
-            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " crawling called" . "\r\n");
             $lastReservedAt = AppPreference::getCrawlLastReservedAt();
             $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
             $currentRoundedHours = date("Y-m-d H:00:00");
@@ -80,7 +79,6 @@ class Kernel extends ConsoleKernel
          * Sync user task
          */
         $schedule->call(function () {
-            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " sync user called" . "\r\n");
             $lastReservedAt = AppPreference::getSyncLastReservedAt();
             $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
             $currentRoundedHours = date("Y-m-d H:00:00");
@@ -106,7 +104,6 @@ class Kernel extends ConsoleKernel
          */
 
         $schedule->call(function () {
-            file_put_contents('/home/vagrant/Code/spotlite/storage/logs/report.log', file_get_contents('/home/vagrant/Code/spotlite/storage/logs/report.log') . "\r\n" . date('Y-m-d H:i:s') . " report called" . "\r\n");
             /* check in every hour */
             $lastReservedAt = AppPreference::getReportLastReservedAt();
             $lastReservedRoundedHours = date("Y-m-d H:00:00", strtotime($lastReservedAt));
