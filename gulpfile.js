@@ -25,7 +25,8 @@ elixir(function (mix) {
         'public/css',
         'public/js',
         'public/fonts',
-        'public/images'
+        'public/images',
+        'public/videos'
     ]);
     mix.styles([
         "node_modules/bootstrap/dist/css/bootstrap.css",
@@ -43,7 +44,6 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css'
     ], "public/css/product.css", "./");
     mix.scripts([
-        // "node_modules/jquery/dist/jquery.js",
         'vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js',
         "node_modules/bootstrap/dist/js/bootstrap.js",
         "node_modules/datatables.net/js/jquery.dataTables.js",
@@ -55,6 +55,7 @@ elixir(function (mix) {
         'node_modules/dragula/dist/dragula.js',
         'node_modules/dom-autoscroller/dist/dom-autoscroller.js',
         'resources/assets/js/commonFunctions.js',
+        'resources/assets/js/sidebar.js',
         'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");
     mix.scripts([
@@ -68,6 +69,7 @@ elixir(function (mix) {
 
     /* copy images */
     mix.copy('resources/assets/images', 'public/images');
+    mix.copy('resources/assets/videos', 'public/videos');
 
     mix.copy("node_modules/bootstrap/dist/fonts", "public/fonts/");
     mix.copy("node_modules/font-awesome/fonts", "public/fonts/");

@@ -163,7 +163,11 @@ class Kernel extends ConsoleKernel
 
                                 // check report date = current date
                                 $currentRoundedDate = date("d");
-                                if ($reportTask->date == $currentRoundedDate) {
+                                $numberOfDaysInThisMonth = date("t");
+
+                                // today is the scheduled report date OR (scheduled report date is greater than number of days of this month AND today is the last day of this month)
+                                // e.g. scheduled 31, runs on 30 of Sep, runs on 28/29 of Feb
+                                if ($reportTask->date == $currentRoundedDate || ($numberOfDaysInThisMonth < $reportTask->date && $numberOfDaysInThisMonth == $currentRoundedDate)) {
                                     $reportTask->setLastSentStamp();
                                     dispatch((new SendReport($reportTask))->onQueue("reporting"));
                                 }

@@ -381,6 +381,29 @@ ______________________________________________________________
     z-index: 9999 !important;
 }
 
+.callout.callout-primary {
+    border-color: #248fb9;
+    color: #fff !important;
+    background-color: #487a9e !important;
+}
+
+.main-header .header-label {
+    float: left;
+    background: transparent none;
+    padding: 13px 13px;
+    font-size: 17px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.main-header .header-label:focus,
+.main-header .header-label:active {
+    background: transparent;
+}
+
+.skin-blue .main-header .navbar .header-label {
+    color: #fff;
+}
+
 @-webkit-keyframes scaleout {
     0% {
         -webkit-transform: scale(0.0)

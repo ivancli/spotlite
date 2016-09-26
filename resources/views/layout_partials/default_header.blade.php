@@ -17,6 +17,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </a>
+        <a href="#" class="header-label">
+            Market intelligence made simple.
+        </a>
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
@@ -35,7 +38,7 @@
                                         <li>
                                             <a href="{{route('profile.index')}}">
                                                 <h3>
-                                                    Profile
+                                                    Profile <span class="text-muted">{{auth()->user()->first_name}} {{auth()->user()->last_name}}</span>
                                                 </h3>
                                             </a>
                                         </li>
@@ -70,6 +73,15 @@
                                             </h3>
                                         </a>
                                     </li>
+                                    @if(auth()->user()->hasValidSubscription() || !auth()->user()->isStaff())
+                                            <li>
+                                                <a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}">
+                                                    <h3>
+                                                        UPGRADE
+                                                    </h3>
+                                                </a>
+                                            </li>
+                                    @endif
                                 </ul>
                             </li>
                         </ul>

@@ -3,10 +3,21 @@
 @section('links')
     <link rel="stylesheet" href="{{asset('css/product.css')}}">
 @stop
+
+@section('notification_banner')
+    <div class="callout callout-primary" style="margin-bottom: 0!important;">
+        <h4>Track how your competitors are pricing identical and similar products.</h4>
+        Configure your categories and products by adding URLs below. Make sure to set up the
+        <a href="#">alerts</a> so you and more team members can receive timely notifications about price changes.
+    </div>
+@stop
+
 @section('header_title', "Products")
+
 @section('breadcrumbs')
     {!! Breadcrumbs::render('product_index') !!}
 @stop
+
 @section('content')
     @include('products.partials.banner_stats')
     <div class="row">
@@ -53,8 +64,6 @@
 @stop
 
 @section('scripts')
-
-    <script type="text/javascript" src="{{asset('js/product.js')}}"></script>
     <script type="text/javascript">
         var start = 0;
         var length = 5;

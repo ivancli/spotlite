@@ -69,6 +69,25 @@ class User extends Authenticatable
         });
     }
 
+    public function cachedAPISubscription()
+    {
+        $userPrimaryKey = $this->primaryKey;
+        $cacheKey = 'api_subscription_for_user_' . $this->$userPrimaryKey;
+        if (Cache::tags(['user_api_subscription'])->has($cacheKey)) {
+            return Cache::tags(['user_api_subscription'])->get($cacheKey);
+        } else {
+            $subscriptionManager = app()->make('App\Contracts\SubscriptionManagement\SubscriptionManager');
+            if ($this->hasValidSubscription()) {
+                $subscription = $subscriptionManager->getSubscription($this->cachedSubscription()->api_subscription_id);
+            } else {
+                $subscription = false;
+            }
+            Cache::tags(['user_api_subscription'])->put($cacheKey, $subscription);
+            Cache::tags(['user_api_subscription'])->flush();
+            return $subscription;
+        }
+    }
+
     public function needSubscription()
     {
         return !$this->isStaff() && !$this->hasValidSubscription();

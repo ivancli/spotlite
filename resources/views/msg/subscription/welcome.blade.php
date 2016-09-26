@@ -23,42 +23,68 @@
             <p class="text-center">
                 You can watch our video tutorial
             </p>
-            <div class="m-b-5">
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/vUF7ja9ehIs" frameborder="0"
-                        allowfullscreen></iframe>
+            <div class="m-b-10">
+                <video width="100%" controls preload="auto">
+                    <source src="{{asset('videos/sample_video.mp4')}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
 
-            {{--<div class="row">--}}
-            {{--<div class="col-sm-12 text-center">--}}
-            {{--<div class="checkbox">--}}
-            {{--<label>--}}
-            {{--<input type="checkbox" onclick="updateDontShowWelcomePage(this)"> Don't show again--}}
-            {{--</label>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<p class="text-center" style="padding: 20px">--}}
-            {{--<button class="btn btn-default" title="Close this popup" data-dismiss="modal">No, thanks--}}
-            {{--</button>--}}
-            {{--<button class="btn btn-success" title="Close this popup and start the tour" id="start_tour"--}}
-            {{--data-dismiss="modal" onclick="return false;">Start the tour--}}
-            {{--</button>--}}
-            {{--</p>--}}
-
             <div class="row">
-                <div class="col-sm-4 text-center">
-                    <div>Download the tutorial</div>
-                    <div>
-                        <a href="#" class="text-muted">
-                            <div style="font-size: 25px;">
-                                <i class=" fa fa-download"></i>
-                            </div>
-                            <div class="text-success">GET IT NOW</div>
-                        </a>
-                    </div>
+                <div class="col-sm-12">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td width="33%" style="vertical-align: bottom;" align="center">
+                                <div class="hidden-xs">Download the tutorial</div>
+                                <div>
+                                    <a href="{{asset('videos/sasmple')}}" class="text-muted">
+                                        <div style="font-size: 25px;">
+                                            <i class=" fa fa-download"></i>
+                                        </div>
+                                        <div class="hidden-xs" style="font-weight: bold; color: #3ba83d;">
+                                            GET IT NOW
+                                        </div>
+                                    </a>
+                                </div>
+                            </td>
+                            <td width="33%" style="vertical-align: bottom;" align="center">
+                                <div class="hidden-xs">Check the FAQ</div>
+                                <div>
+                                    <a href="#" class="text-muted">
+                                        <div style="font-size: 25px;">
+                                            <i class=" fa fa-question-circle-o"></i>
+                                        </div>
+                                        <div class="hidden-xs" style="font-weight: bold; color: #3ba83d;">
+                                            TAKE ME THERE
+                                        </div>
+                                    </a>
+                                </div>
+                            </td>
+                            <td width="34%" style="vertical-align: bottom;" align="center">
+                                <div class="hidden-xs">No need, thanks</div>
+                                <div class="checkbox" style="font-size: 9px; margin-bottom: 0px;">
+                                    <label>
+                                        <input type="checkbox" onclick="updateDontShowWelcomePage(this)"
+                                               style="margin-top: 0;">
+                                        Don't show me this message again, please!
+                                    </label>
+                                </div>
+                                <div>
+                                    <a href="{{route('dashboard.index')}}" class="text-muted">
+                                        <div style="font-size: 25px;">
+                                            <img src="{{asset('images/favicon.png')}}" alt="" width="30">
+                                        </div>
+                                        <div class="hidden-xs" style="font-weight: bold; color: #3ba83d;">GO TO MY
+                                            DASHBOARD
+                                        </div>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-sm-4"></div>
-                <div class="col-sm-4"></div>
             </div>
         </div>
     </div>
