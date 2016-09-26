@@ -4,49 +4,62 @@
     <!--<h4 class="modal-title" id="myModalLabel">Welcome to Composer!</h4>-->
     <div class="row">
         <div class="col-sm-12">
-            <p class="text-center">
-                <img src="{{asset('images/logo-fixed-2.png')}}" style="width: 40%; padding-bottom: 20px">
-            </p>
-
             <h2 class="text-center">
-                Welcome to SpotLite!
+                {{auth()->user()->first_name}}, Welcome to
             </h2>
+            <h3 class="text-center">
+                <img src="{{asset('images/logo-fixed-2.png')}}" style="width: 30%;">
+            </h3>
 
-            <p class="text-center" style="padding: 20px 60px 20px 60px">
-                Spotlite is an affordable and easy-to-use price tracking solution
-                specifically designed for retailers and brands.
-            </p>
-            @if(isset($apiSubscription))
-                <p>
-                    You have subscribed into {{$apiSubscription->product->name}} plan.
-                </p>
-                <p>
-                    {{dump($apiSubscription)}}
-                </p>
-            @endif
             <p class="text-center">
-                [Simple introduction, tutorial or description here]
+                So nice to meet you!
             </p>
             <p class="text-center">
-                [If we are giving tutorial to user, we might need to following two buttons.]
+                It's time to let SpotLite do the hard work while you focus on what matters: growing your business.
             </p>
+            <p class="text-center">
+                Here are a few handy guides you might find useful to get you quickly set up!
+            </p>
+            <p class="text-center">
+                You can watch our video tutorial
+            </p>
+            <div class="m-b-5">
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/vUF7ja9ehIs" frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+
+            {{--<div class="row">--}}
+            {{--<div class="col-sm-12 text-center">--}}
+            {{--<div class="checkbox">--}}
+            {{--<label>--}}
+            {{--<input type="checkbox" onclick="updateDontShowWelcomePage(this)"> Don't show again--}}
+            {{--</label>--}}
+            {{--</div>--}}
+            {{--</div>--}}
+            {{--</div>--}}
+            {{--<p class="text-center" style="padding: 20px">--}}
+            {{--<button class="btn btn-default" title="Close this popup" data-dismiss="modal">No, thanks--}}
+            {{--</button>--}}
+            {{--<button class="btn btn-success" title="Close this popup and start the tour" id="start_tour"--}}
+            {{--data-dismiss="modal" onclick="return false;">Start the tour--}}
+            {{--</button>--}}
+            {{--</p>--}}
 
             <div class="row">
-                <div class="col-sm-12 text-center">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" onclick="updateDontShowWelcomePage(this)"> Don't show again
-                        </label>
+                <div class="col-sm-4 text-center">
+                    <div>Download the tutorial</div>
+                    <div>
+                        <a href="#" class="text-muted">
+                            <div style="font-size: 25px;">
+                                <i class=" fa fa-download"></i>
+                            </div>
+                            <div class="text-success">GET IT NOW</div>
+                        </a>
                     </div>
                 </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
             </div>
-            <p class="text-center" style="padding: 20px">
-                <button class="btn btn-default" title="Close this popup" data-dismiss="modal">No, thanks
-                </button>
-                <button class="btn btn-success" title="Close this popup and start the tour" id="start_tour"
-                        data-dismiss="modal" onclick="return false;">Start the tour
-                </button>
-            </p>
         </div>
     </div>
     <script type="text/javascript">
