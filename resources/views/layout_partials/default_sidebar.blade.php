@@ -109,13 +109,21 @@
                 </li>
             @endif
         </ul>
-        <div class="user-panel">
-            <div id="container-speed" style="width: 100%"></div>
-        </div>
-        @if(auth()->check() && auth()->user()->hasValidSubscription())
+        @if(auth()->check() && auth()->user()->hasValidSubscription() && starts_with(Request::route()->getName(), 'product'))
+            <hr class="sidebar-divider">
             <div class="subscription-panel">
                 <div class="text-center">
                     My Plan: {{auth()->user()->cachedAPISubscription()->product->name}}
+                </div>
+                <div class="block-button-container">
+                    <a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}" class="btn btn-block btn-success">
+                        UPGRADE
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="#" style="text-decoration: underline;">
+                        Need Help?
+                    </a>
                 </div>
             </div>
         @endif

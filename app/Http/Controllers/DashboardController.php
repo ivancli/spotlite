@@ -14,6 +14,8 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class DashboardController extends Controller
 {
@@ -26,7 +28,6 @@ class DashboardController extends Controller
 
     public function index()
     {
-
 //// start Firefox with 5 second timeout
 //$host = 'http://localhost:4444/wd/hub'; // this is the default
 //$capabilities = DesiredCapabilities::firefox();

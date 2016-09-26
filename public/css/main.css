@@ -12986,7 +12986,7 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
 }
 
 .navbar-nav > .spotlite-user-menu > .dropdown-menu > li .spotlite-menu {
-    max-height: 200px;
+    max-height: 250px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -13290,6 +13290,50 @@ ______________________________________________________________
 
 .datepicker {
     z-index: 9999 !important;
+}
+
+.callout.callout-primary {
+    border-color: #248fb9;
+    color: #fff !important;
+    background-color: #487a9e !important;
+}
+
+.main-header .header-label {
+    float: left;
+    background: transparent none;
+    padding: 13px 13px;
+    font-size: 17px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    cursor: default;
+}
+
+.main-header .header-label:focus,
+.main-header .header-label:active {
+    background: transparent;
+}
+
+.skin-blue .main-header .navbar .header-label {
+    color: #fff;
+}
+
+.sidebar-divider {
+    border-color: #515b63;
+}
+
+.subscription-panel {
+    color: #d3d3d3;
+}
+
+.subscription-panel .block-button-container {
+    padding: 10px;
+}
+
+.subscription-panel .block-button-container a {
+    color: white;
+}
+
+.skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a{
+    background-color: #487a9e;
 }
 
 @-webkit-keyframes scaleout {

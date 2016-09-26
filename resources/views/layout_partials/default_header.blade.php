@@ -11,7 +11,7 @@
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <a href="#" class="sidebar-toggle visible-xs" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -38,7 +38,8 @@
                                         <li>
                                             <a href="{{route('profile.index')}}">
                                                 <h3>
-                                                    Profile <span class="text-muted">{{auth()->user()->first_name}} {{auth()->user()->last_name}}</span>
+                                                    Profile <span
+                                                            class="text-muted">{{auth()->user()->first_name}} {{auth()->user()->last_name}}</span>
                                                 </h3>
                                             </a>
                                         </li>
@@ -74,13 +75,14 @@
                                         </a>
                                     </li>
                                     @if(auth()->user()->hasValidSubscription() || !auth()->user()->isStaff())
-                                            <li>
-                                                <a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}">
-                                                    <h3>
+                                        <li>
+                                            <div style="padding: 2px;">
+
+                                                <a class="btn btn-success btn-block" href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}">
                                                         UPGRADE
-                                                    </h3>
                                                 </a>
-                                            </li>
+                                            </div>
+                                        </li>
                                     @endif
                                 </ul>
                             </li>

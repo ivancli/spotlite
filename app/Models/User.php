@@ -76,15 +76,15 @@ class User extends Authenticatable
         if (Cache::tags(['user_api_subscription'])->has($cacheKey)) {
             return Cache::tags(['user_api_subscription'])->get($cacheKey);
         } else {
-            $subscriptionManager = app()->make('App\Contracts\SubscriptionManagement\SubscriptionManager');
-            if ($this->hasValidSubscription()) {
-                $subscription = $subscriptionManager->getSubscription($this->cachedSubscription()->api_subscription_id);
-            } else {
-                $subscription = false;
-            }
-            Cache::tags(['user_api_subscription'])->put($cacheKey, $subscription);
-            Cache::tags(['user_api_subscription'])->flush();
-            return $subscription;
+            return Cache::tags(['user_api_subscription'])->remember($cacheKey, config()->get('cache.ttl'), function () {
+                $subscriptionManager = app()->make('App\Contracts\SubscriptionManagement\SubscriptionManager');
+                if ($this->hasValidSubscription()) {
+                    $subscription = $subscriptionManager->getSubscription($this->cachedSubscription()->api_subscription_id);
+                } else {
+                    $subscription = false;
+                }
+                return $subscription;
+            });
         }
     }
 
