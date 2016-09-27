@@ -154,6 +154,7 @@ class ChargifySubscriptionManager implements SubscriptionManager
         $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $method = "delete";
         $result = $this->sendCurl($apiURL, compact(['userpass', 'method']));
+        $this->deletePaymentProfile($subscription_id);
         try {
             $result = json_decode($result);
             return $result;
@@ -345,5 +346,24 @@ class ChargifySubscriptionManager implements SubscriptionManager
         }
 
         return compact(['expiryYear', 'expiryMonth']);
+    }
+
+    public function deletePaymentProfile($subscription_id)
+    {
+        $subscription = $this->getSubscription($subscription_id);
+        $creditCard = $subscription->credit_card;
+        if(!is_null($creditCard)){
+            $creditCardID = $creditCard->id;
+
+            $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id/payment_profiles/$creditCardID.json";
+            $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+            $method = "delete";
+            $data_type = 'json';
+            $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+            if(!isset($result->errors) || is_null($result->errors)){
+                return true;
+            }
+        }
+        return false;
     }
 }
