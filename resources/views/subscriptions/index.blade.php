@@ -29,8 +29,6 @@
                             @endif
                         </div>
                     </div>
-                    {{dump($sub)}}
-                    {{dump($subscription)}}
                     <div class="row">
                         <div class="col-sm-12 text-right">
                             @if(isset($portalLink))
@@ -45,7 +43,7 @@
                                 Change My Plan
                             </a>
                             {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'method' => 'delete', 'style'=>'display: inline-block', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
-                            {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-danger"]) !!}
+                            {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-default btn-xs"]) !!}
                             {!! Form::close() !!}
                         </div>
                     </div>

@@ -58,7 +58,6 @@
 @include('scripts.variable_setter')
 
 <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/product.js')}}"></script>
 
 @yield('scripts')
 
