@@ -99,6 +99,9 @@
             });
 
             productChart = new Highcharts.Chart({
+                credits: {
+                    enabled: false
+                },
                 chart: {
                     renderTo: 'chart-container'
                 },

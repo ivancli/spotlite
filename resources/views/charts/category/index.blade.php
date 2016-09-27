@@ -106,6 +106,9 @@
             });
 
             categoryChart = new Highcharts.Chart({
+                credits: {
+                    enabled: false
+                },
                 chart: {
                     renderTo: 'chart-container'
                 },
@@ -222,7 +225,7 @@
                                 color: Highcharts.getOptions().colors[Math.floor(ranInt)],
                                 fillOpacity: 0.7,
                                 zIndex: 0,
-                                tooltip:{
+                                tooltip: {
                                     pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>${point.low:,.2f} - ${point.high:,.2f}</b><br/>'
                                 }
                             });
@@ -236,7 +239,7 @@
                                 marker: {
                                     lineColor: Highcharts.getOptions().colors[Math.floor(ranInt)]
                                 },
-                                tooltip:{
+                                tooltip: {
                                     pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>${point.y:,.2f}</b><br/>'
                                 }
                             });
@@ -253,7 +256,7 @@
         }
 
         function removeSeries() {
-            while(categoryChart.series.length > 0)
+            while (categoryChart.series.length > 0)
                 categoryChart.series[0].remove(true);
         }
     </script>

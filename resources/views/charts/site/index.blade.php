@@ -98,6 +98,9 @@
                 $("#txt-product-site-chart-end-date").val(picker.endDate.format('X'));
             });
             productSiteChart = new Highcharts.Chart({
+                credits: {
+                    enabled: false
+                },
                 chart: {
                     renderTo: 'chart-container'
                 },
