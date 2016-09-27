@@ -88,7 +88,7 @@
 
 
             /** enable scrolling when dragging*/
-            autoScroller([window], {
+            autoScroll([window], {
                 margin: 20,
                 pixels: 20,
                 scrollWhenOutside: true,
