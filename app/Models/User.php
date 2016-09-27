@@ -63,8 +63,7 @@ class User extends Authenticatable
     public function cachedSubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-        $cacheKey = 'subscription_for_user_' . $this->$userPrimaryKey;
-        return Cache::tags("user_subscription")->remember($cacheKey, config()->get('cache.ttl'), function () {
+        return Cache::tags(["user_subscription_". $this->$userPrimaryKey])->remember("subscription", config()->get('cache.ttl'), function () {
             return $this->subscription;
         });
     }
@@ -72,11 +71,10 @@ class User extends Authenticatable
     public function cachedAPISubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-        $cacheKey = 'api_subscription_for_user_' . $this->$userPrimaryKey;
-        if (Cache::tags(['user_api_subscription'])->has($cacheKey)) {
-            return Cache::tags(['user_api_subscription'])->get($cacheKey);
+        if (Cache::tags(["user_subscription_". $this->$userPrimaryKey])->has('api_subscription')) {
+            return Cache::tags(["user_subscription_". $this->$userPrimaryKey])->get('api_subscription');
         } else {
-            return Cache::tags(['user_api_subscription'])->remember($cacheKey, config()->get('cache.ttl'), function () {
+            return Cache::tags(["user_subscription_". $this->$userPrimaryKey])->remember('api_subscription', config()->get('cache.ttl'), function () {
                 $subscriptionManager = app()->make('App\Contracts\SubscriptionManagement\SubscriptionManager');
                 if ($this->hasValidSubscription()) {
                     $subscription = $subscriptionManager->getSubscription($this->cachedSubscription()->api_subscription_id);
@@ -122,7 +120,8 @@ class User extends Authenticatable
     public function save(array $options = [])
     {
         $result = parent::save($options);
-        Cache::tags(config()->get('user_subscription'))->flush();
+        $userPrimaryKey = $this->primaryKey;
+        Cache::tags(["user_subscription_". $this->$userPrimaryKey])->flush();
         return $result;
     }
 }
