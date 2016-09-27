@@ -64,8 +64,8 @@ class SubscriptionController extends Controller
     {
         $user = auth()->user();
         $sub = $user->validSubscription();
-        $this->subscriptionManager->updateCreditCardDetails($sub);
         if (!is_null($sub)) {
+            $this->subscriptionManager->updateCreditCardDetails($sub);
             $current_sub_id = $sub->api_subscription_id;
             $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
 
