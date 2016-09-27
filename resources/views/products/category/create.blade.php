@@ -53,7 +53,6 @@
                             showLoading();
                             loadSingleCategory(response.category.urls.show, function (html) {
                                 hideLoading();
-                                alertP("Create Category", "Category has been created.");
                                 if (theEnd) {
                                     $(el).closest(".list-container").append(
                                             html

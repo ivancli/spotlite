@@ -26496,7 +26496,7 @@ function popupHTML(title, $content, $footer, dialogSize) {
 
 function popupFrame($header, $content, $footer) {
     return $("<div>").attr("id", randomString(10)).addClass("modal fade popup").append(
-        $("<div>").addClass("modal-dialog modal-lg").append(
+        $("<div>").addClass("modal-dialog").append(
             $("<div>").addClass("modal-content").append(
                 typeof $header != 'undefined' ?
                     $("<div>").addClass("modal-header").append(
@@ -26932,6 +26932,7 @@ $(function () {
             $.get('/msg/subscription/welcome/0', function (html) {
                 hideLoading();
                 var $modal = popupFrame(html);
+                $modal.find(".modal-dialog").addClass("modal-lg");
                 $modal.modal();
                 // $modal.on("hidden.bs.modal", showCreateGroupFirstLogin);
 

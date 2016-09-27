@@ -43,6 +43,15 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/datepicker/datepicker3.css',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css'
     ], "public/css/product.css", "./");
+    mix.styles([
+        'resources/assets/css/email.css'
+    ], "public/css/email.css", "./");
+    mix.styles([
+        'resources/assets/css/email_import.css'
+    ], "public/css/email_import.css", "./");
+    mix.styles([
+        'resources/assets/css/email_brand.css'
+    ], "public/css/email_brand.css", "./");
     mix.scripts([
         'vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js',
         "node_modules/bootstrap/dist/js/bootstrap.js",

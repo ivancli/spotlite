@@ -1,5 +1,5 @@
 @extends('layouts.adminlte_no_sidebar')
-@section('title', 'Be right back')
+@section('title', 'Unauthorised access.')
 @section('content')
     <div class="row">
         <div class="col-sm-12 text-center">

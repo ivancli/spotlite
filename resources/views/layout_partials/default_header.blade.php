@@ -74,7 +74,7 @@
                                             </h3>
                                         </a>
                                     </li>
-                                    @if(auth()->user()->hasValidSubscription() || !auth()->user()->isStaff())
+                                    @if(auth()->user()->hasValidSubscription() && !auth()->user()->isStaff())
                                         <li>
                                             <div style="padding: 2px;">
 

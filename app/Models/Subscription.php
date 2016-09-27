@@ -59,6 +59,7 @@ class Subscription extends Model
     {
         $result = parent::save($options);
         Cache::tags(Config::get('user_subscriptions'))->flush();
+        Cache::tags(config()->get('user_api_subscription'))->flush();
         return $result;
     }
 
@@ -66,6 +67,7 @@ class Subscription extends Model
     {
         $result = parent::delete($options);
         Cache::tags(Config::get('user_subscriptions'))->flush();
+        Cache::tags(config()->get('user_api_subscription'))->flush();
         return $result;
     }
 }

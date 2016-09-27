@@ -47,7 +47,6 @@
                         showLoading();
                         loadSingleProduct(response.product.urls.show, function (html) {
                             hideLoading();
-                            alertP("Create product", "product has been created.");
                             $(el).closest(".collapsible-category-div").append(
                                     html
                             );

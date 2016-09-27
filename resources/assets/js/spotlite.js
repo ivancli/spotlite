@@ -28,6 +28,7 @@ $(function () {
             $.get('/msg/subscription/welcome/0', function (html) {
                 hideLoading();
                 var $modal = popupFrame(html);
+                $modal.find(".modal-dialog").addClass("modal-lg");
                 $modal.modal();
                 // $modal.on("hidden.bs.modal", showCreateGroupFirstLogin);
 

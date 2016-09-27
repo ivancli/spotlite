@@ -141,7 +141,7 @@
             showLoading();
             var $categoryCollapsible = $(el).closest(".category-wrapper").find(".collapsible-category-div");
             if ($categoryCollapsible.attr("aria-expanded") == "false") {
-                $categoryCollapsible.addClass("in").attr("aria-expanded", true);
+                $categoryCollapsible.addClass("in").attr("aria-expanded", true).css("height", "");
             }
             var $div = $(el).closest(".tbl-category").find("tbody .collapsible-category-div");
             var categoryID = $(el).closest(".category-wrapper").attr("data-category-id");

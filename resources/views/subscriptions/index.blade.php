@@ -31,19 +31,19 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 text-right">
-                            @if(isset($portalLink))
-                                <a href="{{$portalLink}}" class="btn btn-default">
-                                    Access Chargify Billing Portal
-                                </a>
-                            @endif
-                            <a href="{{$updatePaymentLink}}" target="_blank" class="btn btn-default">
+                            {{--@if(isset($portalLink))--}}
+                                {{--<a href="{{$portalLink}}" class="btn btn-default">--}}
+                                    {{--Access Chargify Billing Portal--}}
+                                {{--</a>--}}
+                            {{--@endif--}}
+                            <a href="{{$updatePaymentLink}}" class="btn btn-default">
                                 Update Payment Details
                             </a>
                             <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-default">
                                 Change My Plan
                             </a>
                             {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'method' => 'delete', 'style'=>'display: inline-block', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
-                            {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-default btn-xs"]) !!}
+                            {!! Form::submit('Cancel Subscription', ["class"=>"btn btn-default"]) !!}
                             {!! Form::close() !!}
                         </div>
                     </div>

@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class SubscriptionController extends Controller
@@ -96,26 +97,28 @@ class SubscriptionController extends Controller
                 if (!is_null(auth()->user()->subscription)) {
                     $previousSubscription = auth()->user()->subscription;
                     $previousAPISubscription = $this->subscriptionManager->getSubscription($previousSubscription->api_subscription_id);
-                    $previousAPICreditCard = $previousAPISubscription->credit_card;
-                    if (!is_null($previousAPICreditCard)) {
-                        if ($previousAPICreditCard->expiration_year > date("Y") || ($previousAPICreditCard->expiration_year == date("Y") && $previousAPICreditCard->expiration_month >= date('n'))) {
-                            $fields = new \stdClass();
-                            $subscription = new \stdClass();
-                            $subscription->product_id = $product->id;
-                            $subscription->customer_id = $previousSubscription->api_customer_id;
-                            $subscription->payment_profile_id = $previousAPICreditCard->id;
-                            $subscription->coupon_code = $couponCode;
-                            $fields->subscription = $subscription;
-                            $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
-                            if (isset($result->subscription)) {
+                    if(isset($previousAPISubscription->credit_card)){
+                        $previousAPICreditCard = $previousAPISubscription->credit_card;
+                        if (!is_null($previousAPICreditCard)) {
+                            if ($previousAPICreditCard->expiration_year > date("Y") || ($previousAPICreditCard->expiration_year == date("Y") && $previousAPICreditCard->expiration_month >= date('n'))) {
+                                $fields = new \stdClass();
+                                $subscription = new \stdClass();
+                                $subscription->product_id = $product->id;
+                                $subscription->customer_id = $previousSubscription->api_customer_id;
+                                $subscription->payment_profile_id = $previousAPICreditCard->id;
+                                $subscription->coupon_code = $couponCode;
+                                $fields->subscription = $subscription;
+                                $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
+                                if (isset($result->subscription)) {
 //                                $subscription = new Subscription();
 //                                $subscription->user_id = auth()->user()->getKey();
-                                $previousSubscription->api_product_id = $result->subscription->product->id;
-                                $previousSubscription->api_subscription_id = $result->subscription->id;
-                                $previousSubscription->api_customer_id = $result->subscription->customer->id;
-                                $previousSubscription->cancelled_at = null;
-                                $previousSubscription->save();
-                                return redirect()->route('subscription.index');
+                                    $previousSubscription->api_product_id = $result->subscription->product->id;
+                                    $previousSubscription->api_subscription_id = $result->subscription->id;
+                                    $previousSubscription->api_customer_id = $result->subscription->customer->id;
+                                    $previousSubscription->cancelled_at = null;
+                                    $previousSubscription->save();
+                                    return redirect()->route('subscription.index');
+                                }
                             }
                         }
                     }
@@ -131,6 +134,8 @@ class SubscriptionController extends Controller
                 );
                 $encryptedReference = rawurlencode(json_encode($reference));
                 $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}";
+                Cache::tags(['user_api_subscription'])->flush();
+                Cache::tags(['user_subscription'])->flush();
                 return redirect()->to($chargifyLink);
             } else {
                 /* create subscription in Chargify by using its API */
@@ -162,6 +167,8 @@ class SubscriptionController extends Controller
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
                         event(new SubscriptionCompleted($sub));
+                        Cache::tags(['user_api_subscription'])->flush();
+                        Cache::tags(['user_subscription'])->flush();
                         return redirect()->route('subscription.index');
                     } catch (Exception $e) {
                         /*TODO need to handle exception properly*/
@@ -177,7 +184,6 @@ class SubscriptionController extends Controller
         if (!$request->has('ref') || !$request->has('id')) {
             abort(403, "unauthorised access");
         } else {
-
             $reference = $request->get('ref');
             $reference = json_decode($reference);
             try {
@@ -185,34 +191,39 @@ class SubscriptionController extends Controller
                     $user = User::findOrFail($reference->user_id);
                     if ($user->verification_code == $reference->verification_code) {
                         $user->verification_code = null;
-                        $user->save();
+                        /*TODO fucking enable this*/
+//                        $user->save();
 
                         $subscription_id = $request->get('id');
                         $subscription = $this->subscriptionManager->getSubscription($subscription_id);
-                        if (!is_null($user->validSubscription())) {
-                            $sub = $user->validSubscription();
-                            $expiry_datetime = $subscription->expires_at;
+                        if (!is_null($user->subscription)) {
+                            $sub = $user->subscription;
                             $sub->api_product_id = $subscription->product->id;
                             $sub->api_customer_id = $subscription->customer->id;
                             $sub->api_subscription_id = $subscription->id;
-                            $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
+                            $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
+                            $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
                             $sub->save();
                             $this->subscriptionManager->updateCreditCardDetails($sub);
                             event(new SubscriptionUpdated($sub));
-                            return redirect()->route('msg.subscription.update');
+                            Cache::tags(['user_api_subscription'])->flush();
+                            Cache::tags(['user_subscription'])->flush();
+                            return redirect()->route('subscription.index');
 //                            }
                         } else {
                             /* create subscription record in DB */
-                            $expiry_datetime = $subscription->expires_at;
                             $sub = new Subscription();
                             $sub->user_id = $user->getKey();
                             $sub->api_product_id = $subscription->product->id;
                             $sub->api_customer_id = $subscription->customer->id;
                             $sub->api_subscription_id = $subscription->id;
-                            $sub->expiry_date = is_null($expiry_datetime) ? null : date('Y-m-d H:i:s', strtotime($expiry_datetime));
+                            $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
+                            $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
                             $sub->save();
                             $this->subscriptionManager->updateCreditCardDetails($sub);
                             event(new SubscriptionCompleted($sub));
+                            Cache::tags(['user_api_subscription'])->flush();
+                            Cache::tags(['user_subscription'])->flush();
                             return redirect()->route('subscription.index');
 //                            return redirect()->route('dashboard.index');
                         }
@@ -244,6 +255,8 @@ class SubscriptionController extends Controller
             abort(403);
         }
         $this->subscriptionManager->syncUserSubscription(auth()->user());
+        Cache::tags(['user_api_subscription'])->flush();
+        Cache::tags(['user_subscription'])->flush();
         return redirect()->route('subscription.index');
     }
 
@@ -319,6 +332,8 @@ class SubscriptionController extends Controller
                     }
                     $subscription->save();
                     event(new SubscriptionUpdated($subscription));
+                    Cache::tags(['user_api_subscription'])->flush();
+                    Cache::tags(['user_subscription'])->flush();
                     if ($request->ajax()) {
                         $status = true;
                         if ($request->wantsJson()) {
@@ -350,6 +365,8 @@ class SubscriptionController extends Controller
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
                 $subscription->save();
                 event(new SubscriptionCancelled($subscription));
+                Cache::tags(['user_api_subscription'])->flush();
+                Cache::tags(['user_subscription'])->flush();
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
             } else {
                 abort(500);

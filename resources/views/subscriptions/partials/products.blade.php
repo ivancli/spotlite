@@ -12,6 +12,8 @@
                     {{$item->product->trial_interval}} {{$item->product->trial_interval_unit}}
                     {{$item->product->trial_price_in_cents == 0 ? "free" : ""}}
                     Trial
+                    <br>
+                    (new user only)
                 </p>
             @endif
 

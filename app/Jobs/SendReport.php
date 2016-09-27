@@ -47,16 +47,19 @@ class SendReport extends Job implements ShouldQueue
                 $category = $this->reportTask->reportable;
                 $fileName = str_replace(' ', '_', $category->category_name) . "_category_report" . "." . $this->reportTask->file_type;
                 $subject = $category->category_name;
+                $view = 'products.report.email.category';
                 break;
             case "product":
                 $report = $reportTaskManager->generateProductReport($this->reportTask);
                 $product = $this->reportTask->reportable;
                 $subject = $product->product_name;
                 $fileName = str_replace(' ', '_', $product->product_name) . "_product_report" . "." . $this->reportTask->file_type;
+                $view = 'products.report.email.product';
                 break;
             default:
                 $fileName = "filename.txt";
                 $subject = "";
+                $view = '';
         }
 
         if (isset($report) && !is_null($report)) {
@@ -68,7 +71,7 @@ class SendReport extends Job implements ShouldQueue
             foreach ($this->reportTask->emails as $email) {
                 /* TODO generate email with attachment and send to user */
 
-                dispatch((new SendMail('products.report.email.category',
+                dispatch((new SendMail($view,
                     compact(['report']),
                     array(
                         "email" => $email->report_email_address,

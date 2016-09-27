@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
       xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:fb="http://ogp.me/ns/fb#">
@@ -15,6 +12,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to SpotLite</title>
+    <link rel="stylesheet" href="{{asset('css/email.css')}}">
+    <!--[if !mso]><!-- -->
+    <link rel="stylesheet" href="{{asset('css/dynamic_import.css')}}">
+    <!--<![endif]-->
+    <link rel="stylesheet" href="{{asset('css/dynamic_brand.css')}}">
     <!--[if gte mso 12]>
     <style type="text/css">
         .custom_font {
@@ -103,7 +105,7 @@
             display: none !important
         }
 
-        .block[data-sd-content=video-page] .figure iframe, .sd-mobile-full-width {
+        .sd-mobile-full-width {
             width: 100% !important
         }
 
@@ -166,6 +168,20 @@
         .sd-padding-20 {
             padding: 20px !important
         }
+
+        *[class=full] {
+            width: 100% !important;
+            clear: both !important;
+        }
+
+        *[class=height] {
+            height: 100% !important;
+        }
+
+        *[class=hideonmobile] {
+            display: none !important;
+        }
+
     }
 
 </style>
@@ -227,14 +243,14 @@
 
                                                 <table align="left" border="0" cellpadding="0" cellspacing="0"
                                                        class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 76px; width: 217px"
+                                                       style="font-family: sans-serif; font-size: 14px; height: 121px; width: 217px"
                                                        width="217">
                                                     <tbody>
                                                     <tr>
                                                         <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="76"
-                                                            nodelete="false" quicklink="true" share="false"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0 30px"
+                                                            droppable="true" editable="true" height="91"
+                                                            nodelete="false" quicklink="false" share="false"
+                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 15px"
                                                             valign="top" bgcolor="white">
                                                             <table border="0" cellpadding="0" cellspacing="0"
                                                                    class="block-body" width="100%"
@@ -243,8 +259,8 @@
                                                                 <tr class="figure-container">
                                                                     <td class="figure"
                                                                         style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2016/07/logo-fixed-2.png"
-                                                                                style="display: block" width="157"></td>
+                                                                                src="http://staging.spotlite.com.au/images/logo-fixed-2.png"
+                                                                                style="display: block" width="187"></td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
@@ -282,51 +298,6 @@
                                                             style="padding: 0">
                                                             <!-- Blank 4-column grid --><span
                                                                     class="glyphicon glyphicon-arrow-down"></span>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
-                                     style="display: block; text-align: center" align="center">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
-                                        <tbody>
-                                        <tr>
-                                            <td style="padding: 0">
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="650px" style="width: 650px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="contenttable mso-full-width"
-                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
-                                                       width="650">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false"
-                                                            nodelete="false" quicklink="false" share="false"
-                                                            valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                height="60"
-                                                                                src="https://placehold.it/650x60"
-                                                                                width="650" style="display: block"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -397,28 +368,120 @@
                                                             bgcolor="white">
                                                             <table border="0" cellpadding="0" cellspacing="0"
                                                                    class="article sd-editable block-body"
-                                                                   href="#67ac1e2a4ba93e7569d1"
-                                                                   id="67ac1e2a4ba93e7569d1" width="100%"
+                                                                   href="#f00779b3b95b8cbaa8de"
+                                                                   id="f00779b3b95b8cbaa8de" width="100%"
                                                                    style="font-family: sans-serif; font-size: 14px">
                                                                 <tbody>
                                                                 <tr class="header-container">
                                                                     <td class="header"
-                                                                        style="color: #646c78; line-height: 26px; padding: 20px 20px 15px">
-                                                                        <div class="header1"
-                                                                             style="color: #646c78; font-family: 'Lato', Arial, sans-serif; font-size: 1.5em; line-height: 1.2em">
-                                                                            Welcome to SpotLite
+                                                                        style="color: #646c78; line-height: 26px; padding: 20px">
+                                                                        <div class="header1" data-align="center"
+                                                                             style="color: #646c78; font-family: 'Lato', Arial, sans-serif; font-size: 1.5em; line-height: 1.2em; text-align: center"
+                                                                             align="center">Welcome to SpotLite
                                                                         </div>
                                                                     </td>
                                                                 </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
+                                     style="display: block; text-align: center" align="center">
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
+                                        <tbody>
+                                        <tr>
+                                            <td style="padding: 0">
+                                                <!--[if mso]> </td>
+                                                <td valign="top" align="left" width="650px" style="width: 650px;">
+                                                <![endif]-->
+                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
+                                                       class="contenttable mso-full-width"
+                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
+                                                       width="650">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="block text-style-1" data-sd-content="article"
+                                                            droppable="true" editable="true" nodelete="false"
+                                                            quicklink="true" share="false" valign="top"
+                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
+                                                            bgcolor="white">
+                                                            <table border="0" cellpadding="0" cellspacing="0"
+                                                                   class="article sd-editable block-body"
+                                                                   href="#dc2ea95df259025de5ef"
+                                                                   id="dc2ea95df259025de5ef" width="100%"
+                                                                   style="font-family: sans-serif; font-size: 14px">
+                                                                <tbody>
                                                                 <tr class="main-container">
                                                                     <td class="main"
-                                                                        style="color: #646c78; font-family: 'Open Sans', sans-serif; line-height: 20px; padding: 0 20px 20px">
-                                                                        <div>Dear {{$user->first_name}},</div>
+                                                                        style="color: #646c78; font-family: 'Open Sans', sans-serif; line-height: 20px; padding: 20px">
+                                                                        <div><strong>The way you make your pricing
+                                                                                decisions is about to change</strong></div>
 
-                                                                        <div>Thanks for joining SpotLite.</div>
+                                                                        <div>&#x00a0;</div>
 
-                                                                        <div>[Welcome message here]</div>
+                                                                        <div>We'll start gathering the pricing
+                                                                            information you need, but first you need to
+                                                                            quickly set up.
+                                                                        </div>
 
+                                                                        <div>&#x00a0;</div>
+
+                                                                        <div>All you have to do is:</div>
+
+                                                                        <div>&#x00a0;</div>
+
+                                                                        <div><strong>1. &#x00a0; &#x00a0;Add categories
+                                                                                of products</strong></div>
+
+                                                                        <div style="margin-left: 40px">Create the
+                                                                            categories of products you'd like us to
+                                                                            track
+                                                                        </div>
+
+                                                                        <div style="margin-left: 40px">&#x00a0;</div>
+
+                                                                        <div><strong>2. &#x00a0; &#x00a0;Add URLs of the
+                                                                                products</strong></div>
+
+                                                                        <div style="margin-left: 40px">Inser the URL of
+                                                                            the competitor's products
+                                                                        </div>
+
+                                                                        <div style="margin-left: 40px">&#x00a0;</div>
+
+                                                                        <div><strong>3. &#x00a0; &#x00a0;Set up email
+                                                                                alerts</strong></div>
+
+                                                                        <div style="margin-left: 40px">Assign team
+                                                                            members to receive email alerts about price
+                                                                            changes
+                                                                        </div>
+
+                                                                        <div style="margin-left: 40px">&#x00a0;</div>
+
+                                                                        <div class="header3"
+                                                                             style=": 1.1emline-height: 1.2em; color: #646c78; font-family: 'Lato', Arial, sans-serif; font-size: 1.1em; font-style: italic; font-weight: bold; line-height: 1.1em">
+                                                                            CTA - Quick Start Guide
+                                                                        </div>
+
+                                                                        <div class="header3"
+                                                                             style=": 1.1emline-height: 1.2em; color: #646c78; font-family: 'Lato', Arial, sans-serif; font-size: 1.1em; font-style: italic; font-weight: bold; line-height: 1.1em">
+                                                                            &#x00a0;</div>
+
+                                                                        <div class="header3"
+                                                                             style=": 1.1emline-height: 1.2em; color: #646c78; font-family: 'Lato', Arial, sans-serif; font-size: 1.1em; font-style: italic; font-weight: bold; line-height: 1.1em">
+                                                                            Need a walk through? Watch the video
+                                                                            tutorial:
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                                 </tbody>
@@ -433,25 +496,25 @@
                                     </table>
                                 </div>
 
-                                <div class="grid grid-2 allow-top allow-bottom allow-move allow-delete"
+                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
                                      style="display: block; text-align: center" align="center">
                                     <table align="center" border="0" cellpadding="0" cellspacing="0"
                                            style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
                                         <tbody>
                                         <tr>
-                                            <td align="left" valign="top" style="padding: 0">
+                                            <td style="padding: 0">
                                                 <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
+                                                <td valign="top" align="left" width="650px" style="width: 650px;">
                                                 <![endif]-->
                                                 <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
+                                                       class="contenttable mso-full-width"
+                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
+                                                       width="650">
                                                     <tbody>
                                                     <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="235"
-                                                            nodelete="false" quicklink="true" share="false" valign="top"
+                                                        <td class="block text-style-1" data-sd-content="video-email"
+                                                            droppable="true" editable="true" nodelete="false"
+                                                            quicklink="false" share="false" valign="top"
                                                             style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
                                                             bgcolor="white">
                                                             <table border="0" cellpadding="0" cellspacing="0"
@@ -459,40 +522,15 @@
                                                                    style="font-family: sans-serif; font-size: 14px">
                                                                 <tbody>
                                                                 <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/imgpsh_fullsize-1.jpg"
-                                                                                width="325" style="display: block"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="235"
-                                                            nodelete="false" quicklink="true" share="false" valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/Insightful-spotlite.jpg"
-                                                                                width="325" style="display: block"></td>
+                                                                    <td class="figure" data-height="362"
+                                                                        data-id="vUF7ja9ehIs" data-ratio="1.7922077922"
+                                                                        data-width="650"
+                                                                        style="color: #646c78; padding: 0">
+                                                                        <iframe width="650" height="362"
+                                                                                src="https://www.youtube.com/embed/vUF7ja9ehIs?modestbranding=1&amp;cc_load_policy=1"
+                                                                                frameborder="0"
+                                                                                allowfullscreen=""></iframe>
+                                                                    </td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
@@ -506,66 +544,40 @@
                                     </table>
                                 </div>
 
-                                <div class="grid grid-2 allow-top allow-bottom allow-move allow-delete"
+                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
                                      style="display: block; text-align: center" align="center">
                                     <table align="center" border="0" cellpadding="0" cellspacing="0"
                                            style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
                                         <tbody>
                                         <tr>
-                                            <td align="left" valign="top" style="padding: 0">
+                                            <td style="padding: 0">
                                                 <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
+                                                <td valign="top" align="left" width="650px" style="width: 650px;">
                                                 <![endif]-->
                                                 <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
+                                                       class="contenttable mso-full-width"
+                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
+                                                       width="650">
                                                     <tbody>
                                                     <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" height="235"
-                                                            nodelete="false" quicklink="true" share="false"
+                                                        <td class="block text-style-1" data-sd-content="article"
+                                                            droppable="true" editable="true" nodelete="false"
+                                                            quicklink="true" share="false" valign="top"
                                                             style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
                                                             bgcolor="white">
                                                             <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
+                                                                   class="article sd-editable block-body"
+                                                                   href="#ecc348b7c3fbad289b89"
+                                                                   id="ecc348b7c3fbad289b89" width="100%"
                                                                    style="font-family: sans-serif; font-size: 14px">
                                                                 <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/Actionable-spotlite.jpg"
-                                                                                style="display: block" width="325"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="235"
-                                                            nodelete="false" quicklink="true" share="false" valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/affordable-spotlite.jpg"
-                                                                                width="325" style="display: block"></td>
+                                                                <tr class="main-container">
+                                                                    <td class="main"
+                                                                        style="color: #646c78; font-family: 'Open Sans', sans-serif; line-height: 20px; padding: 20px">
+                                                                        <div>This isn't all!&#x00a0;We thought these
+                                                                            blog posts might interest you:
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
@@ -597,6 +609,161 @@
                         <tr>
                             <td class="allow allow-4" style="padding: 0">
                                 <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
+                                     style="display: block; text-align: center" align="center">
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
+                                        <tbody>
+                                        <tr>
+                                            <td style="padding: 0">
+                                                <!--[if mso]> </td>
+                                                <td valign="top" align="left" width="650px" style="width: 650px;">
+                                                <![endif]-->
+                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
+                                                       class="contenttable mso-full-width"
+                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
+                                                       width="650">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="block text-style-1" data-sd-content="article"
+                                                            droppable="true" editable="true" nodelete="false"
+                                                            quicklink="true" share="false" valign="top"
+                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
+                                                            bgcolor="white">
+                                                            <table border="0" cellpadding="0" cellspacing="0"
+                                                                   class="article sd-editable block-body"
+                                                                   href="#6faac46408d6e02c72a1"
+                                                                   id="6faac46408d6e02c72a1" width="100%"
+                                                                   style="font-family: sans-serif; font-size: 14px">
+                                                                <tbody>
+                                                                <tr class="main-container">
+                                                                    <td class="main"
+                                                                        style="color: #646c78; font-family: 'Open Sans', sans-serif; line-height: 20px; padding: 20px">
+                                                                        <div>Best Regards,</div>
+
+                                                                        <div>&#x00a0;</div>
+
+                                                                        <div>SpotLite Team</div>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
+                                     style="display: block; text-align: center" align="center">
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
+                                        <tbody>
+                                        <tr>
+                                            <td style="padding: 0">
+                                                <!--[if mso]> </td>
+                                                <td valign="top" align="left" width="650px" style="width: 650px;">
+                                                <![endif]-->
+                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
+                                                       class="contenttable mso-full-width"
+                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
+                                                       width="650">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="block text-style-1" data-sd-content="share"
+                                                            droppable="true" editable="true" nodelete="false"
+                                                            quicklink="false" share="false" valign="top"
+                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 20px"
+                                                            bgcolor="white">
+                                                            <table border="0" cellpadding="0" cellspacing="0"
+                                                                   class="block-body" width="100%"
+                                                                   style="font-family: sans-serif; font-size: 14px">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td class="share-body"
+                                                                        style="color: #646c78; padding: 0">
+                                                                        <table border="0" cellpadding="0"
+                                                                               cellspacing="0"
+                                                                               style="float: none; font-family: sans-serif; font-size: 14px; margin-left: 0px; margin-right: 0px; width: 100%"
+                                                                               width="100%">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td align="center"
+                                                                                    class="sd-email-share sd-facebook"
+                                                                                    valign="middle"
+                                                                                    style="color: #646c78; padding: 0">
+                                                                                    <a href="http://ivanl.e-newsletter.com.au/link/id/zzzz57e9b77a19d35186/page.html"
+                                                                                       style="color: #646c78; line-height: 17px; text-decoration: none"
+                                                                                       target="_blank"
+                                                                                       title="Share on Facebook"><img
+                                                                                                src="https://suite.swiftdigital.com.au/media/dynamic/id/8babdad3a4c35d615eabzzzz56b127fcce57a514/artlibrary/interface.gif"
+                                                                                                style="border: none"></a>
+                                                                                </td>
+                                                                                <td align="center"
+                                                                                    class="sd-email-share sd-twitter"
+                                                                                    valign="middle"
+                                                                                    style="color: #646c78; padding: 0">
+                                                                                    <a href="http://ivanl.e-newsletter.com.au/link/id/zzzz57e9b77a1ed0a570/page.html"
+                                                                                       style="color: #646c78; line-height: 17px; text-decoration: none"
+                                                                                       target="_blank"
+                                                                                       title="Share on Twitter"><img
+                                                                                                src="https://suite.swiftdigital.com.au/media/dynamic/id/8babdad3a4c35d615eabzzzz56b12800af9c6326/artlibrary/interface.gif"
+                                                                                                style="border: none"></a>
+                                                                                </td>
+                                                                                <td align="center"
+                                                                                    class="sd-email-share sd-linkedin"
+                                                                                    valign="middle"
+                                                                                    style="color: #646c78; padding: 0">
+                                                                                    <a href="http://ivanl.e-newsletter.com.au/link/id/zzzz57e9b77a1fa54797/page.html"
+                                                                                       style="color: #646c78; line-height: 17px; text-decoration: none"
+                                                                                       target="_blank"
+                                                                                       title="Share on LinkedIn"><img
+                                                                                                src="https://suite.swiftdigital.com.au/media/dynamic/id/8babdad3a4c35d615eabzzzz56b127fdd5f73613/artlibrary/interface.gif"
+                                                                                                style="border: none"></a>
+                                                                                </td>
+                                                                                <td align="center"
+                                                                                    class="sd-email-share sd-print"
+                                                                                    valign="middle"
+                                                                                    style="color: #646c78; padding: 0">
+                                                                                    <a href="http://ivanl.e-newsletter.com.au/link/id/zzzz57e9b77a1ff90991/page.html"
+                                                                                       style="color: #646c78; line-height: 17px; text-decoration: none"
+                                                                                       target="_blank"
+                                                                                       title="Print"><img
+                                                                                                src="https://suite.swiftdigital.com.au/media/dynamic/id/8babdad3a4c35d615eabzzzz56b127fe6d754182/artlibrary/interface.gif"
+                                                                                                style="border: none"></a>
+                                                                                </td>
+                                                                                <td align="center"
+                                                                                    class="sd-email-share sd-forward"
+                                                                                    valign="middle"
+                                                                                    style="color: #646c78; padding: 0">
+                                                                                    <a href="http://ivanl.e-newsletter.com.au/link/id/zzzz57e9b77a226ef868/page.html"
+                                                                                       style="color: #646c78; line-height: 17px; text-decoration: none"
+                                                                                       target="_blank"
+                                                                                       title="Forward-to-a-friend"><img
+                                                                                                src="https://suite.swiftdigital.com.au/media/dynamic/id/8babdad3a4c35d615eabzzzz56b127fd24fe1521/artlibrary/interface.gif"
+                                                                                                style="border: none"></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
                                      style="text-align: center" align="center">
                                     <table align="center" border="0" cellpadding="0" cellspacing="0"
                                            style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
@@ -604,8 +771,7 @@
                                         <tr>
                                             <td style="padding: 0">
                                                 <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="100%" style="width: 100%;">
-                                                <![endif]-->
+                                                <td valign="top" align="left" width="100%" style="width: 100%;"><![endif]-->
                                                 <table align="left" border="0" cellpadding="0" cellspacing="0"
                                                        class="contenttable mso-full-width"
                                                        style="font-family: sans-serif; font-size: 14px; width: 100%"
@@ -619,15 +785,18 @@
                                                             bgcolor="white">
                                                             <table border="0" cellpadding="0" cellspacing="0"
                                                                    class="article sd-editable block-body"
-                                                                   href="#93f2ad8c412cd26199c0"
-                                                                   id="93f2ad8c412cd26199c0" width="100%"
+                                                                   href="#d088adf652fd2203d58b"
+                                                                   id="d088adf652fd2203d58b" width="100%"
                                                                    style="font-family: sans-serif; font-size: 14px">
                                                                 <tbody>
                                                                 <tr class="main-container">
                                                                     <td class="main"
                                                                         style="color: #646c78; font-family: 'Open Sans', sans-serif; line-height: 20px; padding: 20px">
                                                                         <div style="text-align: center" align="center">
-                                                                            <span style="font-size: 12px">[unsubscribe link here]</span>
+                                                                            <span style="font-size: 12px">Please click here to <a
+                                                                                        data-link-type="unsubscribe"
+                                                                                        href="http://ivanl.e-newsletter.com.au/link/id/zzzz57e9b77a22d17188/page.html?parent_id=zzzz57e9b7602798b671"
+                                                                                        style="color: #646c78; line-height: 17px; text-decoration: underline">unsubscribe</a> from our mail list.</span>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
