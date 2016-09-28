@@ -4,26 +4,31 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             @if(auth()->check() && (auth()->user()->hasValidSubscription() || auth()->user()->isStaff()))
-                <li class="{{Style::set_active('/')}}">
-                    <a href="{{url('/')}}">
-                        <i class="fa fa-dashboard"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                {{--<li class="{{Style::set_active('/')}}">--}}
+                    {{--<a href="{{url('/')}}">--}}
+                        {{--<i class="fa fa-dashboard"></i>--}}
+                        {{--<span>Dashboard</span>--}}
+                    {{--</a>--}}
+                {{--</li>--}}
+
+                <li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i
+                                class="fa fa-line-chart"></i> Reports</a></li>
+                <li class="{{Style::set_active('alert')}}"><a href="{{url('alert')}}"><i
+                                class="fa fa-bell-o"></i> Alerts</a></li>
                 <li class="{{Style::set_active_starts_with('product')}}"><a href="{{url('product')}}"><i
                                 class="fa fa-square-o"></i> <span>Products</span></a></li>
-                <li class="treeview {{Style::set_active_or(array('report', 'alert'))}}">
-                    <a href="#">
-                        <i class="fa fa-envelope"></i>
-                        <span>Reports and Alerts</span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i
-                                        class="fa fa-line-chart"></i> Reports</a></li>
-                        <li class="{{Style::set_active('alert')}}"><a href="{{url('alert')}}"><i
-                                        class="fa fa-bell-o"></i> Alerts</a></li>
-                    </ul>
-                </li>
+                {{--<li class="treeview {{Style::set_active_or(array('report', 'alert'))}}">--}}
+                    {{--<a href="#">--}}
+                        {{--<i class="fa fa-envelope"></i>--}}
+                        {{--<span>Reports and Alerts</span>--}}
+                    {{--</a>--}}
+                    {{--<ul class="treeview-menu">--}}
+                        {{--<li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i--}}
+                                        {{--class="fa fa-line-chart"></i> Reports</a></li>--}}
+                        {{--<li class="{{Style::set_active('alert')}}"><a href="{{url('alert')}}"><i--}}
+                                        {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
+                    {{--</ul>--}}
+                {{--</li>--}}
 
                 {{--<li class="treeview {{Style::set_active_starts_with(array('group.'))}}">--}}
                 {{--<a href="#">--}}
@@ -109,24 +114,24 @@
                 </li>
             @endif
         </ul>
-        @if(auth()->check() && auth()->user()->hasValidSubscription() && starts_with(Request::route()->getName(), 'product'))
-            <hr class="sidebar-divider">
-            <div class="subscription-panel">
-                <div class="text-center">
-                    My Plan: {{auth()->user()->cachedAPISubscription()->product->name}}
-                </div>
-                <div class="block-button-container">
-                    <a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}" class="btn btn-block btn-success">
-                        UPGRADE
-                    </a>
-                </div>
-                <div class="text-center">
-                    <a href="#" style="text-decoration: underline;">
-                        Need Help?
-                    </a>
-                </div>
-            </div>
-        @endif
+        {{--@if(auth()->check() && auth()->user()->hasValidSubscription() && starts_with(Request::route()->getName(), 'product'))--}}
+            {{--<hr class="sidebar-divider">--}}
+            {{--<div class="subscription-panel">--}}
+                {{--<div class="text-center">--}}
+                    {{--My Plan: {{auth()->user()->cachedAPISubscription()->product->name}}--}}
+                {{--</div>--}}
+                {{--<div class="block-button-container">--}}
+                    {{--<a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}" class="btn btn-block btn-success">--}}
+                        {{--UPGRADE--}}
+                    {{--</a>--}}
+                {{--</div>--}}
+                {{--<div class="text-center">--}}
+                    {{--<a href="#" style="text-decoration: underline;">--}}
+                        {{--Need Help?--}}
+                    {{--</a>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--@endif--}}
     </section>
     <!-- /.sidebar -->
 </aside>

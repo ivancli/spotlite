@@ -7,7 +7,7 @@
         <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Subscription Plans</h3>
+                    <h3 class="box-title">Choose a subscription plan</h3>
                 </div>
                 <div class="box-body">
                     <div class="row">
@@ -21,7 +21,7 @@
     </div>
 
 
-    <div class="row">
+    <div class="row registration-panel">
         <div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
@@ -39,7 +39,7 @@
                         {!! Form::open(array('route' => 'register.post', 'method' => 'post', "id" => "frm-register", "onsubmit" => "$('#txt-coupon-code').val($('#visual-coupon-code').val())")) !!}
                         @include('auth.forms.register_form')
                         <input type="hidden" name="signup_link" id="txt-signup-link">
-                        <input type="hidden" name="api_product_id" id="txt-api-product-id">
+                        <input type="hidden" name="api_product_id" id="txt-api-product-id" value="{{old("api_product_id")}}">
                         <input type="hidden" name="coupon_code" id="txt-coupon-code">
                         <div class="row m-b-5">
                             <div class="col-sm-6">
@@ -67,12 +67,23 @@
                 var apiProductID = $(this).attr("data-id");
                 $("#txt-signup-link").val(link);
                 $("#txt-api-product-id").val(apiProductID);
+                updateRegistrationPanelStatus();
                 updateBtnRegisterStatus();
             });
+            updateRegistrationPanelStatus();
+            updateBtnRegisterStatus();
         });
 
         function updateBtnRegisterStatus() {
             $("#btn-register").prop("disabled", $(".product-container.selected").length == 0);
+        }
+
+        function updateRegistrationPanelStatus() {
+            if ($(".product-container.selected").length == 0) {
+                $(".registration-panel").slideUp();
+            } else {
+                $(".registration-panel").slideDown();
+            }
         }
     </script>
 @stop

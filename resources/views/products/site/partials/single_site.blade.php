@@ -2,12 +2,17 @@
     data-site-edit-url="{{$productSite->urls['edit']}}"
     data-site-alert-url="{{$productSite->urls['alert']}}"
     data-site-update-url="{{$productSite->urls['update']}}">
-    <td>{{parse_url($productSite->site->site_url)['host']}}</td>
-    <td class="hidden-sm hidden-xs" style="padding-right: 10px;">
-        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted">
-            {{parse_url($productSite->site->site_url)['path']}}
+    <td>
+        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="tooltip" data-trigger="click"
+           title="{{$productSite->site->site_url}}">
+            {{parse_url($productSite->site->site_url)['host']}}
         </a>
     </td>
+    {{--<td class="hidden-sm hidden-xs" style="padding-right: 10px;">--}}
+    {{--<a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted">--}}
+    {{--{{parse_url($productSite->site->site_url)['path']}}--}}
+    {{--</a>--}}
+    {{--</td>--}}
     <td>
         {{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}
     </td>
@@ -37,13 +42,16 @@
         @endif
     </td>
     <td class="text-right action-cell">
-        <a href="#" class="btn-action" onclick="showProductSiteChart('{{$productSite->urls['chart']}}'); return false;">
+        <a href="#" class="btn-action" onclick="showProductSiteChart('{{$productSite->urls['chart']}}'); return false;"
+           data-toggle="tooltip" title="chart">
             <i class="fa fa-line-chart"></i>
         </a>
-        <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;">
+        <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;"
+           data-toggle="tooltip" title="alert">
             <i class="fa {{!is_null($productSite->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
         </a>
-        <a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;">
+        <a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;"
+           data-toggle="tooltip" title="edit">
             <i class="fa fa-pencil-square-o"></i>
         </a>
 
@@ -51,7 +59,8 @@
         {{--change the submitting parameters and update the product site controller destroy function--}}
         {!! Form::model($productSite, array('route' => array('product_site.destroy', $productSite->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
         {{--<input type="hidden" name="product_site_id" value="{{$site->pivot->product_site_id}}">--}}
-        <a href="#" class="btn-action" onclick="btnDeleteSiteOnClick(this); return false;">
+        <a href="#" class="btn-action" onclick="btnDeleteSiteOnClick(this); return false;"
+           data-toggle="tooltip" title="delete">
             <i class="glyphicon glyphicon-trash text-danger"></i>
         </a>
         {!! Form::close() !!}

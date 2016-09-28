@@ -19,7 +19,7 @@
 @stop
 
 @section('content')
-    @include('products.partials.banner_stats')
+    {{--@include('products.partials.banner_stats')--}}
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-solid">

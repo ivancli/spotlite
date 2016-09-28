@@ -34,20 +34,25 @@
             </button>
         </th>
         <th class="text-right action-cell product-th">
-            <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;">
+            <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
+               data-toggle="tooltip" title="chart">
                 <i class="fa fa-line-chart"></i>
             </a>
-            <a href="#" class="btn-action" onclick="showProductAlertForm(this); return false;">
+            <a href="#" class="btn-action" onclick="showProductAlertForm(this); return false;"
+               data-toggle="tooltip" title="alert">
                 <i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
             </a>
-            <a href="#" class="btn-action" onclick="showProductReportTaskForm(this)">
+            <a href="#" class="btn-action" onclick="showProductReportTaskForm(this)"
+               data-toggle="tooltip" title="report">
                 <i class="fa {{!is_null($product->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
             </a>
-            <a href="#" class="btn-action" onclick="toggleEditProductName(this); return false;">
+            <a href="#" class="btn-action" onclick="toggleEditProductName(this); return false;"
+               data-toggle="tooltip" title="edit">
                 <i class="fa fa-pencil-square-o"></i>
             </a>
             {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
-            <a href="#" class="btn-action" onclick="btnDeleteProductOnClick(this); return false;">
+            <a href="#" class="btn-action" onclick="btnDeleteProductOnClick(this); return false;"
+               data-toggle="tooltip" title="delete">
                 <i class="glyphicon glyphicon-trash text-danger"></i>
             </a>
             {!! Form::close() !!}
@@ -63,13 +68,13 @@
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th width="15%">Site</th>
-                        <th width="30%" class="hidden-sm hidden-xs">Path</th>
-                        <th width="9%">Price</th>
-                        <th width="9%"></th>
-                        <th class="text-center" width="7%">My Price</th>
-                        <th width="15%">Last Update</th>
+                        <th width="25%">Site</th>
+                        {{--<th width="30%" class="hidden-sm hidden-xs">Path</th>--}}
+                        <th width="15%">Price</th>
                         <th width="15%"></th>
+                        <th class="text-center" width="10%">My Price</th>
+                        <th width="15%">Last Update</th>
+                        <th width="20%"></th>
                         {{--<th >Site</th>--}}
                         {{--<th  class="hidden-sm hidden-xs">Path</th>--}}
                         {{--<th>Price</th>--}}

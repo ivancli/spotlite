@@ -1,6 +1,6 @@
 @if(!is_null($products))
     @foreach($products as $item)
-        <div class="product-container m-b-10 {{isset($chosenAPIProductID) && $item->product->id == $chosenAPIProductID ? 'chosen': ''}}"
+        <div class="product-container m-b-10 {{isset($chosenAPIProductID) && $item->product->id == $chosenAPIProductID ? 'chosen': ''}} {{old("api_product_id") == $item->product->id ? "selected" : ""}}"
              data-link="{{array_first($item->product->public_signup_pages)->url}}"
              data-id="{{$item->product->id}}" style="border: 1px solid lightgrey; border-radius: 20px;">
             <h4 style="text-transform: uppercase; color: #78a300;">{{$item->product->name}}</h4>
