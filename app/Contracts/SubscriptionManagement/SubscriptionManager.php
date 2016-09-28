@@ -100,4 +100,6 @@ interface SubscriptionManager
     public function syncUserSubscription(User $user);
 
     public function updateCreditCardDetails(Subscription $subscription);
+
+    public function deletePaymentProfile($subscription_id);
 }

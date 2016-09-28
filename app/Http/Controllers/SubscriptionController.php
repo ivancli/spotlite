@@ -77,6 +77,8 @@ class SubscriptionController extends Controller
             $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($current_sub_id);
             event(new SubscriptionManagementViewed());
             return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink']));
+        }else{
+            
         }
     }
 
@@ -109,6 +111,7 @@ class SubscriptionController extends Controller
                                 $subscription->coupon_code = $couponCode;
                                 $fields->subscription = $subscription;
                                 $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
+                                Cache::tags(["user_subscription_". $user->getKey()])->flush();
                                 if (isset($result->subscription)) {
 //                                $subscription = new Subscription();
 //                                $subscription->user_id = auth()->user()->getKey();
@@ -345,16 +348,21 @@ class SubscriptionController extends Controller
 
     /**
      * Cancel subscription
+     * @param Request $request
      * @param $id
      * @return bool|\Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $subscription = Subscription::findOrFail($id);
         event(new SubscriptionCancelling($subscription));
         $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
         if (!is_null($apiSubscription) && is_null($apiSubscription->canceled_at)) {
+            if(!$request->has('keep_profile') || $request->get('keep_profile') != '1'){
+                $this->subscriptionManager->deletePaymentProfile($apiSubscription->id);
+            }
             $result = $this->subscriptionManager->cancelSubscription($apiSubscription->id);
+
             if (!is_null($result->subscription->canceled_at)) {
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
                 $subscription->save();

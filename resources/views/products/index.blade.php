@@ -26,24 +26,24 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Product List</h3>
                     <div class="box-tools pull-right">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
-                                    aria-expanded="true">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li>
-                                    <a href="#" class="btn btn-default" onclick="toggleCollapseCategories();">
-                                        Toggle Collapse Categories
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="btn btn-default" onclick="toggleCollapseProducts();">
-                                        Toggle Collapse Products
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"--}}
+                                    {{--aria-expanded="true">--}}
+                                {{--<i class="fa fa-bars"></i>--}}
+                            {{--</button>--}}
+                            {{--<ul class="dropdown-menu pull-right" role="menu">--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" class="btn btn-default" onclick="toggleCollapseCategories();">--}}
+                                        {{--Toggle Collapse Categories--}}
+                                    {{--</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" class="btn btn-default" onclick="toggleCollapseProducts();">--}}
+                                        {{--Toggle Collapse Products--}}
+                                    {{--</a>--}}
+                                {{--</li>--}}
+                            {{--</ul>--}}
+                        {{--</div>--}}
                     </div>
                 </div>
                 <div class="box-body">

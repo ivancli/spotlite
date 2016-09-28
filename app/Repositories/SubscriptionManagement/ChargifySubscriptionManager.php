@@ -154,7 +154,6 @@ class ChargifySubscriptionManager implements SubscriptionManager
         $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $method = "delete";
         $result = $this->sendCurl($apiURL, compact(['userpass', 'method']));
-        $this->deletePaymentProfile($subscription_id);
         try {
             $result = json_decode($result);
             return $result;
