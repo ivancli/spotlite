@@ -93,4 +93,25 @@ trait CommonFunctions
         }
         return $randomString;
     }
+
+    public function removeGlobalWebTracking($url)
+    {
+        $adTrackingParameters = config("constants.ad_tracking_parameters");
+        foreach ($adTrackingParameters as $adTrackingParameter) {
+            $url = $this->removeqsvar($url, $adTrackingParameter);
+        }
+        return $url;
+    }
+
+    /**
+     *Removing parameters from URL
+     * http://stackoverflow.com/questions/1251582/beautiful-way-to-remove-get-variables-with-php
+     * @param $url
+     * @param $varname
+     * @return mixed
+     */
+    public function removeqsvar($url, $varname)
+    {
+        return preg_replace('/([?&])' . $varname . '=[^&]+(&|$)/', '$1', $url);
+    }
 }

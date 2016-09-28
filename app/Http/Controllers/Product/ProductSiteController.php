@@ -21,6 +21,7 @@ use App\Events\Products\Site\SiteStoring;
 use App\Events\Products\Site\SiteUpdating;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
+use App\Libraries\CommonFunctions;
 use App\Models\ProductSite;
 use App\Models\Site;
 use App\Validators\Product\ProductSite\StoreProductSiteValidator;
@@ -30,6 +31,8 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductSiteController extends Controller
 {
+    use CommonFunctions;
+
     protected $siteManager;
     protected $productManager;
     protected $productSiteManager;
@@ -89,7 +92,10 @@ class ProductSiteController extends Controller
                 "product_id" => $request->get('product_id')
             ));
         } else {
-            $site = $this->siteManager->createSite($request->all());
+            $input = $request->all();
+            $input['site_url'] = $this->removeGlobalWebTracking($input['site_url']);
+
+            $site = $this->siteManager->createSite($input);
             event(new SiteStored($site));
 
             $productSite = ProductSite::create(array(
@@ -198,8 +204,9 @@ class ProductSiteController extends Controller
             $newSite = $this->siteManager->getSite($request->get('site_id'));
         } elseif ($request->has('site_url')) {
             /** if user has provide a url */
+            $site_url = $this->removeGlobalWebTracking($request->get('site_url'));
             $newSite = $this->siteManager->createSite(array(
-                "site_url" => $request->get('site_url'),
+                "site_url" => $site_url,
             ));
         }
         if (isset($newSite)) {

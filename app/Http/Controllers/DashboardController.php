@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use App\Contracts\SubscriptionManagement\SubscriptionManager;
+use App\Libraries\CommonFunctions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -38,6 +39,10 @@ class DashboardController extends Controller
             $driver->get('http://www.google.com.au');
 
             echo "Page source: ";
+            $driver->wait(10, 500)->until(
+                WebDriverExpectedCondition::titleIs('My Page')
+            );
+
             $html = $driver->getPageSource();
 
             $driver->quit();

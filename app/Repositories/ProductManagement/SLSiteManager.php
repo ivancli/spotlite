@@ -11,11 +11,14 @@ namespace App\Repositories\ProductManagement;
 
 use App\Contracts\ProductManagement\SiteManager;
 use App\Filters\QueryFilter;
+use App\Libraries\CommonFunctions;
 use App\Models\Site;
 use Illuminate\Http\Request;
 
 class SLSiteManager implements SiteManager
 {
+    use CommonFunctions;
+
     protected $site;
     protected $request;
 
@@ -45,6 +48,8 @@ class SLSiteManager implements SiteManager
 
     public function createSite($options)
     {
+        $options['site_url'] = $this->removeGlobalWebTracking($options['site_url']);
+
         $site = Site::where("site_url", $options['site_url'])->where(function ($query) use ($options) {
             if (isset($options['site_xpath'])) {
                 $query->where('site_xpath', $options['site_xpath']);
