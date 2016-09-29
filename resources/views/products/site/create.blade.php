@@ -12,8 +12,13 @@
                 {!! Form::open(array('route' => array('product_site.store'), 'method'=>'post', "onsubmit"=>"return false", "id"=>"frm-site-store")) !!}
                 <input type="hidden" name="product_id" value="{{$product->getKey()}}">
                 <div class="form-group required">
-                    {!! Form::label('site_url', 'URL', array('class' => 'control-label', 'placeholder'=>'Enter or copy URL')) !!}
-                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url')) !!}
+                    {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}
+                    &nbsp;
+                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;" data-placement="right" onclick="return false;" data-trigger="hover focus"
+                       data-content="Add the URL for the product you wish to track by going to the product's webpage, copying the URL from the address bar of your browser and pasting it in this field.">
+                        <i class="fa fa-question-circle"></i>
+                    </a>
+                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'placeholder' => 'Enter or copy URL')) !!}
                 </div>
                 <div class="prices-container" style="display: none;">
                     <p>Please select a correct price from below: </p>
@@ -31,6 +36,8 @@
     </div>
     <script type="text/javascript">
         function modalReady(options) {
+            $("[data-toggle=popover]").popover();
+
             $("#btn-create-site").on("click", function () {
                 showLoading();
                 submitSiteStore(function (response) {
@@ -128,7 +135,17 @@
                         $("#btn-check-price").hide();
                         $("#btn-create-site").show();
                     } else {
-                        alertP("Error", "Unable to get price, please try again later");
+                        if (typeof response.errors != 'undefined') {
+                            var $errorContainer = $("#modal-site-store .errors-container");
+                            $errorContainer.empty();
+                            $.each(response.errors, function (index, error) {
+                                $errorContainer.append(
+                                        $("<li>").text(error)
+                                );
+                            });
+                        } else {
+                            alertP("Error", "Unable to get price, please try again later.");
+                        }
                     }
                 },
                 "error": function () {

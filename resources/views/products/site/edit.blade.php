@@ -11,8 +11,13 @@
                 </ul>
                 {!! Form::model($productSite->site, array('route' => array('product_site.update', $productSite->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-site-update")) !!}
                 <div class="form-group required">
-                    {!! Form::label('site_url', 'URL', array('class' => 'control-label', 'placeholder'=>'Enter or copy URL')) !!}
-                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'onkeyup'=>'updateEditSiteModelButtonStatus(this)')) !!}
+                    {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}
+                    &nbsp;
+                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;" data-placement="right" onclick="return false;" data-trigger="hover focus"
+                       data-content="Add the URL for the product you wish to track by going to the product's webpage, copying the URL from the address bar of your browser and pasting it in this field.">
+                        <i class="fa fa-question-circle"></i>
+                    </a>
+                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'onkeyup'=>'updateEditSiteModelButtonStatus(this)', 'placeholder'=>'Enter or copy URL')) !!}
                 </div>
 
                 @if(!is_null($productSite->site->recent_price))
@@ -49,6 +54,8 @@
     </div>
     <script type="text/javascript">
         function modalReady(options) {
+            $("[data-toggle=popover]").popover();
+
             $("#btn-edit-site").on("click", function () {
                 showLoading();
                 submitSiteUpdate(function (response) {

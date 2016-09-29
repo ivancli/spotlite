@@ -39,9 +39,7 @@ class DashboardController extends Controller
             $driver->get('http://www.google.com.au');
 
             echo "Page source: ";
-            $driver->wait(10, 500)->until(
-                WebDriverExpectedCondition::titleIs('My Page')
-            );
+            $driver->wait(10, 500);
 
             $html = $driver->getPageSource();
 

@@ -11,6 +11,7 @@ use App\Models\Crawler;
 use App\Models\Domain;
 use App\Models\HistoricalPrice;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Invigor\Crawler\Contracts\CrawlerInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
@@ -37,7 +38,9 @@ class SLCrawlerManager implements CrawlerManager
 
     public function updateCrawler($crawler_id, $options)
     {
-        // TODO: Implement updateCrawler() method.
+        $crawler = $this->getCrawler($crawler_id);
+        $crawler->update($options);
+        return $crawler;
     }
 
     public function deleteCrawler($crawler_id)
@@ -95,8 +98,14 @@ class SLCrawlerManager implements CrawlerManager
         );
         $crawlerClass->setOptions($options);
         event(new CrawlerLoadingHTML($crawler));
-        $crawlerClass->loadHTML();
-        $html = $crawlerClass->getHTML();
+        /*check cache*/
+        if (Cache::tags(['crawled_sites'])->has($site->site_url)) {
+            $html = Cache::tags(['crawled_sites'])->get($site->site_url);
+        } else {
+            $crawlerClass->loadHTML();
+            $html = $crawlerClass->getHTML();
+            Cache::tags(['crawled_sites'])->put($site->site_url, $html, 60);
+        }
 
 
         if (is_null($html) || strlen($html) == 0) {

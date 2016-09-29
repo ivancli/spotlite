@@ -39,9 +39,8 @@ class CrawlerController extends Controller
         if($request->has('parser_class') && strlen($input['parser_class']) == 0){
             $input['parser_class'] = null;
         }
-
         $crawler = $this->crawlerManager->getCrawler($crawler_id);
-        $crawler = $this->crawlerManager->updateCrawler($crawler_id, $request->all());
+        $crawler = $this->crawlerManager->updateCrawler($crawler_id, $input);
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
