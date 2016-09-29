@@ -229,3 +229,11 @@ Breadcrumbs::register('admin_preference', function ($breadcrumbs) {
     $breadcrumbs->push('App Preferences', route('admin.app_preference.index'));
 });
 
+
+/**
+ * Report Page
+ */
+Breadcrumbs::register('report_index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Reports', route('report.index'));
+});

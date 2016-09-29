@@ -12,8 +12,8 @@ class AlterReportsTable extends Migration
      */
     public function up()
     {
-        Schema::table('reports', function ($table) {
-            $table->integer('user_id');
+        Schema::table('reports', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('user_id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
@@ -29,6 +29,7 @@ class AlterReportsTable extends Migration
     {
         Schema::table('reports', function (Blueprint $table) {
             $table->dropForeign('reports_user_id_foreign');
+            $table->dropColumn('user_id');
         });
     }
 }

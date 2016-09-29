@@ -15,10 +15,15 @@ class Report extends Model
 {
     protected $table = "reports";
     protected $primaryKey = "report_id";
-    protected $fillable = ["report_task_id", "content"];
+    protected $fillable = ["report_task_id", "content", "user_id"];
 
     public function reportTask()
     {
         return $this->belongsTo('App\Models\ReportTask', 'report_task_id', 'report_task_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'user_id');
     }
 }

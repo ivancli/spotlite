@@ -99,6 +99,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('report/product/{product_id}', 'Product\ReportTaskController@deleteProductReport')->name('report_task.product.destroy');
 
         /**
+         * Report Page Related Routes
+         */
+        Route::resource('report', 'Report\ReportController', ['except' => [
+            'create'
+        ]]);
+
+
+        /**
          * Chart Related Routes
          */
         Route::get('chart/category/{category_id}', 'Product\ChartController@categoryIndex')->name('chart.category.index');
