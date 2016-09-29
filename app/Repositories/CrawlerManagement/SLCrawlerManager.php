@@ -129,11 +129,9 @@ class SLCrawlerManager implements CrawlerManager
             $parserClass->init();
             event(new CrawlerLoadingPrice($crawler));
             $result = $parserClass->parseHTML();
-            file_put_contents("/home/vagrant/Code/spotlite/storage/logs/price.log", file_get_contents("/home/vagrant/Code/spotlite/storage/logs/price.log") . "\r\n" . $result . "\r\n");
             if (!is_null($result) && (is_string($result) || is_numeric($result))) {
                 $price = str_replace('$', '', $result);
                 $price = floatval($price);
-                file_put_contents("/home/vagrant/Code/spotlite/storage/logs/price.log", file_get_contents("/home/vagrant/Code/spotlite/storage/logs/price.log") . "\r\n" . $price . "\r\n");
                 if ($price > 0) {
                     /*TODO now you got the $price*/
 
