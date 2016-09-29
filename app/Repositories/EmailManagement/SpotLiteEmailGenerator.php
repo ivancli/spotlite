@@ -34,7 +34,6 @@ class SpotLiteEmailGenerator implements EmailGenerator
 //    }
     public function sendMail($view, array $data = array(), array $options = array())
     {
-        dump($options);
         Mail::send($view, $data, function ($m) use ($options) {
             $m->from(config('mail.from.address'), config('mail.from.name'));
             $m->to($options['email'], (isset($options['first_name']) && isset($options['last_name'])) ? "{$options['first_name']}  {$options['last_name']}" : null)

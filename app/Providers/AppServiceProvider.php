@@ -81,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
          * ***********************************************************************
          */
         /* dynamic binding for crawler */
+
         $this->app->bind(CrawlerInterface::class, function ($app) {
             $siteId = $this->app->request->route('site_id');
             if (!is_null($siteId)) {

@@ -141,7 +141,7 @@ class SiteController extends Controller
             $parser->setHTML($html);
             $parser->init();
             $result = $parser->parseHTML();
-            if (!is_null($result) && is_string($result)) {
+            if (!is_null($result) && (is_string($result) || is_numeric($result))) {
                 $price = str_replace('$', '', $result);
                 $price = floatval($price);
                 if ($price > 0) {

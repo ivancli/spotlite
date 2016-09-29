@@ -15,6 +15,7 @@ use App\Models\Domain;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 use Invigor\Crawler\Contracts\CrawlerInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
 
@@ -23,6 +24,8 @@ class CrawlSite extends Job implements ShouldQueue
     use InteractsWithQueue, SerializesModels;
 
     protected $crawler;
+    protected $crawler_class;
+    protected $parser_class;
 
     /**
      * Create a new job instance.
@@ -43,7 +46,10 @@ class CrawlSite extends Job implements ShouldQueue
 //                $crawler_class = $domain->crawler_class;
 //            }
         }
-        app()->bind('Invigor\Crawler\Contracts\CrawlerInterface', 'Invigor\Crawler\Repositories\Crawlers\\' . $crawler_class);
+
+        /* Unable to bind initiate the real instance instead */
+//        App::bind('Invigor\Crawler\Contracts\CrawlerInterface', 'Invigor\Crawler\Repositories\Crawlers\\' . $crawler_class);
+        $this->crawler_class = 'Invigor\Crawler\Repositories\Crawlers\\' . $crawler_class;
 
 
         if (!is_null($this->crawler->parser_class)) {
@@ -56,7 +62,9 @@ class CrawlSite extends Job implements ShouldQueue
 //            }
         }
 
-        app()->bind('Invigor\Crawler\Contracts\ParserInterface', 'Invigor\Crawler\Repositories\Parsers\\' . $parser_class);
+        /* Unable to bind initiate the real instance instead */
+//        App::bind('Invigor\Crawler\Contracts\ParserInterface', 'Invigor\Crawler\Repositories\Parsers\\' . $parser_class);
+        $this->parser_class = 'Invigor\Crawler\Repositories\Parsers\\' . $parser_class;
     }
 
     /**
@@ -65,8 +73,11 @@ class CrawlSite extends Job implements ShouldQueue
      * @param CrawlerInterface $crawler
      * @param ParserInterface $parser
      */
-    public function handle(CrawlerManager $crawlerManager, CrawlerInterface $crawler, ParserInterface $parser)
+//    public function handle(CrawlerManager $crawlerManager, CrawlerInterface $crawler, ParserInterface $parser)
+    public function handle(CrawlerManager $crawlerManager)
     {
+        $crawler = app()->make($this->crawler_class);
+        $parser = app()->make($this->parser_class);
         $crawlerManager->crawl($this->crawler, $crawler, $parser);
     }
 }
