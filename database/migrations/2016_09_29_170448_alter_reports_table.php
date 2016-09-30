@@ -13,10 +13,8 @@ class AlterReportsTable extends Migration
     public function up()
     {
         Schema::table('reports', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->foreign('user_id')->references('user_id')->on('users')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->enum('report_owner_type', array('product', 'category'))->after("report_id")->comment("product report or category report");
+            $table->integer('report_owner_id')->unsigned()->after("report_owner_type")->comment("product_id or category_id");
         });
     }
 
@@ -28,8 +26,8 @@ class AlterReportsTable extends Migration
     public function down()
     {
         Schema::table('reports', function (Blueprint $table) {
-            $table->dropForeign('reports_user_id_foreign');
-            $table->dropColumn('user_id');
+            $table->dropColumn('report_owner_type');
+            $table->dropColumn('report_owner_id');
         });
     }
 }

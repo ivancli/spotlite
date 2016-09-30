@@ -64,6 +64,18 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Report', 'user_id', 'user_id');
     }
 
+    /**
+     * indirect relationship
+     */
+    public function categoryReportTasks()
+    {
+        return $this->hasManyThrough('App\Models\ReportTask', 'App\Models\Category', 'user_id', 'report_task_owner_id', 'user_id')->where('report_task_owner_type', 'category');
+    }
+
+    public function productReportTasks()
+    {
+        return $this->hasManyThrough('App\Models\ReportTask', 'App\Models\Product', 'user_id', 'report_task_owner_id', 'user_id')->where('report_task_owner_type', 'product');
+    }
 
     public function cachedSubscription()
     {

@@ -9,6 +9,7 @@
 namespace App\Contracts\ProductManagement;
 
 
+use App\Filters\QueryFilter;
 use App\Models\ReportTask;
 
 interface ReportTaskManager
@@ -26,4 +27,6 @@ interface ReportTaskManager
     public function generateCategoryReport(ReportTask $reportTask);
 
     public function generateProductReport(ReportTask $reportTask);
+
+    public function getDataTableReportTasks(QueryFilter $queryFilter);
 }

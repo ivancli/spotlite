@@ -74,6 +74,14 @@ class AppServiceProvider extends ServiceProvider
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\CategoryFilters');
 
+        /* ReportTask Query Filters */
+        $this->app->when('App\Http\Controllers\Product\ReportTaskController')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\ReportTaskFilters');
+        $this->app->when('App\Models\ReportTask')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\ReportTaskFilters');
+
         /*************************************************************************
          *                                                                       *
          * CRAWLER AND PARSER CLASSES DYNAMIC BINDING BASED ON DATABASE RECORD   *

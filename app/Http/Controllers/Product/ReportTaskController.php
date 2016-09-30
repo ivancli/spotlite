@@ -13,8 +13,10 @@ use App\Contracts\ProductManagement\CategoryManager;
 use App\Contracts\ProductManagement\ProductManager;
 use App\Contracts\ProductManagement\ReportTaskManager;
 use App\Exceptions\ValidationException;
+use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 use App\Models\ReportEmail;
+use App\Models\ReportTask;
 use App\Validators\Product\ReportTask\UpdateCategoryReportValidator;
 use App\Validators\Product\ReportTask\UpdateProductReportValidator;
 use Illuminate\Http\Request;
@@ -26,15 +28,39 @@ class ReportTaskController extends Controller
     protected $reportTaskManager;
     protected $updateCategoryReportValidator;
     protected $updateProductReportValidator;
+    protected $queryFilter;
 
-    public function __construct(CategoryManager $categoryManager, ProductManager $productManager, ReportTaskManager $reportTaskManager, UpdateCategoryReportValidator $updateCategoryReportValidator, UpdateProductReportValidator $updateProductReportValidator)
+    public function __construct(CategoryManager $categoryManager,
+                                ProductManager $productManager,
+                                ReportTaskManager $reportTaskManager,
+                                UpdateCategoryReportValidator $updateCategoryReportValidator,
+                                UpdateProductReportValidator $updateProductReportValidator,
+                                QueryFilter $queryFilter)
     {
         $this->categoryManager = $categoryManager;
         $this->productManager = $productManager;
         $this->reportTaskManager = $reportTaskManager;
         $this->updateCategoryReportValidator = $updateCategoryReportValidator;
         $this->updateProductReportValidator = $updateProductReportValidator;
+        $this->queryFilter = $queryFilter;
     }
+
+    public function index(Request $request)
+    {
+
+
+        $reportTasks = $this->reportTaskManager->getDataTableReportTasks($this->queryFilter);
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json($reportTasks);
+            } else {
+                return $reportTasks;
+            }
+        } else {
+            /*TODO return a view with collection of report tasks if necessary*/
+        }
+    }
+
 
     /**
      * Show Edit Category Report Popup

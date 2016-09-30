@@ -11,16 +11,22 @@ namespace App\Repositories\ProductManagement;
 
 use App\Contracts\ProductManagement\ReportManager;
 use App\Contracts\ProductManagement\ReportTaskManager;
+use App\Filters\QueryFilter;
 use App\Models\ReportTask;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SLReportTaskManager implements ReportTaskManager
 {
     protected $reportManager;
+    protected $reportTask;
+    protected $request;
 
-    public function __construct(ReportManager $reportManager)
+    public function __construct(ReportManager $reportManager, ReportTask $reportTask, Request $request)
     {
         $this->reportManager = $reportManager;
+        $this->reportTask = $reportTask;
+        $this->request = $request;
     }
 
     public function getReportTasks()
@@ -88,7 +94,11 @@ class SLReportTaskManager implements ReportTaskManager
         $binaryExcelFileContent = base64_encode($excelFileContent);
         $report = $this->reportManager->storeReport(array(
             "report_task_id" => $reportTask->getKey(),
-            "content" => $binaryExcelFileContent
+            "report_owner_type" => "category",
+            "report_owner_id" => $category->getKey(),
+            "content" => $binaryExcelFileContent,
+            "file_name" => $fileName,
+            "file_type" => $reportTask->file_type
         ));
         return $report;
     }
@@ -121,8 +131,46 @@ class SLReportTaskManager implements ReportTaskManager
         $binaryExcelFileContent = base64_encode($excelFileContent);
         $report = $this->reportManager->storeReport(array(
             "report_task_id" => $reportTask->getKey(),
-            "content" => $binaryExcelFileContent
+            "report_owner_type" => "product",
+            "report_owner_id" => $product->getKey(),
+            "content" => $binaryExcelFileContent,
+            "file_name" => $fileName,
+            "file_type" => $reportTask->file_type
         ));
         return $report;
+    }
+
+    public function getReportTasksCount()
+    {
+        return auth()->user()->categoryReportTasks()->count() + auth()->user()->productReportTasks()->count();
+    }
+
+    public function getDataTableReportTasks(QueryFilter $queryFilter)
+    {
+        $categoryReportTasks = auth()->user()->categoryReportTasks()->with('reportable')->filter($queryFilter)->get();
+        $productReportTasks = auth()->user()->productReportTasks()->with('reportable')->filter($queryFilter)->get();
+
+        $reportTasks = $categoryReportTasks->merge($productReportTasks);
+
+        if ($this->request->has('order')) {
+            foreach ($this->request->get('order') as $columnAndDirection) {
+                if ($columnAndDirection['dir'] == 'asc') {
+                    $reportTasks = $reportTasks->sortBy($columnAndDirection['column'])->values();
+                } else {
+                    $reportTasks = $reportTasks->sortByDesc($columnAndDirection['column'])->values();
+                }
+            }
+        }
+
+        $output = new \stdClass();
+        $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
+        $output->recordTotal = $this->getReportTasksCount();
+        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+            $output->recordsFiltered = $reportTasks->count();
+        } else {
+            $output->recordsFiltered = $this->getReportTasksCount();
+        }
+        $output->data = $reportTasks->toArray();
+        return $output;
     }
 }

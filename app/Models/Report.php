@@ -15,7 +15,13 @@ class Report extends Model
 {
     protected $table = "reports";
     protected $primaryKey = "report_id";
-    protected $fillable = ["report_task_id", "content", "user_id"];
+    protected $fillable = ["report_task_id", "report_owner_type", "report_owner_id", "content", "file_name", "file_type"];
+    protected $appends = ["urls"];
+
+    public function reportable()
+    {
+        return $this->morphTo("report_owner", "report_owner_type", "report_owner_id");
+    }
 
     public function reportTask()
     {
@@ -26,4 +32,12 @@ class Report extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'user_id');
     }
+
+    public function getUrlsAttribute()
+    {
+        return array(
+            "show" => route("report.show", $this->getKey()),
+        );
+    }
+
 }

@@ -59,6 +59,7 @@ class ProductController extends Controller
             }
             $data->categoriesHTML = $html;
             $data->status = true;
+            print_r($data);
             if ($request->wantsJson()) {
                 return response()->json($data);
             } else {

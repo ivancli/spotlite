@@ -22,6 +22,11 @@ Crawler Site Management
 * adapt send report to use send mail function
 
 
+*add permissions and apply middleware to all controllers
+
+*fix report page bug
+
+
 
 
 

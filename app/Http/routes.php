@@ -97,6 +97,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('report/product/{product_id}/edit', 'Product\ReportTaskController@editProductReport')->name('report_task.product.edit');
         Route::put('report/product/{product_id}', 'Product\ReportTaskController@updateProductReport')->name('report_task.product.update');
         Route::delete('report/product/{product_id}', 'Product\ReportTaskController@deleteProductReport')->name('report_task.product.destroy');
+        /*load all report tasks*/
+        Route::get('report/task', 'Product\ReportTaskController@index')->name('report_task.index');
 
         /**
          * Report Page Related Routes

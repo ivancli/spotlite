@@ -37,6 +37,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css',
         'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.css',
         'node_modules/dragula/dist/dragula.css',
+        'resources/assets/css/file-tree.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.styles([
@@ -63,21 +64,20 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/dist/js/app.js',
         'node_modules/dragula/dist/dragula.js',
         'node_modules/dom-autoscroller/dist/dom-autoscroller.js',
-        'resources/assets/js/commonFunctions.js',
-        'resources/assets/js/sidebar.js',
-        'resources/assets/js/spotlite.js'
-    ], "public/js/main.js", "./");
-    mix.scripts([
         "node_modules/highcharts/highcharts.js",
         "node_modules/highcharts/highcharts-more.js",
         "node_modules/highcharts/modules/exporting.js",
         'vendor/almasaeed2010/adminlte/plugins/datepicker/bootstrap-datepicker.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/moment.js',
-        'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js'
-    ], "public/js/product.js", "./");
+        'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js',
+        'resources/assets/js/commonFunctions.js',
+        'resources/assets/js/sidebar.js',
+        'resources/assets/js/spotlite.js'
+    ], "public/js/main.js", "./");
 
     /* copy images */
     mix.copy('resources/assets/images', 'public/images');
+    mix.copy('resources/assets/plugins/jquery.fileTree-1.01/images', 'public/images');
     mix.copy('resources/assets/videos', 'public/videos');
 
     mix.copy("node_modules/bootstrap/dist/fonts", "public/fonts/");

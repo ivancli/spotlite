@@ -9,6 +9,7 @@
 namespace App\Models;
 
 
+use App\Filters\QueryFilter;
 use Illuminate\Database\Eloquent\Model;
 
 class ReportTask extends Model
@@ -17,6 +18,8 @@ class ReportTask extends Model
     protected $fillable = [
         "report_task_owner_type", "report_task_owner_id", "frequency", "date", "day", "time", "weekday_only", "delivery_method", "file_type", "status", "last_sent_at"
     ];
+    protected $appends = ["urls"];
+
     public $timestamps = false;
 
     public function reportable()
@@ -34,4 +37,19 @@ class ReportTask extends Model
         $this->last_sent_at = date("Y-m-d H:i:s");
         $this->save();
     }
+
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
+    }
+
+
+    public function getUrlsAttribute()
+    {
+        return array(
+            "edit" => route("report_task.{$this->report_task_owner_type}.edit", $this->report_task_owner->getKey()),
+            "delete" => route("report_task.{$this->report_task_owner_type}.destroy", $this->report_task_owner->getKey()),
+        );
+    }
+
 }
