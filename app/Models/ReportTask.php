@@ -46,9 +46,11 @@ class ReportTask extends Model
 
     public function getUrlsAttribute()
     {
+        $reportTaskOwnerType = $this->report_task_owner_type;
+        $reportTaskOwnerId = $this->report_task_owner_id;
         return array(
-//            "edit" => route("report_task.$this->report_task_owner_type.edit", $this->report_task_owner->getKey()),
-//            "delete" => route("report_task.$this->report_task_owner_type.destroy", $this->report_task_owner->getKey()),
+            "edit" => route("report_task.$reportTaskOwnerType.edit", $reportTaskOwnerId),
+            "delete" => route("report_task.$reportTaskOwnerType.destroy", $reportTaskOwnerId),
         );
     }
 

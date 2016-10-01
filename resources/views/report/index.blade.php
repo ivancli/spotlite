@@ -222,7 +222,7 @@
                                         $("<a>").attr({
                                             "data-category-id": category.category_id,
                                             "href": "#",
-                                            "onclick": "toggleCategoryFolder(this)"
+                                            "onclick": "toggleCategoryFolder(this); return false;"
                                         }).text("Category reports: " + category.category_name)
                                 )
                         )
@@ -235,7 +235,7 @@
                                         $("<a>").attr({
                                             "data-product-id": product.product_id,
                                             "href": "#",
-                                            "onclick": "toggleProductFolder(this)"
+                                            "onclick": "toggleProductFolder(this); return false;"
                                         }).text("Product reports: " + product.product_name)
                                 )
                         )
@@ -287,8 +287,9 @@
                                         $("<li>").addClass("file ext_" + ext).append(
                                                 $("<a>").attr({
                                                     "href": report.urls['show'],
-                                                    "download": "download"
-                                                }).text(report.file_name + "." + report.file_type)
+                                                    "download": "download",
+                                                    "title": moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type
+                                                }).text(moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type)
                                         )
                                 )
                             });
@@ -340,8 +341,10 @@
                                 $ul.append(
                                         $("<li>").addClass("file ext_" + ext).append(
                                                 $("<a>").attr({
-                                                    "href": "#"
-                                                }).text(report.file_name + "." + report.file_type)
+                                                    "href": report.urls['show'],
+                                                    "download": "download",
+                                                    "title": moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type
+                                                }).text(moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type)
                                         )
                                 )
                             });
