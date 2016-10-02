@@ -74,8 +74,8 @@ class CrawlSite extends Job implements ShouldQueue
 //    public function handle(CrawlerManager $crawlerManager, CrawlerInterface $crawler, ParserInterface $parser)
     public function handle(CrawlerContract $crawler)
     {
-        $crawler = app()->make($this->crawler_class);
-        $parser = app()->make($this->parser_class);
-        $crawler->crawl($this->crawler, $crawler, $parser);
+        $crawlerClass = app()->make($this->crawler_class);
+        $parserClass = app()->make($this->parser_class);
+        $crawler->crawl($this->crawler, $crawlerClass, $parserClass);
     }
 }
