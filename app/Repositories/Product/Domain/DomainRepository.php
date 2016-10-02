@@ -14,7 +14,7 @@ use App\Filters\QueryFilter;
 use App\Models\Domain;
 use Illuminate\Http\Request;
 
-class SLDomainManager implements DomainContract
+class DomainRepository implements DomainContract
 {
     protected $domain;
     protected $request;
