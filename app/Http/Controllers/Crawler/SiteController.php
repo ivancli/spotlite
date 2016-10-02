@@ -9,9 +9,9 @@
 namespace App\Http\Controllers\Crawler;
 
 
-use App\Contracts\ProductManagement\DomainManager;
-use App\Contracts\ProductManagement\ProductSiteManager;
-use App\Contracts\ProductManagement\SiteManager;
+use App\Contracts\Repository\Product\Domain\DomainContract;
+use App\Contracts\Repository\Product\ProductSite\ProductSiteContract;
+use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
@@ -24,21 +24,21 @@ use Invigor\Crawler\Contracts\ParserInterface;
 
 class SiteController extends Controller
 {
-    protected $productSiteManager;
-    protected $siteManager;
+    protected $productSiteRepo;
+    protected $siteRepo;
     protected $queryFilter;
-    protected $domainManager;
+    protected $domainRepo;
 
     protected $storeValidator;
     protected $updateValidator;
 
-    public function __construct(ProductSiteManager $productSiteManager, SiteManager $siteManager,
-                                DomainManager $domainManager, QueryFilter $queryFilter,
+    public function __construct(ProductSiteContract $productSiteContract, SiteContract $siteContract,
+                                DomainContract $domainContract, QueryFilter $queryFilter,
                                 StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
-        $this->productSiteManager = $productSiteManager;
-        $this->siteManager = $siteManager;
-        $this->domainManager = $domainManager;
+        $this->productSiteRepo = $productSiteContract;
+        $this->siteRepo = $siteContract;
+        $this->domainRepo = $domainContract;
         $this->queryFilter = $queryFilter;
 
         $this->storeValidator = $storeValidator;
@@ -49,7 +49,7 @@ class SiteController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $sites = $this->siteManager->getDataTablesSites($this->queryFilter);
+            $sites = $this->siteRepo->getDataTablesSites($this->queryFilter);
             if ($request->wantsJson()) {
                 return response()->json($sites);
             } else {
@@ -87,7 +87,7 @@ class SiteController extends Controller
             }
         }
 
-        $site = $this->siteManager->createSite($request->all());
+        $site = $this->siteRepo->createSite($request->all());
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -102,7 +102,7 @@ class SiteController extends Controller
 
     public function sendTest(Request $request, CrawlerInterface $crawler, ParserInterface $parser, $site_id)
     {
-        $site = $this->siteManager->getSite($site_id);
+        $site = $this->siteRepo->getSite($site_id);
 
         $options = array(
             "url" => $site->site_url,
@@ -225,7 +225,7 @@ class SiteController extends Controller
         if (isset($input['site_xpath']) && strlen($input['site_xpath']) == 0) {
             $input['site_xpath'] = null;
         }
-        $site = $this->siteManager->updateSite($site_id, $input);
+        $site = $this->siteRepo->updateSite($site_id, $input);
         if ($site->status == 'null_xpath') {
             $site->statusWaiting();
         }
@@ -243,7 +243,7 @@ class SiteController extends Controller
 
     public function destroy(Request $request, $site_id)
     {
-        $site = $this->siteManager->getSite($site_id);
+        $site = $this->siteRepo->getSite($site_id);
         $site->delete();
         $status = true;
 

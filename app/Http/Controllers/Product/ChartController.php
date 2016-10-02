@@ -9,24 +9,24 @@
 namespace App\Http\Controllers\Product;
 
 
-use App\Contracts\ProductManagement\CategoryManager;
-use App\Contracts\ProductManagement\ProductManager;
-use App\Contracts\ProductManagement\ProductSiteManager;
+use App\Contracts\Repository\Product\Category\CategoryContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Product\ProductSite\ProductSiteContract;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ChartController extends Controller
 {
-    protected $categoryManager;
-    protected $productManager;
-    protected $productSiteManager;
+    protected $categoryRepo;
+    protected $productRepo;
+    protected $productSiteRepo;
 
-    public function __construct(CategoryManager $categoryManager, ProductManager $productManager, ProductSiteManager $productSiteManager)
+    public function __construct(CategoryContract $categoryContract, ProductContract $productContract, ProductSiteContract $productSiteContract)
     {
-        $this->categoryManager = $categoryManager;
-        $this->productManager = $productManager;
-        $this->productSiteManager = $productSiteManager;
+        $this->categoryRepo = $categoryContract;
+        $this->productRepo = $productContract;
+        $this->productSiteRepo = $productSiteContract;
     }
 
     public function categoryIndex(Request $request, $category_id)
@@ -40,7 +40,7 @@ class ChartController extends Controller
 //                $endDateTime = intval($request->get('end_date'));
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
-                $category = $this->categoryManager->getCategory($category_id);
+                $category = $this->categoryRepo->getCategory($category_id);
                 $categoryPrices = array();
                 foreach ($category->products as $product) {
                     $productPrices = array();
@@ -78,7 +78,7 @@ class ChartController extends Controller
                     $data[$productId] = array();
                     $data[$productId]["range"] = array();
                     $data[$productId]["average"] = array();
-                    $data[$productId]["name"] = $this->productManager->getProduct($productId)->product_name;
+                    $data[$productId]["name"] = $this->productRepo->getProduct($productId)->product_name;
                     foreach ($productLevelPrices as $dateStamp => $dateLevelPrices) {
                         $data[$productId]["range"][] = array(
                             strtotime($dateStamp) * 1000, min($dateLevelPrices), max($dateLevelPrices)
@@ -98,11 +98,11 @@ class ChartController extends Controller
                 $status = true;
                 return response()->json(compact(['status', 'data']));
             } else {
-                $category = $this->categoryManager->getCategory($category_id);
+                $category = $this->categoryRepo->getCategory($category_id);
                 return view('charts.category.index')->with(compact(['category']));
             }
         } else {
-            $category = $this->categoryManager->getCategory($category_id);
+            $category = $this->categoryRepo->getCategory($category_id);
             return view('charts.category.index')->with(compact(['category']));
         }
     }
@@ -114,7 +114,7 @@ class ChartController extends Controller
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
 
-                $product = $this->productManager->getProduct($product_id);
+                $product = $this->productRepo->getProduct($product_id);
 
                 $productPrices = array();
                 $productSites = $product->productSites;
@@ -149,7 +149,7 @@ class ChartController extends Controller
                 foreach ($productPrices as $productSiteId => $siteLevelPrices) {
                     $data[$productSiteId] = array();
                     $data[$productSiteId]["average"] = array();
-                    $data[$productSiteId]["name"] = parse_url($this->productSiteManager->getProductSite($productSiteId)->site->site_url)['host'];
+                    $data[$productSiteId]["name"] = parse_url($this->productSiteRepo->getProductSite($productSiteId)->site->site_url)['host'];
                     foreach ($siteLevelPrices as $dateStamp => $dateLevelPrices) {
                         $data[$productSiteId]["average"][] = array(
                             strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
@@ -165,11 +165,11 @@ class ChartController extends Controller
 
 
             } else {
-                $product = $this->productManager->getProduct($product_id);
+                $product = $this->productRepo->getProduct($product_id);
                 return view('charts.product.index')->with(compact(['product']));
             }
         } else {
-            $product = $this->productManager->getProduct($product_id);
+            $product = $this->productRepo->getProduct($product_id);
             return view('charts.product.index')->with(compact(['product']));
         }
     }
@@ -181,7 +181,7 @@ class ChartController extends Controller
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
 
-                $productSite = $this->productSiteManager->getProductSite($product_site_id);
+                $productSite = $this->productSiteRepo->getProductSite($product_site_id);
                 $site = $productSite->site;
 
                 $sitePrices = array();
@@ -210,7 +210,7 @@ class ChartController extends Controller
 
                 $data[$product_site_id] = array();
                 $data[$product_site_id]["average"] = array();
-                $data[$product_site_id]["name"] = parse_url($this->productSiteManager->getProductSite($product_site_id)->site->site_url)['host'];
+                $data[$product_site_id]["name"] = parse_url($this->productSiteRepo->getProductSite($product_site_id)->site->site_url)['host'];
                 foreach ($sitePrices as $dateStamp => $dateLevelPrices) {
                     $data[$product_site_id]["average"][] = array(
                         strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
@@ -225,11 +225,11 @@ class ChartController extends Controller
 
 
             } else {
-                $productSite = $this->productSiteManager->getProductSite($product_site_id);
+                $productSite = $this->productSiteRepo->getProductSite($product_site_id);
                 return view('charts.site.index')->with(compact(['productSite']));
             }
         } else {
-            $productSite = $this->productSiteManager->getProductSite($product_site_id);
+            $productSite = $this->productSiteRepo->getProductSite($product_site_id);
             return view('charts.site.index')->with(compact(['productSite']));
         }
     }

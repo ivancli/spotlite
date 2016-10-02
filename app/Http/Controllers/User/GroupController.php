@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\User;
 
 
-use App\Contracts\GroupManagement\GroupManager;
+use App\Contracts\Repository\User\Group\GroupContract;
 use App\Events\Group\FirstLoginViewed;
 use App\Events\Group\GroupAttached;
 use App\Events\Group\GroupCreateViewed;
@@ -34,11 +34,11 @@ use Validator;
 
 class GroupController extends Controller
 {
-    protected $groupManager;
+    protected $groupRepo;
 
-    public function __construct(GroupManager $groupManager)
+    public function __construct(GroupContract $groupContract)
     {
-        $this->groupManager = $groupManager;
+        $this->groupRepo = $groupContract;
     }
 
     public function firstLogin()
@@ -109,7 +109,7 @@ class GroupController extends Controller
             }
         } else {
             event(new GroupStoring());
-            $group = $this->groupManager->createGroup($request->all());
+            $group = $this->groupRepo->createGroup($request->all());
             event(new GroupStored($group));
             auth()->user()->groups()->attach($group->getKey());
             event(new GroupAttached($group));
@@ -170,7 +170,7 @@ class GroupController extends Controller
         } else {
             if ($group->users->count() > 1) {
                 event(new GroupStoring());
-                $group = $this->groupManager->createGroup($request->all());
+                $group = $this->groupRepo->createGroup($request->all());
                 event(new GroupStored($group));
                 auth()->user()->groups()->detach($id);
                 event(new GroupDetached($group));
@@ -178,7 +178,7 @@ class GroupController extends Controller
                 event(new GroupAttached($group));
             } else {
                 event(new GroupUpdating($group));
-                $group = $this->groupManager->updateGroup($id, $request->all());
+                $group = $this->groupRepo->updateGroup($id, $request->all());
                 event(new GroupUpdated($group));
             }
         }
@@ -211,7 +211,7 @@ class GroupController extends Controller
             $status = true;
         } else {
             event(new GroupDeleting($group));
-            $status = $this->groupManager->destroyGroup($id);
+            $status = $this->groupRepo->destroyGroup($id);
             event(new GroupDeleted($group));
         }
         if ($request->ajax()) {

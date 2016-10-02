@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Report;
 
-use App\Contracts\ProductManagement\CategoryManager;
-use App\Contracts\ProductManagement\ProductManager;
-use App\Contracts\ProductManagement\ReportManager;
-use App\Contracts\ProductManagement\ReportTaskManager;
+use App\Contracts\Repository\Product\Category\CategoryContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Product\Report\ReportContract;
+use App\Contracts\Repository\Product\Report\ReportTaskContract;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
@@ -13,17 +13,20 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    protected $reportTaskManager;
-    protected $categoryManager;
-    protected $productManager;
-    protected $reportManager;
+    protected $reportTaskRepo;
+    protected $reportRepo;
+    protected $productRepo;
+    protected $categoryRepo;
 
-    public function __construct(ReportManager $reportManager, ReportTaskManager $reportTaskManager, CategoryManager $categoryManager, ProductManager $productManager)
+    public function __construct(ReportContract $reportContract,
+                                ReportTaskContract $reportTaskContract,
+                                CategoryContract $categoryContract,
+                                ProductContract $productContract)
     {
-        $this->reportManager = $reportManager;
-        $this->categoryManager = $categoryManager;
-        $this->productManager = $productManager;
-        $this->reportTaskManager = $reportTaskManager;
+        $this->reportRepo = $reportContract;
+        $this->reportTaskRepo = $reportTaskContract;
+        $this->categoryRepo = $categoryContract;
+        $this->productRepo = $productContract;
     }
 
     /**
@@ -38,7 +41,7 @@ class ReportController extends Controller
         if ($request->ajax()) {
 
             if ($request->has('category_id')) {
-                $category = $this->categoryManager->getCategory($request->get('category_id'));
+                $category = $this->categoryRepo->getCategory($request->get('category_id'));
                 $reports = $category->reports;
                 $reports->each(function ($item, $key) {
                     unset($item->content);
@@ -50,7 +53,7 @@ class ReportController extends Controller
                     return compact(['reports', 'status']);
                 }
             } elseif ($request->has('product_id')) {
-                $product = $this->productManager->getProduct($request->get('product_id'));
+                $product = $this->productRepo->getProduct($request->get('product_id'));
                 $reports = $product->reports;
                 $reports->each(function ($item, $key) {
                     unset($item->content);
@@ -62,8 +65,15 @@ class ReportController extends Controller
                     return compact(['reports', 'status']);
                 }
             } else {
-                $products = Product::has("reports")->get();
-                $categories = Category::has("reports")->get();
+
+                /*
+                 * problematic one
+                 * should look for the auth user products and categories
+                 * */
+                $products = auth()->user()->products()->has("reports")->get();
+//                $products = Product::has("reports")->get();
+                $categories = auth()->user()->categories()->has("reports")->get();
+//                $categories = Category::has("reports")->get();
                 $status = true;
                 if ($request->wantsJson()) {
                     return response()->json(compact(['products', 'categories', 'status']));
@@ -97,7 +107,7 @@ class ReportController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $report = $this->reportManager->getReport($id);
+        $report = $this->reportRepo->getReport($id);
         if ($report->reportable->user_id != auth()->user()->getKey()) {
             abort(403);
         }

@@ -9,9 +9,9 @@
 namespace App\Http\Controllers\Product;
 
 
-use App\Contracts\ProductManagement\ProductManager;
-use App\Contracts\ProductManagement\ProductSiteManager;
-use App\Contracts\ProductManagement\SiteManager;
+use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Product\ProductSite\ProductSiteContract;
+use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Events\Products\Site\SiteCreateViewed;
 use App\Events\Products\Site\SiteDetached;
 use App\Events\Products\Site\SiteEditViewed;
@@ -33,15 +33,15 @@ class ProductSiteController extends Controller
 {
     use CommonFunctions;
 
-    protected $siteManager;
-    protected $productManager;
-    protected $productSiteManager;
+    protected $siteRepo;
+    protected $productRepo;
+    protected $productSiteRepo;
 
-    public function __construct(SiteManager $siteManager, ProductManager $productManager, ProductSiteManager $productSiteManager)
+    public function __construct(SiteContract $siteContract, ProductContract $productContract, ProductSiteContract $productSiteContract)
     {
-        $this->siteManager = $siteManager;
-        $this->productManager = $productManager;
-        $this->productSiteManager = $productSiteManager;
+        $this->siteRepo = $siteContract;
+        $this->productRepo = $productContract;
+        $this->productSiteRepo = $productSiteContract;
     }
 
     /**
@@ -53,7 +53,7 @@ class ProductSiteController extends Controller
     public function create(Request $request)
     {
         if ($request->has('product_id')) {
-            $product = $this->productManager->getProduct($request->get('product_id'));
+            $product = $this->productRepo->getProduct($request->get('product_id'));
         }
         event(new SiteCreateViewed());
         return view('products.site.create')->with(compact(['product']));
@@ -95,7 +95,7 @@ class ProductSiteController extends Controller
             $input = $request->all();
             $input['site_url'] = $this->removeGlobalWebTracking($input['site_url']);
 
-            $site = $this->siteManager->createSite($input);
+            $site = $this->siteRepo->createSite($input);
             event(new SiteStored($site));
 
             $productSite = ProductSite::create(array(
@@ -125,7 +125,7 @@ class ProductSiteController extends Controller
     public function show(Request $request, $id)
     {
         /* TODO there is yet no way to get around with this, unable to get last attached product_site_id */
-        $productSite = $this->productSiteManager->getProductSite($id);
+        $productSite = $this->productSiteRepo->getProductSite($id);
 //        $product = $productSite->product;
 //        $site = $productSite->site;
 //        if ($request->has('product_id')) {
@@ -152,7 +152,7 @@ class ProductSiteController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $productSite = $this->productSiteManager->getProductSite($id);
+        $productSite = $this->productSiteRepo->getProductSite($id);
         $product = $productSite->product;
         $site = $productSite->site;
         event(new SiteEditViewed($site));
@@ -195,17 +195,17 @@ class ProductSiteController extends Controller
                 return redirect()->back()->withInput()->withErrors($errors);
             }
         }
-        $productSite = $this->productSiteManager->getProductSite($id);
+        $productSite = $this->productSiteRepo->getProductSite($id);
         $originalSite = $productSite->site;
 //        $oldProduct = $productSite->product;
 
         /** if user has chosen a price */
         if ($request->has('site_id')) {
-            $newSite = $this->siteManager->getSite($request->get('site_id'));
+            $newSite = $this->siteRepo->getSite($request->get('site_id'));
         } elseif ($request->has('site_url')) {
             /** if user has provide a url */
             $site_url = $this->removeGlobalWebTracking($request->get('site_url'));
-            $newSite = $this->siteManager->createSite(array(
+            $newSite = $this->siteRepo->createSite(array(
                 "site_url" => $site_url,
             ));
         }
@@ -233,7 +233,7 @@ class ProductSiteController extends Controller
     {
         /*TODO validate my price from request*/
 
-        $productSite = $this->productSiteManager->getProductSite($product_site_id);
+        $productSite = $this->productSiteRepo->getProductSite($product_site_id);
         $myPrice = $request->get("my_price");
         if ($myPrice == "y") {
             $allProductSitesOfThisProduct = $productSite->product->productSites;
@@ -266,10 +266,10 @@ class ProductSiteController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $productSite = $this->productSiteManager->getProductSite($id);
+        $productSite = $this->productSiteRepo->getProductSite($id);
         $product = $productSite->product;
         $site = $productSite->site;
-        $productSite = $this->productSiteManager->deleteProductSite($id);
+        $productSite = $this->productSiteRepo->deleteProductSite($id);
         event(new SiteDetached($site, $product));
         $status = true;
         if ($request->ajax()) {

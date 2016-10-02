@@ -11,7 +11,7 @@ use Invigor\Crawler\Contracts\ParserInterface;
  * Date: 9/14/2016
  * Time: 10:46 AM
  */
-interface CrawlerManager
+interface CrawlerContract
 {
     public function getCrawlers();
 

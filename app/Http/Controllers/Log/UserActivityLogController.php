@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Log;
 
-use App\Contracts\LogManagement\UserActivityLogger;
+use App\Contracts\Repository\Logger\UserActivityLoggerContract;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -12,19 +12,19 @@ use App\Http\Requests;
 
 class UserActivityLogController extends Controller
 {
-    protected $userActivityLogger;
+    protected $userActivityLoggerRepo;
     protected $filter;
 
-    public function __construct(UserActivityLogger $userActivityLogger, QueryFilter $filter)
+    public function __construct(UserActivityLoggerContract $userActivityLoggerContract, QueryFilter $filter)
     {
-        $this->userActivityLogger = $userActivityLogger;
+        $this->userActivityLoggerRepo = $userActivityLoggerContract;
         $this->filter = $filter;
     }
 
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $logs = $this->userActivityLogger->getDataTablesLogs($this->filter);
+            $logs = $this->userActivityLoggerRepo->getDataTablesLogs($this->filter);
             if ($request->wantsJson()) {
                 return response()->json($logs);
             } else {
@@ -39,7 +39,7 @@ class UserActivityLogController extends Controller
     {
         $user = User::findOrfail($user_id);
         if ($request->ajax()) {
-            $logs = $this->userActivityLogger->getDataTablesLogsByUser($this->filter, $user);
+            $logs = $this->userActivityLoggerRepo->getDataTablesLogsByUser($this->filter, $user);
             if ($request->wantsJson()) {
                 return response()->json($logs);
             } else {

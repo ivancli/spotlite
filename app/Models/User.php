@@ -92,9 +92,9 @@ class User extends Authenticatable
             return Cache::tags(["user_subscription_" . $this->$userPrimaryKey])->get('api_subscription');
         } else {
             return Cache::tags(["user_subscription_" . $this->$userPrimaryKey])->remember('api_subscription', config()->get('cache.ttl'), function () {
-                $subscriptionManager = app()->make('App\Contracts\SubscriptionManagement\SubscriptionManager');
+                $subscriptionRepo = app()->make('App\Contracts\Repository\Subscription\SubscriptionContract');
                 if ($this->hasValidSubscription()) {
-                    $subscription = $subscriptionManager->getSubscription($this->cachedSubscription()->api_subscription_id);
+                    $subscription = $subscriptionRepo->getSubscription($this->cachedSubscription()->api_subscription_id);
                 } else {
                     $subscription = false;
                 }

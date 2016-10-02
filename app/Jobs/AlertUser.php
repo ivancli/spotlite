@@ -9,8 +9,7 @@
 namespace App\Jobs;
 
 
-use App\Contracts\ProductManagement\AlertManager;
-use App\Models\Alert;
+use App\Contracts\Repository\Product\Alert\AlertContract;
 use App\Models\Crawler;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,9 +32,9 @@ class AlertUser extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     * @param AlertManager $alertManager
+     * @param AlertContract $alertContract
      */
-    public function handle(AlertManager $alertManager)
+    public function handle(AlertContract $alertRepo)
     {
         $site = $this->crawler->site;
 
@@ -46,7 +45,7 @@ class AlertUser extends Job implements ShouldQueue
                 $productSite->alert->save();
                 switch ($productSite->alert->alert_owner_type) {
                     case "product_site":
-                        $alertManager->triggerProductSiteAlert($productSite->alert);
+                        $alertRepo->triggerProductSiteAlert($productSite->alert);
                         break;
                     default:
                 }
@@ -82,7 +81,7 @@ class AlertUser extends Job implements ShouldQueue
                 $product->alert->save();
                 switch ($product->alert->alert_owner_type) {
                     case "product":
-                        $alertManager->triggerProductAlert($product->alert);
+                        $alertRepo->triggerProductAlert($product->alert);
                         break;
                     default:
                 }

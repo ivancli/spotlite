@@ -2,8 +2,7 @@
 
 namespace App\Jobs;
 
-//use App\Contracts\LogManagement\Logger;
-use App\Contracts\LogManagement\UserActivityLogger;
+use App\Contracts\Repository\Logger\UserActivityLoggerContract;
 use App\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -30,9 +29,9 @@ class LogUserActivity extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     * @param UserActivityLogger $userActivityLogger
+     * @param UserActivityLoggerContract $userActivityLogger
      */
-    public function handle(UserActivityLogger $userActivityLogger)
+    public function handle(UserActivityLoggerContract $userActivityLogger)
     {
         $userActivityLogger->storeLog($this->activity, $this->user);
     }

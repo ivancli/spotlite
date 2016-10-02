@@ -9,9 +9,9 @@
 namespace App\Http\Controllers\Product;
 
 
-use App\Contracts\ProductManagement\CategoryManager;
-use App\Contracts\ProductManagement\ProductManager;
-use App\Contracts\ProductManagement\ReportTaskManager;
+use App\Contracts\Repository\Product\Category\CategoryContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Product\Report\ReportTaskContract;
 use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
@@ -23,23 +23,23 @@ use Illuminate\Http\Request;
 
 class ReportTaskController extends Controller
 {
-    protected $categoryManager;
-    protected $productManager;
-    protected $reportTaskManager;
+    protected $categoryRepo;
+    protected $productRepo;
+    protected $reportTaskRepo;
     protected $updateCategoryReportValidator;
     protected $updateProductReportValidator;
     protected $queryFilter;
 
-    public function __construct(CategoryManager $categoryManager,
-                                ProductManager $productManager,
-                                ReportTaskManager $reportTaskManager,
+    public function __construct(CategoryContract $categoryContract,
+                                ProductContract $productContract,
+                                ReportTaskContract $reportTaskContract,
                                 UpdateCategoryReportValidator $updateCategoryReportValidator,
                                 UpdateProductReportValidator $updateProductReportValidator,
                                 QueryFilter $queryFilter)
     {
-        $this->categoryManager = $categoryManager;
-        $this->productManager = $productManager;
-        $this->reportTaskManager = $reportTaskManager;
+        $this->categoryRepo = $categoryContract;
+        $this->productRepo = $productContract;
+        $this->reportTaskRepo = $reportTaskContract;
         $this->updateCategoryReportValidator = $updateCategoryReportValidator;
         $this->updateProductReportValidator = $updateProductReportValidator;
         $this->queryFilter = $queryFilter;
@@ -49,7 +49,7 @@ class ReportTaskController extends Controller
     {
 
 
-        $reportTasks = $this->reportTaskManager->getDataTableReportTasks($this->queryFilter);
+        $reportTasks = $this->reportTaskRepo->getDataTableReportTasks($this->queryFilter);
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json($reportTasks);
@@ -71,7 +71,7 @@ class ReportTaskController extends Controller
      */
     public function editCategoryReport(Request $request, $category_id)
     {
-        $category = $this->categoryManager->getCategory($category_id);
+        $category = $this->categoryRepo->getCategory($category_id);
         if (!is_null($category->reportTask)) {
             $emails = $category->reportTask->emails->pluck('report_email_address', 'report_email_address')->toArray();
         } else {
@@ -114,13 +114,13 @@ class ReportTaskController extends Controller
             return false;
         }
 
-        $category = $this->categoryManager->getCategory($category_id);
+        $category = $this->categoryRepo->getCategory($category_id);
 
         if (is_null($category->reportTask)) {
-            $reportTask = $this->reportTaskManager->storeReportTask($request->all());
+            $reportTask = $this->reportTaskRepo->storeReportTask($request->all());
         } else {
             $reportTask = $category->reportTask;
-            $this->reportTaskManager->updateReportTask($reportTask->getKey(), $request->all());
+            $this->reportTaskRepo->updateReportTask($reportTask->getKey(), $request->all());
         }
 
         $reportEmails = array();
@@ -151,10 +151,10 @@ class ReportTaskController extends Controller
 
     public function deleteCategoryReport(Request $request, $category_id)
     {
-        $category = $this->categoryManager->getCategory($category_id);
+        $category = $this->categoryRepo->getCategory($category_id);
 
         if (!is_null($category->reportTask)) {
-            $this->reportTaskManager->deleteReportTask($category->reportTask->getKey());
+            $this->reportTaskRepo->deleteReportTask($category->reportTask->getKey());
         }
         $status = true;
 
@@ -178,7 +178,7 @@ class ReportTaskController extends Controller
      */
     public function editProductReport(Request $request, $product_id)
     {
-        $product = $this->productManager->getProduct($product_id);
+        $product = $this->productRepo->getProduct($product_id);
         if (!is_null($product->reportTask)) {
             $emails = $product->reportTask->emails->pluck('report_email_address', 'report_email_address')->toArray();
         } else {
@@ -214,13 +214,13 @@ class ReportTaskController extends Controller
             return false;
         }
 
-        $product = $this->productManager->getProduct($product_id);
+        $product = $this->productRepo->getProduct($product_id);
 
         if (is_null($product->reportTask)) {
-            $reportTask = $this->reportTaskManager->storeReportTask($request->all());
+            $reportTask = $this->reportTaskRepo->storeReportTask($request->all());
         } else {
             $reportTask = $product->reportTask;
-            $this->reportTaskManager->updateReportTask($reportTask->getKey(), $request->all());
+            $this->reportTaskRepo->updateReportTask($reportTask->getKey(), $request->all());
         }
 
         $reportEmails = array();
@@ -251,10 +251,10 @@ class ReportTaskController extends Controller
 
     public function deleteProductReport(Request $request, $product_id)
     {
-        $product = $this->productManager->getProduct($product_id);
+        $product = $this->productRepo->getProduct($product_id);
 
         if (!is_null($product->reportTask)) {
-            $this->reportTaskManager->deleteReportTask($product->reportTask->getKey());
+            $this->reportTaskRepo->deleteReportTask($product->reportTask->getKey());
         }
         $status = true;
 

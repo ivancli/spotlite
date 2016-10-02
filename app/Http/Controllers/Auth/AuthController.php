@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Contracts\EmailManagement\EmailGenerator;
-use App\Contracts\SubscriptionManagement\SubscriptionManager;
+use App\Contracts\Repository\Mailer\MailerContract;
+use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Models\Subscription;
 use App\Models\User;
 use Exception;
@@ -36,20 +36,20 @@ class AuthController extends Controller
     protected $redirectTo = '/';
     protected $username = 'email';
 
-    protected $subscriptionManager;
-    protected $emailGenerator;
+    protected $subscriptionRepo;
+    protected $mailer;
 
     /**
      * Create a new authentication controller instance.
      *
-     * @param SubscriptionManager $subscriptionManager
-     * @param EmailGenerator $emailGenerator
+     * @param SubscriptionContract $subscriptionContract
+     * @param MailerContract $mailerContract
      */
-    public function __construct(SubscriptionManager $subscriptionManager, EmailGenerator $emailGenerator)
+    public function __construct(SubscriptionContract $subscriptionContract, MailerContract $mailerContract)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
-        $this->subscriptionManager = $subscriptionManager;
-        $this->emailGenerator = $emailGenerator;
+        $this->subscriptionRepo = $subscriptionContract;
+        $this->mailer = $mailerContract;
     }
 
     /**
@@ -89,10 +89,9 @@ class AuthController extends Controller
         if ($role != null) {
             $user->attachRole($role);
         }
-        $this->emailGenerator->sendWelcomeEmail($user);
-//        $this->emailGenerator->sendWelcomeEmail($user);
+        $this->mailer->sendWelcomeEmail($user);
         if (request()->has('api_product_id')) {
-            $product = $this->subscriptionManager->getProduct(request('api_product_id'));
+            $product = $this->subscriptionRepo->getProduct(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
             $coupon_code = request()->get('coupon_code');
             if ($requireCreditCard == true) {
@@ -120,7 +119,7 @@ class AuthController extends Controller
                 $subscription->customer_attributes = $customer_attributes;
                 $fields->subscription = $subscription;
 
-                $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
+                $result = $this->subscriptionRepo->storeSubscription(json_encode($fields));
                 if (!is_null($result)) {
                     /* clear verification code*/
                     $user->verification_code = null;
@@ -148,7 +147,7 @@ class AuthController extends Controller
 
     public function showRegistrationForm()
     {
-        $products = $this->subscriptionManager->getProducts();
+        $products = $this->subscriptionRepo->getProducts();
 
         if (property_exists($this, 'registerView')) {
             return view($this->registerView)->with(compact(['products']));

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Product;
 
-use App\Contracts\ProductManagement\AlertManager;
-use App\Contracts\ProductManagement\ProductManager;
-use App\Contracts\ProductManagement\ProductSiteManager;
+use App\Contracts\Repository\Product\Alert\AlertContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Product\ProductSite\ProductSiteContract;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\Alert;
@@ -19,15 +19,16 @@ use Illuminate\Support\Facades\Validator;
 
 class AlertController extends Controller
 {
-    protected $productManager;
-    protected $alertManager;
-    protected $productSiteManager;
+    protected $productRepo;
+    protected $alertRepo;
+    protected $productSiteRepo;
 
-    public function __construct(ProductManager $productManager, AlertManager $alertManager, ProductSiteManager $productSiteManager)
+    public function __construct(ProductContract $productContract, AlertContract $alertContract, ProductSiteContract $productSiteContract)
     {
-        $this->productManager = $productManager;
-        $this->alertManager = $alertManager;
-        $this->productSiteManager = $productSiteManager;
+        $this->alertRepo = $alertContract;
+
+        $this->productRepo = $productContract;
+        $this->productSiteRepo = $productSiteContract;
     }
 
     /**
@@ -72,7 +73,7 @@ class AlertController extends Controller
      */
     public function editProductAlert(Request $request, $product_id)
     {
-        $product = $this->productManager->getProduct($product_id);
+        $product = $this->productRepo->getProduct($product_id);
         $productSites = $product->productSites->pluck('site.site_url', 'product_site_id')->toArray();
         if (!is_null($product->alert)) {
             $emails = $product->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
@@ -118,12 +119,12 @@ class AlertController extends Controller
             abort(404);
             return false;
         }
-        $product = $this->productManager->getProduct($product_id);
+        $product = $this->productRepo->getProduct($product_id);
         if (is_null($product->alert)) {
-            $alert = $this->alertManager->storeAlert($request->all());
+            $alert = $this->alertRepo->storeAlert($request->all());
         } else {
             $alert = $product->alert;
-            $this->alertManager->updateAlert($alert->getKey(), $request->all());
+            $this->alertRepo->updateAlert($alert->getKey(), $request->all());
             /*TODO enhance this part*/
             if (!$request->has('comparison_price')) {
                 $alert->comparison_price = null;
@@ -173,7 +174,7 @@ class AlertController extends Controller
      */
     public function deleteProductAlert(Request $request, $product_id)
     {
-        $product = $this->productManager->getProduct($product_id);
+        $product = $this->productRepo->getProduct($product_id);
         $alert = $product->alert;
         $alert->delete();
         $status = true;
@@ -197,7 +198,7 @@ class AlertController extends Controller
      */
     public function editProductSiteAlert(Request $request, $product_site_id)
     {
-        $productSite = $this->productSiteManager->getProductSite($product_site_id);
+        $productSite = $this->productSiteRepo->getProductSite($product_site_id);
 
         if (!is_null($productSite->alert)) {
             $emails = $productSite->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
@@ -242,12 +243,12 @@ class AlertController extends Controller
             abort(404);
             return false;
         }
-        $productSite = $this->productSiteManager->getProductSite($product_site_id);
+        $productSite = $this->productSiteRepo->getProductSite($product_site_id);
         if (is_null($productSite->alert)) {
-            $alert = $this->alertManager->storeAlert($request->all());
+            $alert = $this->alertRepo->storeAlert($request->all());
         } else {
             $alert = $productSite->alert;
-            $this->alertManager->updateAlert($alert->getKey(), $request->all());
+            $this->alertRepo->updateAlert($alert->getKey(), $request->all());
             /*TODO enhance this part*/
             if (!$request->has('comparison_price')) {
                 $alert->comparison_price = null;
@@ -289,7 +290,7 @@ class AlertController extends Controller
      */
     public function deleteProductSiteAlert(Request $request, $product_site_id)
     {
-        $productSite = $this->productSiteManager->getProductSite($product_site_id);
+        $productSite = $this->productSiteRepo->getProductSite($product_site_id);
         $alert = $productSite->alert;
         $alert->delete();
         $status = true;

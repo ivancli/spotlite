@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\SubscriptionManagement\SubscriptionManager;
+use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Events\Subscription\SubscriptionCancelled;
 use App\Events\Subscription\SubscriptionCancelling;
 use App\Events\Subscription\SubscriptionCompleted;
@@ -24,11 +24,11 @@ use Illuminate\Support\Facades\Mail;
 
 class SubscriptionController extends Controller
 {
-    protected $subscriptionManager;
+    protected $subscriptionRepo;
 
-    public function __construct(SubscriptionManager $subscriptionManager)
+    public function __construct(SubscriptionContract $subscriptionContract)
     {
-        $this->subscriptionManager = $subscriptionManager;
+        $this->subscriptionRepo = $subscriptionContract;
         /*TODO need to handle middleware for each function*/
     }
 
@@ -44,7 +44,7 @@ class SubscriptionController extends Controller
         }
 
         /*load all products/services*/
-        $products = $this->subscriptionManager->getProducts();
+        $products = $this->subscriptionRepo->getProducts();
 
         /* remove the trail/free product for the existing subscriber */
         foreach ($products as $index => $product) {
@@ -65,16 +65,16 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $sub = $user->validSubscription();
         if (!is_null($sub)) {
-            $this->subscriptionManager->updateCreditCardDetails($sub);
+            $this->subscriptionRepo->updateCreditCardDetails($sub);
             $current_sub_id = $sub->api_subscription_id;
-            $subscription = $this->subscriptionManager->getSubscription($current_sub_id);
+            $subscription = $this->subscriptionRepo->getSubscription($current_sub_id);
 
             $portalEnabled = !is_null($subscription->customer->portal_customer_created_at);
             if ($portalEnabled) {
-                $portalLink = $this->subscriptionManager->getBillingPortalLink($sub);
+                $portalLink = $this->subscriptionRepo->getBillingPortalLink($sub);
             }
 
-            $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($current_sub_id);
+            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($current_sub_id);
             event(new SubscriptionManagementViewed());
             return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink']));
         }else{
@@ -93,12 +93,12 @@ class SubscriptionController extends Controller
         }
         $productId = request()->get('api_product_id');
         $couponCode = $request->get('coupon_code');
-        $product = $this->subscriptionManager->getProduct($productId);
+        $product = $this->subscriptionRepo->getProduct($productId);
         if (!is_null($product)) {
             if ($product->require_credit_card) {
                 if (!is_null(auth()->user()->subscription)) {
                     $previousSubscription = auth()->user()->subscription;
-                    $previousAPISubscription = $this->subscriptionManager->getSubscription($previousSubscription->api_subscription_id);
+                    $previousAPISubscription = $this->subscriptionRepo->getSubscription($previousSubscription->api_subscription_id);
                     if(isset($previousAPISubscription->credit_card)){
                         $previousAPICreditCard = $previousAPISubscription->credit_card;
                         if (!is_null($previousAPICreditCard)) {
@@ -110,7 +110,7 @@ class SubscriptionController extends Controller
                                 $subscription->payment_profile_id = $previousAPICreditCard->id;
                                 $subscription->coupon_code = $couponCode;
                                 $fields->subscription = $subscription;
-                                $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
+                                $result = $this->subscriptionRepo->storeSubscription(json_encode($fields));
                                 Cache::tags(["user_subscription_". $user->getKey()])->flush();
                                 if (isset($result->subscription)) {
 //                                $subscription = new Subscription();
@@ -152,7 +152,7 @@ class SubscriptionController extends Controller
                 $fields->subscription = $subscription;
 
 //                $result = $this->setSubscription(json_encode($fields));
-                $result = $this->subscriptionManager->storeSubscription(json_encode($fields));
+                $result = $this->subscriptionRepo->storeSubscription(json_encode($fields));
                 if ($result != null) {
                     /* clear verification code*/
                     $user->verification_code = null;
@@ -196,7 +196,7 @@ class SubscriptionController extends Controller
 //                        $user->save();
 
                         $subscription_id = $request->get('id');
-                        $subscription = $this->subscriptionManager->getSubscription($subscription_id);
+                        $subscription = $this->subscriptionRepo->getSubscription($subscription_id);
                         if (!is_null($user->subscription)) {
                             $sub = $user->subscription;
                             $sub->api_product_id = $subscription->product->id;
@@ -205,7 +205,7 @@ class SubscriptionController extends Controller
                             $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
                             $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
                             $sub->save();
-                            $this->subscriptionManager->updateCreditCardDetails($sub);
+                            $this->subscriptionRepo->updateCreditCardDetails($sub);
                             event(new SubscriptionUpdated($sub));
                             Cache::tags(["user_subscription_". $user->getKey()])->flush();
                             return redirect()->route('subscription.index');
@@ -220,7 +220,7 @@ class SubscriptionController extends Controller
                             $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
                             $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
                             $sub->save();
-                            $this->subscriptionManager->updateCreditCardDetails($sub);
+                            $this->subscriptionRepo->updateCreditCardDetails($sub);
                             event(new SubscriptionCompleted($sub));
                             Cache::tags(["user_subscription_". $user->getKey()])->flush();
                             return redirect()->route('subscription.index');
@@ -253,7 +253,7 @@ class SubscriptionController extends Controller
         if (auth()->user()->getKey() != $user_id) {
             abort(403);
         }
-        $this->subscriptionManager->syncUserSubscription(auth()->user());
+        $this->subscriptionRepo->syncUserSubscription(auth()->user());
         Cache::tags(["user_subscription_". $user_id])->flush();
         return redirect()->route('subscription.index');
     }
@@ -268,7 +268,7 @@ class SubscriptionController extends Controller
 
         //load all products from Chargify
 //        $products = $this->getProducts();
-        $products = $this->subscriptionManager->getProducts();
+        $products = $this->subscriptionRepo->getProducts();
 
         /* remove the trail/free product for the existing subscriber */
         foreach ($products as $index => $product) {
@@ -284,14 +284,14 @@ class SubscriptionController extends Controller
     {
         $subscription = Subscription::findOrFail($id);
         event(new SubscriptionUpdating($subscription));
-        $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+        $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
 
         if ($request->has('coupon_code')) {
             $fields = new \stdClass();
             $updatedSubscription = new \stdClass();
             $updatedSubscription->coupon_code = $request->get('coupon_code');
             $fields->subscription = $updatedSubscription;
-            $result = $this->subscriptionManager->updateSubscription($apiSubscription->id, json_encode($fields));
+            $result = $this->subscriptionRepo->updateSubscription($apiSubscription->id, json_encode($fields));
             if ($result == false) {
                 if ($request->ajax()) {
                     $status = false;
@@ -318,7 +318,7 @@ class SubscriptionController extends Controller
             $migration->include_coupons = 1;
             $fields->migration = $migration;
 
-            $result = $this->subscriptionManager->setMigration($apiSubscription->id, json_encode($fields));
+            $result = $this->subscriptionRepo->setMigration($apiSubscription->id, json_encode($fields));
             if ($result != false) {
                 if (!is_null($result->subscription)) {
                     $subscription->api_product_id = $result->subscription->product->id;
@@ -356,12 +356,12 @@ class SubscriptionController extends Controller
     {
         $subscription = Subscription::findOrFail($id);
         event(new SubscriptionCancelling($subscription));
-        $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+        $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
         if (!is_null($apiSubscription) && is_null($apiSubscription->canceled_at)) {
             if(!$request->has('keep_profile') || $request->get('keep_profile') != '1'){
-                $this->subscriptionManager->deletePaymentProfile($apiSubscription->id);
+                $this->subscriptionRepo->deletePaymentProfile($apiSubscription->id);
             }
-            $result = $this->subscriptionManager->cancelSubscription($apiSubscription->id);
+            $result = $this->subscriptionRepo->cancelSubscription($apiSubscription->id);
 
             if (!is_null($result->subscription->canceled_at)) {
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));

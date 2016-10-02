@@ -24,8 +24,8 @@ class LogServiceProvider extends ServiceProvider
     public function register()
     {
 
-        $this->app->bind('App\Contracts\LogManagement\UserActivityLogger', 'App\Repositories\LogManagement\SLUserActivityLogger');
-        $this->app->bind('App\Contracts\LogManagement\CrawlerActivityLogger', 'App\Repositories\LogManagement\SLCrawlerActivityLogger');
+        $this->app->bind('App\Contracts\Repository\Logger\UserActivityLoggerContract', 'App\Repositories\Logger\UserActivityLoggerRepository');
+        $this->app->bind('App\Contracts\Repository\Logger\CrawlerActivityLoggerContract', 'App\Repositories\Logger\CrawlerActivityLoggerRepository');
 
         $this->app->when('App\Http\Controllers\Log\UserActivityLogController')
             ->needs('App\Filters\QueryFilter')

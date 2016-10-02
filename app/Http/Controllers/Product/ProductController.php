@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers\Product;
 
-use App\Contracts\ProductManagement\CategoryManager;
-use App\Contracts\ProductManagement\ProductManager;
+use App\Contracts\Repository\Product\Category\CategoryContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Events\Products\Product\ProductCreateViewed;
 use App\Events\Products\Product\ProductDeleted;
 use App\Events\Products\Product\ProductDeleting;
@@ -32,14 +32,14 @@ use Illuminate\Support\Facades\Validator;
  */
 class ProductController extends Controller
 {
-    protected $productManager;
-    protected $categoryManager;
+    protected $productRepo;
+    protected $categoryRepo;
     protected $filter;
 
-    public function __construct(ProductManager $productManager, CategoryManager $categoryManager, QueryFilter $filter)
+    public function __construct(ProductContract $productContract, CategoryContract $categoryContract, QueryFilter $filter)
     {
-        $this->productManager = $productManager;
-        $this->categoryManager = $categoryManager;
+        $this->productRepo = $productContract;
+        $this->categoryRepo = $categoryContract;
         $this->filter = $filter;
     }
 
@@ -52,7 +52,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->categoryManager->lazyLoadCategories($this->filter);
+            $data = $this->categoryRepo->lazyLoadCategories($this->filter);
             $html = "";
             foreach ($data->categories as $category) {
                 $html .= view("products.category.partials.single_category")->with(compact(['category']));
@@ -66,7 +66,7 @@ class ProductController extends Controller
             }
         } else {
             $categories = auth()->user()->categories;
-            $productCount = $this->productManager->getProductsCount();
+            $productCount = $this->productRepo->getProductsCount();
             event(new ProductListViewed());
             return view('products.index')->with(compact(['categories', 'productCount']));
         }
@@ -81,7 +81,7 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         if ($request->has('category_id')) {
-            $category = $this->categoryManager->getCategory($request->get('category_id'));
+            $category = $this->categoryRepo->getCategory($request->get('category_id'));
         }
         event(new ProductCreateViewed());
         return view('products.product.create')->with(compact(['category']));
@@ -113,7 +113,7 @@ class ProductController extends Controller
             }
         }
         event(new ProductStoring());
-        $product = $this->productManager->createProduct($request->all());
+        $product = $this->productRepo->createProduct($request->all());
         event(new ProductStored($product));
         $status = true;
         if ($request->ajax()) {
@@ -136,7 +136,7 @@ class ProductController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $product = $this->productManager->getProduct($id);
+        $product = $this->productRepo->getProduct($id);
         event(new ProductSingleViewed($product));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -174,9 +174,9 @@ class ProductController extends Controller
                 return redirect()->back()->withInput()->withErrors($errors);
             }
         }
-        $product = $this->productManager->getProduct($id);
+        $product = $this->productRepo->getProduct($id);
         event(new ProductUpdating($product));
-        $product = $this->productManager->updateProduct($id, $request->all());
+        $product = $this->productRepo->updateProduct($id, $request->all());
         event(new ProductUpdated($product));
         $status = true;
         if ($request->ajax()) {
@@ -197,7 +197,7 @@ class ProductController extends Controller
         if ($request->has('order')) {
             $order = $request->get('order');
             foreach ($order as $key => $ord) {
-                $product = $this->productManager->getProduct($ord['product_id'], false);
+                $product = $this->productRepo->getProduct($ord['product_id'], false);
                 if (!is_null($product) && intval($ord['product_order']) != 0) {
                     $product->product_order = intval($ord['product_order']);
                     $product->save();
@@ -226,9 +226,9 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $product = $this->productManager->getProduct($id);
+        $product = $this->productRepo->getProduct($id);
         event(new ProductDeleting($product));
-        $status = $this->productManager->deleteProduct($id);
+        $status = $this->productRepo->deleteProduct($id);
         event(new ProductDeleted($product));
         if ($request->ajax()) {
             if ($request->wantsJson()) {

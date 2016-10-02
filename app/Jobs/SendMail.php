@@ -9,7 +9,7 @@
 namespace App\Jobs;
 
 
-use App\Contracts\EmailManagement\EmailGenerator;
+use App\Contracts\Repository\Mailer\MailerContract;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -47,10 +47,10 @@ class SendMail extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     * @param EmailGenerator $emailGenerator
+     * @param MailerContract $mailer
      */
-    public function handle(EmailGenerator $emailGenerator)
+    public function handle(MailerContract $mailer)
     {
-        $emailGenerator->sendMail($this->view, $this->data, $this->options);
+        $mailer->sendMail($this->view, $this->data, $this->options);
     }
 }

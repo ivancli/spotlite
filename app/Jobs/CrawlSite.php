@@ -9,7 +9,7 @@
 namespace App\Jobs;
 
 
-use App\Contracts\CrawlerManagement\CrawlerManager;
+use App\Contracts\Repository\Crawler\CrawlerContract;
 use App\Models\Crawler;
 use App\Models\Domain;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -69,15 +69,13 @@ class CrawlSite extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     * @param CrawlerManager $crawlerManager
-     * @param CrawlerInterface $crawler
-     * @param ParserInterface $parser
+     * @param CrawlerContract $crawler
      */
 //    public function handle(CrawlerManager $crawlerManager, CrawlerInterface $crawler, ParserInterface $parser)
-    public function handle(CrawlerManager $crawlerManager)
+    public function handle(CrawlerContract $crawler)
     {
         $crawler = app()->make($this->crawler_class);
         $parser = app()->make($this->parser_class);
-        $crawlerManager->crawl($this->crawler, $crawler, $parser);
+        $crawler->crawl($this->crawler, $crawler, $parser);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\SubscriptionManagement\SubscriptionManager;
+use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 
@@ -10,11 +10,11 @@ use App\Http\Requests;
 
 class MessageController extends Controller
 {
-    protected $subscriptionManager;
+    protected $subscriptionRepo;
 
-    public function __construct(SubscriptionManager $subscriptionManager)
+    public function __construct(SubscriptionContract $subscriptionContract)
     {
-        $this->subscriptionManager = $subscriptionManager;
+        $this->subscriptionRepo = $subscriptionContract;
     }
 
     public function welcomeSubscription($raw = 0)
@@ -22,7 +22,7 @@ class MessageController extends Controller
         $user = auth()->user();
         if (!auth()->user()->isStaff()) {
             $subscription = $user->validSubscription();
-            $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+            $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
         }
         if ($raw == 0) {
             return view('msg.subscription.welcome')->with(compact(['apiSubscription']));
@@ -35,7 +35,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
         $subscription = $user->validSubscription();
-        $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+        $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
         if ($raw == 0) {
             return view('msg.subscription.welcome')->with(compact(['apiSubscription']));
         } else {
@@ -48,7 +48,7 @@ class MessageController extends Controller
         $user = auth()->user();
         $subscription = Subscription::findOrFail($subscription_id);
         if ($subscription->user_id == $user->getKey()) {
-            $apiSubscription = $this->subscriptionManager->getSubscription($subscription->api_subscription_id);
+            $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
             if ($raw == 0) {
                 return view('msg.subscription.cancelled')->with(compact(['apiSubscription']));
             } else {
@@ -63,7 +63,7 @@ class MessageController extends Controller
     public function notifyCreditCardExpiringSoon($raw = 0)
     {
         $apiSubscriptionId = auth()->user()->validSubscription()->api_subscription_id;
-        $updatePaymentLink = $this->subscriptionManager->generateUpdatePaymentLink($apiSubscriptionId);
+        $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($apiSubscriptionId);
 
         if ($raw == 0) {
             return view('msg.subscription.credit_card_expiry')->with(compact(['updatePaymentLink']));

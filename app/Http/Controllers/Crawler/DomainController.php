@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Crawler;
 
-use App\Contracts\ProductManagement\DomainManager;
+use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,12 +11,12 @@ use App\Http\Requests;
 
 class DomainController extends Controller
 {
-    protected $domainManager;
+    protected $domainRepo;
     protected $queryFilter;
 
-    public function __construct(DomainManager $domainManager, QueryFilter $queryFilter)
+    public function __construct(DomainContract $domainContract, QueryFilter $queryFilter)
     {
-        $this->domainManager = $domainManager;
+        $this->domainRepo = $domainContract;
         $this->queryFilter = $queryFilter;
     }
 
@@ -29,7 +29,7 @@ class DomainController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $domains = $this->domainManager->getDataTableDomains($this->queryFilter);
+            $domains = $this->domainRepo->getDataTableDomains($this->queryFilter);
             if ($request->wantsJson()) {
                 return response()->json($domains);
             } else {
@@ -65,7 +65,7 @@ class DomainController extends Controller
     {
         /*TODO validation here*/
 
-        $domain = $this->domainManager->createDomain($request->all());
+        $domain = $this->domainRepo->createDomain($request->all());
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -88,7 +88,7 @@ class DomainController extends Controller
     public function update(Request $request, $id)
     {
         /*TODO validation here*/
-        $domain = $this->domainManager->getDomain($id);
+        $domain = $this->domainRepo->getDomain($id);
         $domain->update($request->all());
         $status = true;
         if ($request->ajax()) {
@@ -111,7 +111,7 @@ class DomainController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $domain = $this->domainManager->getDomain($id);
+        $domain = $this->domainRepo->getDomain($id);
         $domain->delete();
         $status = true;
         if ($request->ajax()) {

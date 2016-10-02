@@ -9,22 +9,22 @@
 namespace App\Http\Controllers\Crawler;
 
 
-use App\Contracts\CrawlerManagement\CrawlerManager;
+use App\Contracts\Repository\Crawler\CrawlerContract;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class CrawlerController extends Controller
 {
-    protected $crawlerManager;
+    protected $crawler;
 
-    public function __construct(CrawlerManager $crawlerManager)
+    public function __construct(CrawlerContract $crawler)
     {
-        $this->crawlerManager = $crawlerManager;
+        $this->crawler = $crawler;
     }
 
     public function edit($crawler_id)
     {
-        $crawler = $this->crawlerManager->getCrawler($crawler_id);
+        $crawler = $this->crawler->getCrawler($crawler_id);
         return view('admin.site.forms.crawler')->with(compact(['crawler']));
     }
 
@@ -32,15 +32,16 @@ class CrawlerController extends Controller
     {
         /*TODO validation here*/
         $input = $request->all();
-        if(!$request->has('crawler_class') || strlen(trim($input['crawler_class'])) == 0){
+        if($request->has('crawler_class') && strlen($input['crawler_class']) == 0){
             $input['crawler_class'] = null;
         }
 
-        if(!$request->has('parser_class') || strlen(trim($input['parser_class'])) == 0){
+        if($request->has('parser_class') && strlen($input['parser_class']) == 0){
             $input['parser_class'] = null;
         }
-        $crawler = $this->crawlerManager->getCrawler($crawler_id);
-        $crawler = $this->crawlerManager->updateCrawler($crawler_id, $input);
+
+        $crawler = $this->crawler->getCrawler($crawler_id);
+        $crawler = $this->crawler->updateCrawler($crawler_id, $request->all());
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {

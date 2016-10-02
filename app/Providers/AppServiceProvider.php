@@ -37,18 +37,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Contracts\SubscriptionManagement\SubscriptionManager', 'App\Repositories\SubscriptionManagement\ChargifySubscriptionManager');
-        $this->app->bind('App\Contracts\EmailManagement\EmailGenerator', 'App\Repositories\EmailManagement\SpotLiteEmailGenerator');
-        $this->app->bind('App\Contracts\GroupManagement\GroupManager', 'App\Repositories\GroupManagement\UMGroupManager');
-        $this->app->bind('App\Contracts\ProductManagement\CategoryManager', 'App\Repositories\ProductManagement\SLCategoryManager');
-        $this->app->bind('App\Contracts\ProductManagement\ProductManager', 'App\Repositories\ProductManagement\SLProductManager');
-        $this->app->bind('App\Contracts\ProductManagement\SiteManager', 'App\Repositories\ProductManagement\SLSiteManager');
-        $this->app->bind('App\Contracts\ProductManagement\ProductSiteManager', 'App\Repositories\ProductManagement\SLProductSiteManager');
-        $this->app->bind('App\Contracts\ProductManagement\AlertManager', 'App\Repositories\ProductManagement\SLAlertManager');
-        $this->app->bind('App\Contracts\ProductManagement\ReportTaskManager', 'App\Repositories\ProductManagement\SLReportTaskManager');
-        $this->app->bind('App\Contracts\ProductManagement\ReportManager', 'App\Repositories\ProductManagement\SLReportManager');
-        $this->app->bind('App\Contracts\ProductManagement\DomainManager', 'App\Repositories\ProductManagement\SLDomainManager');
-        $this->app->bind('App\Contracts\CrawlerManagement\CrawlerManager', 'App\Repositories\CrawlerManagement\SLCrawlerManager');
+        $this->app->bind('App\Contracts\Repository\Mailer\MailerContract', 'App\Repositories\Mailer\MailerRepository');
+        $this->app->bind('App\Contracts\Repository\User\Group\GroupContract', 'App\Repositories\User\Group\GroupRepository');
+        $this->app->bind('App\Contracts\Repository\Crawler\CrawlerContract', 'App\Repositories\Crawler\CrawlerRepository');
+        $this->app->bind('App\Contracts\Repository\Subscription\SubscriptionContract', 'App\Repositories\Subscription\ChargifySubscriptionRepository');
+        $this->app->bind('App\Contracts\Repository\Product\Report\ReportContract', 'App\Repositories\Product\Report\ReportRepository');
+        $this->app->bind('App\Contracts\Repository\Product\Report\ReportTaskContract', 'App\Repositories\Product\Report\ReportTaskRepository');
+        $this->app->bind('App\Contracts\Repository\Product\Alert\AlertContract', 'App\Repositories\Product\Alert\AlertRepository');
+        $this->app->bind('App\Contracts\Repository\Product\Product\ProductContract', 'App\Repositories\Product\Product\ProductRepository');
+        $this->app->bind('App\Contracts\Repository\Product\Category\CategoryContract', 'App\Repositories\Product\Category\CategoryRepository');
+        $this->app->bind('App\Contracts\Repository\Product\Site\SiteContract', 'App\Repositories\Product\Site\SiteRepository');
+        $this->app->bind('App\Contracts\Repository\Product\ProductSite\ProductSiteContract', 'App\Repositories\Product\ProductSite\ProductSiteRepository');
+        $this->app->bind('App\Contracts\Repository\Product\Domain\DomainContract', 'App\Repositories\Product\Domain\DomainRepository');
 
         /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')

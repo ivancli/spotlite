@@ -9,8 +9,7 @@
 namespace App\Jobs;
 
 
-use App\Contracts\EmailManagement\EmailGenerator;
-use App\Contracts\ProductManagement\ReportTaskManager;
+use App\Contracts\Repository\Product\Report\ReportTaskContract;
 use App\Models\ReportTask;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,24 +32,23 @@ class SendReport extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     * @param ReportTaskManager $reportTaskManager
-     * @param EmailGenerator $emailGenerator
+     * @param ReportTaskContract $reportTaskRepo
      */
-    public function handle(ReportTaskManager $reportTaskManager, EmailGenerator $emailGenerator)
+    public function handle(ReportTaskContract $reportTaskRepo)
     {
         /* call manager to generate a report */
         /* can be a daily/weekly/monthly report */
 
         switch ($this->reportTask->report_task_owner_type) {
             case "category":
-                $report = $reportTaskManager->generateCategoryReport($this->reportTask);
+                $report = $reportTaskRepo->generateCategoryReport($this->reportTask);
                 $category = $this->reportTask->reportable;
                 $fileName = str_replace(' ', '_', $category->category_name) . "_category_report" . "." . $this->reportTask->file_type;
                 $subject = $category->category_name;
                 $view = 'products.report.email.category';
                 break;
             case "product":
-                $report = $reportTaskManager->generateProductReport($this->reportTask);
+                $report = $reportTaskRepo->generateProductReport($this->reportTask);
                 $product = $this->reportTask->reportable;
                 $subject = $product->product_name;
                 $fileName = str_replace(' ', '_', $product->product_name) . "_product_report" . "." . $this->reportTask->file_type;

@@ -9,26 +9,26 @@
 namespace App\Http\Controllers\Log;
 
 
-use App\Contracts\LogManagement\CrawlerActivityLogger;
+use App\Contracts\Repository\Logger\CrawlerActivityLoggerContract;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class CrawlerActivityLogController extends Controller
 {
-    protected $crawlerActivityLogger;
+    protected $crawlerActivityLoggerRepo;
     protected $filter;
 
-    public function __construct(CrawlerActivityLogger $crawlerActivityLogger, QueryFilter $filter)
+    public function __construct(CrawlerActivityLoggerContract $crawlerActivityLoggerContract, QueryFilter $filter)
     {
-        $this->crawlerActivityLogger = $crawlerActivityLogger;
+        $this->crawlerActivityLoggerRepo = $crawlerActivityLoggerContract;
         $this->filter = $filter;
     }
 
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $logs = $this->crawlerActivityLogger->getDataTablesLogs($this->filter);
+            $logs = $this->crawlerActivityLoggerRepo->getDataTablesLogs($this->filter);
             if ($request->wantsJson()) {
                 return response()->json($logs);
             } else {

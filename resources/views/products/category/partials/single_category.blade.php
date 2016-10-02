@@ -41,16 +41,16 @@
                     <a href="#" class="btn-action" data-toggle="tooltip" title="alert">
                         <i class="fa fa-bell-o"></i>
                     </a>
-                    <a href="#" class="btn-action" onclick="showCategoryReportTaskForm(this)" data-toggle="tooltip"
+                    <a href="#" class="btn-action" onclick="showCategoryReportTaskForm(this); return false;" data-toggle="tooltip"
                        title="report">
                         <i class="fa {{!is_null($category->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
                     </a>
-                    <a href="#" class="btn-action" onclick="toggleEditCategoryName(this)" data-toggle="tooltip"
+                    <a href="#" class="btn-action" onclick="toggleEditCategoryName(this); return false;" data-toggle="tooltip"
                        title="edit">
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
                     {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
-                    <a href="#" class="btn-action" onclick="btnDeleteCategoryOnClick(this)" data-toggle="tooltip"
+                    <a href="#" class="btn-action" onclick="btnDeleteCategoryOnClick(this); return false;" data-toggle="tooltip"
                        title="delete">
                         <i class="glyphicon glyphicon-trash text-danger"></i>
                     </a>
