@@ -6,7 +6,7 @@
  * Time: 3:45 PM
  */
 
-namespace App\Repositories\ProductManagement;
+namespace App\Repositories\Product\Domain;
 
 
 use App\Contracts\Repository\Product\Domain\DomainContract;
