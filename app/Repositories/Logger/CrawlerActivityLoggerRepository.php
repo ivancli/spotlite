@@ -6,7 +6,7 @@
  * Time: 1:49 PM
  */
 
-namespace App\Repositories\LogManagement;
+namespace App\Repositories\Logger;
 
 
 use App\Contracts\Repository\Logger\CrawlerActivityLoggerContract;
