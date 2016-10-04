@@ -65,8 +65,10 @@ class User extends Authenticatable
     }
 
     /**
+     * -----------------------------------------------------------------------------------------------------------------
      * indirect relationship
      */
+
     public function categoryReportTasks()
     {
         return $this->hasManyThrough('App\Models\ReportTask', 'App\Models\Category', 'user_id', 'report_task_owner_id', 'user_id')->where('report_task_owner_type', 'category');
@@ -76,6 +78,18 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough('App\Models\ReportTask', 'App\Models\Product', 'user_id', 'report_task_owner_id', 'user_id')->where('report_task_owner_type', 'product');
     }
+
+    public function productAlerts()
+    {
+        return $this->hasManyThrough('App\Models\Alert', 'App\Models\Product', 'user_id', 'alert_owner_id', 'user_id')->where('alert_owner_type', 'product');
+    }
+
+    public function productSites()
+    {
+        return $this->hasManyThrough('App\Models\ProductSite', 'App\Models\Product', 'user_id', 'product_id', 'user_id');
+    }
+
+//----------------------------------------------------------------------------------------------------------------------
 
     public function cachedSubscription()
     {

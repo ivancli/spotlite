@@ -24,7 +24,7 @@
                 <div class="form-group required" id="comparison-price-container"
                      style="{{isset($product->alert) && $product->alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">
                     {!! Form::label('comparison_price', 'Price Point', array('class' => 'control-label')) !!}
-                    {!! Form::text('comparison_price', null, array('class' => 'form-control sl-form-control', 'id' => 'txt-comparison-price')) !!}
+                    {!! Form::text('comparison_price', is_null($product->alert) ? null : number_format($product->alert->comparison_price, 2, '.', ''), array('class' => 'form-control sl-form-control', 'id' => 'txt-comparison-price')) !!}
                 </div>
                 <div class="form-group">
                     {!! Form::label('site_id[]', 'Exclude', array('class' => 'control-label')) !!}

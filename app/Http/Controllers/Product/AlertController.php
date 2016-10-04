@@ -5,11 +5,17 @@ namespace App\Http\Controllers\Product;
 use App\Contracts\Repository\Product\Alert\AlertContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\ProductSite\ProductSiteContract;
+use App\Events\Products\Alert\AlertCreated;
+use App\Events\Products\Alert\AlertCreateViewed;
+use App\Events\Products\Alert\AlertCreating;
+use App\Events\Products\Alert\AlertDeleted;
+use App\Events\Products\Alert\AlertDeleting;
+use App\Events\Products\Alert\AlertEdited;
+use App\Events\Products\Alert\AlertEditing;
+use App\Events\Products\Alert\AlertEditViewed;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
-use App\Models\Alert;
 use App\Models\AlertEmail;
-use App\Models\Site;
 use App\Validators\Product\Alert\UpdateProductAlertValidator;
 use App\Validators\Product\Alert\UpdateProductSiteAlertValidator;
 use Illuminate\Http\Request;
@@ -19,16 +25,32 @@ use Illuminate\Support\Facades\Validator;
 
 class AlertController extends Controller
 {
+    /*repositories*/
     protected $productRepo;
     protected $alertRepo;
     protected $productSiteRepo;
 
+
     public function __construct(ProductContract $productContract, AlertContract $alertContract, ProductSiteContract $productSiteContract)
     {
         $this->alertRepo = $alertContract;
-
         $this->productRepo = $productContract;
         $this->productSiteRepo = $productSiteContract;
+
+    }
+
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $alerts = $this->alertRepo->getDataTableAlerts();
+            if ($request->wantsJson()) {
+                return response()->json($alerts);
+            } else {
+                return $alerts;
+            }
+        } else {
+            return view('products.alert.index');
+        }
     }
 
     /**
@@ -76,9 +98,11 @@ class AlertController extends Controller
         $product = $this->productRepo->getProduct($product_id);
         $productSites = $product->productSites->pluck('site.site_url', 'product_site_id')->toArray();
         if (!is_null($product->alert)) {
+            event(new AlertEditViewed($product->alert));
             $emails = $product->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
             $excludedProductSites = $product->alert->excludedProductSites->pluck('site_id')->toArray();
         } else {
+            event(new AlertCreateViewed());
             $emails = array();
             $excludedProductSites = array();
         }
@@ -121,16 +145,26 @@ class AlertController extends Controller
         }
         $product = $this->productRepo->getProduct($product_id);
         if (is_null($product->alert)) {
+            event(new AlertCreating());
             $alert = $this->alertRepo->storeAlert($request->all());
+            event(new AlertCreated($alert));
         } else {
             $alert = $product->alert;
+
+            event(new AlertEditing($alert));
+
             $this->alertRepo->updateAlert($alert->getKey(), $request->all());
+
             /*TODO enhance this part*/
             if (!$request->has('comparison_price')) {
                 $alert->comparison_price = null;
                 $alert->save();
             }
+
+            event(new AlertEdited($alert));
         }
+
+        /*TODO can use sync instead of detach attach*/
         $alert->excludedProductSites()->detach();
         if ($request->has('site_id')) {
             foreach ($request->get('site_id') as $site) {
@@ -176,7 +210,13 @@ class AlertController extends Controller
     {
         $product = $this->productRepo->getProduct($product_id);
         $alert = $product->alert;
+
+        event(new AlertDeleting($alert));
+
         $alert->delete();
+
+        event(new AlertDeleted($alert));
+
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -202,8 +242,14 @@ class AlertController extends Controller
 
         if (!is_null($productSite->alert)) {
             $emails = $productSite->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
+
+            event(new AlertEditViewed($productSite->alert));
+
         } else {
             $emails = array();
+
+            event(new AlertCreateViewed());
+
         }
 
         return view('products.alert.site')->with(compact(['productSite', 'emails']));
@@ -245,15 +291,26 @@ class AlertController extends Controller
         }
         $productSite = $this->productSiteRepo->getProductSite($product_site_id);
         if (is_null($productSite->alert)) {
+
+            event(new AlertCreating());
+
             $alert = $this->alertRepo->storeAlert($request->all());
+
+            event(new AlertCreated($alert));
+
         } else {
             $alert = $productSite->alert;
+
+            event(new AlertEditing($alert));
+
             $this->alertRepo->updateAlert($alert->getKey(), $request->all());
             /*TODO enhance this part*/
             if (!$request->has('comparison_price')) {
                 $alert->comparison_price = null;
                 $alert->save();
             }
+
+            event(new AlertEdited($alert));
         }
 
         $alertEmails = array();
@@ -292,7 +349,13 @@ class AlertController extends Controller
     {
         $productSite = $this->productSiteRepo->getProductSite($product_site_id);
         $alert = $productSite->alert;
+
+        event(new AlertDeleting($alert));
+
         $alert->delete();
+
+        event(new AlertDeleted($alert));
+
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {

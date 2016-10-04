@@ -19,6 +19,8 @@ class Alert extends Model
         "alert_owner_id", "alert_owner_type", "comparison_price_type", "comparison_price", "comparison_site_id", "operator", "last_active_at"
     ];
     public $timestamps = false;
+    protected $appends = ['urls'];
+
 
     public function alertable()
     {
@@ -33,6 +35,11 @@ class Alert extends Model
     public function emails()
     {
         return $this->hasMany('App\Models\AlertEmail', 'alert_id', 'alert_id');
+    }
+
+    public function logs()
+    {
+        return $this->hasMany('App\Models\Logs\AlertActivityLog', 'alert_id', 'alert_id');
     }
 
     /**
@@ -60,4 +67,20 @@ class Alert extends Model
             return false;
         }
     }
+
+    /**
+     * URLs
+     *
+     * @return array
+     */
+    public function getUrlsAttribute()
+    {
+        $alertOwnerType = $this->alert_owner_type;
+        $alertOwnerId = $this->alert_owner_id;
+        return array(
+            "edit" => route("alert.$alertOwnerType.edit", $alertOwnerId),
+            "delete" => route("alert.$alertOwnerType.destroy", $alertOwnerId),
+        );
+    }
+
 }

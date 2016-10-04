@@ -237,3 +237,11 @@ Breadcrumbs::register('report_index', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Reports', route('report.index'));
 });
+
+/**
+ * Alert Page
+ */
+Breadcrumbs::register('alert_index', function($breadcrumbs){
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Alerts', route('alert.index'));
+});

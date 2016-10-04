@@ -82,6 +82,7 @@ class AppServiceProvider extends ServiceProvider
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\ReportTaskFilters');
 
+
         /*************************************************************************
          *                                                                       *
          * CRAWLER AND PARSER CLASSES DYNAMIC BINDING BASED ON DATABASE RECORD   *

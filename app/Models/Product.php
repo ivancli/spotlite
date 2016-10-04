@@ -60,6 +60,14 @@ class Product extends Model
         return $this->morphMany('App\Models\Report', 'report_owner', null, null, 'product_id');
     }
 
+    //indirect relationships
+
+    public function productSiteAlerts()
+    {
+        return $this->hasManyThrough('App\Models\Alert', 'App\Models\Product', 'product_id', 'alert_owner_id', 'product_id')->where('alert_owner_type', 'product_site');
+    }
+
+
     /**
      * back up category before deleting
      * @return bool|null

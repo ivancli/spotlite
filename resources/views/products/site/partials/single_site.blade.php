@@ -177,7 +177,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to show add site form, please try again later.");
+                    alertP("Error", "Unable to show edit alert form, please try again later.");
                 }
             });
         }

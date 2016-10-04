@@ -35,8 +35,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -199,7 +197,8 @@
                                             "&nbsp;",
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
-                                                "data-url": data.urls['delete']
+                                                "data-url": data.urls['delete'],
+                                                "onclick": "deleteReportTask(this)"
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-trash")
                                             )
@@ -406,8 +405,10 @@
                         if ($.isFunction(modalReady)) {
                             modalReady({
                                 "updateCallback": function (response) {
+                                    tblReportTask.ajax.reload();
                                 },
                                 "deleteCallback": function (response) {
+                                    tblReportTask.ajax.reload();
                                 }
                             })
                         }
@@ -422,6 +423,41 @@
                     alertP("Error", "Unable to show edit report form, please try again later.");
                 }
             });
+        }
+
+        function deleteReportTask(el) {
+            confirmP("Delete Report Schedule", "Do you want to delete this schedule?", {
+                "affirmative": {
+                    "text": "Delete",
+                    "class": "btn-danger",
+                    "dismiss": true,
+                    "callback": function () {
+                        showLoading();
+                        $.ajax({
+                            "url": $(el).attr("data-url"),
+                            "method": "delete",
+                            "dataType": "json",
+                            "success": function (response) {
+                                hideLoading();
+                                if (response.status == true) {
+                                    tblReportTask.row($(el).closest("tr")).remove().draw();
+                                } else {
+                                    alertP("Error", "Unable to delete report schedule, please try again later.");
+                                }
+                            },
+                            "error": function (xhr, status, error) {
+                                hideLoading();
+                                alertP("Error", "Unable to delete report schedule, please try again later.");
+                            }
+                        })
+                    }
+                },
+                "negative": {
+                    "text": "Cancel",
+                    "class": "btn-default",
+                    "dismiss": true
+                }
+            })
         }
     </script>
 @stop

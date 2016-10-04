@@ -87,6 +87,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('alert/product_site/{product_site_id}', 'Product\AlertController@updateProductSiteAlert')->name('alert.product_site.update');
         Route::delete('alert/product_site/{product_site_id}', 'Product\AlertController@deleteProductSiteAlert')->name('alert.product_site.destroy');
 
+        Route::resource('alert', 'Product\AlertController');
+        Route::resource('alert_log', 'Log\AlertActivityLogController');
+
 
         /**
          * Report Related Routes
@@ -103,8 +106,8 @@ Route::group(['middleware' => ['auth']], function () {
         /**
          * Report Page Related Routes
          */
-        Route::resource('report', 'Report\ReportController', ['except' => [
-            'create'
+        Route::resource('report', 'Product\ReportController', ['only' => [
+            'index', 'show', 'destroy'
         ]]);
 
 

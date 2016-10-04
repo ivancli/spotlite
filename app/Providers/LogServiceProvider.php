@@ -26,6 +26,8 @@ class LogServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Contracts\Repository\Logger\UserActivityLoggerContract', 'App\Repositories\Logger\UserActivityLoggerRepository');
         $this->app->bind('App\Contracts\Repository\Logger\CrawlerActivityLoggerContract', 'App\Repositories\Logger\CrawlerActivityLoggerRepository');
+        $this->app->bind('App\Contracts\Repository\Logger\AlertActivityLoggerContract', 'App\Repositories\Logger\AlertActivityLoggerRepository');
+
 
         $this->app->when('App\Http\Controllers\Log\UserActivityLogController')
             ->needs('App\Filters\QueryFilter')
@@ -41,5 +43,6 @@ class LogServiceProvider extends ServiceProvider
         $this->app->when('App\Models\CrawlerActivityLog')
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\CrawlerActivityLogFilters');
+
     }
 }

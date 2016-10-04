@@ -10,13 +10,23 @@ namespace App\Repositories\Product\Alert;
 
 
 use App\Contracts\Repository\Product\Alert\AlertContract;
+use App\Events\Products\Alert\AlertSent;
+use App\Events\Products\Alert\AlertTriggered;
+use App\Filters\QueryFilter;
 use App\Jobs\LogUserActivity;
 use App\Jobs\SendMail;
 use App\Models\Alert;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class AlertRepository implements AlertContract
 {
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
     public function getAlerts()
     {
@@ -51,6 +61,7 @@ class AlertRepository implements AlertContract
 
     public function triggerProductAlert(Alert $alert)
     {
+        event(new AlertTriggered($alert));
         $product = $alert->alertable;
 
         $productSites = $product->productSites;
@@ -118,11 +129,15 @@ class AlertRepository implements AlertContract
                     "subject" => 'SpotLite - Product Price Alert'
                 )
             ))->onQueue("mailing"));
+
+            event(new AlertSent($alert, $email));
         }
     }
 
     public function triggerProductSiteAlert(Alert $alert)
     {
+        event(new AlertTriggered($alert));
+
         $productSite = $alert->alertable;
         if (is_null($productSite)) {
             return false;
@@ -164,6 +179,8 @@ class AlertRepository implements AlertContract
                         "email" => $email->alert_email_address,
                         "subject" => 'SpotLite - Site Price Alert'
                     )))->onQueue("mailing"));
+
+                event(new AlertSent($alert, $email));
             }
         }
     }
@@ -186,5 +203,76 @@ class AlertRepository implements AlertContract
             default:
                 return false;
         }
+    }
+
+    private function getAlertsCount()
+    {
+        $productSiteWithAlerts = auth()->user()->productSites()->with("alert")->get();
+
+        $productSiteAlerts = array();
+        foreach ($productSiteWithAlerts as $productSiteWithAlert) {
+            if (!is_null($productSiteWithAlert->alert)) {
+                $productSiteAlerts [] = $productSiteWithAlert->alert;
+            }
+        }
+
+        return auth()->user()->productAlerts()->count() + count($productSiteAlerts);
+    }
+
+    public function getDataTableAlerts()
+    {
+        $productAlerts = $this->getProductAlertsByAuthUser();
+        $productSiteAlerts = $this->getProductSiteAlertsByAuthUser();
+
+        $alerts = $productAlerts->merge($productSiteAlerts);
+
+
+        if ($this->request->has('order')) {
+            foreach ($this->request->get('order') as $columnAndDirection) {
+                if ($columnAndDirection['dir'] == 'asc') {
+                    $alerts = $alerts->sortBy($columnAndDirection['column'])->values();
+                } else {
+                    $alerts = $alerts->sortByDesc($columnAndDirection['column'])->values();
+                }
+            }
+        }
+
+        if ($this->request->has('start')) {
+            $alerts = $alerts->slice($this->request->get('start'), $alerts->count());
+        }
+
+        if ($this->request->has('length')) {
+            $alerts = $alerts->take($this->request->get('length'));
+        }
+
+        $output = new \stdClass();
+        $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
+        $output->recordTotal = $this->getAlertsCount();
+        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+            $output->recordsFiltered = $alerts->count();
+        } else {
+            $output->recordsFiltered = $this->getAlertsCount();
+        }
+        $output->data = $alerts->toArray();
+        return $output;
+    }
+
+    public function getProductAlertsByAuthUser()
+    {
+        return auth()->user()->productAlerts()->with('alertable')->get();
+    }
+
+    public function getProductSiteAlertsByAuthUser()
+    {
+        /*get product site with alerts*/
+        $productSitesWithAlerts = auth()->user()->productSites()->with('alert')->with('alert.alertable')->with('alert.alertable.site')->get();
+
+        $productSiteAlerts = $productSitesWithAlerts->pluck(['alert']);
+
+        /*remove the null value*/
+        $productSiteAlerts = $productSiteAlerts->reject(function ($alert, $key) {
+            return is_null($alert);
+        });
+        return $productSiteAlerts;
     }
 }

@@ -239,10 +239,7 @@
                 "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
-                    $modal.modal({
-                        "backdrop": "static",
-                        "keyboard": false
-                    });
+                    $modal.modal();
                     $modal.on("shown.bs.modal", function () {
                         if ($.isFunction(modalReady)) {
                             modalReady({

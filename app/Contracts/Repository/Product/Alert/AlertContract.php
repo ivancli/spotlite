@@ -26,4 +26,10 @@ interface AlertContract
     public function triggerProductAlert(Alert $alert);
 
     public function triggerProductSiteAlert(Alert $alert);
+
+    public function getDataTableAlerts();
+
+    public function getProductAlertsByAuthUser();
+
+    public function getProductSiteAlertsByAuthUser();
 }
