@@ -101,7 +101,7 @@ class ReportController extends Controller
             abort(403);
         }
         $createdAt = date('Ymd', strtotime($report->created_at));
-        $filename = $createdAt . $report->file_name . '.' . $report->file_type;
+        $filename = $createdAt . "_" . $report->file_name . '.' . $report->file_type;
         return response(base64_decode($report->content))
             ->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
             ->header('Content-Disposition', "attachment; filename=$filename")
@@ -113,11 +113,23 @@ class ReportController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $report = $this->reportRepo->getReport($id);
+        $this->reportRepo->deleteReport($id);
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
     }
 }

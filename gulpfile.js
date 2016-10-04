@@ -38,6 +38,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.css',
         'node_modules/dragula/dist/dragula.css',
         'resources/assets/css/file-tree.css',
+        'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.styles([
@@ -70,6 +71,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/datepicker/bootstrap-datepicker.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/moment.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js',
+        'node_modules/jquery-contextmenu/dist/jquery.contextMenu.js',
         'resources/assets/js/commonFunctions.js',
         'resources/assets/js/sidebar.js',
         'resources/assets/js/spotlite.js'

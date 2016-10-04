@@ -63,7 +63,7 @@ class SendReport extends Job implements ShouldQueue
         if (isset($report) && !is_null($report)) {
             $attachment = array(
                 "data" => $report->content,
-                "file_name" => date("Ymd") . $fileName
+                "file_name" => date("Ymd") . "_" . $fileName
             );
 
             foreach ($this->reportTask->emails as $email) {

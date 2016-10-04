@@ -37,6 +37,7 @@ class Report extends Model
     {
         return array(
             "show" => route("report.show", $this->getKey()),
+            "delete" => route("report.destroy", $this->getKey())
         );
     }
 

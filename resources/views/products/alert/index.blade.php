@@ -198,7 +198,7 @@
                                             $("<a>").addClass("text-muted").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['edit'],
-                                                "onclick": "showAlertForm(this)"
+                                                "onclick": "showAlertForm(this); return false;"
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-cog")
                                             ),
@@ -206,7 +206,7 @@
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],
-                                                "onclick": "deleteReportTask(this)"
+                                                "onclick": "deleteAlert(this); return false"
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-trash")
                                             )
@@ -237,11 +237,8 @@
                         "name": "alert_activity_log_id",
                         "data": function (data) {
                             var content = JSON.parse(data.content);
-                            console.info('content', content.email.alert_email_address);
-                            console.info('data', data);
                             var popoverContent = "";
                             var alertOwnerType = "";
-                            console.info('data.alert.alert_owner_type', data.alert.alert_owner_type);
                             if (data.alert.alert_owner_type == "product") {
                                 alertOwnerType = "Product ";
                                 popoverContent = $("<div>").append(
@@ -339,6 +336,41 @@
                     alertP("Error", "Unable to show edit alert form, please try again later.");
                 }
             });
+        }
+
+        function deleteAlert(el) {
+            confirmP("Delete Alert", "Do you want to delete this alert?", {
+            "affirmative": {
+                    "text": "Delete",
+                    "class": "btn-danger",
+                    "dismiss": true,
+                    "callback": function () {
+                        showLoading();
+                        $.ajax({
+                            "url": $(el).attr("data-url"),
+                            "method": "delete",
+                            "dataType": "json",
+                            "success": function (response) {
+                                hideLoading();
+                                if (response.status == true) {
+                                    tblAlert.row($(el).closest("tr")).remove().draw();
+                                } else {
+                                    alertP("Error", "Unable to delete alert, please try again later.");
+                                }
+                            },
+                            "error": function (xhr, status, error) {
+                                hideLoading();
+                                alertP("Error", "Unable to delete alert, please try again later.");
+                            }
+                        })
+                    }
+                },
+                "negative": {
+                    "text": "Cancel",
+                    "class": "btn-default",
+                    "dismiss": true
+                }
+            })
         }
     </script>
 @stop

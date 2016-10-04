@@ -67,6 +67,30 @@
     <script type="text/javascript">
         var tblReportTask = null;
         $(function () {
+            $.contextMenu({
+                "selector": '.report-list-container .file-anchor',
+                "items": {
+                    "download": {
+                        "name": "Download",
+                        "callback": function(key, opt){
+                            var el = opt.$trigger.context;
+                            el.click();
+                        }
+                    },
+                    "delete": {
+                        "name": "Delete",
+                        "callback": function (key, opt) {
+                            var el = opt.$trigger.context;
+                            deleteReport(el, function (response) {
+                                $(el).closest("li").remove();
+                            });
+
+                        }
+                    }
+                }
+            });
+
+
             jQuery.fn.dataTable.Api.register('processing()', function (show) {
                 return this.iterator('table', function (ctx) {
                     ctx.oApi._fnProcessingDisplay(ctx, show);
@@ -284,11 +308,13 @@
                                 }
                                 $ul.append(
                                         $("<li>").addClass("file ext_" + ext).append(
-                                                $("<a>").attr({
+                                                $("<a>").addClass("file-anchor").attr({
+                                                    "data-delete-url": report.urls["delete"],
+                                                    "data-report-id": report.report_id,
                                                     "href": report.urls['show'],
                                                     "download": "download",
-                                                    "title": moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type
-                                                }).text(moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type)
+                                                    "title": moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type
+                                                }).text(moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type)
                                         )
                                 )
                             });
@@ -339,11 +365,13 @@
                                 }
                                 $ul.append(
                                         $("<li>").addClass("file ext_" + ext).append(
-                                                $("<a>").attr({
+                                                $("<a>").addClass("file-anchor").attr({
+                                                    "data-delete-url": report.urls["delete"],
+                                                    "data-report-id": report.report_id,
                                                     "href": report.urls['show'],
                                                     "download": "download",
-                                                    "title": moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type
-                                                }).text(moment(report.created_at).format("YYYYMMDD") + report.file_name + "." + report.file_type)
+                                                    "title": moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type
+                                                }).text(moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type)
                                         )
                                 )
                             });
@@ -353,7 +381,6 @@
                     },
                     "error": function (xhr, status, error) {
                         hideReportListLoading();
-
                     }
                 })
             } else {
@@ -448,6 +475,44 @@
                             "error": function (xhr, status, error) {
                                 hideLoading();
                                 alertP("Error", "Unable to delete report schedule, please try again later.");
+                            }
+                        })
+                    }
+                },
+                "negative": {
+                    "text": "Cancel",
+                    "class": "btn-default",
+                    "dismiss": true
+                }
+            })
+        }
+
+        function deleteReport(el, callback) {
+            confirmP("Delete Report", "Do you want to delete this report?", {
+                "affirmative": {
+                    "text": "Delete",
+                    "class": "btn-danger",
+                    "dismiss": true,
+                    "callback": function () {
+                        console.info($(el).attr("data-delete-url"));
+                        showLoading();
+                        $.ajax({
+                            "url": $(el).attr("data-delete-url"),
+                            "method": "delete",
+                            "dataType": "json",
+                            "success": function (response) {
+                                hideLoading();
+                                if (response.status == true) {
+                                    if ($.isFunction(callback)) {
+                                        callback(response);
+                                    }
+                                } else {
+                                    alertP("Error", "Unable to delete report, please try again later.");
+                                }
+                            },
+                            "error": function (xhr, status, error) {
+                                hideLoading();
+                                alertP("Error", "Unable to delete report, please try again later.");
                             }
                         })
                     }
