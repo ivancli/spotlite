@@ -43,7 +43,8 @@
                 "pageLength": 25,
                 "order": [[3, "desc"]],
                 "language": {
-                    "emptyTable": "No logs in the list"
+                    "emptyTable": "No logs in the list",
+                    "zeroRecords": "No logs in the list"
                 },
                 "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'><'col-sm-7'p>>",
                 "ajax": {

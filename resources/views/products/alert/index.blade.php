@@ -80,7 +80,8 @@
                 "pageLength": 25,
                 "order": [[4, "asc"]],
                 "language": {
-                    "emptyTable": "No alerts in the list"
+                    "emptyTable": "No alerts in the list",
+                    "zeroRecords": "No alerts in the list"
                 },
                 "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
                 "ajax": {
@@ -232,7 +233,8 @@
                 "pageLength": 10,
                 "ordering": false,
                 "language": {
-                    "emptyTable": "No alert logs in the list"
+                    "emptyTable": "No alert logs in the list",
+                    "zeroRecords": "No alert logs in the list"
                 },
                 "dom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'p>>",
                 "ajax": {
