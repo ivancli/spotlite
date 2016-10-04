@@ -104,6 +104,9 @@
                 "pageLength": 25,
                 "order": [[3, "asc"]],
                 "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
+                "language": {
+                    "emptyTable": "No report schedules in the list"
+                },
                 "ajax": {
                     "url": "{{route('report_task.index')}}",
                     "data": function (d) {

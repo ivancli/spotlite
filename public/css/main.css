@@ -12911,7 +12911,7 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
 
 ul.file-tree {
     font-family: Verdana, sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 18px;
     padding: 0px;
     margin: 0px;
@@ -12919,10 +12919,9 @@ ul.file-tree {
 
 ul.file-tree li {
     list-style: none;
-    padding: 0px;
-    padding-left: 20px;
-    margin: 0px;
+    padding: 0px 0px 0px 20px;
     white-space: nowrap;
+    margin: 5px 0px 0px;
 }
 
 ul.file-tree A {

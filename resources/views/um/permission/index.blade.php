@@ -51,6 +51,9 @@
                 "pagingType": "full_numbers",
                 "processing": true,
                 "serverSide": true,
+                "language": {
+                    "emptyTable": "No permissions in the list"
+                },
                 "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'><'col-sm-7'p>>",
                 "ajax": "{{route('um.permission.index')}}",
                 "columns": [

@@ -46,6 +46,9 @@
                 "serverSide": true,
                 "pageLength": 25,
                 "order": [[0, "asc"]],
+                "language": {
+                    "emptyTable": "No domains in the list"
+                },
                 "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
                 "ajax": {
                     "url": "{{route(request()->route()->getName())}}",

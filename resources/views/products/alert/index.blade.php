@@ -79,6 +79,9 @@
                 "filter": false,
                 "pageLength": 25,
                 "order": [[4, "asc"]],
+                "language": {
+                    "emptyTable": "No alerts in the list"
+                },
                 "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
                 "ajax": {
                     "url": "{{route('alert.index')}}",
@@ -228,6 +231,9 @@
                 "filter": false,
                 "pageLength": 10,
                 "ordering": false,
+                "language": {
+                    "emptyTable": "No alert logs in the list"
+                },
                 "dom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'p>>",
                 "ajax": {
                     "url": "{{route('alert_log.index')}}"
