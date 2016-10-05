@@ -245,6 +245,24 @@ class AlertRepository implements AlertContract
             $alerts = $alerts->take($this->request->get('length'));
         }
 
+        if ($this->request->has('search') && isset($this->request->get('search')['value']) && strlen($this->request->get('search')['value']) > 0) {
+            $searchString = $this->request->get('search')['value'];
+            $alerts = $alerts->filter(function ($alert, $key) use ($searchString) {
+                if (str_contains(strtolower($alert->alert_owner_type), strtolower($searchString))
+                    || str_contains(strtolower($alert->comparison_price_type), strtolower($searchString))
+                    || str_contains(strtolower($alert->comparison_price), strtolower($searchString))
+                ) {
+                    return true;
+                }
+
+                if ($alert->alert_owner_type == "product_site") {
+                    return str_contains(strtolower($alert->alert_owner->site->domain), strtolower($searchString));
+                } elseif ($alert->alert_owner_type == "product") {
+                    return str_contains(strtolower($alert->alert_owner->product_name), strtolower($searchString));
+                }
+            })->values();
+        }
+
         $output = new \stdClass();
         $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
         $output->recordTotal = $this->getAlertsCount();

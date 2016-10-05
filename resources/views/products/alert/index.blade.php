@@ -76,7 +76,6 @@
                 "pagingType": "full_numbers",
                 "processing": true,
                 "serverSide": true,
-                "filter": false,
                 "pageLength": 25,
                 "order": [[4, "asc"]],
                 "language": {
@@ -156,7 +155,9 @@
                     },
                     {
                         "name": "comparison_price_type",
-                        "data": "comparison_price_type"
+                        "data": function (data) {
+                            return capitalise(data.comparison_price_type)
+                        }
                     },
                     {
                         "name": "operator",
@@ -191,7 +192,13 @@
                     },
                     {
                         "name": "last_active_at",
-                        "data": "last_active_at"
+                        "data": function (data) {
+                            if (data.last_active_at != null) {
+                                return moment(data.last_active_at).format("lll")
+                            } else {
+                                return null;
+                            }
+                        }
                     },
                     {
                         "class": "text-center",
@@ -348,7 +355,7 @@
 
         function deleteAlert(el) {
             confirmP("Delete Alert", "Do you want to delete this alert?", {
-            "affirmative": {
+                "affirmative": {
                     "text": "Delete",
                     "class": "btn-danger",
                     "dismiss": true,

@@ -41,9 +41,10 @@ class ReportTaskFilters extends QueryFilter
      */
     public function search($keyWord)
     {
-        return $this->builder->where('report_task_owner_type', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('frequency', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('file_type', 'LIKE', "%{$keyWord['value']}%");
+//        return $this->builder->where('report_task_owner_type', 'LIKE', "%{$keyWord['value']}%")
+//            ->orWhere('frequency', 'LIKE', "%{$keyWord['value']}%")
+//            ->orWhere('file_type', 'LIKE', "%{$keyWord['value']}%");
+        return $this->builder;
     }
 
     /**

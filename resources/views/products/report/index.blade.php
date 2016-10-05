@@ -72,7 +72,7 @@
                 "items": {
                     "download": {
                         "name": "Download",
-                        "callback": function(key, opt){
+                        "callback": function (key, opt) {
                             var el = opt.$trigger.context;
                             el.click();
                         }
@@ -100,7 +100,6 @@
                 "pagingType": "full_numbers",
                 "processing": true,
                 "serverSide": true,
-                "filter": false,
                 "pageLength": 25,
                 "order": [[3, "asc"]],
                 "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
@@ -201,12 +200,22 @@
                     {
                         "sortable": false,
                         "name": "file_type",
-                        "data": "file_type"
+                        "data": function (data) {
+                            switch (data.file_type) {
+                                case "xlsx":
+                                    return "Excel 2007-2013"
+                            }
+                            return null;
+                        }
                     },
                     {
                         "name": "last_sent_at",
                         "data": function (data) {
-                            return moment(data.last_sent_at).format("lll")
+                            if (data.last_sent_at != null) {
+                                return moment(data.last_sent_at).format("lll")
+                            } else {
+                                return null;
+                            }
                         }
                     },
                     {

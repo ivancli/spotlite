@@ -3,8 +3,8 @@
     data-site-alert-url="{{$productSite->urls['alert']}}"
     data-site-update-url="{{$productSite->urls['update']}}">
     <td>
-        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="tooltip" data-trigger="click"
-           title="{{$productSite->site->site_url}}">
+        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="popover" data-trigger="hover focus"
+           data-content="{{$productSite->site->site_url}}">
             {{parse_url($productSite->site->site_url)['host']}}
         </a>
     </td>
@@ -35,9 +35,9 @@
     </td>
     <td>
         @if(!is_null($productSite->site->last_crawled_at))
-            <div title="{{$productSite->site->last_crawled_at}}" data-toggle="tooltip">
-                {{date("Y-m-d", strtotime($productSite->site->last_crawled_at))}}
-                <span class="hidden-xs hidden-sm">{{date("H:i:s", strtotime($productSite->site->last_crawled_at))}}</span>
+            <div title="{{date("M j Y n:i A", strtotime($productSite->site->last_crawled_at))}}" data-toggle="tooltip">
+                {{date("M j Y", strtotime($productSite->site->last_crawled_at))}}
+                <span class="hidden-xs hidden-sm">{{date("n:i A", strtotime($productSite->site->last_crawled_at))}}</span>
             </div>
         @endif
     </td>
@@ -252,5 +252,13 @@
                 });
             });
         }
+
+        function initPopover(){
+            $("[data-toggle=popover]").popover();
+        }
+
+        $(function(){
+            initPopover();
+        })
     </script>
 </tr>

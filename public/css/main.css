@@ -13743,7 +13743,8 @@ th.ellipsis {
 /*border: 1px solid #e6e6e6 !important;*/
 /*}*/
 
-.site-wrapper .tooltip-inner {
+.site-wrapper .tooltip-inner,
+.site-wrapper .popover-content {
     word-break: break-all;
     word-wrap: break-word;
 }

@@ -168,6 +168,42 @@ class ReportTaskRepository implements ReportTaskContract
             }
         }
 
+        if ($this->request->has('search') && isset($this->request->get('search')['value']) && strlen($this->request->get('search')['value']) > 0) {
+            $searchString = $this->request->get('search')['value'];
+            $reportTasks = $reportTasks->filter(function ($reportTask, $key) use ($searchString) {
+                if (str_contains(strtolower($reportTask->report_task_owner_type), strtolower($searchString))
+                    || str_contains(strtolower($reportTask->frequency), strtolower($searchString))
+                    || str_contains(strtolower($reportTask->last_sent_at), strtolower($searchString))
+                ) {
+                    return true;
+                }
+                switch ($reportTask->file_type) {
+                    case "xlsx":
+                        if (str_contains(strtolower("Excel 2007-2013"), strtolower($searchString))) {
+                            return true;
+                        }
+                        break;
+                    case "pdf":
+                        if (str_contains(strtolower("PDF"), strtolower($searchString))) {
+                            return true;
+                        }
+                        break;
+                    case "xls":
+                        if (str_contains(strtolower("Excel 2003"), strtolower($searchString))) {
+                            return true;
+                        }
+                        break;
+                    default:
+                }
+
+                if ($reportTask->report_task_owner_type == "category") {
+                    return str_contains(strtolower($reportTask->report_task_owner->category_name), strtolower($searchString));
+                } elseif ($reportTask->report_task_owner_type == "product") {
+                    return str_contains(strtolower($reportTask->report_task_owner->product_name), strtolower($searchString));
+                }
+            })->values();
+        }
+
         $output = new \stdClass();
         $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
         $output->recordTotal = $this->getReportTasksCount();
