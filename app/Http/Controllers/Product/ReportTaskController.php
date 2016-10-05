@@ -12,6 +12,15 @@ namespace App\Http\Controllers\Product;
 use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Report\ReportTaskContract;
+use App\Events\Products\Report\ReportListViewed;
+use App\Events\Products\Report\ReportTaskCreated;
+use App\Events\Products\Report\ReportTaskCreateViewed;
+use App\Events\Products\Report\ReportTaskCreating;
+use App\Events\Products\Report\ReportTaskDeleted;
+use App\Events\Products\Report\ReportTaskDeleting;
+use App\Events\Products\Report\ReportTaskEdited;
+use App\Events\Products\Report\ReportTaskEditing;
+use App\Events\Products\Report\ReportTaskEditViewed;
 use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
@@ -47,7 +56,7 @@ class ReportTaskController extends Controller
 
     public function index(Request $request)
     {
-
+        event(new ReportListViewed());
 
         $reportTasks = $this->reportTaskRepo->getDataTableReportTasks($this->queryFilter);
         if ($request->ajax()) {
@@ -73,8 +82,10 @@ class ReportTaskController extends Controller
     {
         $category = $this->categoryRepo->getCategory($category_id);
         if (!is_null($category->reportTask)) {
+            event(new ReportTaskEditViewed($category->reportTask));
             $emails = $category->reportTask->emails->pluck('report_email_address', 'report_email_address')->toArray();
         } else {
+            event(new ReportTaskCreateViewed());
             $emails = array();
         }
         return view('products.report.category')->with(compact(['category', 'emails']));
@@ -117,10 +128,18 @@ class ReportTaskController extends Controller
         $category = $this->categoryRepo->getCategory($category_id);
 
         if (is_null($category->reportTask)) {
+
+            event(new ReportTaskCreating());
+
             $reportTask = $this->reportTaskRepo->storeReportTask($request->all());
+
+            event(new ReportTaskCreated($reportTask));
+
         } else {
             $reportTask = $category->reportTask;
+            event(new ReportTaskEditing($reportTask));
             $this->reportTaskRepo->updateReportTask($reportTask->getKey(), $request->all());
+            event(new ReportTaskEdited($reportTask));
         }
 
         $reportEmails = array();
@@ -154,7 +173,9 @@ class ReportTaskController extends Controller
         $category = $this->categoryRepo->getCategory($category_id);
 
         if (!is_null($category->reportTask)) {
+            event(new ReportTaskDeleting($category->reportTask));
             $this->reportTaskRepo->deleteReportTask($category->reportTask->getKey());
+            event(new ReportTaskDeleted($category->reportTask));
         }
         $status = true;
 
@@ -180,8 +201,10 @@ class ReportTaskController extends Controller
     {
         $product = $this->productRepo->getProduct($product_id);
         if (!is_null($product->reportTask)) {
+            event(new ReportTaskEditViewed($product->reportTask));
             $emails = $product->reportTask->emails->pluck('report_email_address', 'report_email_address')->toArray();
         } else {
+            event(new ReportTaskCreateViewed());
             $emails = array();
         }
         return view('products.report.product')->with(compact(['product', 'emails']));
@@ -217,10 +240,14 @@ class ReportTaskController extends Controller
         $product = $this->productRepo->getProduct($product_id);
 
         if (is_null($product->reportTask)) {
+            event(new ReportTaskCreating());
             $reportTask = $this->reportTaskRepo->storeReportTask($request->all());
+            event(new ReportTaskCreated($reportTask));
         } else {
             $reportTask = $product->reportTask;
+            event(new ReportTaskEditing($reportTask));
             $this->reportTaskRepo->updateReportTask($reportTask->getKey(), $request->all());
+            event(new ReportTaskEdited($reportTask));
         }
 
         $reportEmails = array();
@@ -254,7 +281,9 @@ class ReportTaskController extends Controller
         $product = $this->productRepo->getProduct($product_id);
 
         if (!is_null($product->reportTask)) {
+            event(new ReportTaskDeleting($product->reportTask));
             $this->reportTaskRepo->deleteReportTask($product->reportTask->getKey());
+            event(new ReportTaskDeleted($product->reportTask));
         }
         $status = true;
 

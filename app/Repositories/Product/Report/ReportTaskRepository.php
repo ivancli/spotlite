@@ -11,6 +11,8 @@ namespace App\Repositories\Product\Report;
 
 use App\Contracts\Repository\Product\Report\ReportContract;
 use App\Contracts\Repository\Product\Report\ReportTaskContract;
+use App\Events\Products\Report\ReportCreated;
+use App\Events\Products\Report\ReportCreating;
 use App\Filters\QueryFilter;
 use App\Models\ReportTask;
 use Illuminate\Http\Request;
@@ -65,6 +67,7 @@ class ReportTaskRepository implements ReportTaskContract
 
     public function generateCategoryReport(ReportTask $reportTask)
     {
+        event(new ReportCreating());
         $category = $reportTask->reportable;
         $products = $category->products;
 
@@ -100,11 +103,13 @@ class ReportTaskRepository implements ReportTaskContract
             "file_name" => $fileName,
             "file_type" => $reportTask->file_type
         ));
+        event(new ReportCreated($report));
         return $report;
     }
 
     public function generateProductReport(ReportTask $reportTask)
     {
+        event(new ReportCreating());
         $product = $reportTask->reportable;
 
 
@@ -137,6 +142,7 @@ class ReportTaskRepository implements ReportTaskContract
             "file_name" => $fileName,
             "file_type" => $reportTask->file_type
         ));
+        event(new ReportCreated($report));
         return $report;
     }
 

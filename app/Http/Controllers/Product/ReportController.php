@@ -120,6 +120,10 @@ class ReportController extends Controller
     public function destroy(Request $request, $id)
     {
         $report = $this->reportRepo->getReport($id);
+        if ($report->reportable->user->getKey() != auth()->user()->getKey()) {
+            abort(403);
+        }
+
         $this->reportRepo->deleteReport($id);
         $status = true;
         if ($request->ajax()) {

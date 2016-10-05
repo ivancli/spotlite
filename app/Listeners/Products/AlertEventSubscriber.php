@@ -60,14 +60,16 @@ class AlertEventSubscriber
         dispatch((new LogUserActivity(auth()->user(), "viewed edit alert - {$alert->getKey()}"))->onQueue("logging"));
     }
 
+    public function onAlertListViewed($event)
+    {
+        dispatch((new LogUserActivity(auth()->user(), "viewed alert list page"))->onQueue("logging"));
+    }
+
     public function onAlertSent($event)
     {
         $alert = $event->alert;
         $email = $event->alertEmail;
-        dispatch((new LogAlertActivity($alert, array(
-            "type" => "sent",
-            "email" => $email
-        ))));
+        dispatch((new LogAlertActivity($alert, array("type" => "sent", "email" => $email)))->onQueue("logging"));
     }
 
     public function onAlertTriggered($event)
@@ -88,6 +90,7 @@ class AlertEventSubscriber
         $events->listen('App\Events\Products\Alert\AlertEdited', 'App\Listeners\Products\AlertEventSubscriber@onAlertEdited');
         $events->listen('App\Events\Products\Alert\AlertEditing', 'App\Listeners\Products\AlertEventSubscriber@onAlertEditing');
         $events->listen('App\Events\Products\Alert\AlertEditViewed', 'App\Listeners\Products\AlertEventSubscriber@onAlertEditViewed');
+        $events->listen('App\Events\Products\Alert\AlertListViewed', 'App\Listeners\Products\AlertEventSubscriber@onAlertListViewed');
         $events->listen('App\Events\Products\Alert\AlertSent', 'App\Listeners\Products\AlertEventSubscriber@onAlertSent');
         $events->listen('App\Events\Products\Alert\AlertTriggered', 'App\Listeners\Products\AlertEventSubscriber@onAlertTriggered');
     }

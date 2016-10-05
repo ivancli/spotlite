@@ -11,7 +11,7 @@ class CreateReportActivityLogsTable extends Migration {
 			$table->bigIncrements('report_activity_log_id');
 			$table->integer('report_task_id')->unsigned()->index();
 			$table->enum('status', array('started', 'prepared', 'validated', 'generated', 'saved'));
-			$table->text('message')->nullable();
+			$table->text('content')->nullable();
 			$table->timestamps();
 		});
 	}

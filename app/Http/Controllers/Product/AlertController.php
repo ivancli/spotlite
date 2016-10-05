@@ -13,6 +13,7 @@ use App\Events\Products\Alert\AlertDeleting;
 use App\Events\Products\Alert\AlertEdited;
 use App\Events\Products\Alert\AlertEditing;
 use App\Events\Products\Alert\AlertEditViewed;
+use App\Events\Products\Alert\AlertListViewed;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\AlertEmail;
@@ -49,6 +50,7 @@ class AlertController extends Controller
                 return $alerts;
             }
         } else {
+            event(new AlertListViewed());
             return view('products.alert.index');
         }
     }

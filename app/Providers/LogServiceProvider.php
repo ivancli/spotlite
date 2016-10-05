@@ -27,6 +27,7 @@ class LogServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\Logger\UserActivityLoggerContract', 'App\Repositories\Logger\UserActivityLoggerRepository');
         $this->app->bind('App\Contracts\Repository\Logger\CrawlerActivityLoggerContract', 'App\Repositories\Logger\CrawlerActivityLoggerRepository');
         $this->app->bind('App\Contracts\Repository\Logger\AlertActivityLoggerContract', 'App\Repositories\Logger\AlertActivityLoggerRepository');
+        $this->app->bind('App\Contracts\Repository\Logger\ReportActivityLoggerContract', 'App\Repositories\Logger\ReportActivityLoggerRepository');
 
 
         $this->app->when('App\Http\Controllers\Log\UserActivityLogController')

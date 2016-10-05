@@ -10,6 +10,7 @@ namespace App\Jobs;
 
 
 use App\Contracts\Repository\Product\Report\ReportTaskContract;
+use App\Events\Products\Report\ReportSent;
 use App\Models\ReportTask;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -68,7 +69,7 @@ class SendReport extends Job implements ShouldQueue
 
             foreach ($this->reportTask->emails as $email) {
                 /* TODO generate email with attachment and send to user */
-
+                event(new ReportSent($report, $email));
                 dispatch((new SendMail($view,
                     compact(['report']),
                     array(
