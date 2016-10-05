@@ -13753,6 +13753,16 @@ th.ellipsis {
     display: none;
 }
 
+#tbl-report-task .popover,
+#tbl-alert .popover {
+    font-size: 11px;
+}
+
+#tbl-report-task .popover .popover-content,
+#tbl-alert .popover .popover-content {
+    padding: 5px 7px;
+}
+
 @media (min-width: 992px) {
     .modal-xl {
         width: 900px;

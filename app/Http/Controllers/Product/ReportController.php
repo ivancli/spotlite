@@ -46,6 +46,7 @@ class ReportController extends Controller
                 $reports->each(function ($item, $key) {
                     unset($item->content);
                 });
+                $reports = $reports->sortByDesc('created_at')->values();
                 $status = true;
                 if ($request->wantsJson()) {
                     return response()->json(compact(['reports', 'status']));
@@ -58,6 +59,7 @@ class ReportController extends Controller
                 $reports->each(function ($item, $key) {
                     unset($item->content);
                 });
+                $reports = $reports->sortByDesc('created_at')->values();
                 $status = true;
                 if ($request->wantsJson()) {
                     return response()->json(compact(['reports', 'status']));

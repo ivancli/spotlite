@@ -7,15 +7,6 @@
 @stop
 
 @section('content')
-    <style>
-        #tbl-report-task .popover {
-            font-size: 11px;
-        }
-
-        #tbl-report-task .popover .popover-content {
-            padding: 5px 7px;
-        }
-    </style>
     <div class="row">
         <div class="col-md-8">
             <div class="box box-solid">
