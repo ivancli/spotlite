@@ -163,6 +163,14 @@ Route::group(['middleware' => ['auth']], function () {
     ]]);
 
     Route::get('logout', 'Auth\AuthController@logout')->name('logout');
+
+
+    /*TODO remove these routes before pushing to production*/
+    Route::get('notes', function () {
+        return view('debug.note');
+    });
+
+
 });
 
 /**

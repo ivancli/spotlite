@@ -2,10 +2,14 @@
 @section('title', 'Member Login')
 @section('content')
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-offset-4 col-lg-4 col-md-offset-3 col-md-6 col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Member login</h3>
+
+                    <div class="box-tools pull-right">
+                        <a class="btn btn-default btn-sm" href="{{route('register.get')}}">Not a member yet? Sign Up Now</a>
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="um-form-container">
@@ -16,18 +20,13 @@
                                 @endforeach
                             </ul>
                         @endif
-                        {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login")) !!}
+                        {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "class"=>"form-horizontal sl-form-horizontal")) !!}
                         @include('auth.forms.login_form')
                         <div class="row m-b-5">
-                            <div class="col-sm-6">
-                                <a href="{{route('register.get')}}">Not a member yet? Click here to register.</a>
-                            </div>
-                            <div class="col-sm-6 text-right">
+                            <div class="col-sm-6 text-left">
                                 <a href="{{route('password.get')}}">Forgot password?</a>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 text-right">
+                            <div class="col-sm-6 text-right">
                                 {!! Form::submit('Login', ["class"=>"btn btn-default btn-sm"]) !!}
                             </div>
                         </div>

@@ -13763,6 +13763,10 @@ th.ellipsis {
     padding: 5px 7px;
 }
 
+.sl-form-horizontal .control-label {
+    text-align: left;
+}
+
 @media (min-width: 992px) {
     .modal-xl {
         width: 900px;

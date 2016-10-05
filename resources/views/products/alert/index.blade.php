@@ -137,7 +137,7 @@
                                                         ),
                                                         $("<div>").append(
                                                                 "Last crawled: ",
-                                                                $("<strong>").text(data.alert_owner.site.last_crawled_at)
+                                                                $("<strong>").text(moment(data.alert_owner.site.last_crawled_at).format('lll'))
                                                         ),
                                                         $("<div>").append(
                                                                 "Recent price: ",
@@ -305,7 +305,9 @@
                     },
                     {
                         "name": "created_at",
-                        "data": "created_at"
+                        "data": function(data){
+                            return moment(data.created_at).format('lll');
+                        }
                     }
                 ],
                 "drawCallback": function (settings) {

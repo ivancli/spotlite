@@ -14,11 +14,12 @@
                 <div class="form-group required">
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}
                     &nbsp;
-                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;" data-placement="right" onclick="return false;" data-trigger="hover focus"
+                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;"
+                       data-placement="right" onclick="return false;" data-trigger="hover focus"
                        data-content="Add the URL for the product you wish to track by going to the product's webpage, copying the URL from the address bar of your browser and pasting it in this field.">
                         <i class="fa fa-question-circle"></i>
                     </a>
-                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'placeholder' => 'Enter or copy URL')) !!}
+                    {!! Form::text('site_url', null, array('class' => 'form-control m-b-5', 'id'=>'txt-site-url', 'placeholder' => 'Enter or copy URL')) !!}
                 </div>
                 <div class="prices-container" style="display: none;">
                     <p>Please select a correct price from below: </p>
