@@ -125,7 +125,7 @@ class AlertRepository implements AlertContract
             dispatch((new SendMail('products.alert.email.product',
                 compact(['alert', 'alertingProductSites', 'myProductSite']),
                 array(
-                    "email" => $email,
+                    "email" => $email->alert_email_address,
                     "subject" => 'SpotLite - Product Price Alert'
                 )
             ))->onQueue("mailing"));
