@@ -77,7 +77,7 @@ class AlertEventSubscriber
         $alert = $event->alert;
         dispatch((new LogAlertActivity($alert, array(
             "type" => "trigger",
-        ))));
+        )))->onQueue("logging"));
     }
 
     public function subscribe($events)
