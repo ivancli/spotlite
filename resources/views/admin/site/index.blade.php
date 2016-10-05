@@ -102,7 +102,7 @@
                                         $("<div>").text(timestampToDateTimeByFormat(timestamp, "Y-m-d")).attr({
                                             "title": timestampToDateTimeByFormat(timestamp, "Y-m-d H:i"),
                                             "data-toggle": "tooltip"
-                                        }).addClass("text-right")
+                                        })
                                 ).html();
                             } else {
                                 return "";
@@ -164,7 +164,7 @@
                                 return $("<div>").append(
                                         $("<div>").append(
                                                 "$" + parseFloat(data.recent_price).formatMoney()
-                                        ).addClass("text-right")
+                                        )
                                 ).html();
                             }
                             return data.recent_price;
@@ -177,7 +177,7 @@
                             return $("<div>").append(
                                     $("<div>").append(
                                             data.last_crawled_at
-                                    ).addClass("text-right")
+                                    )
                             ).html();
                         }
                     },
