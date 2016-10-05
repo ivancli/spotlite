@@ -1,6 +1,6 @@
 @extends('layouts.adminlte')
 @section('title', 'Subscription')
-@section('header_title', "Update Subscription")
+@section('header_title', "Change My Plan")
 @section('breadcrumbs')
     {!! Breadcrumbs::render('subscription_edit', $subscription) !!}
 @stop
@@ -50,7 +50,17 @@
         }
 
         function submitSubscriptionUpdateOnclick() {
-            confirmP("Update Subscription", "Do you want to update your subscription?", {
+            var fromPrice = $(".product-container.chosen").attr("data-price");
+            var toPrice = $(".product-container.selected").attr("data-price");
+            var title, content;
+            if(parseInt(fromPrice) > parseInt(toPrice)){
+                title = "Downgrade Subscription";
+                content = "By downgrading your subscription you will receive a credit for the pro-rata amount for the rest of the month at the next subscription fee. This credit will be offset against future subscription charges.";
+            }else{
+                title = "Upgrade Subscription";
+                content = "By upgrading your subscription you will be immediately charged the pro-rata amount for the rest of the month at the new subscription fee"
+            }
+            confirmP(title, content + "<br><br>Are you sure you want to change your subscription?", {
                 "affirmative": {
                     "class": "btn-primary",
                     "callback": function () {

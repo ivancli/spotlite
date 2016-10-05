@@ -11,10 +11,11 @@ namespace App\Jobs;
 
 use App\Contracts\Repository\Logger\ReportActivityLoggerContract;
 use App\Models\ReportTask;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class LogReportActivity
+class LogReportActivity extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

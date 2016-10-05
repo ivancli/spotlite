@@ -11,10 +11,11 @@ namespace App\Jobs;
 
 use App\Contracts\Repository\Logger\AlertActivityLoggerContract;
 use App\Models\Alert;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class LogAlertActivity
+class LogAlertActivity extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

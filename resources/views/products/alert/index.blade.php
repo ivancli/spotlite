@@ -77,7 +77,7 @@
                 "processing": true,
                 "serverSide": true,
                 "pageLength": 25,
-                "order": [[4, "asc"]],
+                "order": [[4, "desc"]],
                 "language": {
                     "emptyTable": "No alerts in the list",
                     "zeroRecords": "No alerts in the list"
@@ -120,15 +120,15 @@
                                                         )
                                                 ).html(),
                                                 "data-html": true,
-                                                "data-trigger": "hover focus"
+                                                "data-trigger": "hover"
                                             }).text(data.alert_owner.product_name)
                                     );
                                     break;
                                 case "product_site":
                                     $cellText.append(
                                             $("<a>").attr({
-                                                "href": "#",
-                                                "onclick": "return false;",
+                                                "href": data.alert_owner.site.site_url,
+                                                "target": "_blank",
                                                 "data-toggle": "popover",
                                                 "data-content": $("<div>").append(
                                                         $("<div>").append(
@@ -145,7 +145,7 @@
                                                         )
                                                 ).html(),
                                                 "data-html": true,
-                                                "data-trigger": "hover focus"
+                                                "data-trigger": "hover"
                                             }).text(data.alert_owner.site.domain)
                                     );
                                     break;
