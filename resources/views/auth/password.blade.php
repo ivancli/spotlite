@@ -2,7 +2,7 @@
 @section('title', 'Forgot Password')
 @section('content')
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-offset-4 col-lg-4 col-md-offset-3 col-md-6 col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Forgot Password</h3>
@@ -11,15 +11,20 @@
                     <div class="um-form-container">
                         <ul class="text-danger errors-container">
                         </ul>
-                        {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
+                        {!! Form::open(array('route' => 'password.post', 'method' => 'post', "class" => "form-horizontal sl-form-horizontal", "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
 
                         <div class="form-group required">
-                            {!! Form::label('email', 'Email', array('class' => 'control-label')) !!}
-                            {!! Form::email('email', null, array('class' => 'form-control')) !!}
+                            {!! Form::label('email', 'Email', array('class' => 'control-label col-md-3')) !!}
+                            <div class="col-md-9">
+                                {!! Form::email('email', null, array('class' => 'form-control')) !!}
+                            </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-12 text-right">
+                            <div class="col-sm-6">
+                                <a href="{{route('login.get')}}">Back to login page</a>
+                            </div>
+                            <div class="col-sm-6 text-right">
                                 {!! Form::submit('Forgot', ["class"=>"btn btn-default btn-sm", "href"=>"#"]) !!}
                             </div>
                         </div>
