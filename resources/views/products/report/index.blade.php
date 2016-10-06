@@ -183,7 +183,7 @@
                                 case "daily":
                                 default:
                                     var time = moment("1970-1-1 " + data.time).format("ha");
-                                    summary += "Daily at " + time + (data.weekday_only == "yes" ? " weekdays only" : "")
+                                    summary += "Daily at " + time + (data.weekday_only == "y" ? " weekdays only" : "")
                             }
                             return summary;
                         }

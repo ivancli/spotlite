@@ -20,7 +20,7 @@
 
                 <div class="form-group show-on-daily">
                     {!! Form::label('weekday_only', 'Weekday Only', array('class' => 'control-label')) !!}
-                    {!! Form::checkbox('weekday_only', "yes") !!}
+                    {!! Form::checkbox('weekday_only', "y") !!}
                 </div>
 
                 <div class="form-group required show-on-daily">
@@ -107,6 +107,7 @@
                     {!! Form::label('email[]', 'Add Email', array('class' => 'control-label')) !!}
 {{--                    {!! Form::select('email[]', $emails, $emails, ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email']) !!}--}}
                     {!! Form::select('email[]', [auth()->user()->email], [auth()->user()->email], ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email', 'disabled' => 'disabled']) !!}
+                    <input type="hidden" name="email[]" value="{{auth()->user()->email}}">
                 </div>
                 {!! Form::close() !!}
             </div>

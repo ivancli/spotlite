@@ -31,6 +31,7 @@
                     {!! Form::label('email[]', 'Notify Emails', array('class' => 'control-label')) !!}
 {{--                    {!! Form::select('email[]', $emails, $emails, ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email']) !!}--}}
                     {!! Form::select('email[]', [auth()->user()->email], [auth()->user()->email], ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email', 'disabled' => 'disabled']) !!}
+                    <input type="hidden" name="email[]" value="{{auth()->user()->email}}">
                 </div>
                 {!! Form::close() !!}
             </div>

@@ -16,7 +16,7 @@ class CreateReportTasksTable extends Migration
             $table->smallInteger('date')->unsigned()->nullable()->index()->default('1');
             $table->tinyInteger('day')->unsigned()->nullable()->index();
             $table->time('time')->nullable();
-            $table->enum('weekday_only', array('yes', 'no'))->nullable();
+            $table->char('weekday_only', 1)->nullable()->comment('y=yes,n=no');
             $table->enum('file_type', array('xls', 'xlsx', 'csv', 'pdf'))->default('xlsx');
             $table->enum('delivery_method', array('email', 'sms'));
             $table->enum('status', array('picked', 'queuing', 'running'))->nullable();

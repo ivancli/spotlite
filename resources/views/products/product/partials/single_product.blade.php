@@ -87,7 +87,7 @@
                     <tbody>
                     {{--sites here--}}
                     @if(!is_null($product->sites))
-                        @foreach($product->productSites()->orderBy('my_price', 'asc')->orderBy('product_site_id')->get() as $productSite)
+                        @foreach($product->productSites()->orderBy('my_price', 'desc')->orderBy('product_site_id')->get() as $productSite)
                             @include('products.site.partials.single_site')
                         @endforeach
                     @endif

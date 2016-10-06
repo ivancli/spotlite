@@ -55,6 +55,10 @@ class ReportTaskRepository implements ReportTaskContract
     public function updateReportTask($report_task_id, $options)
     {
         $reportTask = $this->getReportTask($report_task_id);
+
+        if (!isset($options['weekday_only'])) {
+            $options['weekday_only'] = null;
+        }
         $reportTask->update($options);
         return $reportTask;
     }
