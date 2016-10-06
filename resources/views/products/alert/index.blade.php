@@ -293,7 +293,7 @@
                                                 "data-toggle": "popover",
                                                 "data-content": popoverContent,
                                                 "data-html": true,
-                                                "data-trigger": "hover focus"
+                                                "data-trigger": "hover"
                                             }).addClass("text-muted").text(alertOwnerType),
                                             "alert sent to ",
                                             $("<a>").attr({

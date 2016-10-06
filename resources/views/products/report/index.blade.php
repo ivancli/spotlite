@@ -138,7 +138,7 @@
                                                         )
                                                 ).html(),
                                                 "data-html": true,
-                                                "data-trigger": "hover focus"
+                                                "data-trigger": "hover"
                                             }).text(data.report_task_owner.category_name)
                                     );
                                     break;
@@ -159,7 +159,7 @@
                                                         )
                                                 ).html(),
                                                 "data-html": true,
-                                                "data-trigger": "hover focus"
+                                                "data-trigger": "hover"
                                             }).text(data.report_task_owner.product_name)
                                     );
                                     break;

@@ -3,7 +3,7 @@
     data-site-alert-url="{{$productSite->urls['alert']}}"
     data-site-update-url="{{$productSite->urls['update']}}">
     <td>
-        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="popover" data-trigger="hover focus"
+        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="popover" data-trigger="hover"
            data-content="{{$productSite->site->site_url}}">
             {{parse_url($productSite->site->site_url)['host']}}
         </a>

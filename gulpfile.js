@@ -81,6 +81,7 @@ elixir(function (mix) {
     mix.copy('resources/assets/images', 'public/images');
     mix.copy('resources/assets/plugins/jquery.fileTree-1.01/images', 'public/images');
     mix.copy('resources/assets/videos', 'public/videos');
+    mix.copy('resources/assets/others', 'public/others');
 
     mix.copy("node_modules/bootstrap/dist/fonts", "public/fonts/");
     mix.copy("node_modules/font-awesome/fonts", "public/fonts/");

@@ -13,7 +13,7 @@
                 <div class="form-group required">
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}
                     &nbsp;
-                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;" data-placement="right" onclick="return false;" data-trigger="hover focus"
+                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;" data-placement="right" onclick="return false;" data-trigger="hover"
                        data-content="Add the URL for the product you wish to track by going to the product's webpage, copying the URL from the address bar of your browser and pasting it in this field.">
                         <i class="fa fa-question-circle"></i>
                     </a>
