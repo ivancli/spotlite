@@ -5,10 +5,10 @@
         <div class="col-lg-offset-4 col-lg-4 col-md-offset-3 col-md-6 col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Member login</h3>
+                    <h3 class="box-title">Account login</h3>
 
                     <div class="box-tools pull-right">
-                        <a class="btn btn-default btn-sm" href="{{route('register.get')}}">Not a member yet? Sign Up Now</a>
+                        <a class="btn btn-default btn-sm" href="{{route('register.get')}}">Don't have an account? Sign Up Now</a>
                     </div>
                 </div>
                 <div class="box-body">

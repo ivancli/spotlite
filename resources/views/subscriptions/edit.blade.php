@@ -8,9 +8,6 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Subscription Plans</h3>
-                </div>
                 <div class="box-body">
                     <div class="row m-b-10">
                         <div class="col-sm-12 text-center">
@@ -58,7 +55,7 @@
                 content = "By downgrading your subscription you will receive a credit for the pro-rata amount for the rest of the month at the next subscription fee. This credit will be offset against future subscription charges.";
             }else{
                 title = "Upgrade Subscription";
-                content = "By upgrading your subscription you will be immediately charged the pro-rata amount for the rest of the month at the new subscription fee"
+                content = "By upgrading your subscription you will be immediately charged the pro-rata amount for the rest of the month at the new subscription fee."
             }
             confirmP(title, content + "<br><br>Are you sure you want to change your subscription?", {
                 "affirmative": {

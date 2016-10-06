@@ -136,7 +136,7 @@
                                                                 $("<strong>").text(data.alert_owner.site.domain)
                                                         ),
                                                         $("<div>").append(
-                                                                "Last crawled: ",
+                                                                "Last fetch: ",
                                                                 $("<strong>").text(moment(data.alert_owner.site.last_crawled_at).format('lll'))
                                                         ),
                                                         $("<div>").append(
