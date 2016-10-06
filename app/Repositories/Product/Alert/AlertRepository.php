@@ -48,6 +48,9 @@ class AlertRepository implements AlertContract
 
     public function updateAlert($alert_id, $options)
     {
+        if (!isset($options['one_off'])) {
+            $options['one_off'] = 'n';
+        }
         $alert = $this->getAlert($alert_id);
         $alert->update($options);
         return $alert;
@@ -181,6 +184,9 @@ class AlertRepository implements AlertContract
                     )))->onQueue("mailing"));
 
                 event(new AlertSent($alert, $email));
+            }
+            if ($alert->one_off == 'y') {
+                $alert->delete();
             }
         }
     }

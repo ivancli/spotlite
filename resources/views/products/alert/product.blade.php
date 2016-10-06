@@ -36,6 +36,10 @@
                     {!! Form::select('email[]', [auth()->user()->email], [auth()->user()->email], ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email', 'disabled' => 'disabled']) !!}
                     <input type="hidden" name="email[]" value="{{auth()->user()->email}}">
                 </div>
+                <div class="form-group">
+                    {!! Form::label('one_off', 'One-off', array('class' => 'control-label')) !!}
+                    {!! Form::checkbox('one_off', "y", $product->alert->one_off == 'y', array('class' => 'sl-form-control')) !!}
+                </div>
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">

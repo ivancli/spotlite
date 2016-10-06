@@ -333,6 +333,12 @@ th.ellipsis {
     text-align: left;
 }
 
+.sl-form-control[type=checkbox] {
+    vertical-align: middle;
+    margin-top: 0;
+    margin-left: 5px;
+}
+
 @media (min-width: 992px) {
     .modal-xl {
         width: 900px;

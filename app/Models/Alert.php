@@ -16,7 +16,7 @@ class Alert extends Model
 {
     protected $primaryKey = "alert_id";
     protected $fillable = [
-        "alert_owner_id", "alert_owner_type", "comparison_price_type", "comparison_price", "comparison_site_id", "operator", "last_active_at"
+        "alert_owner_id", "alert_owner_type", "comparison_price_type", "comparison_price", "comparison_site_id", "operator", "last_active_at", "one_off"
     ];
     public $timestamps = false;
     protected $appends = ['urls'];

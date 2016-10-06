@@ -13,7 +13,7 @@ class AlterAlertTable2 extends Migration
     public function up()
     {
         Schema::table('alerts', function (Blueprint $table) {
-            $table->char('one_off', 1);
+            $table->char('one_off', 1)->default('n')->comment("y=yes,n=no");
         });
     }
 

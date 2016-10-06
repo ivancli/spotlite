@@ -20,7 +20,7 @@
 
                 <div class="form-group show-on-daily">
                     {!! Form::label('weekday_only', 'Weekday Only', array('class' => 'control-label')) !!}
-                    {!! Form::checkbox('weekday_only', "y") !!}
+                    {!! Form::checkbox('weekday_only', "y", $category->reportTask->weekday_only == 'y', array("class" => "sl-form-control")) !!}
                 </div>
 
                 <div class="form-group required show-on-daily">
