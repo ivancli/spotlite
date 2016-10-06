@@ -33,7 +33,6 @@
                 submitUpdateCrawler(function (response) {
                     if (response.status == true) {
                         $("#modal-crawler-update").modal("hide");
-                        alertP("Update Crawler", "Crawler has been updated.");
                     } else {
                         alertP("Error", "Unable to update crawler, please try again later.");
                     }

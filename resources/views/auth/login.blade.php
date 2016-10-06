@@ -1,8 +1,8 @@
 @extends('layouts.adminlte')
-@section('title', 'Member Login')
+@section('title', 'Account Login')
 @section('content')
     <div class="row">
-        <div class="col-lg-offset-4 col-lg-4 col-md-offset-3 col-md-6 col-sm-12">
+        <div class="col-md-offset-3 col-md-6 col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Account login</h3>

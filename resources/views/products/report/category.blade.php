@@ -134,7 +134,6 @@
             $("#btn-update-category-report").on("click", function () {
                 submitEditReportTask(function (response) {
                     if (response.status == true) {
-                        alertP("Create/Update Report Schedule", "Report has been scheduled.");
                         $("#modal-report-task-category").modal("hide");
                         if ($.isFunction(options.updateCallback)) {
                             options.updateCallback(response);
@@ -165,7 +164,6 @@
                         "callback": function () {
                             submitDeleteCategoryReportTask(function (response) {
                                 if (response.status == true) {
-                                    alertP("Delete Report Schedule", "Report schedule has been deleted.");
                                     $("#modal-report-task-category").modal("hide");
                                     if ($.isFunction(options.deleteCallback)) {
                                         options.deleteCallback(response);

@@ -441,7 +441,6 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
-                                    alertP("Delete domain", "The domain has been deleted.");
                                     $(el).closest(".site-wrapper").remove();
                                     tblDomain.row($(el).closest("tr")).remove().draw();
                                 } else {

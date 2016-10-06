@@ -35095,7 +35095,13 @@ function alertP(title, bodyText, callback) {
     $modal.modal();
 
     if (typeof callback != 'undefined') {
-        $modal.on("hidden.bs.modal", callback)
+        $modal.on("hidden.bs.modal", function () {
+            if ($.isFunction(callback)) {
+                callback();
+                $modal.remove();
+                $("body").css("padding-right", "");
+            }
+        })
     }
 }
 
@@ -35134,6 +35140,11 @@ function confirmP(title, bodyText, btnOpts) {
     );
     var $modal = popupHTML(title, bodyText, $footer, "sm");
     $modal.modal();
+
+    $modal.on("hidden.bs.modal", function () {
+        $("body").css("padding-right", "");
+        $modal.remove();
+    })
 }
 
 /**
@@ -35503,7 +35514,7 @@ function capitalise(string) {
 }
 
 function camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (letter, index) {
         return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(/\s+/g, '');
 }
