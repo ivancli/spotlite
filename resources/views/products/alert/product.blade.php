@@ -38,7 +38,7 @@
                 </div>
                 <div class="form-group">
                     {!! Form::label('one_off', 'One-off', array('class' => 'control-label')) !!}
-                    {!! Form::checkbox('one_off', "y", $product->alert->one_off == 'y', array('class' => 'sl-form-control')) !!}
+                    {!! Form::checkbox('one_off', "y", is_null($product->alert) ? null : $product->alert->one_off == 'y', array('class' => 'sl-form-control')) !!}
                 </div>
                 {!! Form::close() !!}
             </div>
@@ -70,6 +70,7 @@
             $("#btn-update-product-alert").on("click", function () {
                 submitUpdateProductAlert(function (response) {
                     if (response.status == true) {
+                        alertP("Create/Update Alert", "Alert has been updated.");
                         $("#modal-alert-product").modal("hide");
                         if ($.isFunction(options.updateCallback)) {
                             options.updateCallback(response);
@@ -99,6 +100,7 @@
                         "callback": function () {
                             submitDeleteProductAlert(function (response) {
                                 if (response.status == true) {
+                                    alertP("Delete Alert", "Alert has been deleted.");
                                     $("#modal-alert-product").modal("hide");
                                     if ($.isFunction(options.deleteCallback)) {
                                         options.deleteCallback(response);

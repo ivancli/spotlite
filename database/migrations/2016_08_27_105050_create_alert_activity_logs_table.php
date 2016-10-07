@@ -9,7 +9,7 @@ class CreateAlertActivityLogsTable extends Migration {
 	{
 		Schema::create('alert_activity_logs', function(Blueprint $table) {
 			$table->bigIncrements('alert_activity_log_id');
-            $table->integer('alert_id')->unsigned();
+            $table->integer('alert_id')->unsigned()->nullable();
             $table->text('content');
 			$table->timestamps();
 		});

@@ -32,7 +32,7 @@ class AlertUser extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     * @param AlertContract $alertContract
+     * @param AlertContract $alertRepo
      */
     public function handle(AlertContract $alertRepo)
     {
@@ -40,7 +40,7 @@ class AlertUser extends Job implements ShouldQueue
 
         $productSites = $site->productSites;
         foreach ($productSites as $productSite) {
-            if (!is_null($productSite->alert)) {
+            if (!is_null($productSite->alert) && !$productSite->alert->lastActiveWithinHour()) {
                 $productSite->alert->last_active_at = date("Y-m-d H:i:s");
                 $productSite->alert->save();
                 switch ($productSite->alert->alert_owner_type) {

@@ -28,7 +28,7 @@ class LogAlertActivity extends Job implements ShouldQueue
      * @param Alert $alert
      * @param $options
      */
-    public function __construct(Alert $alert, $options)
+    public function __construct($alert, $options)
     {
         $this->options = $options;
         $this->alert = $alert;

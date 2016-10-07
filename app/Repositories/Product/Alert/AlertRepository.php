@@ -13,6 +13,7 @@ use App\Contracts\Repository\Product\Alert\AlertContract;
 use App\Events\Products\Alert\AlertSent;
 use App\Events\Products\Alert\AlertTriggered;
 use App\Filters\QueryFilter;
+use App\Jobs\DeleteObject;
 use App\Jobs\LogUserActivity;
 use App\Jobs\SendMail;
 use App\Models\Alert;
@@ -135,6 +136,9 @@ class AlertRepository implements AlertContract
 
             event(new AlertSent($alert, $email));
         }
+        if ($alert->one_off == 'y') {
+            dispatch((new DeleteObject($alert))->onQueue("deleting")->delay(300));
+        }
     }
 
     public function triggerProductSiteAlert(Alert $alert)
@@ -153,7 +157,6 @@ class AlertRepository implements AlertContract
         $product = $productSite->product;
 
         $myProductSite = $product->productSites()->where("my_price", "y")->first();
-
 
         if ($alert->comparison_price_type == 'my price') {
             if (is_null($myProductSite)) {
@@ -182,11 +185,10 @@ class AlertRepository implements AlertContract
                         "email" => $email->alert_email_address,
                         "subject" => 'SpotLite - Site Price Alert'
                     )))->onQueue("mailing"));
-
                 event(new AlertSent($alert, $email));
             }
             if ($alert->one_off == 'y') {
-                $alert->delete();
+                dispatch((new DeleteObject($alert))->onQueue("deleting")->delay(300));
             }
         }
     }

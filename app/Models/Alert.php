@@ -61,7 +61,7 @@ class Alert extends Model
     public function lastActiveWithinHour($hour = 1)
     {
         if (!is_null($this->last_active_at)) {
-            $hourDiff = (strtotime(date('Y-m-d H:00:00', strtotime($this->last_active_at))) - strtotime(date('Y-m-d H:00:00'))) / 3600;
+            $hourDiff = (strtotime(date('Y-m-d H:00:00')) - strtotime(date('Y-m-d H:00:00', strtotime($this->last_active_at)))) / 3600;
             return $hourDiff < $hour;
         } else {
             return false;
