@@ -35,14 +35,14 @@
                             <li>
                                 <ul class="spotlite-menu">
                                     @if(auth()->user()->hasValidSubscription() || auth()->user()->isStaff())
-                                        <li>
-                                            <a href="{{route('profile.index')}}">
-                                                <h3>
-                                                    Profile <span
-                                                            class="text-muted">{{auth()->user()->first_name}} {{auth()->user()->last_name}}</span>
-                                                </h3>
-                                            </a>
-                                        </li>
+                                        {{--<li>--}}
+                                            {{--<a href="{{route('profile.index')}}">--}}
+                                                {{--<h3>--}}
+                                                    {{--Profile <span--}}
+                                                            {{--class="text-muted">{{auth()->user()->first_name}} {{auth()->user()->last_name}}</span>--}}
+                                                {{--</h3>--}}
+                                            {{--</a>--}}
+                                        {{--</li>--}}
                                         <li>
                                             <a href="{{route('account.index')}}">
                                                 <h3>
@@ -51,13 +51,13 @@
                                             </a>
                                         </li>
                                         @if(!auth()->user()->isStaff())
-                                            <li>
-                                                <a href="{{route('group.index')}}">
-                                                    <h3>
-                                                        Group Management
-                                                    </h3>
-                                                </a>
-                                            </li>
+                                            {{--<li>--}}
+                                                {{--<a href="{{route('group.index')}}">--}}
+                                                    {{--<h3>--}}
+                                                        {{--Group Management--}}
+                                                    {{--</h3>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
                                             <li>
                                                 <a href="{{route('subscription.index')}}">
                                                     <h3>

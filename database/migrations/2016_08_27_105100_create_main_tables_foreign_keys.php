@@ -126,7 +126,7 @@ class CreateMainTablesForeignKeys extends Migration
         });
         Schema::table('alert_emails', function (Blueprint $table) {
             $table->foreign('alert_id')->references('alert_id')->on('alerts')
-                ->onDelete('cascade')
+                ->onDelete('set null')
                 ->onUpdate('cascade');
         });
         Schema::table('alert_activity_logs', function (Blueprint $table) {

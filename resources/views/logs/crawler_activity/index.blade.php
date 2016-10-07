@@ -87,7 +87,9 @@
                     },
                     {
                         "name": "created_at",
-                        "data": "created_at"
+                        "data": function(data){
+                            return timestampToDateTimeByFormat(moment(data.created_at).unix(), datefmt + " " + timefmt)
+                        }
                     }
                 ]
             });

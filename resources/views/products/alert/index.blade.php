@@ -1,6 +1,5 @@
 @extends('layouts.adminlte')
 @section('title', 'Alerts')
-@section('header_title', "Alerts")
 
 @section('breadcrumbs')
     {!! Breadcrumbs::render('alert_index') !!}
@@ -17,48 +16,97 @@
         }
     </style>
     <div class="row">
-        <div class="col-md-8">
-            <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Alerts</h3>
-                </div>
-                <div class="box-body">
-                    <table class=" table table-striped table-condensed table-bordered" id="tbl-alert">
-                        <thead>
-                        <tr>
-                            <th class="text-muted">Alert source</th>
-                            <th class="text-muted">Trigger</th>
-                            <th class="text-muted">Trend</th>
-                            <th class="text-muted">Price point</th>
-                            <th class="text-muted">Last sent</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+        <div class="col-sm-12">
+
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs ui-sortable-handle">
+                    <li class="active">
+                        <a href="#alert-settings" data-toggle="tab" aria-expanded="true">Alert Settings</a>
+                    </li>
+                    <li class="">
+                        <a href="#alert-history" data-toggle="tab" aria-expanded="false">Alert History</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <!-- Morris chart - Sales -->
+                    <div class="chart tab-pane active" id="alert-settings">
+
+                        <table class=" table table-striped table-condensed table-bordered" id="tbl-alert">
+                            <thead>
+                            <tr>
+                                <th class="text-muted">Alert source</th>
+                                <th class="text-muted">Trigger</th>
+                                <th class="text-muted">Trend</th>
+                                <th class="text-muted">Price point</th>
+                                <th class="text-muted">Last sent</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="chart tab-pane" id="alert-history">
+                        <table class="table table-striped table-condensed table-bordered" id="tbl-alert-log">
+                            <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Sent at</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Alert History</h3>
-                </div>
-                <div class="box-body">
-                    <table class="table table-striped table-condensed table-bordered" id="tbl-alert-log">
-                        <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Sent at</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    </div>
+
+    <div class="row">
+        {{--<div class="col-md-8">--}}
+        {{--<div class="box box-solid">--}}
+        {{--<div class="box-header with-border">--}}
+        {{--<h3 class="box-title">Alerts</h3>--}}
+        {{--</div>--}}
+        {{--<div class="box-body">--}}
+        {{--<table class=" table table-striped table-condensed table-bordered" id="tbl-alert">--}}
+        {{--<thead>--}}
+        {{--<tr>--}}
+        {{--<th class="text-muted">Alert source</th>--}}
+        {{--<th class="text-muted">Trigger</th>--}}
+        {{--<th class="text-muted">Trend</th>--}}
+        {{--<th class="text-muted">Price point</th>--}}
+        {{--<th class="text-muted">Last sent</th>--}}
+        {{--<th></th>--}}
+        {{--</tr>--}}
+        {{--</thead>--}}
+        {{--<tbody>--}}
+        {{--</tbody>--}}
+        {{--</table>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--<div class="col-md-4">--}}
+        {{--<div class="box box-solid">--}}
+        {{--<div class="box-header with-border">--}}
+        {{--<h3 class="box-title">Alert History</h3>--}}
+        {{--</div>--}}
+        {{--<div class="box-body">--}}
+        {{--<table class="table table-striped table-condensed table-bordered" id="tbl-alert-log">--}}
+        {{--<thead>--}}
+        {{--<tr>--}}
+        {{--<th>Email</th>--}}
+        {{--<th>Sent at</th>--}}
+        {{--</tr>--}}
+        {{--</thead>--}}
+        {{--<tbody>--}}
+        {{--</tbody>--}}
+        {{--</table>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--</div>--}}
     </div>
 @stop
 
@@ -67,6 +115,12 @@
         var tblAlert = null;
         var tblAlertLog = null;
         $(function () {
+            $("a[data-toggle=tab][href='#alert-history']").on("shown.bs.tab", function (e) {
+                if (tblAlertLog == null) {
+                    initAlertLog();
+                }
+            });
+
             jQuery.fn.dataTable.Api.register('processing()', function (show) {
                 return this.iterator('table', function (ctx) {
                     ctx.oApi._fnProcessingDisplay(ctx, show);
@@ -137,7 +191,7 @@
                                                         ),
                                                         $("<div>").append(
                                                                 "Last fetch: ",
-                                                                $("<strong>").text(moment(data.alert_owner.site.last_crawled_at).format('lll'))
+                                                                $("<strong>").text(timestampToDateTimeByFormat(moment(data.alert_owner.site.last_crawled_at).unix(), datefmt + " " + timefmt))
                                                         ),
                                                         $("<div>").append(
                                                                 "Recent price: ",
@@ -194,7 +248,7 @@
                         "name": "last_active_at",
                         "data": function (data) {
                             if (data.last_active_at != null) {
-                                return moment(data.last_active_at).format("lll")
+                                return timestampToDateTimeByFormat(moment(data.last_active_at).unix(), datefmt + " " + timefmt)
                             } else {
                                 return null;
                             }
@@ -232,6 +286,9 @@
             });
 
 
+        });
+
+        function initAlertLog() {
             tblAlertLog = $("#tbl-alert-log").DataTable({
                 "pagingType": "full_numbers",
                 "processing": true,
@@ -243,7 +300,7 @@
                     "emptyTable": "No alert logs in the list",
                     "zeroRecords": "No alert logs in the list"
                 },
-                "dom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'p>>",
+                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12'p>>",
                 "ajax": {
                     "url": "{{route('alert_log.index')}}"
                 },
@@ -254,16 +311,16 @@
                             var content = JSON.parse(data.content);
                             var popoverContent = "";
                             var alertOwnerType = "";
-                            if (data.alert.alert_owner_type == "product") {
+                            if (data.alert_activity_log_owner_type == "product") {
                                 alertOwnerType = "Product ";
                                 popoverContent = $("<div>").append(
                                         $("<div>").append(
                                                 "Name: ",
-                                                $("<strong>").text(data.alert.alert_owner.product_name)
+                                                $("<strong>").text(data.alert_activity_log_owner.product_name)
                                         ),
                                         $("<div>").append(
                                                 "Number of sites: ",
-                                                $("<strong>").text(data.alert.alert_owner.product_sites.length)
+                                                $("<strong>").text(data.alert_activity_log_owner.product_sites.length)
                                         )
                                 ).html()
 
@@ -272,15 +329,15 @@
                                 popoverContent = $("<div>").append(
                                         $("<div>").append(
                                                 "Domain: ",
-                                                $("<strong>").text(data.alert.alert_owner.site.domain)
+                                                $("<strong>").text(data.alert_activity_log_owner.site.domain)
                                         ),
                                         $("<div>").append(
                                                 "Last crawled: ",
-                                                $("<strong>").text(data.alert.alert_owner.site.last_crawled_at)
+                                                $("<strong>").text(timestampToDateTimeByFormat(moment(data.alert_activity_log_owner.site.last_crawled_at).unix(), datefmt + " " + timefmt))
                                         ),
                                         $("<div>").append(
                                                 "Recent price: ",
-                                                $("<strong>").text('$' + parseFloat(data.alert.alert_owner.site.recent_price).formatMoney(2, '.', ','))
+                                                $("<strong>").text('$' + parseFloat(data.alert_activity_log_owner.site.recent_price).formatMoney(2, '.', ','))
                                         )
                                 ).html()
                             }
@@ -305,8 +362,8 @@
                     },
                     {
                         "name": "created_at",
-                        "data": function(data){
-                            return moment(data.created_at).format('lll');
+                        "data": function (data) {
+                            return timestampToDateTimeByFormat(moment(data.created_at).unix(), datefmt + " " + timefmt);
                         }
                     }
                 ],
@@ -315,8 +372,7 @@
                 }
             });
 
-
-        });
+        }
 
         function initialisePopover() {
             $("[data-toggle=popover]").popover();

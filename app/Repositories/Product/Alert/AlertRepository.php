@@ -138,6 +138,7 @@ class AlertRepository implements AlertContract
         }
         if ($alert->one_off == 'y') {
             dispatch((new DeleteObject($alert))->onQueue("deleting")->delay(300));
+//            $this->deleteAlert($alert->getKey());
         }
     }
 
@@ -187,6 +188,7 @@ class AlertRepository implements AlertContract
                     )))->onQueue("mailing"));
                 event(new AlertSent($alert, $email));
             }
+
             if ($alert->one_off == 'y') {
                 dispatch((new DeleteObject($alert))->onQueue("deleting")->delay(300));
             }

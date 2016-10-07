@@ -16,6 +16,25 @@ use Illuminate\Http\Request;
 class UserPreferenceController extends Controller
 {
 
+    public function massUpdatePreferences(Request $request)
+    {
+        $preferences = $request->get('preferences');
+        foreach ($preferences as $key => $preference) {
+            UserPreference::setPreference(auth()->user(), $key, $preference);
+        }
+
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
+    }
+
     public function updatePreference(Request $request, $element, $value)
     {
         $user = auth()->user();

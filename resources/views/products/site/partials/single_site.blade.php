@@ -3,7 +3,8 @@
     data-site-alert-url="{{$productSite->urls['alert']}}"
     data-site-update-url="{{$productSite->urls['update']}}">
     <td>
-        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="popover" data-trigger="hover"
+        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="popover"
+           data-trigger="hover"
            data-content="{{$productSite->site->site_url}}">
             {{parse_url($productSite->site->site_url)['host']}}
         </a>
@@ -35,10 +36,11 @@
     </td>
     <td>
         @if(!is_null($productSite->site->last_crawled_at))
-            <div title="{{date("M j Y n:i A", strtotime($productSite->site->last_crawled_at))}}" data-toggle="tooltip">
-                {{date("M j Y", strtotime($productSite->site->last_crawled_at))}}
-                <span class="hidden-xs hidden-sm">{{date("n:i A", strtotime($productSite->site->last_crawled_at))}}</span>
-            </div>
+            <span title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($productSite->site->last_crawled_at))}}"
+                 data-toggle="tooltip">
+                {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($productSite->site->last_crawled_at))}}
+                <span class="hidden-xs hidden-sm">{{date(auth()->user()->preference('TIME_FORMAT'), strtotime($productSite->site->last_crawled_at))}}</span>
+            </span>
         @endif
     </td>
     <td class="text-right action-cell">
@@ -253,11 +255,11 @@
             });
         }
 
-        function initPopover(){
+        function initPopover() {
             $("[data-toggle=popover]").popover();
         }
 
-        $(function(){
+        $(function () {
             initPopover();
         })
     </script>

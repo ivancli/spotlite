@@ -83,3 +83,28 @@ check if task scheduler provide callback for skipped operation
 
 
 when 2 sites under the same product finished crawling, it trigger alert events two times, the product alert runs twice, need to deduplicate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Soft delete alert?

@@ -16,7 +16,7 @@ class User extends Authenticatable
      */
     protected $primaryKey = "user_id";
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'verification_code', 'last_login', 'first_login',
+        'title', 'first_name', 'last_name', 'email', 'phone', 'password', 'verification_code', 'last_login', 'first_login',
     ];
 
     public $timestamps = false;
@@ -90,6 +90,16 @@ class User extends Authenticatable
     }
 
 //----------------------------------------------------------------------------------------------------------------------
+
+    public function preference($key)
+    {
+        $preference = $this->hasMany('App\Models\UserPreference', 'user_id', 'user_id')->where('element', $key)->first();
+        if (is_null($preference)) {
+            return null;
+        } else {
+            return $preference->value;
+        }
+    }
 
     public function cachedSubscription()
     {

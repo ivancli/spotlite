@@ -9,6 +9,8 @@
 namespace App\Jobs;
 
 
+use App\Contracts\Repository\Product\Alert\AlertContract;
+use DaveJamesMiller\Breadcrumbs\Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -30,9 +32,15 @@ class DeleteObject extends Job implements ShouldQueue
 
     /**
      * Execute the job.
+     * @param AlertContract $alertRepo
      */
-    public function handle()
+    public function handle(AlertContract $alertRepo)
     {
-        $this->object->delete();
+        try {
+            $this->object->delete();
+        } catch (Exception $e) {
+            //object has been deleted before hand
+            /*TODO need a better way to handle this*/
+        }
     }
 }

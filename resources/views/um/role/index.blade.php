@@ -75,11 +75,15 @@
                     },
                     {
                         "name": "created_at",
-                        "data": "created_at"
+                        "data": function(data){
+                            return timestampToDateTimeByFormat(moment(data.created_at).unix(), datefmt + " " + timefmt)
+                        }
                     },
                     {
                         "name": "updated_at",
-                        "data": "updated_at"
+                        "data": function(data){
+                            return timestampToDateTimeByFormat(moment(data.updated_at).unix(), datefmt + " " + timefmt)
+                        }
                     },
                     {
                         "class": "text-center",

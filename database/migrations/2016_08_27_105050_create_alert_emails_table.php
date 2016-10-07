@@ -9,7 +9,7 @@ class CreateAlertEmailsTable extends Migration {
 	{
 		Schema::create('alert_emails', function(Blueprint $table) {
 			$table->increments('alert_email_id');
-            $table->integer('alert_id')->unsigned();
+            $table->integer('alert_id')->unsigned()->nullable();
             $table->text('alert_email_address');
 		});
 	}

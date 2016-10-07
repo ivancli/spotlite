@@ -203,7 +203,7 @@
                         "name": "last_sent_at",
                         "data": function (data) {
                             if (data.last_sent_at != null) {
-                                return moment(data.last_sent_at).format("lll")
+                                return timestampToDateTimeByFormat(moment(data.last_sent_at).unix(), datefmt + " " + timefmt);
                             } else {
                                 return null;
                             }

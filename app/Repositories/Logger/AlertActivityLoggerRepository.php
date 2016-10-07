@@ -66,6 +66,8 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
     {
         $fields = array(
             "alert_id" => $alert->getKey(),
+            "alert_activity_log_owner_type" => $alert->alert_owner_type,
+            "alert_activity_log_owner_id" => $alert->alert_owner_id,
             "type" => $options['type'],
             "content" => json_encode($options),
         );
@@ -158,8 +160,8 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
 
     public function getProductAlertLogsByAuthUser()
     {
-        $productLogs = auth()->user()->productAlerts()->with('logs.alert.alertable')->get()->pluck('logs')->flatten();
-        $productLogs = $productLogs->reject(function($productLog, $key){
+        $productLogs = auth()->user()->products()->with('alertActivityLogs.alertActivityLoggable')->get()->pluck('alertActivityLogs')->flatten();
+        $productLogs = $productLogs->reject(function ($productLog, $key) {
             return $productLog->type != 'sent';
         });
         return $productLogs;
@@ -167,15 +169,10 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
 
     public function getProductSiteAlertLogsByAuthUser()
     {
-        $productSites = auth()->user()->productSites()->with('alert.logs.alert.alertable.site')->get();
-        $productSiteAlerts = $productSites->pluck(['alert'])->reject(function ($alert, $key) {
-            return is_null($alert);
+        $productSiteLogs = auth()->user()->productSites()->with('alertActivityLogs.alertActivityLoggable.site')->get()->pluck('alertActivityLogs')->flatten();
+        $productSiteLogs = $productSiteLogs->reject(function ($productSiteLog, $key) {
+            return $productSiteLog->type != 'sent';
         });
-        $productSiteAlertLogs = $productSiteAlerts->pluck('logs');
-        $productSiteAlertLogs = $productSiteAlertLogs->flatten();
-        $productSiteAlertLogs = $productSiteAlertLogs->reject(function($productSiteAlertLog, $key){
-            return $productSiteAlertLog->type != "sent";
-        });
-        return $productSiteAlertLogs;
+        return $productSiteLogs;
     }
 }

@@ -20,36 +20,36 @@
 
                 <div class="form-group show-on-daily">
                     {!! Form::label('weekday_only', 'Weekday Only', array('class' => 'control-label')) !!}
-                    {!! Form::checkbox('weekday_only', "y", $product->reportTask->weekday_only == 'y', array("class" => "sl-form-control")) !!}
+                    {!! Form::checkbox('weekday_only', "y", is_null($product->reportTask) ? null : $product->reportTask->weekday_only == 'y', array("class" => "sl-form-control")) !!}
                 </div>
 
                 <div class="form-group required show-on-daily">
                     {!! Form::label('time', 'Delivery Time', array('class' => 'control-label')) !!}
                     {!! Form::select('time', array(
-                    "00:00:00"=>"12:00am",
-                    "1:00:00"=>"1:00am",
-                    "2:00:00"=>"2:00am",
-                    "3:00:00"=>"3:00am",
-                    "4:00:00"=>"4:00am",
-                    "5:00:00"=>"5:00am",
-                    "6:00:00"=>"6:00am",
-                    "7:00:00"=>"7:00am",
-                    "8:00:00"=>"8:00am",
-                    "9:00:00"=>"9:00am",
-                    "10:00:00"=>"10:00am",
-                    "11:00:00"=>"11:00am",
-                    "12:00:00"=>"12:00pm",
-                    "13:00:00"=>"1:00pm",
-                    "14:00:00"=>"2:00pm",
-                    "15:00:00"=>"3:00pm",
-                    "16:00:00"=>"4:00pm",
-                    "17:00:00"=>"5:00pm",
-                    "18:00:00"=>"6:00pm",
-                    "19:00:00"=>"7:00pm",
-                    "20:00:00"=>"8:00pm",
-                    "21:00:00"=>"9:00pm",
-                    "22:00:00"=>"10:00pm",
-                    "23:00:00"=>"11:00pm",
+                    "00:00:00"=> date(auth()->user()->preference('TIME_FORMAT'), strtotime("12:00am")),
+                    "1:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("1:00am")),
+                    "2:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("2:00am")),
+                    "3:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("3:00am")),
+                    "4:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("4:00am")),
+                    "5:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("5:00am")),
+                    "6:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("6:00am")),
+                    "7:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("7:00am")),
+                    "8:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("8:00am")),
+                    "9:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("9:00am")),
+                    "10:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("10:00am")),
+                    "11:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("11:00am")),
+                    "12:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("12:00pm")),
+                    "13:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("1:00pm")),
+                    "14:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("2:00pm")),
+                    "15:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("3:00pm")),
+                    "16:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("4:00pm")),
+                    "17:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("5:00pm")),
+                    "18:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("6:00pm")),
+                    "19:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("7:00pm")),
+                    "20:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("8:00pm")),
+                    "21:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("9:00pm")),
+                    "22:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("10:00pm")),
+                    "23:00:00"=>date(auth()->user()->preference('TIME_FORMAT'), strtotime("11:00pm")),
                     ), null, ['class'=>'form-control sl-form-control']) !!}
                 </div>
 

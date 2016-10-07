@@ -40,6 +40,11 @@ class ProductSite extends Model
         return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'product_site_id');
     }
 
+    public function alertActivityLogs()
+    {
+        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'product_site_id');
+    }
+
     public function getUrlsAttribute()
     {
         return array(

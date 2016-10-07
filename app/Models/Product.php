@@ -60,6 +60,11 @@ class Product extends Model
         return $this->morphMany('App\Models\Report', 'report_owner', null, null, 'product_id');
     }
 
+    public function alertActivityLogs()
+    {
+        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'product_id');
+    }
+
     //indirect relationships
 
     public function productSiteAlerts()

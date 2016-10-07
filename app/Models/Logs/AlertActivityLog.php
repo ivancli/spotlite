@@ -16,12 +16,17 @@ class AlertActivityLog extends Model
 {
     protected $primaryKey = "alert_activity_log_id";
     protected $fillable = [
-        'alert_id', 'type', 'content',
+        'alert_id', 'type', 'content', 'alert_activity_log_owner_type', 'alert_activity_log_owner_id'
     ];
 
     public function alert()
     {
         return $this->belongsTo('App\Models\Alert', 'alert_id', 'alert_id');
+    }
+
+    public function alertActivityLoggable()
+    {
+        return $this->morphTo("alert_activity_log_owner", "alert_activity_log_owner_type", "alert_activity_log_owner_id");
     }
 
     public function scopeFilter($query, QueryFilter $filters)

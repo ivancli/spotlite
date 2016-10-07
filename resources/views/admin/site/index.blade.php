@@ -34,12 +34,12 @@
                         <thead>
                         <tr>
                             <th class="shrink">ID</th>
-                            <th>Created at</th>
                             <th>Site</th>
                             <th width="200">URL</th>
                             <th width="200">xPath</th>
                             <th>Last Price</th>
                             <th>Last Crawl</th>
+                            <th>Created at</th>
                             <th>Status</th>
                             <th width="100"></th>
                         </tr>
@@ -92,22 +92,6 @@
                     {
                         "name": "site_id",
                         "data": "site_id"
-                    },
-                    {
-                        "name": "created_at",
-                        "data": function (data) {
-                            if (data.created_at != null) {
-                                var timestamp = strtotime(data.created_at)
-                                return $("<div>").append(
-                                        $("<div>").text(timestampToDateTimeByFormat(timestamp, "Y-m-d")).attr({
-                                            "title": timestampToDateTimeByFormat(timestamp, "Y-m-d H:i"),
-                                            "data-toggle": "tooltip"
-                                        })
-                                ).html();
-                            } else {
-                                return "";
-                            }
-                        }
                     },
                     {
                         "name": "site_url",
@@ -173,12 +157,27 @@
                     {
                         "name": "last_crawled_at",
                         "data": function (data) {
-                            //data.last_crawled_at;
-                            return $("<div>").append(
-                                    $("<div>").append(
-                                            data.last_crawled_at
-                                    )
-                            ).html();
+                            if (data.last_crawled_at != null) {
+                                return timestampToDateTimeByFormat(moment(data.last_crawled_at).unix(), datefmt + " " + timefmt)
+                            } else {
+                                return null;
+                            }
+                        }
+                    },
+                    {
+                        "name": "created_at",
+                        "data": function (data) {
+                            if (data.created_at != null) {
+                                var timestamp = strtotime(data.created_at)
+                                return $("<div>").append(
+                                        $("<span>").text(timestampToDateTimeByFormat(timestamp, datefmt)).attr({
+                                            "title": timestampToDateTimeByFormat(timestamp, datefmt + ' ' + timefmt),
+                                            "data-toggle": "tooltip"
+                                        })
+                                ).html();
+                            } else {
+                                return "";
+                            }
                         }
                     },
                     {
@@ -441,6 +440,7 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
+                                    alertP("Delete domain", "The domain has been deleted.");
                                     $(el).closest(".site-wrapper").remove();
                                     tblDomain.row($(el).closest("tr")).remove().draw();
                                 } else {

@@ -6,6 +6,7 @@ use App\Contracts\Repository\Mailer\MailerContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\UserPreference;
 use Exception;
 use Invigor\UM\UMRole;
 use Validator;
@@ -61,6 +62,7 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'title' => 'min:2',
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
@@ -79,16 +81,22 @@ class AuthController extends Controller
         $chargifyLink = request('signup_link');
         $verificationCode = str_random(10);
         $user = User::create([
+            'title' => isset($data['title']) ? $data['title'] : null,
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'phone' => isset($data['phone']) ? $data['phone'] : null,
             'verification_code' => $verificationCode
         ]);
         $role = UMRole::where("name", "client")->first();
         if ($role != null) {
             $user->attachRole($role);
         }
+
+        UserPreference::setPreference($user, "DATE_FORMAT", "Y-m-d");
+        UserPreference::setPreference($user, "TIME_FORMAT", "g:i a");
+
         $this->mailer->sendWelcomeEmail($user);
         if (request()->has('api_product_id')) {
             $product = $this->subscriptionRepo->getProduct(request('api_product_id'));

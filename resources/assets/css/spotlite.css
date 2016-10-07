@@ -11,6 +11,14 @@
     margin-bottom: 10px;
 }
 
+.p-10 {
+    padding: 10px;
+}
+
+.p-20 {
+    padding: 20px;
+}
+
 .product-container {
     width: 200px;
     display: inline-block;
@@ -157,6 +165,7 @@ td.shrink, th.shrink {
 
 .sl-form-control {
     width: auto;
+    max-width: 100%;
 }
 
 table th.action-cell,
@@ -337,6 +346,14 @@ th.ellipsis {
     vertical-align: middle;
     margin-top: 0;
     margin-left: 5px;
+}
+
+.content-header {
+    min-height: 41px;
+}
+
+body {
+    padding-right: 0px !important;
 }
 
 @media (min-width: 992px) {

@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth']], function () {
          * User Preferences Related Routes
          */
         Route::put('preference/{element}/{value}', 'User\UserPreferenceController@updatePreference')->name('preference.update');
+        Route::put('preference', 'User\UserPreferenceController@massUpdatePreferences')->name('preference.mass_update');
 
 
         /**
