@@ -74,7 +74,7 @@ class SendReport extends Job implements ShouldQueue
                     compact(['report']),
                     array(
                         "email" => $email->report_email_address,
-                        "subject" => "SpotLite - $subject Category Report",
+                        "subject" => "SpotLite - $subject {$this->reportTask->report_task_owner_type} report",
                         "attachment" => $attachment
                     )))->onQueue("mailing"));
             }
