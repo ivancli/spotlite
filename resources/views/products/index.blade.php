@@ -5,11 +5,14 @@
 @stop
 
 @section('notification_banner')
-    <div class="callout callout-primary" style="margin-bottom: 0!important;">
-        <h4>Track how your competitors are pricing identical and similar products.</h4>
-        Configure your categories and products by adding URLs below. Make sure to set up the
-        <a href="#">alerts</a> so you and more team members can receive timely notifications about price changes.
-    </div>
+    @if(auth()->user()->preference("HIDE_PRODUCT_BANNER_MESSAGE") != "1")
+        <div class="callout callout-primary" style="margin-bottom: 0!important;">
+            <button type="button" class="close" onclick="hideProductBannerMessage(this); return false;">×</button>
+            <h4>Track how your competitors are pricing identical and similar products.</h4>
+            Configure your categories and products by adding URLs below. Make sure to set up the
+            <a href="#">alerts</a> so you and more team members can receive timely notifications about price changes.
+        </div>
+    @endif
 @stop
 
 @section('header_title', "Products")
@@ -27,22 +30,22 @@
                     <h3 class="box-title">Product List</h3>
                     <div class="box-tools pull-right">
                         {{--<div class="btn-group">--}}
-                            {{--<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"--}}
-                                    {{--aria-expanded="true">--}}
-                                {{--<i class="fa fa-bars"></i>--}}
-                            {{--</button>--}}
-                            {{--<ul class="dropdown-menu pull-right" role="menu">--}}
-                                {{--<li>--}}
-                                    {{--<a href="#" class="btn btn-default" onclick="toggleCollapseCategories();">--}}
-                                        {{--Toggle Collapse Categories--}}
-                                    {{--</a>--}}
-                                {{--</li>--}}
-                                {{--<li>--}}
-                                    {{--<a href="#" class="btn btn-default" onclick="toggleCollapseProducts();">--}}
-                                        {{--Toggle Collapse Products--}}
-                                    {{--</a>--}}
-                                {{--</li>--}}
-                            {{--</ul>--}}
+                        {{--<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"--}}
+                        {{--aria-expanded="true">--}}
+                        {{--<i class="fa fa-bars"></i>--}}
+                        {{--</button>--}}
+                        {{--<ul class="dropdown-menu pull-right" role="menu">--}}
+                        {{--<li>--}}
+                        {{--<a href="#" class="btn btn-default" onclick="toggleCollapseCategories();">--}}
+                        {{--Toggle Collapse Categories--}}
+                        {{--</a>--}}
+                        {{--</li>--}}
+                        {{--<li>--}}
+                        {{--<a href="#" class="btn btn-default" onclick="toggleCollapseProducts();">--}}
+                        {{--Toggle Collapse Products--}}
+                        {{--</a>--}}
+                        {{--</li>--}}
+                        {{--</ul>--}}
                         {{--</div>--}}
                     </div>
                 </div>
@@ -223,6 +226,21 @@
                 },
                 "error": function (xhr, status, error) {
                     alertP("Error", "Unable to update category order, please try again later.");
+                }
+            })
+        }
+
+        function hideProductBannerMessage(el) {
+            $(el).closest(".callout").slideUp(function(){
+                $(this).remove();
+            })
+            $.ajax({
+                "url": "{{route("preference.update", ["element" => "HIDE_PRODUCT_BANNER_MESSAGE", "value" => "1"])}}",
+                "method": "put",
+                "dataType": "json",
+                "success": function (response) {
+                },
+                "error": function (xhr, status, error) {
                 }
             })
         }
