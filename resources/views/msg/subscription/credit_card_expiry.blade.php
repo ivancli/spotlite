@@ -19,7 +19,7 @@
                 <button class="btn btn-default" title="Close this popup" data-dismiss="modal">No, thanks
                 </button>
                 <a class="btn btn-success" href="{{$updatePaymentLink}}">
-                    Update Credit Card Details
+                    Update Payment Details
                 </a>
             </p>
         </div>
