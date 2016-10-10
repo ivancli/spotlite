@@ -51,7 +51,8 @@ class AlertUser extends Job implements ShouldQueue
 
 
         $product = $site->product;
-        if (!is_null($product->alert)) {
+
+        if (!is_null($product) && !is_null($product->alert)) {
             /*CHECK IF ALL SITE UNDER THIS PRODUCT ALL CRAWLED*/
             $allCrawled = true;
             $sites = $product->sites;
