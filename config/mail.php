@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'spotlite.invigor@gmail.com', 'name' => 'SpotLite'],
+    'from' => ['address' => env('MAIL_USERNAME'), 'name' => env('MAIL_FROM_NAME')],
 
     /*
     |--------------------------------------------------------------------------
