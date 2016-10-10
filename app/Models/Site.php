@@ -17,13 +17,18 @@ class Site extends Model
 {
     protected $primaryKey = "site_id";
     protected $fillable = [
-        "site_url", "site_xpath", "recent_price", "last_crawled_at", "price_diff"
+        "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "my_price"
     ];
     protected $appends = ['urls', 'domain'];
 
-    public function products()
+    public function preference()
     {
-        return $this->belongsToMany('App\Models\Product', 'product_sites', 'site_id', 'product_id')->withPivot('product_site_id');
+        return $this->hasOne('App\Models\SitePreference', 'site_id', 'site_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product', 'product_id', 'product_id');
     }
 
     public function crawler()
@@ -31,14 +36,14 @@ class Site extends Model
         return $this->hasOne('App\Models\Crawler', 'site_id', 'site_id');
     }
 
-    public function productSites()
+    public function alert()
     {
-        return $this->hasMany('App\Models\ProductSite', 'site_id', 'site_id');
+        return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'site_id');
     }
 
-    public function alerts()
+    public function alertActivityLogs()
     {
-        return $this->morphMany('App\Models\Alert', 'alert_owner', 'alert_owner_type', 'alert_owner_id', 'site_id');
+        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'product_site_id');
     }
 
     public function excludedByAlerts()
@@ -77,6 +82,11 @@ class Site extends Model
             "site_id" => $site->getKey()
         ));
 
+        /* create one-to-one site preference when site is created */
+        SitePreference::create(array(
+            "site_id" => $site->getKey()
+        ));
+
         /* create domain if the domain of site url does not exist */
         $newDomain = parse_url($site->site_url)['host'];
 
@@ -97,6 +107,17 @@ class Site extends Model
             "test" => route("admin.site.test", $this->getKey()),
             "admin_delete" => route("admin.site.destroy", $this->getKey()),
             "admin_crawler_edit" => route("admin.crawler.edit", $this->crawler->getKey()),
+            "show" => route("site.show", $this->getKey()),
+
+            "edit" => route("site.edit", $this->getKey()),
+            "update" => route("site.my_price", $this->getKey()),
+            "delete" => route("site.destroy", $this->getKey()),
+
+            "alert" => route("alert.site.edit", $this->getKey()),
+
+            "chart" => route("chart.site.index", $this->getKey()),
+
+            "admin_xpath_edit" => route("admin.site.xpath.edit", $this->getKey()),
         );
     }
 

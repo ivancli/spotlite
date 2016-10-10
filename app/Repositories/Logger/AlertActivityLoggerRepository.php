@@ -97,40 +97,11 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
         // TODO: Implement deleteLog() method.
     }
 
-    /**
-     * Load logs which belong to logged in user
-     *
-     * @return mixed
-     */
-    public function getLogsByAuthUser()
-    {
-        /*TODO get product alerts*/
-        $productAlerts = auth()->user()->productAlerts;
-
-
-        $productSitesWithAlerts = (auth()->user()->productSites()->with('alert')->get());
-        $alerts = $productSitesWithAlerts->pluck(['alert']);
-
-        $productSiteAlerts = $alerts->reject(function ($alert, $key) {
-            return is_null($alert);
-        });
-
-        foreach (auth()->user()->products as $product) {
-            if ($product->productSiteAlerts()->count() > 0) {
-                dump($product->productSiteAlerts);
-            }
-        }
-
-        $productSiteAlerts = auth()->user()->productSiteAlerts;
-
-        /*TODO get product site alert*/
-    }
-
     public function getDataTableAlertActivityLogs()
     {
         $productAlertLogs = $this->getProductAlertLogsByAuthUser();
-        $productSiteAlertLogs = $this->getProductSiteAlertLogsByAuthUser();
-        $alertLogs = $productAlertLogs->merge($productSiteAlertLogs);
+        $siteAlertLogs = $this->getSiteAlertLogsByAuthUser();
+        $alertLogs = $productAlertLogs->merge($siteAlertLogs);
 
         $alertLogCount = $alertLogs->count();
 
@@ -167,12 +138,12 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
         return $productLogs;
     }
 
-    public function getProductSiteAlertLogsByAuthUser()
+    public function getSiteAlertLogsByAuthUser()
     {
-        $productSiteLogs = auth()->user()->productSites()->with('alertActivityLogs.alertActivityLoggable.site')->get()->pluck('alertActivityLogs')->flatten();
-        $productSiteLogs = $productSiteLogs->reject(function ($productSiteLog, $key) {
-            return $productSiteLog->type != 'sent';
+        $siteLogs = auth()->user()->sites()->with('alertActivityLogs.alertActivityLoggable')->get()->pluck('alertActivityLogs')->flatten();
+        $siteLogs = $siteLogs->reject(function ($siteLog, $key) {
+            return $siteLog->type != 'sent';
         });
-        return $productSiteLogs;
+        return $siteLogs;
     }
 }

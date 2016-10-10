@@ -32,16 +32,16 @@ class CrawlerController extends Controller
     {
         /*TODO validation here*/
         $input = $request->all();
-        if($request->has('crawler_class') && strlen($input['crawler_class']) == 0){
+        if(!$request->has('crawler_class') || strlen($input['crawler_class']) == 0){
             $input['crawler_class'] = null;
         }
 
-        if($request->has('parser_class') && strlen($input['parser_class']) == 0){
+        if(!$request->has('parser_class') || strlen($input['parser_class']) == 0){
             $input['parser_class'] = null;
         }
 
         $crawler = $this->crawler->getCrawler($crawler_id);
-        $crawler = $this->crawler->updateCrawler($crawler_id, $request->all());
+        $crawler = $this->crawler->updateCrawler($crawler_id, $input);
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {

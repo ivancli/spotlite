@@ -25,5 +25,11 @@ interface SiteContract
 
     public function deleteSite($id);
 
+    public function adoptPreferences($site_id, $target_site_id);
+
+    public function clearPreferences($site_id);
+
+    public function copySiteHistoricalPrice($site_id, $target_site_id);
+
     public function getDataTablesSites(QueryFilter $queryFilter);
 }

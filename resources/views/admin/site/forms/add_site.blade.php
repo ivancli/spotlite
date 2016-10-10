@@ -14,10 +14,6 @@
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}
                     {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'placeholder'=>'Enter or copy URL')) !!}
                 </div>
-                <div class="form-group">
-                    {!! Form::label('site_xpath', 'xPath', array('class' => 'control-label')) !!}
-                    {!! Form::text('site_xpath', null, array('class' => 'form-control', 'id'=>'txt-site-xpath')) !!}
-                </div>
                 {!! Form::close() !!}
 
             </div>

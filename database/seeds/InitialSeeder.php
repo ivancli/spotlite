@@ -23,6 +23,11 @@ class InitialSeeder extends Seeder
             'role_id' => $superAdmin->role_id,
         ]);
 
+        $user = \App\Models\User::findOrFail($userId);
+        \App\Models\UserPreference::setPreference($user, 'DATE_FORMAT', 'Y-m-d');
+        \App\Models\UserPreference::setPreference($user, 'TIME_FORMAT', 'g:i a');
+
+
         /* parent permissions */
         $manageUser = new \Invigor\UM\UMPermission();
         $manageUser->name = "manage_user";

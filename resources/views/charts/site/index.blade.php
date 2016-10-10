@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="modal-product-site-chart">
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-site-chart">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-body" style="background-color: #f5f5f5;">
@@ -11,7 +11,7 @@
                             <div class="box-body">
                                 <div class="row m-b-10">
                                     <div class="col-sm-12">
-                                        <form action="" class="form-horizontal" id="frm-product-site-chart-characteristics">
+                                        <form action="" class="form-horizontal" id="frm-site-chart-characteristics">
                                             <div class="form-group required">
                                                 <label class="col-sm-4 control-label">Timespan</label>
                                                 <div class="col-sm-8">
@@ -42,9 +42,9 @@
                                                                name="date_range"
                                                                id="txt-date-range" readonly="readonly">
                                                         <input type="hidden" name="start_date"
-                                                               id="txt-product-site-chart-start-date">
+                                                               id="txt-site-chart-start-date">
                                                         <input type="hidden" name="end_date"
-                                                               id="txt-product-site-chart-end-date">
+                                                               id="txt-site-chart-end-date">
                                                     </div>
                                                 </div>
                                                 <!-- /.input group -->
@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-primary" onclick="loadProductSiteChartData()">Generate
+                                        <button class="btn btn-primary" onclick="loadSiteChartData()">Generate
                                             Chart
                                         </button>
                                         <button class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -87,17 +87,17 @@
     </div>
 
     <script>
-        var productSiteChart = null;
+        var siteChart = null;
 
         function modalReady() {
             $("#txt-date-range").daterangepicker({
                 "maxDate": moment()
             }).on('apply.daterangepicker', function (ev, picker) {
                 $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-                $("#txt-product-site-chart-start-date").val(picker.startDate.format('X'));
-                $("#txt-product-site-chart-end-date").val(picker.endDate.format('X'));
+                $("#txt-site-chart-start-date").val(picker.startDate.format('X'));
+                $("#txt-site-chart-end-date").val(picker.endDate.format('X'));
             });
-            productSiteChart = new Highcharts.Chart({
+            siteChart = new Highcharts.Chart({
                 credits: {
                     enabled: false
                 },
@@ -105,11 +105,11 @@
                     renderTo: 'chart-container'
                 },
                 title: {
-                    text: '{{parse_url($productSite->site->site_url)['host']}}',
+                    text: '{{parse_url($site->site_url)['host']}}',
                     x: -20 //center
                 },
                 subtitle: {
-                    text: '{{$productSite->product->product_name}}',
+                    text: '{{$site->product->product_name}}',
                     x: -20
                 },
                 xAxis: {
@@ -149,7 +149,7 @@
             }
         }
 
-        function loadProductSiteChartData() {
+        function loadSiteChartData() {
             var startDate = null;
             var endDate = null;
             switch ($("#sel-timespan").val()) {
@@ -191,8 +191,8 @@
                     break;
                 case "custom":
                 default:
-                    startDate = $("#txt-product-site-chart-start-date").val();
-                    endDate = $("#txt-product-site-chart-end-date").val();
+                    startDate = $("#txt-site-chart-start-date").val();
+                    endDate = $("#txt-site-chart-end-date").val();
             }
 
             if (startDate == null || endDate == null) {
@@ -200,14 +200,14 @@
                 return false;
             }
 
-            $("#txt-product-site-chart-start-date").val(startDate);
-            $("#txt-product-site-chart-end-date").val(endDate);
+            $("#txt-site-chart-start-date").val(startDate);
+            $("#txt-site-chart-end-date").val(endDate);
 
-            productSiteChart.showLoading();
+            siteChart.showLoading();
             $.ajax({
-                "url": "{{$productSite->urls['chart']}}",
+                "url": "{{$site->urls['chart']}}",
                 "method": "get",
-                "data": $("#frm-product-site-chart-characteristics").serialize(),
+                "data": $("#frm-site-chart-characteristics").serialize(),
                 "dataType": "json",
                 "success": function (response) {
                     if (response.status == true) {
@@ -216,7 +216,7 @@
                         console.info("called");
                         $.each(response.data, function (siteId, site) {
                             console.info(site);
-                            productSiteChart.addSeries({
+                            siteChart.addSeries({
                                 name: site.name + " Average",
                                 data: site.average,
                                 tooltip: {
@@ -224,8 +224,8 @@
                                 }
                             });
 
-                            productSiteChart.redraw();
-                            productSiteChart.hideLoading();
+                            siteChart.redraw();
+                            siteChart.hideLoading();
                         });
                     }
                 },
@@ -236,8 +236,8 @@
         }
 
         function removeSeries() {
-            while (productSiteChart.series.length > 0)
-                productSiteChart.series[0].remove(true);
+            while (siteChart.series.length > 0)
+                siteChart.series[0].remove(true);
         }
     </script>
 </div>

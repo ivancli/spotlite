@@ -87,7 +87,7 @@
                     <tbody>
                     {{--sites here--}}
                     @if(!is_null($product->sites))
-                        @foreach($product->productSites()->orderBy('my_price', 'desc')->orderBy('product_site_id')->get() as $productSite)
+                        @foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_id')->get() as $site)
                             @include('products.site.partials.single_site')
                         @endforeach
                     @endif
@@ -187,7 +187,7 @@
             showLoading();
             var productID = $(el).closest(".product-wrapper").attr("data-product-id");
             $.ajax({
-                "url": "{{route('product_site.create')}}",
+                "url": "{{route('site.create')}}",
                 "method": "get",
                 "data": {
                     "product_id": productID
@@ -202,8 +202,8 @@
                                 "callback": function (response) {
                                     if (response.status == true) {
                                         showLoading();
-                                        if (typeof response.productSite != 'undefined') {
-                                            $.get(response.productSite.urls.show, function (html) {
+                                        if (typeof response.site != 'undefined') {
+                                            $.get(response.site.urls.show, function (html) {
                                                 hideLoading();
                                                 $(el).closest(".product-wrapper").find(".tbl-site tbody").append(html);
                                             });

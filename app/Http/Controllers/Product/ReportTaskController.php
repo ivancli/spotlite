@@ -25,7 +25,6 @@ use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 use App\Models\ReportEmail;
-use App\Models\ReportTask;
 use App\Validators\Product\ReportTask\UpdateCategoryReportValidator;
 use App\Validators\Product\ReportTask\UpdateProductReportValidator;
 use Illuminate\Http\Request;

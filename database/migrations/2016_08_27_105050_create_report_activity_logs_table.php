@@ -10,7 +10,7 @@ class CreateReportActivityLogsTable extends Migration {
 		Schema::create('report_activity_logs', function(Blueprint $table) {
 			$table->bigIncrements('report_activity_log_id');
 			$table->integer('report_task_id')->unsigned()->index();
-			$table->enum('status', array('started', 'prepared', 'validated', 'generated', 'saved'));
+            $table->enum('type', array("trigger", "sent", "create"));
 			$table->text('content')->nullable();
 			$table->timestamps();
 		});

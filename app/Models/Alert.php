@@ -28,9 +28,9 @@ class Alert extends Model
         return $this->morphTo("alert_owner", "alert_owner_type");
     }
 
-    public function excludedProductSites()
+    public function excludedSites()
     {
-        return $this->belongsToMany('App\Models\ProductSite', 'alert_excluded_product_sites', 'alert_id', 'product_site_id');
+        return $this->belongsToMany('App\Models\Site', 'alert_excluded_sites', 'alert_id', 'site_id');
     }
 
     public function emails()

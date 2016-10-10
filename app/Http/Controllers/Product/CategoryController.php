@@ -17,9 +17,6 @@ use App\Validators\Product\Category\StoreValidator;
 use App\Validators\Product\Category\UpdateValidator;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use Illuminate\Support\Facades\Validator;
-
 /**
  * Created by PhpStorm.
  * User: ivan.li

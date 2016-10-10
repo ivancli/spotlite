@@ -1,31 +1,31 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="modal-alert-product-site">
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-alert-site">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{$productSite->product->product_name}} Site Price Alert</h4>
+                <h4 class="modal-title">{{$site->product->product_name}} Site Price Alert</h4>
             </div>
             <div class="modal-body">
-                <p>{{parse_url($productSite->site->site_url)['host']}}</p>
+                <p>{{parse_url($site->site_url)['host']}}</p>
                 <ul class="text-danger errors-container">
                 </ul>
 
-                {!! Form::model($productSite->alert, array('route' => array('alert.product_site.update', $productSite->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-site-update")) !!}
-                <input type="hidden" name="alert_owner_id" value="{{$productSite->getKey()}}">
-                <input type="hidden" name="alert_owner_type" value="product_site">
+                {!! Form::model($site->alert, array('route' => array('alert.site.update', $site->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-site-update")) !!}
+                <input type="hidden" name="alert_owner_id" value="{{$site->getKey()}}">
+                <input type="hidden" name="alert_owner_type" value="site">
                 <div class="form-group required">
                     {!! Form::label('comparison_price_type', 'Trigger', array('class' => 'control-label')) !!}
-                    {!! Form::select('comparison_price_type', $productSite->my_price == 'n' ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
+                    {!! Form::select('comparison_price_type', $site->my_price == 'n' ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
                 </div>
                 <div class="form-group required">
                     {!! Form::label('operator', 'Trend', array('class' => 'control-label')) !!}
                     {!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control sl-form-control']) !!}
                 </div>
                 <div class="form-group required" id="comparison-price-container"
-                     style="{{isset($productSite->alert) && $productSite->alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">
+                     style="{{isset($site->alert) && $site->alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">
                     {!! Form::label('comparison_price', 'Price Point', array('class' => 'control-label')) !!}
-                    {!! Form::text('comparison_price', is_null($productSite->alert) ? null : number_format($productSite->alert->comparison_price, 2, '.', ''), array('class' => 'form-control sl-form-control', 'id' => 'txt-comparison-price')) !!}
+                    {!! Form::text('comparison_price', is_null($site->alert) ? null : number_format($site->alert->comparison_price, 2, '.', ''), array('class' => 'form-control sl-form-control', 'id' => 'txt-comparison-price')) !!}
                 </div>
                 <div class="form-group required">
                     {!! Form::label('email[]', 'Notify Emails', array('class' => 'control-label')) !!}
@@ -35,14 +35,14 @@
                 </div>
                 <div class="form-group">
                     {!! Form::label('one_off', 'One-off', array('class' => 'control-label')) !!}
-                    {!! Form::checkbox('one_off', "y", is_null($productSite->alert) ? null : $productSite->alert->one_off == 'y', array('class' => 'sl-form-control')) !!}
+                    {!! Form::checkbox('one_off', "y", is_null($site->alert) ? null : $site->alert->one_off == 'y', array('class' => 'sl-form-control')) !!}
                 </div>
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-update-product-site-alert">OK</button>
-                @if(!is_null($productSite->alert))
-                    <button class="btn btn-danger" id="btn-delete-product-site-alert">Delete</button>
+                <button class="btn btn-primary" id="btn-update-site-alert">OK</button>
+                @if(!is_null($site->alert))
+                    <button class="btn btn-danger" id="btn-delete-site-alert">Delete</button>
                 @endif
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
@@ -64,17 +64,17 @@
                 }
             });
 
-            $("#btn-update-product-site-alert").on("click", function () {
-                submitUpdateProductSiteAlert(function (response) {
+            $("#btn-update-site-alert").on("click", function () {
+                submitUpdateSiteAlert(function (response) {
                     if (response.status == true) {
                         alertP("Create/Update Alert", "Alert has been updated.");
-                        $("#modal-alert-product-site").modal("hide");
+                        $("#modal-alert-site").modal("hide");
                         if ($.isFunction(options.updateCallback)) {
                             options.updateCallback(response);
                         }
                     } else {
                         if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-alert-product-site .errors-container");
+                            var $errorContainer = $("#modal-alert-site .errors-container");
                             $errorContainer.empty();
                             $.each(response.errors, function (index, error) {
                                 $errorContainer.append(
@@ -87,7 +87,7 @@
                     }
                 })
             });
-            $("#btn-delete-product-site-alert").on("click", function () {
+            $("#btn-delete-site-alert").on("click", function () {
 
                 confirmP("Delete alert", "Do you want to delete this alert?", {
                     "affirmative": {
@@ -95,16 +95,16 @@
                         "class": "btn-danger",
                         "dismiss": true,
                         "callback": function () {
-                            submitDeleteProductSiteAlert(function (response) {
+                            submitDeleteSiteAlert(function (response) {
                                 if (response.status == true) {
                                     alertP("Delete Alert", "Alert has been deleted.");
-                                    $("#modal-alert-product-site").modal("hide");
+                                    $("#modal-alert-site").modal("hide");
                                     if ($.isFunction(options.deleteCallback)) {
                                         options.deleteCallback(response);
                                     }
                                 } else {
                                     if (typeof response.errors != 'undefined') {
-                                        var $errorContainer = $("#modal-alert-product-site .errors-container");
+                                        var $errorContainer = $("#modal-alert-site .errors-container");
                                         $errorContainer.empty();
                                         $.each(response.errors, function (index, error) {
                                             $errorContainer.append(
@@ -127,15 +127,15 @@
             })
         }
 
-        function submitUpdateProductSiteAlert(callback) {
+        function submitUpdateSiteAlert(callback) {
             showLoading();
             if ($("#sel-price-type").val() == "my price") {
                 $("#txt-comparison-price").remove();
             }
             $.ajax({
-                "url": "{{route('alert.product_site.update', $productSite->getKey())}}",
+                "url": "{{route('alert.site.update', $site->getKey())}}",
                 "method": "put",
-                "data": $("#frm-alert-product-site-update").serialize(),
+                "data": $("#frm-alert-site-update").serialize(),
                 "dataType": "json",
                 "success": function (response) {
                     hideLoading();
@@ -150,10 +150,10 @@
             })
         }
 
-        function submitDeleteProductSiteAlert(callback) {
+        function submitDeleteSiteAlert(callback) {
             showLoading();
             $.ajax({
-                "url": "{{route('alert.product_site.destroy', $productSite->getKey())}}",
+                "url": "{{route('alert.site.destroy', $site->getKey())}}",
                 "method": "delete",
                 "dataType": "json",
                 "success": function (response) {

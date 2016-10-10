@@ -68,17 +68,17 @@ class AlertRepository implements AlertContract
         event(new AlertTriggered($alert));
         $product = $alert->alertable;
 
-        $productSites = $product->productSites;
+        $sites = $product->sites;
 
-        $myProductSite = $product->productSites()->where("my_price", "y")->first();
+        $mySite = $product->sites()->where("my_price", "y")->first();
 
         if ($alert->comparison_price_type == 'my price') {
 
-            if (is_null($myProductSite)) {
+            if (is_null($mySite)) {
                 return false;
             }
 
-            $comparisonPrice = $myProductSite->site->recent_price;
+            $comparisonPrice = $mySite->recent_price;
 
 
             /* the alert site is my site, no need to compare or notify */
@@ -90,14 +90,14 @@ class AlertRepository implements AlertContract
             return false;
         }
 
-        $alertingProductSites = array();
+        $alertingSites = array();
 
-        foreach ($productSites as $productSite) {
+        foreach ($sites as $site) {
 
-            $excludedProductSites = $alert->excludedProductSites;
+            $excludedSites = $alert->excludedSites;
             $excluded = false;
-            foreach ($excludedProductSites as $excludedProductSite) {
-                if ($excludedProductSite->site->getKey() == $productSite->site->getKey()) {
+            foreach ($excludedSites as $excludedSite) {
+                if ($excludedSite->getKey() == $site->getKey()) {
                     $excluded = true;
                 }
             }
@@ -106,28 +106,28 @@ class AlertRepository implements AlertContract
             }
 
             /*TODO review necessity*/
-            if ($productSite->site->status != 'ok') {
+            if ($site->status != 'ok') {
                 continue;
             }
 
-            if ($alert->comparison_price_type == 'my price' && $myProductSite->site->getKey() == $productSite->site->getKey()) {
+            if ($alert->comparison_price_type == 'my price' && $mySite->getKey() == $site->getKey()) {
                 continue;
             }
 
-            $alertUser = $this->comparePrices($productSite->site->recent_price, $comparisonPrice, $alert->operator);
+            $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
 
             if ($alertUser) {
-                $alertingProductSites[] = $productSite;
+                $alertingSites[] = $site;
             }
         }
 
-        if (count($alertingProductSites) == 0) {
+        if (count($alertingSites) == 0) {
             return false;
         }
         $emails = $alert->emails;
         foreach ($emails as $email) {
             dispatch((new SendMail('products.alert.email.product',
-                compact(['alert', 'alertingProductSites', 'myProductSite']),
+                compact(['alert', 'alertingSites', 'mySite']),
                 array(
                     "email" => $email->alert_email_address,
                     "subject" => 'SpotLite - Product Price Alert'
@@ -142,32 +142,31 @@ class AlertRepository implements AlertContract
         }
     }
 
-    public function triggerProductSiteAlert(Alert $alert)
+    public function triggerSiteAlert(Alert $alert)
     {
         event(new AlertTriggered($alert));
 
-        $productSite = $alert->alertable;
-        if (is_null($productSite)) {
+        $site = $alert->alertable;
+        if (is_null($site)) {
             return false;
         }
         /*TODO review necessity*/
-        if ($productSite->site->status != 'ok') {
+        if ($site->status != 'ok') {
             return false;
         }
-        $site = $productSite->site;
-        $product = $productSite->product;
+        $product = $site->product;
 
-        $myProductSite = $product->productSites()->where("my_price", "y")->first();
+        $mySite = $product->sites()->where("my_price", "y")->first();
 
         if ($alert->comparison_price_type == 'my price') {
-            if (is_null($myProductSite)) {
+            if (is_null($mySite)) {
                 return false;
             }
             /* the alert site is my site, no need to compare or notify */
-            if ($myProductSite->site->getKey() == $site->getKey()) {
+            if ($mySite->getKey() == $site->getKey()) {
                 return false;
             }
-            $comparisonPrice = $myProductSite->site->recent_price;
+            $comparisonPrice = $mySite->recent_price;
         } else {
             $comparisonPrice = $alert->comparison_price;
         }
@@ -176,12 +175,11 @@ class AlertRepository implements AlertContract
         }
 
         $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
-
         if ($alertUser) {
             $emails = $alert->emails;
             foreach ($emails as $email) {
                 dispatch((new SendMail('products.alert.email.site',
-                    compact(['alert', 'myProductSite']),
+                    compact(['alert', 'mySite']),
                     array(
                         "email" => $email->alert_email_address,
                         "subject" => 'SpotLite - Site Price Alert'
@@ -217,24 +215,24 @@ class AlertRepository implements AlertContract
 
     private function getAlertsCount()
     {
-        $productSiteWithAlerts = auth()->user()->productSites()->with("alert")->get();
+        $siteWithAlerts = auth()->user()->sites()->with("alert")->get();
 
-        $productSiteAlerts = array();
-        foreach ($productSiteWithAlerts as $productSiteWithAlert) {
-            if (!is_null($productSiteWithAlert->alert)) {
-                $productSiteAlerts [] = $productSiteWithAlert->alert;
+        $siteAlerts = array();
+        foreach ($siteWithAlerts as $siteWithAlert) {
+            if (!is_null($siteWithAlert->alert)) {
+                $siteAlerts [] = $siteWithAlert->alert;
             }
         }
 
-        return auth()->user()->productAlerts()->count() + count($productSiteAlerts);
+        return auth()->user()->productAlerts()->count() + count($siteAlerts);
     }
 
     public function getDataTableAlerts()
     {
         $productAlerts = $this->getProductAlertsByAuthUser();
-        $productSiteAlerts = $this->getProductSiteAlertsByAuthUser();
+        $siteAlerts = $this->getSiteAlertsByAuthUser();
 
-        $alerts = $productAlerts->merge($productSiteAlerts);
+        $alerts = $productAlerts->merge($siteAlerts);
 
 
         if ($this->request->has('order')) {
@@ -265,8 +263,8 @@ class AlertRepository implements AlertContract
                     return true;
                 }
 
-                if ($alert->alert_owner_type == "product_site") {
-                    return str_contains(strtolower($alert->alert_owner->site->domain), strtolower($searchString));
+                if ($alert->alert_owner_type == "site") {
+                    return str_contains(strtolower($alert->alert_owner->domain), strtolower($searchString));
                 } elseif ($alert->alert_owner_type == "product") {
                     return str_contains(strtolower($alert->alert_owner->product_name), strtolower($searchString));
                 }
@@ -290,17 +288,17 @@ class AlertRepository implements AlertContract
         return auth()->user()->productAlerts()->with('alertable')->get();
     }
 
-    public function getProductSiteAlertsByAuthUser()
+    public function getSiteAlertsByAuthUser()
     {
         /*get product site with alerts*/
-        $productSitesWithAlerts = auth()->user()->productSites()->with('alert')->with('alert.alertable')->with('alert.alertable.site')->get();
+        $sitesWithAlerts = auth()->user()->sites()->with('alert')->with('alert.alertable')->get();
 
-        $productSiteAlerts = $productSitesWithAlerts->pluck(['alert']);
+        $siteAlerts = $sitesWithAlerts->pluck(['alert']);
 
         /*remove the null value*/
-        $productSiteAlerts = $productSiteAlerts->reject(function ($alert, $key) {
+        $siteAlerts = $siteAlerts->reject(function ($alert, $key) {
             return is_null($alert);
         });
-        return $productSiteAlerts;
+        return $siteAlerts;
     }
 }

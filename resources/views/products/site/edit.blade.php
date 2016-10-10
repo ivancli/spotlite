@@ -4,12 +4,12 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{$productSite->product->product_name}}</h4>
+                <h4 class="modal-title">{{$site->product->product_name}}</h4>
             </div>
             <div class="modal-body">
                 <ul class="text-danger errors-container">
                 </ul>
-                {!! Form::model($productSite->site, array('route' => array('product_site.update', $productSite->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-site-update")) !!}
+                {!! Form::model($site, array('route' => array('site.update', $site->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-site-update")) !!}
                 <div class="form-group required">
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}
                     &nbsp;
@@ -20,8 +20,8 @@
                     {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'onkeyup'=>'updateEditSiteModelButtonStatus(this)', 'placeholder'=>'Enter or copy URL')) !!}
                 </div>
 
-                @if(!is_null($productSite->site->recent_price))
-                    <p>Current price: ${{number_format($productSite->site->recent_price, 2, '.', ',')}}</p>
+                @if(!is_null($site->recent_price))
+                    <p>Current price: ${{number_format($site->recent_price, 2, '.', ',')}}</p>
                 @endif
                 <div class="prices-container">
                     @if(isset($sites) && $sites->count() > 0)
@@ -30,7 +30,7 @@
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="site_id" class="rad-site-id"
-                                           value="{{$priceSite->getKey()}}" {{$priceSite->getKey() == $productSite->site->getKey() ? 'checked="checked"' : ""}}>
+                                           value="{{$priceSite->getKey()}}" {{$priceSite->getKey() == $site->getKey() ? 'checked="checked"' : ""}}>
                                     ${{number_format($priceSite->recent_price, 2, '.', ',')}}
                                 </label>
                             </div>
@@ -179,7 +179,7 @@
 
         function updateEditSiteModelButtonStatus(el) {
             var siteURL = $(el).val();
-            if (siteURL != "{{$productSite->site->site_url}}") {
+            if (siteURL != "{{$site->site_url}}") {
                 $("#btn-check-price").show();
                 $("#btn-edit-site").hide();
                 $("#btn-report-error").hide();

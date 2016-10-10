@@ -215,11 +215,11 @@
                     if (response.status == true) {
                         removeSeries();
 
-                        $.each(response.data, function (productSiteId, productSite) {
+                        $.each(response.data, function (siteId, site) {
 
                             productChart.addSeries({
-                                name: productSite.name + " Average",
-                                data: productSite.average,
+                                name: site.name + " Average",
+                                data: site.average,
                                 tooltip: {
                                     pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>${point.y:,.2f}</b><br/>'
                                 }

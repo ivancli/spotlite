@@ -20,7 +20,7 @@ class Category extends Model
         "category_name", "user_id", "category_order", "report_task_id"
     ];
     public $timestamps = false;
-    protected $appends = ["urls", "productCount", "productSiteCount"];
+    protected $appends = ["urls", "productCount", "siteCount"];
 
     public function user()
     {
@@ -32,9 +32,9 @@ class Category extends Model
         return $this->hasMany('App\Models\Product', 'category_id', 'category_id');
     }
 
-    public function productSites()
+    public function sites()
     {
-        return $this->hasManyThrough('App\Models\ProductSite', 'App\Models\Product', 'category_id', 'product_id', 'category_id');
+        return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'category_id', 'product_id', 'category_id');
     }
 
     public function alerts()
@@ -74,9 +74,9 @@ class Category extends Model
         return $this->products->count();
     }
 
-    public function getProductSiteCountAttribute()
+    public function getSiteCountAttribute()
     {
-        return $this->productSites->count();
+        return $this->sites->count();
     }
 
     public function getUrlsAttribute()

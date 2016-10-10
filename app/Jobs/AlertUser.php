@@ -38,34 +38,28 @@ class AlertUser extends Job implements ShouldQueue
     {
         $site = $this->crawler->site;
 
-        $productSites = $site->productSites;
-        foreach ($productSites as $productSite) {
-            if (!is_null($productSite->alert) && !$productSite->alert->lastActiveWithinHour()) {
-                $productSite->alert->last_active_at = date("Y-m-d H:i:s");
-                $productSite->alert->save();
-                switch ($productSite->alert->alert_owner_type) {
-                    case "product_site":
-                        $alertRepo->triggerProductSiteAlert($productSite->alert);
-                        break;
-                    default:
-                }
+        if (!is_null($site->alert) && !$site->alert->lastActiveWithinHour()) {
+            $site->alert->last_active_at = date("Y-m-d H:i:s");
+            $site->alert->save();
+            switch ($site->alert->alert_owner_type) {
+                case "site":
+                    $alertRepo->triggerSiteAlert($site->alert);
+                    break;
+                default:
             }
         }
 
 
-        $products = $site->products;
-        foreach ($products as $product) {
-            if (is_null($product->alert)) {
-                continue;
-            }
+        $product = $site->product;
+        if (!is_null($product->alert)) {
             /*CHECK IF ALL SITE UNDER THIS PRODUCT ALL CRAWLED*/
             $allCrawled = true;
             $sites = $product->sites;
             foreach ($sites as $site) {
-                $excludedProductSites = $product->alert->excludedProductSites;
+                $excludedSites = $product->alert->excludedSites;
                 $excluded = false;
-                foreach ($excludedProductSites as $excludedProductSite) {
-                    if ($excludedProductSite->site->getKey() == $site->getKey()) {
+                foreach ($excludedSites as $excludedSite) {
+                    if ($excludedSite->getKey() == $site->getKey()) {
                         $excluded = true;
                     }
                 }

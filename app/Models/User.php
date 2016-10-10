@@ -84,9 +84,9 @@ class User extends Authenticatable
         return $this->hasManyThrough('App\Models\Alert', 'App\Models\Product', 'user_id', 'alert_owner_id', 'user_id')->where('alert_owner_type', 'product');
     }
 
-    public function productSites()
+    public function sites()
     {
-        return $this->hasManyThrough('App\Models\ProductSite', 'App\Models\Product', 'user_id', 'product_id', 'user_id');
+        return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'user_id', 'product_id', 'user_id');
     }
 
 //----------------------------------------------------------------------------------------------------------------------
