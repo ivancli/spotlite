@@ -38,7 +38,7 @@
                             <td width="33%" style="vertical-align: bottom;" align="center">
                                 <div class="hidden-xs">Download the tutorial</div>
                                 <div>
-                                    <a href="{{asset('videos/sasmple')}}" class="text-muted">
+                                    <a href="{{asset('videos/sample_video.mp4')}}" class="text-muted">
                                         <div style="font-size: 25px;">
                                             <i class=" fa fa-download"></i>
                                         </div>
