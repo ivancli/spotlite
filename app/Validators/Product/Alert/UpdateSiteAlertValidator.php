@@ -9,7 +9,7 @@ use App\Validators\ValidatorAbstract;
  * Date: 11/09/2016
  * Time: 6:56 PM
  */
-class UpdateProductSiteAlertValidator extends ValidatorAbstract
+class UpdateSiteAlertValidator extends ValidatorAbstract
 {
 
     /**

@@ -16,13 +16,9 @@ use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 
-use App\Models\Category;
 use App\Validators\Product\Product\StoreValidator;
 use App\Validators\Product\Product\UpdateValidator;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Created by PhpStorm.

@@ -68,12 +68,8 @@ Route::group(['middleware' => ['auth']], function () {
         ]]);
         //site routes
         Route::get('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
-        //product site routes
-        Route::put("product_site/{product_site_id}/my_price", 'Product\ProductSiteController@setMyPrice')->name('product_site.my_price');
-        Route::resource('product_site', 'Product\ProductSiteController', ['except' => [
-            'index'
-        ]]);
-
+        Route::put("site/{site_id}/my_price", 'Product\SiteController@setMyPrice')->name('site.my_price');
+        Route::resource('site', 'Product\SiteController');
 
         /**
          * Alert Related Routes
@@ -84,9 +80,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('alert/product/{product_id}/edit', 'Product\AlertController@editProductAlert')->name('alert.product.edit');
         Route::put('alert/product/{product_id}', 'Product\AlertController@updateProductAlert')->name('alert.product.update');
         Route::delete('alert/product/{product_id}', 'Product\AlertController@deleteProductAlert')->name('alert.product.destroy');
-        Route::get('alert/product_site/{product_site_id}/edit', 'Product\AlertController@editProductSiteAlert')->name('alert.product_site.edit');
-        Route::put('alert/product_site/{product_site_id}', 'Product\AlertController@updateProductSiteAlert')->name('alert.product_site.update');
-        Route::delete('alert/product_site/{product_site_id}', 'Product\AlertController@deleteProductSiteAlert')->name('alert.product_site.destroy');
+        Route::get('alert/site/{site_id}/edit', 'Product\AlertController@editSiteAlert')->name('alert.site.edit');
+        Route::put('alert/site/{site_id}', 'Product\AlertController@updateSiteAlert')->name('alert.site.update');
+        Route::delete('alert/site/{site_id}', 'Product\AlertController@deleteSiteAlert')->name('alert.site.destroy');
 
         Route::resource('alert', 'Product\AlertController');
         Route::resource('alert_log', 'Log\AlertActivityLogController');
@@ -117,7 +113,7 @@ Route::group(['middleware' => ['auth']], function () {
          */
         Route::get('chart/category/{category_id}', 'Product\ChartController@categoryIndex')->name('chart.category.index');
         Route::get('chart/product/{product_id}', 'Product\ChartController@productIndex')->name('chart.product.index');
-        Route::get('chart/product_site/{product_site_id}', 'Product\ChartController@productSiteIndex')->name('chart.product_site.index');
+        Route::get('chart/site/{site_id}', 'Product\ChartController@SiteIndex')->name('chart.site.index');
     });
 
 
@@ -148,6 +144,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* admin crawler management */
     Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
+    Route::get('admin/site/xpath/{site_id}/edit', 'Crawler\SiteController@editxPath')->name('admin.site.xpath.edit');
+    Route::put('admin/site/xpath/{site_id}/edit', 'Crawler\SiteController@updatexPath')->name('admin.site.xpath.update');
     Route::resource('admin/site', 'Crawler\SiteController', ['except' => [
         'show', 'edit'
     ]]);

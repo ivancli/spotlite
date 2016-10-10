@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repository\Product\Alert\AlertContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
-use App\Contracts\Repository\Product\ProductSite\ProductSiteContract;
+use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Events\Products\Alert\AlertCreated;
 use App\Events\Products\Alert\AlertCreateViewed;
 use App\Events\Products\Alert\AlertCreating;
@@ -18,25 +18,22 @@ use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\AlertEmail;
 use App\Validators\Product\Alert\UpdateProductAlertValidator;
-use App\Validators\Product\Alert\UpdateProductSiteAlertValidator;
+use App\Validators\Product\Alert\UpdateSiteAlertValidator;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use Illuminate\Support\Facades\Validator;
 
 class AlertController extends Controller
 {
     /*repositories*/
     protected $productRepo;
     protected $alertRepo;
-    protected $productSiteRepo;
+    protected $siteRepo;
 
 
-    public function __construct(ProductContract $productContract, AlertContract $alertContract, ProductSiteContract $productSiteContract)
+    public function __construct(ProductContract $productContract, AlertContract $alertContract, SiteContract $siteContract)
     {
         $this->alertRepo = $alertContract;
         $this->productRepo = $productContract;
-        $this->productSiteRepo = $productSiteContract;
+        $this->siteRepo = $siteContract;
 
     }
 
@@ -98,17 +95,17 @@ class AlertController extends Controller
     public function editProductAlert(Request $request, $product_id)
     {
         $product = $this->productRepo->getProduct($product_id);
-        $productSites = $product->productSites->pluck('site.site_url', 'product_site_id')->toArray();
+        $sites = $product->sites->pluck('site_url', 'site_id')->toArray();
         if (!is_null($product->alert)) {
             event(new AlertEditViewed($product->alert));
             $emails = $product->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
-            $excludedProductSites = $product->alert->excludedProductSites->pluck('site_id')->toArray();
+            $excludedSites = $product->alert->excludedSites->pluck('site_id')->toArray();
         } else {
             event(new AlertCreateViewed());
             $emails = array();
-            $excludedProductSites = array();
+            $excludedSites = array();
         }
-        return view('products.alert.product')->with(compact(['product', 'productSites', 'emails', 'excludedProductSites']));
+        return view('products.alert.product')->with(compact(['product', 'sites', 'emails', 'excludedSites']));
     }
 
     /**
@@ -167,10 +164,10 @@ class AlertController extends Controller
         }
 
         /*TODO can use sync instead of detach attach*/
-        $alert->excludedProductSites()->detach();
+        $alert->excludedSites()->detach();
         if ($request->has('site_id')) {
             foreach ($request->get('site_id') as $site) {
-                $alert->excludedProductSites()->attach($site);
+                $alert->excludedSites()->attach($site);
             }
         }
 
@@ -235,40 +232,35 @@ class AlertController extends Controller
      * show edit site alert popup
      *
      * @param Request $request
-     * @param $product_site_id
+     * @param $site_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function editProductSiteAlert(Request $request, $product_site_id)
+    public function editSiteAlert(Request $request, $site_id)
     {
-        $productSite = $this->productSiteRepo->getProductSite($product_site_id);
+        $site = $this->siteRepo->getSite($site_id);
 
-        if (!is_null($productSite->alert)) {
-            $emails = $productSite->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
-
-            event(new AlertEditViewed($productSite->alert));
-
+        if (!is_null($site->alert)) {
+            $emails = $site->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
+            event(new AlertEditViewed($site->alert));
         } else {
             $emails = array();
-
             event(new AlertCreateViewed());
-
         }
-
-        return view('products.alert.site')->with(compact(['productSite', 'emails']));
+        return view('products.alert.site')->with(compact(['site', 'emails']));
     }
 
     /**
      * Update site alert
      *
-     * @param UpdateProductSiteAlertValidator $updateProductSiteAlertValidator
+     * @param UpdateSiteAlertValidator $updateSiteAlertValidator
      * @param Request $request
-     * @param $product_site_id
+     * @param $site_id
      * @return bool|\Illuminate\Http\RedirectResponse
      */
-    public function updateProductSiteAlert(UpdateProductSiteAlertValidator $updateProductSiteAlertValidator, Request $request, $product_site_id)
+    public function updateSiteAlert(UpdateSiteAlertValidator $updateSiteAlertValidator, Request $request, $site_id)
     {
         try {
-            $updateProductSiteAlertValidator->validate($request->all());
+            $updateSiteAlertValidator->validate($request->all());
         } catch (ValidationException $e) {
             $status = false;
             $errors = $e->getErrors();
@@ -283,16 +275,16 @@ class AlertController extends Controller
             }
         }
 
-        if ($request->get('alert_owner_id') != $product_site_id) {
+        if ($request->get('alert_owner_id') != $site_id) {
             abort(404);
             return false;
         }
-        if ($request->get('alert_owner_type') != 'product_site') {
+        if ($request->get('alert_owner_type') != 'site') {
             abort(404);
             return false;
         }
-        $productSite = $this->productSiteRepo->getProductSite($product_site_id);
-        if (is_null($productSite->alert)) {
+        $site = $this->siteRepo->getSite($site_id);
+        if (is_null($site->alert)) {
 
             event(new AlertCreating());
 
@@ -301,7 +293,7 @@ class AlertController extends Controller
             event(new AlertCreated($alert));
 
         } else {
-            $alert = $productSite->alert;
+            $alert = $site->alert;
 
             event(new AlertEditing($alert));
 
@@ -344,13 +336,13 @@ class AlertController extends Controller
      * Delete site alert
      *
      * @param Request $request
-     * @param $product_site_id
+     * @param $site_id
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function deleteProductSiteAlert(Request $request, $product_site_id)
+    public function deleteSiteAlert(Request $request, $site_id)
     {
-        $productSite = $this->productSiteRepo->getProductSite($product_site_id);
-        $alert = $productSite->alert;
+        $site = $this->siteRepo->getSite($site_id);
+        $alert = $site->alert;
 
         event(new AlertDeleting($alert));
 

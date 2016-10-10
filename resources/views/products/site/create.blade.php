@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <ul class="text-danger errors-container">
                 </ul>
-                {!! Form::open(array('route' => array('product_site.store'), 'method'=>'post', "onsubmit"=>"return false", "id"=>"frm-site-store")) !!}
+                {!! Form::open(array('route' => array('site.store'), 'method'=>'post', "onsubmit"=>"return false", "id"=>"frm-site-store")) !!}
                 <input type="hidden" name="product_id" value="{{$product->getKey()}}">
                 <div class="form-group required">
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}

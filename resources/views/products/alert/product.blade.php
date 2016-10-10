@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                     {!! Form::label('site_id[]', 'Exclude', array('class' => 'control-label')) !!}
-                    {!! Form::select('site_id[]', $productSites, $excludedProductSites, array('class' => 'form-control', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
+                    {!! Form::select('site_id[]', $sites, $excludedSites, array('class' => 'form-control', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
                 </div>
                 <div class="form-group required">
                     {!! Form::label('email[]', 'Notify Emails', array('class' => 'control-label')) !!}

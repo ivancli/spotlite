@@ -5,10 +5,10 @@ Site Alert
 @if($alert->comparison_price_type == "my price")
     <h4>My Site URL</h4>
     <p>
-        {{$myProductSite->site->site_url}}
+        {{$mySite->site_url}}
     </p>
     <p>
-        {{$myProductSite->site->recent_price}}
+        {{$mySite->recent_price}}
     </p>
 @else
     <h4>Comparison Price</h4>
@@ -17,10 +17,10 @@ Site Alert
 
 <h4>Alert Site URL</h4>
 <p>
-    {{$alert->alertable->site->site_url}}
+    {{$alert->alertable->site_url}}
 </p>
 <p>
-    {{$alert->alertable->site->recent_price}}
+    {{$alert->alertable->recent_price}}
 </p>
 
 <h4>Operator</h4>

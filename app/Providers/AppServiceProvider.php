@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\Domain;
-use App\Models\ProductSite;
 use App\Models\Site;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -26,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'product' => Product::class,
             'category' => Category::class,
-            'product_site' => ProductSite::class
+            'site' => Site::class
         ]);
     }
 
@@ -47,7 +46,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\Product\Product\ProductContract', 'App\Repositories\Product\Product\ProductRepository');
         $this->app->bind('App\Contracts\Repository\Product\Category\CategoryContract', 'App\Repositories\Product\Category\CategoryRepository');
         $this->app->bind('App\Contracts\Repository\Product\Site\SiteContract', 'App\Repositories\Product\Site\SiteRepository');
-        $this->app->bind('App\Contracts\Repository\Product\ProductSite\ProductSiteContract', 'App\Repositories\Product\ProductSite\ProductSiteRepository');
         $this->app->bind('App\Contracts\Repository\Product\Domain\DomainContract', 'App\Repositories\Product\Domain\DomainRepository');
 
         /* Site Query Filters */

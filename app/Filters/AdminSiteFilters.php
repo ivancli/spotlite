@@ -41,7 +41,6 @@ class AdminSiteFilters extends QueryFilter
         return $this->builder->where(function ($query) use ($keyWord) {
             $query->where('site_url', 'LIKE', "%{$keyWord['value']}%")
                 ->orWhere('site_id', 'LIKE', "%{$keyWord['value']}%")
-                ->orWhere('site_xpath', 'LIKE', "%{$keyWord['value']}%")
                 ->orWhere('recent_price', 'LIKE', "%{$keyWord['value']}%")
                 ->orWhere('last_crawled_at', 'LIKE', "%{$keyWord['value']}%");
         });

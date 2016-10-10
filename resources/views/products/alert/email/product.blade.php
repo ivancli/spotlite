@@ -5,10 +5,10 @@ Product Alert
 @if($alert->comparison_price_type == "my price")
     <h4>My Site URL</h4>
     <p>
-        {{$myProductSite->site->site_url}}
+        {{$mySite->site_url}}
     </p>
     <p>
-        {{$myProductSite->site->recent_price}}
+        {{$mySite->recent_price}}
     </p>
 @else
     <h4>Comparison Price</h4>
@@ -17,14 +17,14 @@ Product Alert
 
 <h4>Alert Sites URLs</h4>
 <ol>
-    @foreach($alertingProductSites as $alertingProductSite)
+    @foreach($alertingSites as $alertingSite)
         <li>
             <ul>
                 <li>
-                    <p>{{$alertingProductSite->site->site_url}}</p>
+                    <p>{{$alertingSite->site_url}}</p>
                 </li>
                 <li>
-                    <p>{{$alertingProductSite->site->recent_price}}</p>
+                    <p>{{$alertingSite->recent_price}}</p>
                 </li>
             </ul>
         </li>

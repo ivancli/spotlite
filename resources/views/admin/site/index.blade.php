@@ -121,17 +121,19 @@
                             return $("<div>").append(
                                     $("<div>").addClass("xpath-wrapper").append(
                                             $("<div>").append(
-                                                    $("<span>").text(data.site_xpath).addClass("lbl-site-xpath"),
+                                                    $("<span>").text(data.preference.xpath_1).addClass("lbl-site-xpath"),
                                                     $("<input>").attr({
                                                         "type": "text",
                                                         "onkeyup": "if(event.keyCode == 27) togglexPathInput(this); if(event.keyCode == 13) togglexPathInput($(this).closest('.xpath-wrapper').find('[data-url]').get(0));  return false;",
-                                                        "value": data.site_xpath
+                                                        "value": data.preference.xpath_1
                                                     }).hide().addClass("txt-site-xpath form-control input-sm")
                                             ),
                                             $("<a>").attr({
                                                 "href": "#",
-                                                "onclick": "togglexPathInput(this); return false;",
-                                                "data-url": data.urls.admin_update
+//                                                "onclick": "togglexPathInput(this); return false;",
+                                                "onclick": "showEditxPathForm(this); return false;",
+//                                                "data-url": data.urls.admin_update
+                                                "data-url": data.urls.admin_xpath_edit
                                             }).append(
                                                     $("<i>").addClass("fa fa-pencil text-muted")
                                             ).addClass("btn-edit-xpath")
@@ -305,6 +307,8 @@
             )
         });
 
+
+        /* TODO delete the following two functions */
         function togglexPathInput(el) {
             var $txt = $(el).closest("tr").find(".txt-site-xpath");
             var $lbl = $(el).closest("tr").find(".lbl-site-xpath");
@@ -313,10 +317,9 @@
                 $txt.show().focus();
             } else {
                 if ($(el).attr("data-url")) {
-                    /* TODO save xpath */
                     updateXPath($(el).attr("data-url"), {"site_xpath": $txt.val()}, function (response) {
-                        $lbl.show().text(response.site.site_xpath);
-                        $txt.hide().val(response.site.site_xpath);
+                        $lbl.show().text(response.site.preference.xpath_1);
+                        $txt.hide().val(response.site.preference.xpath_1);
                     }, function (response) {
 
                     });
@@ -424,6 +427,27 @@
             })
         }
 
+        function showEditxPathForm(el) {
+            showLoading();
+            $.get($(el).attr("data-url"), function(html){
+                hideLoading();
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady({
+                            "callback": function (response) {
+                                tblSite.ajax.reload();
+                            }
+                        })
+                    }
+                });
+                $modal.on("hidden.bs.modal", function () {
+                    $(this).remove();
+                });
+
+            })
+        }
 
         function btnDeleteSiteOnClick(el) {
             confirmP("Delete site", "Do you want to delete this site?", {
@@ -440,16 +464,15 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
-                                    alertP("Delete domain", "The domain has been deleted.");
-                                    $(el).closest(".site-wrapper").remove();
-                                    tblDomain.row($(el).closest("tr")).remove().draw();
+                                    alertP("Delete domain", "The site has been deleted.");
+                                    tblSite.row($(el).closest("tr")).remove().draw();
                                 } else {
-                                    alertP("Error", "Unable to delete domain, please try again later.");
+                                    alertP("Error", "Unable to delete site, please try again later.");
                                 }
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete domain, please try again later.");
+                                alertP("Error", "Unable to delete site, please try again later.");
                             }
                         })
                     }

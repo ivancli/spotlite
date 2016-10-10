@@ -134,7 +134,7 @@
                                                         ),
                                                         $("<div>").append(
                                                                 "Number of sites: ",
-                                                                $("<strong>").text(data.report_task_owner.productSiteCount)
+                                                                $("<strong>").text(data.report_task_owner.siteCount)
                                                         )
                                                 ).html(),
                                                 "data-html": true,
@@ -155,7 +155,7 @@
                                                         ),
                                                         $("<div>").append(
                                                                 "Number of sites: ",
-                                                                $("<strong>").text(data.report_task_owner.productSiteCount)
+                                                                $("<strong>").text(data.report_task_owner.siteCount)
                                                         )
                                                 ).html(),
                                                 "data-html": true,

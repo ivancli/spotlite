@@ -110,60 +110,69 @@ class CrawlerRepository implements CrawlerContract
             /*TODO handle error, page not crawled*/
             $site->statusFailHTML();
         }
+//        if (is_null($xpath)) {
+//            $domain = Domain::where('domain_url', $site->domain)->first();
+//            if (!is_null($domain)) {
+//                $xpath = $domain->domain_xpath;
+//            }
+//        }
+        for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
+            $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
+            if ($xpath != null) {
+                $options = array(
+                    "xpath" => $xpath,
+                );
+                $parserClass->setOptions($options);
+                $parserClass->setHTML($html);
+                $parserClass->init();
+                event(new CrawlerLoadingPrice($crawler));
+                $result = $parserClass->parseHTML();
+                if (!is_null($result) && (is_string($result) || is_numeric($result))) {
+                    $price = str_replace('$', '', $result);
+                    $price = floatval($price);
+                    if ($price > 0) {
+                        /*TODO now you got the $price*/
 
-        $xpath = $site->site_xpath;
-        if (is_null($xpath)) {
-            $domain = Domain::where('domain_url', $site->domain)->first();
-            if (!is_null($domain)) {
-                $xpath = $domain->domain_xpath;
-            }
-        }
-        if ($xpath != null) {
-            $options = array(
-                "xpath" => $xpath,
-            );
-            $parserClass->setOptions($options);
-            $parserClass->setHTML($html);
-            $parserClass->init();
-            event(new CrawlerLoadingPrice($crawler));
-            $result = $parserClass->parseHTML();
-            if (!is_null($result) && (is_string($result) || is_numeric($result))) {
-                $price = str_replace('$', '', $result);
-                $price = floatval($price);
-                if ($price > 0) {
-                    /*TODO now you got the $price*/
+                        $historicalPrice = HistoricalPrice::create(array(
+                            "crawler_id" => $crawler->getKey(),
+                            "site_id" => $site->getKey(),
+                            "price" => $price
+                        ));
 
-                    $historicalPrice = HistoricalPrice::create(array(
-                        "crawler_id" => $crawler->getKey(),
-                        "site_id" => $site->getKey(),
-                        "price" => $price
-                    ));
+                        if (!is_null($site->recent_price)) {
+                            $site->price_diff = $price - $site->recent_price;
+                        }
+                        $site->recent_price = $price;
+                        $site->last_crawled_at = $historicalPrice->created_at;
 
-                    if (!is_null($site->recent_price)) {
-                        $site->price_diff = $price - $site->recent_price;
+                        if (!$crawler->lastCrawlerWithinHour()) {
+                            return false;
+                        }
+                        event(new CrawlerSavingPrice($crawler));
+                        $site->save();
+                        $site->statusOK();
+                        event(new CrawlerFinishing($crawler));
+                        $crawler->resetStatus();
+                        return true;
+                    } else {
+                        /*TODO handle error, price is incorrect*/
+                        $site->statusFailPrice();
+                        continue;
                     }
-                    $site->recent_price = $price;
-                    $site->last_crawled_at = $historicalPrice->created_at;
-
-                    if (!$crawler->lastCrawlerWithinHour()) {
-                        return false;
-                    }
-                    event(new CrawlerSavingPrice($crawler));
-                    $site->save();
-                    $site->statusOK();
-                    event(new CrawlerFinishing($crawler));
                 } else {
-                    /*TODO handle error, price is incorrect*/
-                    $site->statusFailPrice();
+                    /*TODO handle error, xpath is incorrect*/
+                    $site->statusFailXpath();
+                    continue;
                 }
             } else {
-                /*TODO handle error, xpath is incorrect*/
-                $site->statusFailXpath();
+                /*TODO handle error, cannot find xpath*/
+                if ($xpathIndex == 1) {
+                    $site->statusNullXpath();
+                }
+                break;
             }
-        } else {
-            /*TODO handle error, cannot find xpath*/
-            $site->statusNullXpath();
         }
         $crawler->resetStatus();
+        return false;
     }
 }

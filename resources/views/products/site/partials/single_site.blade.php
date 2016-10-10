@@ -1,27 +1,22 @@
-<tr class="site-wrapper" data-product-site-id="{{$productSite->getKey()}}"
-    data-site-edit-url="{{$productSite->urls['edit']}}"
-    data-site-alert-url="{{$productSite->urls['alert']}}"
-    data-site-update-url="{{$productSite->urls['update']}}">
+<tr class="site-wrapper" data-site-id="{{$site->getKey()}}"
+    data-site-edit-url="{{$site->urls['edit']}}"
+    data-site-alert-url="{{$site->urls['alert']}}"
+    data-site-update-url="{{$site->urls['update']}}">
     <td>
-        <a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted" data-toggle="popover"
+        <a href="{{$site->site_url}}" target="_blank" class="text-muted" data-toggle="popover"
            data-trigger="hover"
-           data-content="{{$productSite->site->site_url}}">
-            {{parse_url($productSite->site->site_url)['host']}}
+           data-content="{{$site->site_url}}">
+            {{parse_url($site->site_url)['host']}}
         </a>
     </td>
-    {{--<td class="hidden-sm hidden-xs" style="padding-right: 10px;">--}}
-    {{--<a href="{{$productSite->site->site_url}}" target="_blank" class="text-muted">--}}
-    {{--{{parse_url($productSite->site->site_url)['path']}}--}}
-    {{--</a>--}}
-    {{--</td>--}}
     <td>
-        {{is_null($productSite->site->recent_price) ? '' : "$" . number_format($productSite->site->recent_price, 2, '.', ',')}}
+        {{is_null($site->recent_price) ? '' : "$" . number_format($site->recent_price, 2, '.', ',')}}
     </td>
     <td class="text-center">
-        @if(!is_null($productSite->site->recent_price))
-            @if(!is_null($productSite->site->price_diff) && $productSite->site->price_diff != 0)
-                <i class="glyphicon {{$productSite->site->price_diff > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
-                ${{number_format(abs($productSite->site->price_diff), 2, '.', ',')}}
+        @if(!is_null($site->recent_price))
+            @if(!is_null($site->price_diff) && $site->price_diff != 0)
+                <i class="glyphicon {{$site->price_diff > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
+                ${{number_format(abs($site->price_diff), 2, '.', ',')}}
             @else
                 -
             @endif
@@ -30,27 +25,27 @@
     <td align="center">
 
         <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;"
-           data-alert-is-subjected-my-price="{{$productSite->alert['comparison_price_type'] == 'my price' ? 'y' : 'n'}}">
-            <i class="fa fa-check-circle-o {{$productSite->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
+           data-alert-is-subjected-my-price="{{$site->alert['comparison_price_type'] == 'my price' ? 'y' : 'n'}}">
+            <i class="fa fa-check-circle-o {{$site->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
         </a>
     </td>
     <td>
-        @if(!is_null($productSite->site->last_crawled_at))
-            <span title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($productSite->site->last_crawled_at))}}"
+        @if(!is_null($site->last_crawled_at))
+            <span title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}"
                  data-toggle="tooltip">
-                {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($productSite->site->last_crawled_at))}}
-                <span class="hidden-xs hidden-sm">{{date(auth()->user()->preference('TIME_FORMAT'), strtotime($productSite->site->last_crawled_at))}}</span>
+                {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->last_crawled_at))}}
+                <span class="hidden-xs hidden-sm">{{date(auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}</span>
             </span>
         @endif
     </td>
     <td class="text-right action-cell">
-        <a href="#" class="btn-action" onclick="showProductSiteChart('{{$productSite->urls['chart']}}'); return false;"
+        <a href="#" class="btn-action" onclick="showSiteChart('{{$site->urls['chart']}}'); return false;"
            data-toggle="tooltip" title="chart">
             <i class="fa fa-line-chart"></i>
         </a>
         <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;"
            data-toggle="tooltip" title="alert">
-            <i class="fa {{!is_null($productSite->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
+            <i class="fa {{!is_null($site->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
         </a>
         <a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;"
            data-toggle="tooltip" title="edit">
@@ -58,9 +53,8 @@
         </a>
 
         {{--TODO not yet finished--}}
-        {{--change the submitting parameters and update the product site controller destroy function--}}
-        {!! Form::model($productSite, array('route' => array('product_site.destroy', $productSite->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
-        {{--<input type="hidden" name="product_site_id" value="{{$site->pivot->product_site_id}}">--}}
+        {{--change the submitting parameters and update the site controller destroy function--}}
+        {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
         <a href="#" class="btn-action" onclick="btnDeleteSiteOnClick(this); return false;"
            data-toggle="tooltip" title="delete">
             <i class="glyphicon glyphicon-trash text-danger"></i>
@@ -112,7 +106,7 @@
                 "url": $(el).closest(".site-wrapper").attr("data-site-edit-url"),
                 "method": "get",
                 "data": {
-                    "product_site_id": $(el).closest(".site-wrapper").attr("data-product-site-id")
+                    "site_id": $(el).closest(".site-wrapper").attr("data-site-id")
                 },
                 "success": function (html) {
                     hideLoading();
@@ -124,8 +118,8 @@
                                 "callback": function (response) {
                                     if (response.status == true) {
                                         showLoading();
-                                        if (typeof response.productSite != 'undefined') {
-                                            $.get(response.productSite.urls.show, function (html) {
+                                        if (typeof response.site != 'undefined') {
+                                            $.get(response.site.urls.show, function (html) {
                                                 hideLoading();
                                                 $(el).closest(".site-wrapper").replaceWith(html);
                                             });
@@ -174,7 +168,7 @@
                         }
                     });
                     $modal.on("hidden.bs.modal", function () {
-                        $("#modal-alert-product-site").remove();
+                        $("#modal-alert-site").remove();
                     });
                 },
                 "error": function (xhr, status, error) {
@@ -238,7 +232,7 @@
             })
         }
 
-        function showProductSiteChart(url) {
+        function showSiteChart(url) {
             showLoading();
             $.get(url, function (html) {
                 hideLoading();

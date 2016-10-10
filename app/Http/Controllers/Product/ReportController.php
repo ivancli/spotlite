@@ -7,8 +7,6 @@ use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Report\ReportContract;
 use App\Contracts\Repository\Product\Report\ReportTaskContract;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller

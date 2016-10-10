@@ -21,13 +21,6 @@ interface AlertActivityLoggerContract
     public function getLogs();
 
     /**
-     * Load logs which belong to logged in user
-     *
-     * @return mixed
-     */
-    public function getLogsByAuthUser();
-
-    /**
      * get all logs in DataTables format
      * @param QueryFilter $filters
      * @return mixed
@@ -68,7 +61,7 @@ interface AlertActivityLoggerContract
 
     public function getProductAlertLogsByAuthUser();
 
-    public function getProductSiteAlertLogsByAuthUser();
+    public function getSiteAlertLogsByAuthUser();
 
     public function getDataTableAlertActivityLogs();
 }

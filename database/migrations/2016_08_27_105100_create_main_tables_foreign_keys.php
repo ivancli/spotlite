@@ -24,13 +24,8 @@ class CreateMainTablesForeignKeys extends Migration
 //                ->onDelete('cascade')
 //                ->onUpdate('cascade');
 //        });
-        Schema::table('product_sites', function (Blueprint $table) {
+        Schema::table('sites', function (Blueprint $table) {
             $table->foreign('product_id')->references('product_id')->on('products')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-        });
-        Schema::table('product_sites', function (Blueprint $table) {
-            $table->foreign('site_id')->references('site_id')->on('sites')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
@@ -120,7 +115,7 @@ class CreateMainTablesForeignKeys extends Migration
                 ->onUpdate('cascade');
         });
         Schema::table('alerts', function (Blueprint $table) {
-            $table->foreign('comparison_product_site_id')->references('product_site_id')->on('product_sites')
+            $table->foreign('comparison_site_id')->references('site_id')->on('sites')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
@@ -144,14 +139,8 @@ class CreateMainTablesForeignKeys extends Migration
         Schema::table('categories', function (Blueprint $table) {
             $table->dropForeign('categories_user_id_foreign');
         });
-//        Schema::table('sites', function (Blueprint $table) {
-//            $table->dropForeign('sites_product_id_foreign');
-//        });
-        Schema::table('product_sites', function (Blueprint $table) {
-            $table->dropForeign('product_sites_product_id_foreign');
-        });
-        Schema::table('product_sites', function (Blueprint $table) {
-            $table->dropForeign('product_sites_site_id_foreign');
+        Schema::table('sites', function (Blueprint $table) {
+            $table->dropForeign('sites_product_id_foreign');
         });
         Schema::table('historical_prices', function (Blueprint $table) {
             $table->dropForeign('historical_prices_crawler_id_foreign');
@@ -205,7 +194,7 @@ class CreateMainTablesForeignKeys extends Migration
             $table->dropForeign('domain_ips_ip_id_foreign');
         });
         Schema::table('alerts', function (Blueprint $table) {
-            $table->dropForeign('alerts_comparison_product_site_id_foreign');
+            $table->dropForeign('alerts_comparison_site_id_foreign');
         });
         Schema::table('alert_emails', function (Blueprint $table) {
             $table->dropForeign('alert_emails_alert_id_foreign');

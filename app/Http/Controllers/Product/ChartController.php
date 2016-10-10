@@ -11,22 +11,21 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
-use App\Contracts\Repository\Product\ProductSite\ProductSiteContract;
+use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ChartController extends Controller
 {
     protected $categoryRepo;
     protected $productRepo;
-    protected $productSiteRepo;
+    protected $siteRepo;
 
-    public function __construct(CategoryContract $categoryContract, ProductContract $productContract, ProductSiteContract $productSiteContract)
+    public function __construct(CategoryContract $categoryContract, ProductContract $productContract, SiteContract $siteContract)
     {
         $this->categoryRepo = $categoryContract;
         $this->productRepo = $productContract;
-        $this->productSiteRepo = $productSiteContract;
+        $this->siteRepo = $siteContract;
     }
 
     public function categoryIndex(Request $request, $category_id)
@@ -36,18 +35,16 @@ class ChartController extends Controller
             if ($request->wantsJson()) {
                 /*TODO validate start date and end date and resolution*/
 
-//                $startDateTime = intval($request->get('start_date'));
-//                $endDateTime = intval($request->get('end_date'));
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
                 $category = $this->categoryRepo->getCategory($category_id);
                 $categoryPrices = array();
                 foreach ($category->products as $product) {
                     $productPrices = array();
-                    $productSites = $product->productSites;
-                    foreach ($productSites as $productSite) {
+                    $sites = $product->sites;
+                    foreach ($sites as $site) {
                         $sitePrices = array();
-                        $historicalPrices = $productSite->site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
+                        $historicalPrices = $site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
                         foreach ($historicalPrices as $historicalPrice) {
                             switch ($request->get('resolution')) {
                                 case "weekly":
@@ -117,10 +114,10 @@ class ChartController extends Controller
                 $product = $this->productRepo->getProduct($product_id);
 
                 $productPrices = array();
-                $productSites = $product->productSites;
-                foreach ($productSites as $productSite) {
+                $sites = $product->sites;
+                foreach ($sites as $site) {
                     $sitePrices = array();
-                    $historicalPrices = $productSite->site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
+                    $historicalPrices = $site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
                     foreach ($historicalPrices as $historicalPrice) {
                         switch ($request->get('resolution')) {
                             case "weekly":
@@ -142,21 +139,21 @@ class ChartController extends Controller
                         $count = count($sitePrice);
                         $sitePrices[$date][] = $sum / $count;
                     }
-                    $productPrices[$productSite->getKey()] = $sitePrices;
+                    $productPrices[$site->getKey()] = $sitePrices;
                 }
 
                 $data = array();
-                foreach ($productPrices as $productSiteId => $siteLevelPrices) {
-                    $data[$productSiteId] = array();
-                    $data[$productSiteId]["average"] = array();
-                    $data[$productSiteId]["name"] = parse_url($this->productSiteRepo->getProductSite($productSiteId)->site->site_url)['host'];
+                foreach ($productPrices as $siteId => $siteLevelPrices) {
+                    $data[$siteId] = array();
+                    $data[$siteId]["average"] = array();
+                    $data[$siteId]["name"] = parse_url($this->siteRepo->getSite($siteId)->site_url)['host'];
                     foreach ($siteLevelPrices as $dateStamp => $dateLevelPrices) {
-                        $data[$productSiteId]["average"][] = array(
+                        $data[$siteId]["average"][] = array(
                             strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
                         );
                     }
 
-                    usort($data[$productSiteId]["average"], function ($a, $b) {
+                    usort($data[$siteId]["average"], function ($a, $b) {
                         return $a[0] > $b[0];
                     });
                 }
@@ -174,15 +171,14 @@ class ChartController extends Controller
         }
     }
 
-    public function productSiteIndex(Request $request, $product_site_id)
+    public function siteIndex(Request $request, $site_id)
     {
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
 
-                $productSite = $this->productSiteRepo->getProductSite($product_site_id);
-                $site = $productSite->site;
+                $site = $this->siteRepo->getSite($site_id);
 
                 $sitePrices = array();
                 $historicalPrices = $site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
@@ -208,16 +204,16 @@ class ChartController extends Controller
                     $sitePrices[$date][] = $sum / $count;
                 }
 
-                $data[$product_site_id] = array();
-                $data[$product_site_id]["average"] = array();
-                $data[$product_site_id]["name"] = parse_url($this->productSiteRepo->getProductSite($product_site_id)->site->site_url)['host'];
+                $data[$site_id] = array();
+                $data[$site_id]["average"] = array();
+                $data[$site_id]["name"] = parse_url($site->site_url)['host'];
                 foreach ($sitePrices as $dateStamp => $dateLevelPrices) {
-                    $data[$product_site_id]["average"][] = array(
+                    $data[$site_id]["average"][] = array(
                         strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
                     );
                 }
 
-                usort($data[$product_site_id]["average"], function ($a, $b) {
+                usort($data[$site_id]["average"], function ($a, $b) {
                     return $a[0] > $b[0];
                 });
                 $status = true;
@@ -225,12 +221,12 @@ class ChartController extends Controller
 
 
             } else {
-                $productSite = $this->productSiteRepo->getProductSite($product_site_id);
-                return view('charts.site.index')->with(compact(['productSite']));
+                $site = $this->siteRepo->getSite($site_id);
+                return view('charts.site.index')->with(compact(['site']));
             }
         } else {
-            $productSite = $this->productSiteRepo->getProductSite($product_site_id);
-            return view('charts.site.index')->with(compact(['productSite']));
+            $site = $this->siteRepo->getSite($site_id);
+            return view('charts.site.index')->with(compact(['site']));
         }
     }
 }
