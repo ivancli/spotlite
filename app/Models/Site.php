@@ -43,7 +43,7 @@ class Site extends Model
 
     public function alertActivityLogs()
     {
-        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'product_site_id');
+        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'site_id');
     }
 
     public function excludedByAlerts()

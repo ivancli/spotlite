@@ -101,6 +101,7 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
     {
         $productAlertLogs = $this->getProductAlertLogsByAuthUser();
         $siteAlertLogs = $this->getSiteAlertLogsByAuthUser();
+
         $alertLogs = $productAlertLogs->merge($siteAlertLogs);
 
         $alertLogCount = $alertLogs->count();

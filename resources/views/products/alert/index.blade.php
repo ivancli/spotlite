@@ -284,15 +284,15 @@
                                 popoverContent = $("<div>").append(
                                         $("<div>").append(
                                                 "Domain: ",
-                                                $("<strong>").text(data.alert_activity_log_owner.site.domain)
+                                                $("<strong>").text(data.alert_activity_log_owner.domain)
                                         ),
                                         $("<div>").append(
                                                 "Last crawled: ",
-                                                $("<strong>").text(timestampToDateTimeByFormat(moment(data.alert_activity_log_owner.site.last_crawled_at).unix(), datefmt + " " + timefmt))
+                                                $("<strong>").text(timestampToDateTimeByFormat(moment(data.alert_activity_log_owner.last_crawled_at).unix(), datefmt + " " + timefmt))
                                         ),
                                         $("<div>").append(
                                                 "Recent price: ",
-                                                $("<strong>").text('$' + parseFloat(data.alert_activity_log_owner.site.recent_price).formatMoney(2, '.', ','))
+                                                $("<strong>").text('$' + parseFloat(data.alert_activity_log_owner.recent_price).formatMoney(2, '.', ','))
                                         )
                                 ).html()
                             }
