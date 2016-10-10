@@ -26,9 +26,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Product List</h3>
-                    <div class="box-tools pull-right">
+                {{--<div class="box-header with-border">--}}
+                    {{--<h3 class="box-title"></h3>--}}
+                    {{--<div class="box-tools pull-right">--}}
                         {{--<div class="btn-group">--}}
                         {{--<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"--}}
                         {{--aria-expanded="true">--}}
@@ -47,8 +47,8 @@
                         {{--</li>--}}
                         {{--</ul>--}}
                         {{--</div>--}}
-                    </div>
-                </div>
+                    {{--</div>--}}
+                {{--</div>--}}
                 <div class="box-body">
                     <div class="row m-b-10">
                         <div class="col-sm-12">
