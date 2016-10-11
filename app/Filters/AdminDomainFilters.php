@@ -40,8 +40,7 @@ class AdminDomainFilters extends QueryFilter
     {
         return $this->builder->where('domain_id', 'LIKE', "%{$keyWord['value']}%")
             ->orWhere('domain_url', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('domain_name', 'LIKE', "%{$keyWord['value']}%")
-            ->orWhere('domain_xpath', 'LIKE', "%{$keyWord['value']}%");
+            ->orWhere('domain_name', 'LIKE', "%{$keyWord['value']}%");
     }
 
     /**

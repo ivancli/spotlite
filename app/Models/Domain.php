@@ -17,7 +17,7 @@ class Domain extends Model
 {
     protected $primaryKey = "domain_id";
     protected $fillable = [
-        "domain_url", "domain_name", "domain_xpath", "cookie_id", "crawler_class", "parser_class"
+        "domain_url", "domain_name", "cookie_id", "crawler_class", "parser_class"
     ];
     protected $appends = ['urls'];
     public $timestamps = false;
