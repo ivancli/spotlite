@@ -89,65 +89,69 @@ class AppServiceProvider extends ServiceProvider
          */
         /* dynamic binding for crawler */
 
-        $this->app->bind(CrawlerInterface::class, function ($app) {
-            $siteId = $this->app->request->route('site_id');
-            if (!is_null($siteId)) {
-                $site = Site::findOrFail($siteId);
-                if (!is_null($site->crawler)) {
-                    if (!is_null($site->crawler->crawler_class)) {
-                        try {
-                            return $app->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
-                        } catch (Exception $e) {
+        $this->app->bind('Invigor\Crawler\Contracts\CrawlerInterface', 'Invigor\Crawler\Repositories\Crawlers\DefaultCrawler');
+        $this->app->bind('Invigor\Crawler\Contracts\ParserInterface', 'Invigor\Crawler\Repositories\Parsers\XPathParser');
 
-                        }
-                    }
-                }
 
-                /*check domain settings*/
-                $domain_url = parse_url($site->site_url)['host'];
-                $domain = Domain::where("domain_url", $domain_url)->first();
-                if (!is_null($domain)) {
-                    if (!is_null($domain->crawler_class)) {
-                        try {
-                            return $app->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
-                        } catch (Exception $e) {
-
-                        }
-                    }
-                }
-            }
-            return $app->make('Invigor\Crawler\Repositories\Crawlers\DefaultCrawler');
-        });
-
-        /* dynamic binding for parser */
-        $this->app->bind(ParserInterface::class, function ($app) {
-            $siteId = $this->app->request->route('site_id');
-            if (!is_null($siteId)) {
-                $site = Site::findOrFail($siteId);
-                if (!is_null($site->crawler)) {
-                    if (!is_null($site->crawler->parser_class)) {
-                        try {
-                            return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
-                        } catch (Exception $e) {
-
-                        }
-                    }
-                }
-
-                /*check domain settings*/
-                $domain_url = parse_url($site->site_url)['host'];
-                $domain = Domain::where("domain_url", $domain_url)->first();
-                if (!is_null($domain)) {
-                    if (!is_null($domain->parser_class)) {
-                        try {
-                            return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
-                        } catch (Exception $e) {
-
-                        }
-                    }
-                }
-            }
-            return $app->make('Invigor\Crawler\Repositories\Parsers\XPathParser');
-        });
+//        $this->app->bind(CrawlerInterface::class, function ($app) {
+//            $siteId = $this->app->request->route('site_id');
+//            if (!is_null($siteId)) {
+//                $site = Site::findOrFail($siteId);
+//                if (!is_null($site->crawler)) {
+//                    if (!is_null($site->crawler->crawler_class)) {
+//                        try {
+//                            return $app->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
+//                        } catch (Exception $e) {
+//
+//                        }
+//                    }
+//                }
+//
+//                /*check domain settings*/
+//                $domain_url = parse_url($site->site_url)['host'];
+//                $domain = Domain::where("domain_url", $domain_url)->first();
+//                if (!is_null($domain)) {
+//                    if (!is_null($domain->crawler_class)) {
+//                        try {
+//                            return $app->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
+//                        } catch (Exception $e) {
+//
+//                        }
+//                    }
+//                }
+//            }
+//            return $app->make('Invigor\Crawler\Repositories\Crawlers\DefaultCrawler');
+//        });
+//
+//        /* dynamic binding for parser */
+//        $this->app->bind(ParserInterface::class, function ($app) {
+//            $siteId = $this->app->request->route('site_id');
+//            if (!is_null($siteId)) {
+//                $site = Site::findOrFail($siteId);
+//                if (!is_null($site->crawler)) {
+//                    if (!is_null($site->crawler->parser_class)) {
+//                        try {
+//                            return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
+//                        } catch (Exception $e) {
+//
+//                        }
+//                    }
+//                }
+//
+//                /*check domain settings*/
+//                $domain_url = parse_url($site->site_url)['host'];
+//                $domain = Domain::where("domain_url", $domain_url)->first();
+//                if (!is_null($domain)) {
+//                    if (!is_null($domain->parser_class)) {
+//                        try {
+//                            return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
+//                        } catch (Exception $e) {
+//
+//                        }
+//                    }
+//                }
+//            }
+//            return $app->make('Invigor\Crawler\Repositories\Parsers\XPathParser');
+//        });
     }
 }

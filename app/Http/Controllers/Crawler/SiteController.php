@@ -104,6 +104,13 @@ class SiteController extends Controller
     {
         $site = $this->siteRepo->getSite($site_id);
 
+        if (!is_null($site->crawler->crawler_class)) {
+            $crawler = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
+        }
+        if (!is_null($site->crawler->parser_class)) {
+            $parser = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
+        }
+
         $options = array(
             "url" => $site->site_url,
         );

@@ -2,35 +2,40 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Events\Products\Site\SiteCreateViewed;
 use App\Events\Products\Site\SitePricesViewed;
 use App\Events\Products\Site\SiteStored;
 use App\Events\Products\Site\SiteStoring;
-use App\Events\Products\Site\SiteUpdating;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Libraries\CommonFunctions;
+use App\Models\Domain;
 use App\Models\Site;
 use App\Validators\Product\Site\GetPriceValidator;
 use App\Validators\Product\Site\StoreValidator;
 use App\Validators\Product\Site\UpdateValidator;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use Illuminate\Support\Facades\Validator;
+use Invigor\Crawler\Contracts\CrawlerInterface;
+use Invigor\Crawler\Contracts\ParserInterface;
+use Invigor\Crawler\Repositories\Crawlers\DefaultCrawler;
+use Invigor\Crawler\Repositories\Parsers\XPathParser;
 
 class SiteController extends Controller
 {
     use CommonFunctions;
 
     protected $siteRepo;
+    protected $domainRepo;
     protected $productRepo;
 
-    public function __construct(SiteContract $siteContract, ProductContract $productContract)
+    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract)
     {
         $this->siteRepo = $siteContract;
+        $this->domainRepo = $domainContract;
         $this->productRepo = $productContract;
     }
 
@@ -109,7 +114,13 @@ class SiteController extends Controller
             $site->last_crawled_at = $targetSite->last_crawled_at;
             $site->save();
             /* adopt the historical prices of the copied site */
-            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
+//            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
+        } elseif ($request->has('domain_id')) {
+            $targetDomain = $this->domainRepo->getDomain($request->get('domain_id'));
+            $this->siteRepo->adoptDomainPreferences($site->getKey(), $request->get('domain_id'));
+            $site->recent_price = $request->has('domain_price') ? $request->get('domain_price') : null;
+            $site->last_crawled_at = null;
+            $site->save();
         } else {
             $this->siteRepo->clearPreferences($site->getKey());
             $site->recent_price = null;
@@ -137,20 +148,88 @@ class SiteController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Request $request
-     * @param  int $id
+     * @param CrawlerInterface $crawler
+     * @param ParserInterface $parser
+     * @param $site_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function edit(Request $request, $id)
+    public function edit(Request $request, CrawlerInterface $crawler, ParserInterface $parser, $site_id)
     {
-        $site = $this->siteRepo->getSite($id);
+        $site = $this->siteRepo->getSite($site_id);
         $product = $site->product;
+
+        if (!is_null($site->crawler->crawler_class)) {
+            $crawler = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
+        }
+        if (!is_null($site->crawler->parser_class)) {
+            $parser = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
+        }
+
+        $domainURL = parse_url($site->site_url)['host'];
+        $domain = Domain::where("domain_url", $domainURL)->first();
+        if (!is_null($domain)) {
+            $options = array(
+                "url" => $site->site_url,
+            );
+            $crawler->setOptions($options);
+            $crawler->loadHTML();
+            $html = $crawler->getHTML();
+            if (!is_null($html) && strlen($html) != 0) {
+                for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
+                    $xpath = $domain->preference->toArray()["xpath_{$xpathIndex}"];
+                    if ($xpath != null) {
+                        $options = array(
+                            "xpath" => $xpath,
+                        );
+                        $parser->setOptions($options);
+                        $parser->setHTML($html);
+                        $parser->init();
+                        $result = $parser->parseHTML();
+                        if (!is_null($result) && (is_string($result) || is_numeric($result))) {
+                            $price = str_replace('$', '', $result);
+                            $price = floatval($price);
+                            if ($price > 0) {
+                                break;
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        if (isset($price) && $price > 0) {
+            $targetDomain = array(
+                "domain_id" => $domain->getKey(),
+                "recent_price" => $price
+            );
+        }
         $sites = Site::where("site_url", $site->site_url)->whereNotNull("recent_price")->get();
+        $sitePrices = array();
+        if (!is_null($site->recent_price)) {
+            $sitePrices[] = $site->recent_price;
+        }
+        foreach ($sites as $key => $otherSite) {
+            if (!in_array($otherSite->recent_price, $sitePrices) && (!isset($targetDomain) || $targetDomain['recent_price'] != $otherSite->recent_price)) {
+                $sitePrices[] = $otherSite->recent_price;
+            } else {
+                if ($site->getKey() != $otherSite->getKey()) {
+                    unset($sites[$key]);
+                }
+            }
+        }
+
+
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
-                return response()->json(compact(['status', 'site', 'product', 'sites']));
+                return response()->json(compact(['status', 'site', 'product', 'sites', 'targetDomain']));
             } else {
-                return view('products.site.edit')->with(compact(['status', 'sites', 'site']));
+                return view('products.site.edit')->with(compact(['status', 'sites', 'site', 'targetDomain']));
             }
         } else {
             /*TODO implement this if necessary*/
@@ -194,7 +273,13 @@ class SiteController extends Controller
             $site->last_crawled_at = $targetSite->last_crawled_at;
             $site->save();
             /* adopt the historical prices of the copied site */
-            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
+//            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
+        } elseif ($request->has('domain_id')) {
+            $targetDomain = $this->domainRepo->getDomain($request->get('domain_id'));
+            $this->siteRepo->adoptDomainPreferences($id, $request->get('domain_id'));
+            $site->recent_price = $request->has('domain_price') ? $request->get('domain_price') : null;
+            $site->last_crawled_at = null;
+            $site->save();
         } else {
             $this->siteRepo->clearPreferences($site->getKey());
             $site->recent_price = null;
@@ -213,8 +298,7 @@ class SiteController extends Controller
         }
     }
 
-
-    public function getPrices(GetPriceValidator $getPriceValidator, Request $request)
+    public function getPrices(GetPriceValidator $getPriceValidator, CrawlerInterface $crawler, ParserInterface $parser, Request $request)
     {
         try {
             $getPriceValidator->validate($request->all());
@@ -232,15 +316,68 @@ class SiteController extends Controller
             }
         }
 
+        $domainURL = parse_url($request->get('site_url'))['host'];
+        $domain = Domain::where("domain_url", $domainURL)->first();
+        if (!is_null($domain)) {
+            $options = array(
+                "url" => $request->get('site_url'),
+            );
+            $crawler->setOptions($options);
+            $crawler->loadHTML();
+            $html = $crawler->getHTML();
+            if (!is_null($html) && strlen($html) != 0) {
+                for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
+                    $xpath = $domain->preference->toArray()["xpath_{$xpathIndex}"];
+                    if ($xpath != null) {
+                        $options = array(
+                            "xpath" => $xpath,
+                        );
+                        $parser->setOptions($options);
+                        $parser->setHTML($html);
+                        $parser->init();
+                        $result = $parser->parseHTML();
+                        if (!is_null($result) && (is_string($result) || is_numeric($result))) {
+                            $price = str_replace('$', '', $result);
+                            $price = floatval($price);
+                            if ($price > 0) {
+                                break;
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        if (isset($price) && $price > 0) {
+            $targetDomain = array(
+                "domain_id" => $domain->getKey(),
+                "recent_price" => $price
+            );
+        }
+
         $sites = Site::where("site_url", $request->get('site_url'))->whereNotNull("recent_price")->get();
 //            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
+        $sitePrices = array();
+        foreach ($sites as $key => $site) {
+            if (!in_array($site->recent_price, $sitePrices) && (!isset($targetDomain) || $targetDomain['recent_price'] != $site->recent_price)) {
+                $sitePrices[] = $site->recent_price;
+            } else {
+                unset($sites[$key]);
+            }
+        }
+
         $status = true;
         event(new SitePricesViewed());
         if ($request->ajax()) {
             if ($request->wantsJson()) {
-                return response()->json(compact(['status', 'sites']));
+                return response()->json(compact(['status', 'sites', 'targetDomain']));
             } else {
-                return compact(['status', 'sites']);
+                return compact(['status', 'sites', 'targetDomain']);
             }
         } else {
             //TODO implement if needed

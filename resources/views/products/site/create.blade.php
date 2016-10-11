@@ -112,7 +112,27 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
-                        if (response.sites.length > 0) {
+                        if (response.sites.length > 0 || typeof response.targetDomain != "undefined") {
+                            if (typeof response.targetDomain != "undefined") {
+                                $(".prices-container").append(
+                                        $("<div>").append(
+                                                $("<label>").append(
+                                                        $("<input>").attr({
+                                                            "type": "radio",
+                                                            "value": response.targetDomain.domain_id,
+                                                            "name": "domain_id",
+                                                            "onclick": "$('.rad-site-id[name=site_id]').prop('checked', false);"
+                                                        }).addClass("rad-site-id"),
+                                                        $("<input>").attr({
+                                                            "type": "hidden",
+                                                            "value": response.targetDomain.recent_price,
+                                                            "name": "domain_price"
+                                                        }),
+                                                        $("<span>").text('$' + (parseFloat(response.targetDomain.recent_price)).formatMoney(2, '.', ','))
+                                                )
+                                        ).addClass("radio")
+                                )
+                            }
                             $.each(response.sites, function (index, site) {
                                 $(".prices-container").append(
                                         $("<div>").append(
@@ -120,7 +140,8 @@
                                                         $("<input>").attr({
                                                             "type": "radio",
                                                             "value": site.site_id,
-                                                            "name": "site_id"
+                                                            "name": "site_id",
+                                                            "onclick": "$('.rad-site-id[name=domain_id]').prop('checked', false);"
                                                         }).addClass("rad-site-id"),
                                                         $("<span>").text('$' + (parseFloat(site.recent_price)).formatMoney(2, '.', ','))
                                                 )

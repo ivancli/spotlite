@@ -79,15 +79,15 @@
                         "data": function (data) {
                             return $("<div>").append(
                                     $("<div>").css("padding-right", "20px").append(
-                                            $("<span>").text(data.domain_xpath).addClass("lbl-domain-xpath"),
+                                            $("<span>").text(data.preference.xpath_1).addClass("lbl-domain-xpath"),
                                             $("<input>").attr({
                                                 "type": "text",
-                                                "value": data.domain_xpath
+                                                "value": data.preference.xpath_1
                                             }).hide().addClass("txt-domain-xpath form-control input-sm"),
                                             $("<a>").attr({
                                                 "href": "#",
-                                                "onclick": "togglexPathInput(this); return false;",
-                                                "data-url": data.urls.update
+                                                "onclick": "showEditxPathForm(this); return false;",
+                                                "data-url": data.urls.xpath_edit
                                             }).append(
                                                     $("<i>").addClass("fa fa-pencil float-right text-muted").css("margin-right", "-20px")
                                             )
@@ -112,15 +112,15 @@
                                         "href": data.domain_url,
                                         "target": "_blank"
                                     }).append(
-                                            $("<i>").addClass("fa fa-globe")
+                                            $("<i>").addClass("glyphicon glyphicon-globe")
                                     ).addClass("text-muted"),
                                     "&nbsp;",
                                     $("<a>").attr({
                                         "href": "#",
                                         "data-url": data.urls.delete,
-                                        "onclick": "btnDeleteSiteOnClick(this)"
+                                        "onclick": "btnDeleteDomainOnClick(this)"
                                     }).append(
-                                            $("<i>").addClass("fa fa-trash-o")
+                                            $("<i>").addClass("glyphicon glyphicon-trash")
                                     ).addClass("text-muted text-danger")
                             ).html()
                         }
@@ -182,32 +182,29 @@
             })
         }
 
-        function testCrawler(el) {
+        function showEditxPathForm(el) {
             showLoading();
-            $.ajax({
-                "url": $(el).attr("data-url"),
-                "method": "post",
-                "dataType": "json",
-                "success": function (response) {
-                    hideLoading();
-                    if (response.status == true) {
-                        alertP("Crawler Test", "The crawled price is $" + response.price);
-                    } else {
-                        if (typeof response.errors != "undefined") {
-                            alertP("Error", response.errors.join(" "));
-                        } else {
-                            alertP("Error", "Unable to test the crawler, please try again later.");
-                        }
+            $.get($(el).attr("data-url"), function(html){
+                hideLoading();
+                var $modal = $(html);
+                $modal.modal();
+                $modal.on("shown.bs.modal", function () {
+                    if ($.isFunction(modalReady)) {
+                        modalReady({
+                            "callback": function (response) {
+                                tblDomain.ajax.reload();
+                            }
+                        })
                     }
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    alertP("Error", "Unable to test the crawler, please try again later.");
-                }
+                });
+                $modal.on("hidden.bs.modal", function () {
+                    $(this).remove();
+                });
+
             })
         }
 
-        function btnDeleteSiteOnClick(el) {
+        function btnDeleteDomainOnClick(el) {
             confirmP("Delete domain", "Do you want to delete all preferences of this domain?", {
                 "affirmative": {
                     "text": "Delete",

@@ -152,6 +152,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/crawler', 'Crawler\CrawlerController', ['only' => [
         'edit', 'update'
     ]]);
+
+    Route::get('admin/domain/xpath/{domain_id}/edit', 'Crawler\DomainController@editxPath')->name('admin.domain.xpath.edit');
+    Route::put('admin/domain/xpath/{domain_id}/edit', 'Crawler\DomainController@updatexPath')->name('admin.domain.xpath.update');
     Route::resource('admin/domain', 'Crawler\DomainController', ['except' => [
         'show', 'edit'
     ]]);

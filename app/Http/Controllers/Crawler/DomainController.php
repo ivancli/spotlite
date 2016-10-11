@@ -103,6 +103,45 @@ class DomainController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $site_id
+     * @return SiteController|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function editxPath(Request $request, $site_id)
+    {
+        $domain = $this->domainRepo->getDomain($site_id);
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+
+            } else {
+                return view('admin.domain.forms.xpath')->with(compact(['domain']));
+            }
+        } else {
+            return view('admin.domain.forms.xpath')->with(compact(['domain']));
+        }
+    }
+
+    public function updatexPath(Request $request, $site_id)
+    {
+        $input = array_map(function ($e) {
+            return $e ?: null;
+        }, $request->all());
+
+        $domain = $this->domainRepo->getDomain($site_id);
+        $domain->preference->update($input);
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /* TODO implement this if necessary */
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param Request $request

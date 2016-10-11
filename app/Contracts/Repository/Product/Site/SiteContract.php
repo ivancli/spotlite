@@ -27,6 +27,8 @@ interface SiteContract
 
     public function adoptPreferences($site_id, $target_site_id);
 
+    public function adoptDomainPreferences($site_id, $target_domain_id);
+
     public function clearPreferences($site_id);
 
     public function copySiteHistoricalPrice($site_id, $target_site_id);

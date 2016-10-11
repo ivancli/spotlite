@@ -13,7 +13,8 @@
                 <div class="form-group required">
                     {!! Form::label('site_url', 'URL', array('class' => 'control-label')) !!}
                     &nbsp;
-                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;" data-placement="right" onclick="return false;" data-trigger="hover"
+                    <a href="#" class="text-muted" data-toggle="popover" style="font-size: 16px; font-weight: bold;"
+                       data-placement="right" onclick="return false;" data-trigger="hover"
                        data-content="Add the URL for the product you wish to track by going to the product's webpage, copying the URL from the address bar of your browser and pasting it in this field.">
                         <i class="fa fa-question-circle"></i>
                     </a>
@@ -26,11 +27,25 @@
                 <div class="prices-container">
                     @if(isset($sites) && $sites->count() > 0)
                         <p>Please select a correct price from below: </p>
+                        @if(isset($targetDomain) && $targetDomain['recent_price'] != $site->recent_price)
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="domain_id" class="rad-site-id"
+                                           value="{{$targetDomain['domain_id']}}"
+                                           onclick="$('.rad-site-id[name=site_id]').prop('checked', false);"
+                                    >
+                                    ${{number_format($targetDomain['recent_price'], 2, '.', ',')}}
+
+                                </label>
+                            </div>
+                        @endif
                         @foreach($sites as $priceSite)
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="site_id" class="rad-site-id"
-                                           value="{{$priceSite->getKey()}}" {{$priceSite->getKey() == $site->getKey() ? 'checked="checked"' : ""}}>
+                                           value="{{$priceSite->getKey()}}"
+                                           {{$priceSite->getKey() == $site->getKey() ? 'checked="checked"' : ""}}
+                                           onclick="$('.rad-site-id[name=domain_id]').prop('checked', false);">
                                     ${{number_format($priceSite->recent_price, 2, '.', ',')}}
                                 </label>
                             </div>
@@ -144,6 +159,25 @@
                             $(".prices-container").empty().append(
                                     $("<p>").text("Please select a correct price from below: ")
                             );
+                            if (response.domain != "undefined") {
+                                $(".prices-container").append(
+                                        $("<div>").append(
+                                                $("<label>").append(
+                                                        $("<input>").attr({
+                                                            "type": "radio",
+                                                            "value": response.domain.domain_id,
+                                                            "name": "domain_id"
+                                                        }).addClass("rad-site-id"),
+                                                        $("<input>").attr({
+                                                            "type": "hidden",
+                                                            "value": response.domain.recent_price,
+                                                            "name": "domain_price"
+                                                        }),
+                                                        $("<span>").text('$' + (parseFloat(response.domain.recent_price)).formatMoney(2, '.', ','))
+                                                )
+                                        ).addClass("radio")
+                                )
+                            }
                             $.each(response.sites, function (index, site) {
                                 $(".prices-container").append(
                                         $("<div>").append(

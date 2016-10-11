@@ -9,6 +9,7 @@
 namespace App\Repositories\Product\Site;
 
 
+use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Filters\QueryFilter;
 use App\Libraries\CommonFunctions;
@@ -21,11 +22,13 @@ class SiteRepository implements SiteContract
 
     protected $site;
     protected $request;
+    protected $domainRepo;
 
-    public function __construct(Request $request, Site $site)
+    public function __construct(Request $request, Site $site, DomainContract $domainContract)
     {
         $this->site = $site;
         $this->request = $request;
+        $this->domainRepo = $domainContract;
     }
 
     public function getSites()
@@ -138,5 +141,22 @@ class SiteRepository implements SiteContract
             $historicalPrice->created_at = $targetHistoricalPrice->created_at;
             $historicalPrice->save();
         }
+    }
+
+    public function adoptDomainPreferences($site_id, $target_domain_id)
+    {
+        $site = $this->getSite($site_id);
+        $targetDomain = $this->domainRepo->getDomain($target_domain_id);
+
+        $preference = $site->preference;
+
+        $targetPreference = $targetDomain->preference;
+
+        $preference->xpath_1 = $targetPreference->xpath_1;
+        $preference->xpath_2 = $targetPreference->xpath_2;
+        $preference->xpath_3 = $targetPreference->xpath_3;
+        $preference->xpath_4 = $targetPreference->xpath_4;
+        $preference->xpath_5 = $targetPreference->xpath_5;
+        $preference->save();
     }
 }

@@ -71,7 +71,7 @@ class DomainRepository implements DomainContract
 
     public function getDataTableDomains(QueryFilter $queryFilter)
     {
-        $domains = $this->domain->filter($queryFilter)->get();
+        $domains = $this->domain->with('preference')->filter($queryFilter)->get();
         $output = new \stdClass();
         $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
         $output->recordTotal = $this->getDomainCount();
