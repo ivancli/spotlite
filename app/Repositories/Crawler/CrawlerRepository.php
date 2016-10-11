@@ -96,12 +96,14 @@ class CrawlerRepository implements CrawlerContract
         );
         $crawlerClass->setOptions($options);
         event(new CrawlerLoadingHTML($crawler));
+
         /*check cache*/
         if (Cache::tags(['crawled_sites'])->has($site->site_url)) {
             $html = Cache::tags(['crawled_sites'])->get($site->site_url);
         } else {
             $crawlerClass->loadHTML();
             $html = $crawlerClass->getHTML();
+
             Cache::tags(['crawled_sites'])->put($site->site_url, $html, 60);
         }
 

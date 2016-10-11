@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "69bd4c078f2f2fd95656e6c9e9011edc",
+    "hash": "db165e19b1432ad5c13f9f5502557a27",
     "content-hash": "bf16ec13f3c4420f3d8fd44edb020a9a",
     "packages": [
         {
@@ -523,12 +523,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/spotlite-crawler.git",
-                "reference": "e67a08717deaf6acff44b60432a74b8485cdfb7c"
+                "reference": "532fe51197c85f65d4b87456d0e9729dda311c65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/spotlite-crawler/zipball/e67a08717deaf6acff44b60432a74b8485cdfb7c",
-                "reference": "e67a08717deaf6acff44b60432a74b8485cdfb7c",
+                "url": "https://api.github.com/repos/ketchol/spotlite-crawler/zipball/532fe51197c85f65d4b87456d0e9729dda311c65",
+                "reference": "532fe51197c85f65d4b87456d0e9729dda311c65",
                 "shasum": ""
             },
             "require": {
@@ -568,7 +568,7 @@
                 "source": "https://github.com/ketchol/spotlite-crawler/tree/master",
                 "issues": "https://github.com/ketchol/spotlite-crawler/issues"
             },
-            "time": "2016-09-29 06:44:24"
+            "time": "2016-10-11 06:47:05"
         },
         {
             "name": "invigor/um",
@@ -1566,16 +1566,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "5277094ed527a1c4477177d102fe4c53551953e0"
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/5277094ed527a1c4477177d102fe4c53551953e0",
-                "reference": "5277094ed527a1c4477177d102fe4c53551953e0",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
                 "shasum": ""
             },
             "require": {
@@ -1609,7 +1609,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-09-19 16:02:08"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "psy/psysh",
