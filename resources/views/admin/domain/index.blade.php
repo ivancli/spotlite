@@ -109,7 +109,7 @@
                         "data": function (data) {
                             return $("<div>").append(
                                     $("<a>").attr({
-                                        "href": data.domain_url,
+                                        "href": "http://" + data.domain_url,
                                         "target": "_blank"
                                     }).append(
                                             $("<i>").addClass("glyphicon glyphicon-globe")
