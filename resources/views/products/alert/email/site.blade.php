@@ -1,27 +1,30 @@
-Site Alert
-
-
-
-@if($alert->comparison_price_type == "my price")
-    <h4>My Site URL</h4>
-    <p>
-        {{$mySite->site_url}}
-    </p>
-    <p>
-        {{$mySite->recent_price}}
-    </p>
-@else
-    <h4>Comparison Price</h4>
-    <p>{{$alert->comparison_price}}</p>
-@endif
-
-<h4>Alert Site URL</h4>
 <p>
-    {{$alert->alertable->site_url}}
-</p>
-<p>
-    {{$alert->alertable->recent_price}}
+    We found that at <a href="{{$alert->alertable->site_url}}">{{parse_url($alert->alertable->site_url)['host']}}</a>
+    the price for {{$alert->alertable->product->product_name}} is
+    @if($alert->comparison_price_type == "my price")
+        @if($alert->alertable->recent_price > $mySite->recent_price)
+            above
+        @elseif($alert->alertable->recent_price == $mySite->recent_price)
+            equal to
+        @elseif($alert->alertable->recent_price < $mySite->recent_price)
+            below
+        @endif
+        ${{number_format($mySite->recent_price, 2, '.', ',')}}.
+    @else
+        @if($alert->alertable->recent_price > $alert->comparison_price)
+            above
+        @elseif($alert->alertable->recent_price == $alert->comparison_price)
+            equal to
+        @elseif($alert->alertable->recent_price < $alert->comparison_price)
+            below
+        @endif
+        ${{number_format($alert->comparison_price, 2, '.', ',')}}.
+    @endif
 </p>
 
-<h4>Operator</h4>
-{{$alert->operator}}
+<p>You can also view this information through your <a href="{{route('dashboard.index')}}">SpotLite Dashboard</a>.</p>
+
+<p>Want to change your alert preference? <a href="{{route('alert.index')}}">Click here</a></p>
+
+<p>Best regards,</p>
+<p>SpotLite Team</p>

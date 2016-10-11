@@ -130,7 +130,7 @@ class AlertRepository implements AlertContract
                 compact(['alert', 'alertingSites', 'mySite']),
                 array(
                     "email" => $email->alert_email_address,
-                    "subject" => 'SpotLite - Product Price Alert'
+                    "subject" => 'SpotLite Price Alert ' . $product->product_name
                 )
             ))->onQueue("mailing"));
 
@@ -182,7 +182,7 @@ class AlertRepository implements AlertContract
                     compact(['alert', 'mySite']),
                     array(
                         "email" => $email->alert_email_address,
-                        "subject" => 'SpotLite - Site Price Alert'
+                        "subject" => 'SpotLite Price Alert ' . $site->product->product_name
                     )))->onQueue("mailing"));
                 event(new AlertSent($alert, $email));
             }

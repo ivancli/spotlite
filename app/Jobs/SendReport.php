@@ -45,13 +45,13 @@ class SendReport extends Job implements ShouldQueue
                 $report = $reportTaskRepo->generateCategoryReport($this->reportTask);
                 $category = $this->reportTask->reportable;
                 $fileName = str_replace(' ', '_', $category->category_name) . "_category_report" . "." . $this->reportTask->file_type;
-                $subject = $category->category_name;
+                $subject = "SpotLite " . ucfirst($category->category_name) . " " . ucfirst($this->reportTask->frequency) . " " . " Report";
                 $view = 'products.report.email.category';
                 break;
             case "product":
                 $report = $reportTaskRepo->generateProductReport($this->reportTask);
                 $product = $this->reportTask->reportable;
-                $subject = $product->product_name;
+                $subject = "SpotLite " . ucfirst($product->product_name) . " " . ucfirst($this->reportTask->frequency) . " " . " Report";
                 $fileName = str_replace(' ', '_', $product->product_name) . "_product_report" . "." . $this->reportTask->file_type;
                 $view = 'products.report.email.product';
                 break;
@@ -68,10 +68,11 @@ class SendReport extends Job implements ShouldQueue
             );
 
             foreach ($this->reportTask->emails as $email) {
+                $reportTask = $this->reportTask;
                 /* TODO generate email with attachment and send to user */
                 event(new ReportSent($report, $email));
                 dispatch((new SendMail($view,
-                    compact(['report']),
+                    compact(['report', 'reportTask']),
                     array(
                         "email" => $email->report_email_address,
                         "subject" => "SpotLite - $subject {$this->reportTask->report_task_owner_type} report",
