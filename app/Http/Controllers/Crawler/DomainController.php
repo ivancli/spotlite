@@ -107,9 +107,9 @@ class DomainController extends Controller
      * @param $site_id
      * @return SiteController|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function editxPath(Request $request, $site_id)
+    public function editxPath(Request $request, $domain_id)
     {
-        $domain = $this->domainRepo->getDomain($site_id);
+        $domain = $this->domainRepo->getDomain($domain_id);
         if ($request->ajax()) {
             if ($request->wantsJson()) {
 
@@ -121,13 +121,13 @@ class DomainController extends Controller
         }
     }
 
-    public function updatexPath(Request $request, $site_id)
+    public function updatexPath(Request $request, $domain_id)
     {
         $input = array_map(function ($e) {
             return $e ?: null;
         }, $request->all());
 
-        $domain = $this->domainRepo->getDomain($site_id);
+        $domain = $this->domainRepo->getDomain($domain_id);
         $domain->preference->update($input);
         $status = true;
         if ($request->ajax()) {
@@ -136,8 +136,25 @@ class DomainController extends Controller
             } else {
                 return compact(['status']);
             }
-        } else {
-            /* TODO implement this if necessary */
+        }
+    }
+
+    public function updateClasses(Request $request, $domain_id)
+    {
+        $domain = $this->domainRepo->getDomain($domain_id);
+
+        $input = array_map(function ($e) {
+            return $e ?: null;
+        }, $request->all());
+
+        $domain->update($input);
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'domain']));
+            } else {
+                return compact(['status', 'domain']);
+            }
         }
     }
 

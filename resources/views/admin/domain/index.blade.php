@@ -97,11 +97,45 @@
                     },
                     {
                         "name": "crawler_class",
-                        "data": "crawler_class"
+                        "data": function (data) {
+                            return $("<div>").append(
+                                    $("<div>").css("padding-right", "20px").append(
+                                            $("<span>").text(data.crawler_class).addClass("lbl-domain-crawler-class"),
+                                            $("<input>").attr({
+                                                "type": "text",
+                                                "value": data.crawler_class
+                                            }).hide().addClass("txt-domain-crawler-class form-control input-sm"),
+                                            $("<a>").attr({
+                                                "href": "#",
+                                                "onclick": "toggleCrawlerClassInput(this); return false;",
+                                                "data-url": data.urls.crawler_class_update
+                                            }).append(
+                                                    $("<i>").addClass("fa fa-pencil float-right text-muted").css("margin-right", "-20px")
+                                            )
+                                    )
+                            ).html();
+                        }
                     },
                     {
                         "name": "parser_class",
-                        "data": "parser_class"
+                        "data": function (data) {
+                            return $("<div>").append(
+                                    $("<div>").css("padding-right", "20px").append(
+                                            $("<span>").text(data.parser_class).addClass("lbl-domain-parser-class"),
+                                            $("<input>").attr({
+                                                "type": "text",
+                                                "value": data.parser_class
+                                            }).hide().addClass("txt-domain-parser-class form-control input-sm"),
+                                            $("<a>").attr({
+                                                "href": "#",
+                                                "onclick": "toggleParserClassInput(this); return false;",
+                                                "data-url": data.urls.parser_class_update
+                                            }).append(
+                                                    $("<i>").addClass("fa fa-pencil float-right text-muted").css("margin-right", "-20px")
+                                            )
+                                    )
+                            ).html();
+                        }
                     },
                     {
                         "class": "text-center",
@@ -152,6 +186,100 @@
             }
         }
 
+        function toggleCrawlerClassInput(el) {
+            var $txt = $(el).closest("tr").find(".txt-domain-crawler-class");
+            var $lbl = $(el).closest("tr").find(".lbl-domain-crawler-class");
+            if ($lbl.is(":visible")) {
+                $lbl.hide();
+                $txt.show();
+            } else {
+                /* TODO save xpath */
+                updateCrawlerClass($(el).attr("data-url"), {"crawler_class": $txt.val()}, function (response) {
+                    $lbl.show().text(response.domain.crawler_class);
+                    $txt.hide().val(response.domain.crawler_class);
+                }, function (response) {
+
+                });
+            }
+        }
+
+        function toggleParserClassInput(el) {
+            var $txt = $(el).closest("tr").find(".txt-domain-parser-class");
+            var $lbl = $(el).closest("tr").find(".lbl-domain-parser-class");
+            if ($lbl.is(":visible")) {
+                $lbl.hide();
+                $txt.show();
+            } else {
+                /* TODO save xpath */
+                updateParserClass($(el).attr("data-url"), {"parser_class": $txt.val()}, function (response) {
+                    $lbl.show().text(response.domain.parser_class);
+                    $txt.hide().val(response.domain.parser_class);
+                }, function (response) {
+
+                });
+            }
+        }
+
+        function updateCrawlerClass(url, data, successCallback, errorCallback) {
+            showLoading();
+            $.ajax({
+                "url": url,
+                "method": "put",
+                "data": data,
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        if ($.isFunction(successCallback)) {
+                            successCallback(response);
+                        }
+                    } else {
+                        if ($.isFunction(errorCallback)) {
+                            errorCallback(response);
+                        }
+                        alertP("Error", "unable to update xpath, please try again later.");
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    if ($.isFunction(errorCallback)) {
+                        errorCallback(response);
+                    }
+                    alertP("Error", "unable to update xpath, please try again later.");
+                }
+            })
+        }
+
+        function updateParserClass(url, data, successCallback, errorCallback) {
+            showLoading();
+            $.ajax({
+                "url": url,
+                "method": "put",
+                "data": data,
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        if ($.isFunction(successCallback)) {
+                            successCallback(response);
+                        }
+                    } else {
+                        if ($.isFunction(errorCallback)) {
+                            errorCallback(response);
+                        }
+                        alertP("Error", "unable to update xpath, please try again later.");
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    if ($.isFunction(errorCallback)) {
+                        errorCallback(response);
+                    }
+                    alertP("Error", "unable to update xpath, please try again later.");
+                }
+            })
+        }
+
         function updateXPath(url, data, successCallback, errorCallback) {
             showLoading();
             $.ajax({
@@ -184,7 +312,7 @@
 
         function showEditxPathForm(el) {
             showLoading();
-            $.get($(el).attr("data-url"), function(html){
+            $.get($(el).attr("data-url"), function (html) {
                 hideLoading();
                 var $modal = $(html);
                 $modal.modal();
@@ -241,8 +369,7 @@
             })
         }
 
-        function showAddDomainForm()
-        {
+        function showAddDomainForm() {
             showLoading();
             $.get("{{route("admin.domain.create")}}", function (html) {
                 hideLoading();
@@ -257,7 +384,7 @@
                         })
                     }
                 });
-                $modal.on("hidden.bs.modal", function(){
+                $modal.on("hidden.bs.modal", function () {
                     $(this).remove();
                 });
             })

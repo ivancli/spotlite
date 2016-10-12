@@ -29,6 +29,8 @@ class Domain extends Model
             "update" => route("admin.domain.update", $this->getKey()),
             "delete" => route("admin.domain.destroy", $this->getKey()),
             "xpath_edit" => route("admin.domain.xpath.edit", $this->getKey()),
+            "crawler_class_update" => route("admin.domain.classes.update", $this->getKey()),
+            "parser_class_update" => route("admin.domain.classes.update", $this->getKey()),
         );
     }
 
