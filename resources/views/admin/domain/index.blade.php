@@ -44,6 +44,7 @@
                 "pagingType": "full_numbers",
                 "processing": true,
                 "serverSide": true,
+                "stateSave": true,
                 "pageLength": 25,
                 "order": [[0, "asc"]],
                 "language": {
