@@ -12,7 +12,7 @@ class CreateDashboardWidgetTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('dashboard_widget_types', function (Blueprint $table) {
+        Schema::create('dashboard_widget_templates', function (Blueprint $table) {
             $table->increments('dashboard_widget_template_id');
             $table->text('dashboard_widget_template_name');
             $table->char('is_hidden', 1)->default(0);
