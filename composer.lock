@@ -523,12 +523,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ketchol/spotlite-crawler.git",
-                "reference": "532fe51197c85f65d4b87456d0e9729dda311c65"
+                "reference": "b7430a0ae5daf57f8902924008e672632ade1282"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/spotlite-crawler/zipball/532fe51197c85f65d4b87456d0e9729dda311c65",
-                "reference": "532fe51197c85f65d4b87456d0e9729dda311c65",
+                "url": "https://api.github.com/repos/ketchol/spotlite-crawler/zipball/b7430a0ae5daf57f8902924008e672632ade1282",
+                "reference": "b7430a0ae5daf57f8902924008e672632ade1282",
                 "shasum": ""
             },
             "require": {
@@ -568,7 +568,7 @@
                 "source": "https://github.com/ketchol/spotlite-crawler/tree/master",
                 "issues": "https://github.com/ketchol/spotlite-crawler/issues"
             },
-            "time": "2016-10-11 06:47:05"
+            "time": "2016-10-12 01:05:52"
         },
         {
             "name": "invigor/um",
