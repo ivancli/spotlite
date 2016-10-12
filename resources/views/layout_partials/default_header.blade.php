@@ -46,7 +46,7 @@
                                         <li>
                                             <a href="{{route('account.index')}}">
                                                 <h3>
-                                                    Account Settings
+                                                    Settings
                                                 </h3>
                                             </a>
                                         </li>

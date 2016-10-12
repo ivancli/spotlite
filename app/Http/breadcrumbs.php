@@ -184,11 +184,11 @@ Breadcrumbs::register('group_show', function ($breadcrumbs, $user) {
 
 
 /**
- * Account Settings
+ * Settings
  */
 Breadcrumbs::register('account_index', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push('Account Settings', route('account.index'));
+    $breadcrumbs->push('Settings', route('account.index'));
 });
 
 
