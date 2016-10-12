@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Contracts\Repository\Crawler\CrawlerContract;
 use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
@@ -31,12 +32,14 @@ class SiteController extends Controller
     protected $siteRepo;
     protected $domainRepo;
     protected $productRepo;
+    protected $crawlerRepo;
 
-    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract)
+    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract)
     {
         $this->siteRepo = $siteContract;
         $this->domainRepo = $domainContract;
         $this->productRepo = $productContract;
+        $this->crawlerRepo = $crawlerContract;
     }
 
     /**
@@ -148,53 +151,48 @@ class SiteController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Request $request
-     * @param CrawlerInterface $crawler
-     * @param ParserInterface $parser
+     * @param CrawlerInterface $crawlerClass
+     * @param ParserInterface $parserClass
      * @param $site_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function edit(Request $request, CrawlerInterface $crawler, ParserInterface $parser, $site_id)
+    public function edit(Request $request, CrawlerInterface $crawlerClass, ParserInterface $parserClass, $site_id)
     {
         $site = $this->siteRepo->getSite($site_id);
         $product = $site->product;
 
-        if (!is_null($site->crawler->crawler_class)) {
-            $crawler = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
-        }
-        if (!is_null($site->crawler->parser_class)) {
-            $parser = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
-        }
 
         $domainURL = parse_url($site->site_url)['host'];
         $domain = Domain::where("domain_url", $domainURL)->first();
+
+        if (!is_null($domain->crawler_class)) {
+            $crawlerClass = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
+        }
+        if (!is_null($domain->parser_class)) {
+            $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
+        }
+
         if (!is_null($domain)) {
             $options = array(
                 "url" => $site->site_url,
             );
-            $crawler->setOptions($options);
-            $crawler->loadHTML();
-            $html = $crawler->getHTML();
-            if (!is_null($html) && strlen($html) != 0) {
+            $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
+            if (!is_null($content) && strlen($content) != 0) {
                 for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
                     $xpath = $domain->preference->toArray()["xpath_{$xpathIndex}"];
-                    if ($xpath != null) {
-                        $options = array(
-                            "xpath" => $xpath,
-                        );
-                        $parser->setOptions($options);
-                        $parser->setHTML($html);
-                        $parser->init();
-                        $result = $parser->parseHTML();
-                        if (!is_null($result) && (is_string($result) || is_numeric($result))) {
-                            $price = str_replace('$', '', $result);
-                            $price = floatval($price);
-                            if ($price > 0) {
-                                break;
-                            } else {
-                                continue;
-                            }
+                    if ($xpath != null || (!is_null($domain->crawler_class) || !is_null($domain->parser_class))) {
+                        $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass);
+                        if (isset($result['status']) && $result['status'] == true) {
+                            $price = $result['price'];
+                            break;
                         } else {
-                            continue;
+                            if (isset($result['error'])) {
+                                if ($result['error'] == "incorrect price") {
+                                    continue;
+                                } elseif ($result['error'] == "incorrect xpath") {
+                                    continue;
+                                }
+                            }
                         }
                     } else {
                         break;
@@ -223,7 +221,6 @@ class SiteController extends Controller
             }
         }
 
-
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -231,8 +228,6 @@ class SiteController extends Controller
             } else {
                 return view('products.site.edit')->with(compact(['status', 'sites', 'site', 'targetDomain']));
             }
-        } else {
-            /*TODO implement this if necessary*/
         }
     }
 
@@ -298,7 +293,7 @@ class SiteController extends Controller
         }
     }
 
-    public function getPrices(GetPriceValidator $getPriceValidator, CrawlerInterface $crawler, ParserInterface $parser, Request $request)
+    public function getPrices(GetPriceValidator $getPriceValidator, CrawlerInterface $crawlerClass, ParserInterface $parserClass, Request $request)
     {
         try {
             $getPriceValidator->validate($request->all());
@@ -318,34 +313,36 @@ class SiteController extends Controller
 
         $domainURL = parse_url($request->get('site_url'))['host'];
         $domain = Domain::where("domain_url", $domainURL)->first();
+
+        if (!is_null($domain->crawler_class)) {
+            $crawlerClass = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
+        }
+        if (!is_null($domain->parser_class)) {
+            $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
+        }
+
         if (!is_null($domain)) {
             $options = array(
                 "url" => $request->get('site_url'),
             );
-            $crawler->setOptions($options);
-            $crawler->loadHTML();
-            $html = $crawler->getHTML();
-            if (!is_null($html) && strlen($html) != 0) {
+
+            $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
+            if (!is_null($content) && strlen($content) != 0) {
                 for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
                     $xpath = $domain->preference->toArray()["xpath_{$xpathIndex}"];
-                    if ($xpath != null) {
-                        $options = array(
-                            "xpath" => $xpath,
-                        );
-                        $parser->setOptions($options);
-                        $parser->setHTML($html);
-                        $parser->init();
-                        $result = $parser->parseHTML();
-                        if (!is_null($result) && (is_string($result) || is_numeric($result))) {
-                            $price = str_replace('$', '', $result);
-                            $price = floatval($price);
-                            if ($price > 0) {
-                                break;
-                            } else {
-                                continue;
-                            }
+                    if ($xpath != null || (!is_null($domain->crawler_class) || !is_null($domain->parser_class))) {
+                        $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass);
+                        if (isset($result['status']) && $result['status'] == true) {
+                            $price = $result['price'];
+                            break;
                         } else {
-                            continue;
+                            if (isset($result['error'])) {
+                                if ($result['error'] == "incorrect price") {
+                                    continue;
+                                } elseif ($result['error'] == "incorrect xpath") {
+                                    continue;
+                                }
+                            }
                         }
                     } else {
                         break;

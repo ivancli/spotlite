@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Crawler;
 
 
+use App\Contracts\Repository\Crawler\CrawlerContract;
 use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Exceptions\ValidationException;
@@ -27,18 +28,22 @@ class SiteController extends Controller
     use CommonFunctions;
 
     protected $siteRepo;
-    protected $queryFilter;
     protected $domainRepo;
+    protected $crawlerRepo;
+
+    protected $queryFilter;
 
     protected $storeValidator;
     protected $updateValidator;
 
-    public function __construct(SiteContract $siteContract,
-                                DomainContract $domainContract, QueryFilter $queryFilter,
+    public function __construct(SiteContract $siteContract, DomainContract $domainContract, CrawlerContract $crawlerContract,
+                                QueryFilter $queryFilter,
                                 StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
         $this->siteRepo = $siteContract;
         $this->domainRepo = $domainContract;
+        $this->crawlerRepo = $crawlerContract;
+
         $this->queryFilter = $queryFilter;
 
         $this->storeValidator = $storeValidator;
@@ -100,24 +105,20 @@ class SiteController extends Controller
         }
     }
 
-    public function sendTest(Request $request, CrawlerInterface $crawler, ParserInterface $parser, $site_id)
+    public function sendTest(Request $request, CrawlerInterface $crawlerClass, ParserInterface $parserClass, $site_id)
     {
         $site = $this->siteRepo->getSite($site_id);
-
         if (!is_null($site->crawler->crawler_class)) {
-            $crawler = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
+            $crawlerClass = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
         }
         if (!is_null($site->crawler->parser_class)) {
-            $parser = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
+            $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
         }
-
         $options = array(
             "url" => $site->site_url,
         );
-        $crawler->setOptions($options);
-        $crawler->loadHTML();
-        $html = $crawler->getHTML();
-        if (is_null($html) || strlen($html) == 0) {
+        $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
+        if (is_null($content) || strlen($content) == 0) {
             $status = false;
             $errors = array("HTML is blank");
             if ($request->ajax()) {
@@ -130,52 +131,35 @@ class SiteController extends Controller
                 /*TODO implement if needed*/
             }
         }
-
-
-//        if (is_null($xpath)) {
-//            $domain_url = parse_url($site->site_url)['host'];
-//            $domain = Domain::where('domain_url', $domain_url)->first();
-//            if (!is_null($domain)) {
-//                $xpath = $domain->domain_xpath;
-//            }
-//        }
-
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
-            if ($xpath != null) {
-                $options = array(
-                    "xpath" => $xpath,
-                );
-                $parser->setOptions($options);
-                $parser->setHTML($html);
-                $parser->init();
-                $result = $parser->parseHTML();
-                if (!is_null($result) && (is_string($result) || is_numeric($result))) {
-                    $price = $result;
-                    foreach(config("constants.price_describers") as $priceDescriber){
-                        $price = str_replace($priceDescriber, '', $price);
-                    }
-                    $price = floatval($price);
-                    if ($price > 0) {
-                        $status = true;
-                        if ($request->ajax()) {
-                            if ($request->wantsJson()) {
-                                return response()->json(compact(['status', 'price']));
-                            } else {
-                                return compact(['status', 'price']);
-                            }
+
+            if ($xpath != null || (!is_null($site->crawler->crawler_class) || !is_null($site->crawler->parser_class))) {
+                $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass);
+
+                if (isset($result['status']) && $result['status'] == true) {
+                    $price = $result['price'];
+                    $status = true;
+                    if ($request->ajax()) {
+                        if ($request->wantsJson()) {
+                            return response()->json(compact(['status', 'price']));
                         } else {
-                            /*TODO implement if needed*/
+                            return compact(['status', 'price']);
                         }
                     } else {
-                        $status = false;
-                        $errors = array("The crawled price is incorrect");
-                        continue;
+                        /*TODO implement if needed*/
                     }
                 } else {
                     $status = false;
-                    $errors = array("xPath is incorrect, or the site might be loaded through ajax.");
-                    continue;
+                    if (isset($result['error'])) {
+                        if ($result['error'] == "incorrect price") {
+                            $errors = array("The crawled price is incorrect");
+                            continue;
+                        } elseif ($result['error'] == "incorrect xpath") {
+                            $errors = array("xPath is incorrect, or the site might be loaded through ajax.");
+                            continue;
+                        }
+                    }
                 }
             } else {
                 if ($xpathIndex == 1) {
@@ -188,8 +172,6 @@ class SiteController extends Controller
                     } else {
                         return compact(['status', 'errors']);
                     }
-                } else {
-                    /*TODO implement if needed*/
                 }
             }
         }

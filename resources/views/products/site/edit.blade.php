@@ -25,7 +25,7 @@
                     <p>Current price: ${{number_format($site->recent_price, 2, '.', ',')}}</p>
                 @endif
                 <div class="prices-container">
-                    @if(isset($sites) && $sites->count() > 0)
+                    @if(isset($sites) && $sites->count() > 0 || isset($targetDomain))
                         <p>Please select a correct price from below: </p>
                         @if(isset($targetDomain) && $targetDomain['recent_price'] != $site->recent_price)
                             <div class="radio">
@@ -34,6 +34,7 @@
                                            value="{{$targetDomain['domain_id']}}"
                                            onclick="$('.rad-site-id[name=site_id]').prop('checked', false);"
                                     >
+                                    <input type="hidden" name="domain_price" value="{{$targetDomain['recent_price']}}">
                                     ${{number_format($targetDomain['recent_price'], 2, '.', ',')}}
 
                                 </label>
@@ -61,7 +62,7 @@
                 <button class="btn btn-primary" id="btn-edit-site">OK</button>
 
                 <button class="btn btn-warning" id="btn-report-error"
-                        style="{{!isset($sites) || $sites->count() == 0 ? 'display: none;' : ""}}">Error
+                        style="{{(!isset($sites) || $sites->count() == 0) && !isset($targetDomain) ? 'display: none;' : ""}}">Error
                 </button>
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
@@ -155,25 +156,25 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
-                        if (response.sites.length > 0) {
+                        if (response.sites.length > 0 || typeof response.targetDomain != 'undefined') {
                             $(".prices-container").empty().append(
                                     $("<p>").text("Please select a correct price from below: ")
                             );
-                            if (response.domain != "undefined") {
+                            if (typeof response.targetDomain != "undefined") {
                                 $(".prices-container").append(
                                         $("<div>").append(
                                                 $("<label>").append(
                                                         $("<input>").attr({
                                                             "type": "radio",
-                                                            "value": response.domain.domain_id,
+                                                            "value": response.targetDomain.domain_id,
                                                             "name": "domain_id"
                                                         }).addClass("rad-site-id"),
                                                         $("<input>").attr({
                                                             "type": "hidden",
-                                                            "value": response.domain.recent_price,
+                                                            "value": response.targetDomain.recent_price,
                                                             "name": "domain_price"
                                                         }),
-                                                        $("<span>").text('$' + (parseFloat(response.domain.recent_price)).formatMoney(2, '.', ','))
+                                                        $("<span>").text('$' + (parseFloat(response.targetDomain.recent_price)).formatMoney(2, '.', ','))
                                                 )
                                         ).addClass("radio")
                                 )

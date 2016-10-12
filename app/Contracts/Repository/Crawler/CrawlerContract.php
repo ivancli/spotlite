@@ -28,4 +28,8 @@ interface CrawlerContract
     public function setCrawlerRunning($crawler_id);
 
     public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass);
+
+    public function crawlPage($option, CrawlerInterface $crawlerClass);
+
+    public function parserPrice($xpath, $content, ParserInterface $parserClass);
 }

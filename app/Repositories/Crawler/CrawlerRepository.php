@@ -74,10 +74,107 @@ class CrawlerRepository implements CrawlerContract
     public function setCrawlerRunning($crawler_id)
     {
         $crawler = $this->getCrawler($crawler_id);
-        $crawler->status = "queuing";
+        $crawler->status = "running";
         $crawler->save();
         return $crawler;
     }
+
+//    public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass)
+//    {
+//        /*TODO check once again to prevent duplication*/
+//
+//        if (!$crawler->lastCrawlerWithinHour()) {
+//            return false;
+//        }
+//        event(new CrawlerRunning($crawler));
+//        $this->setCrawlerRunning($crawler->getKey());
+//
+//        $site = $crawler->site;
+//        $options = array(
+//            "url" => $site->site_url,
+//        );
+//        $crawlerClass->setOptions($options);
+//        event(new CrawlerLoadingHTML($crawler));
+//
+//        /*check cache*/
+//        if (Cache::tags(['crawled_sites'])->has($site->site_url)) {
+//            $html = Cache::tags(['crawled_sites'])->get($site->site_url);
+//        } else {
+//            $crawlerClass->loadHTML();
+//            $html = $crawlerClass->getHTML();
+//
+//            Cache::tags(['crawled_sites'])->put($site->site_url, $html, 60);
+//        }
+//
+//
+//        if (is_null($html) || strlen($html) == 0) {
+//            /*TODO handle error, page not crawled*/
+//            $site->statusFailHTML();
+//        }
+//
+//        for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
+//            $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
+//            if ($xpath != null) {
+//                $options = array(
+//                    "xpath" => $xpath,
+//                );
+//                $parserClass->setOptions($options);
+//                $parserClass->setHTML($html);
+//                $parserClass->init();
+//                event(new CrawlerLoadingPrice($crawler));
+//                $result = $parserClass->parseHTML();
+//                if (!is_null($result) && (is_string($result) || is_numeric($result))) {
+//                    $price = $result;
+//                    foreach (config("constants.price_describers") as $priceDescriber) {
+//                        $price = str_replace($priceDescriber, '', $price);
+//                    }
+//
+//                    $price = floatval($price);
+//                    if ($price > 0) {
+//                        /*TODO now you got the $price*/
+//
+//                        $historicalPrice = HistoricalPrice::create(array(
+//                            "crawler_id" => $crawler->getKey(),
+//                            "site_id" => $site->getKey(),
+//                            "price" => $price
+//                        ));
+//
+//                        if (!is_null($site->recent_price)) {
+//                            $site->price_diff = $price - $site->recent_price;
+//                        }
+//                        $site->recent_price = $price;
+//                        $site->last_crawled_at = $historicalPrice->created_at;
+//
+//                        if (!$crawler->lastCrawlerWithinHour()) {
+//                            return false;
+//                        }
+//                        event(new CrawlerSavingPrice($crawler));
+//                        $site->save();
+//                        $site->statusOK();
+//                        event(new CrawlerFinishing($crawler));
+//                        $crawler->resetStatus();
+//                        return true;
+//                    } else {
+//                        /*TODO handle error, price is incorrect*/
+//                        $site->statusFailPrice();
+//                        continue;
+//                    }
+//                } else {
+//                    /*TODO handle error, xpath is incorrect*/
+//                    $site->statusFailXpath();
+//                    continue;
+//                }
+//            } else {
+//                /*TODO handle error, cannot find xpath*/
+//                if ($xpathIndex == 1) {
+//                    $site->statusNullXpath();
+//                }
+//                break;
+//            }
+//        }
+//        $crawler->resetStatus();
+//        return false;
+//    }
 
     public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass)
     {
@@ -87,90 +184,68 @@ class CrawlerRepository implements CrawlerContract
             return false;
         }
         event(new CrawlerRunning($crawler));
-        $crawler->status = "running";
-        $crawler->save();
+        $this->setCrawlerRunning($crawler->getKey());
 
         $site = $crawler->site;
-        $options = array(
-            "url" => $site->site_url,
-        );
-        $crawlerClass->setOptions($options);
         event(new CrawlerLoadingHTML($crawler));
 
         /*check cache*/
         if (Cache::tags(['crawled_sites'])->has($site->site_url)) {
-            $html = Cache::tags(['crawled_sites'])->get($site->site_url);
+            $content = Cache::tags(['crawled_sites'])->get($site->site_url);
         } else {
-            $crawlerClass->loadHTML();
-            $html = $crawlerClass->getHTML();
-
-            Cache::tags(['crawled_sites'])->put($site->site_url, $html, 60);
+            $options = array(
+                "url" => $site->site_url,
+            );
+            $content = $this->crawlPage($options, $crawlerClass);
+            Cache::tags(['crawled_sites'])->put($site->site_url, $content, 60);
         }
 
 
-        if (is_null($html) || strlen($html) == 0) {
-            /*TODO handle error, page not crawled*/
+        // page cannot be crawled
+        if (is_null($content) || strlen($content) == 0) {
             $site->statusFailHTML();
         }
-//        if (is_null($xpath)) {
-//            $domain = Domain::where('domain_url', $site->domain)->first();
-//            if (!is_null($domain)) {
-//                $xpath = $domain->domain_xpath;
-//            }
-//        }
+
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
-            if ($xpath != null) {
-                $options = array(
-                    "xpath" => $xpath,
-                );
-                $parserClass->setOptions($options);
-                $parserClass->setHTML($html);
-                $parserClass->init();
-                event(new CrawlerLoadingPrice($crawler));
-                $result = $parserClass->parseHTML();
-                if (!is_null($result) && (is_string($result) || is_numeric($result))) {
-                    $price = $result;
-                    foreach(config("constants.price_describers") as $priceDescriber){
-                        $price = str_replace($priceDescriber, '', $price);
+            if ($xpath != null || (!is_null($crawler->crawler_class) || !is_null($crawler->parser_class))) {
+                $result = $this->parserPrice($xpath, $content, $parserClass);
+                if (isset($result['status']) && $result['status'] == true) {
+                    $price = $result['price'];
+                    $historicalPrice = HistoricalPrice::create(array(
+                        "crawler_id" => $crawler->getKey(),
+                        "site_id" => $site->getKey(),
+                        "price" => $price
+                    ));
+
+                    if (!is_null($site->recent_price)) {
+                        $site->price_diff = $price - $site->recent_price;
                     }
+                    $site->recent_price = $price;
+                    $site->last_crawled_at = $historicalPrice->created_at;
 
-                    $price = floatval($price);
-                    if ($price > 0) {
-                        /*TODO now you got the $price*/
-
-                        $historicalPrice = HistoricalPrice::create(array(
-                            "crawler_id" => $crawler->getKey(),
-                            "site_id" => $site->getKey(),
-                            "price" => $price
-                        ));
-
-                        if (!is_null($site->recent_price)) {
-                            $site->price_diff = $price - $site->recent_price;
-                        }
-                        $site->recent_price = $price;
-                        $site->last_crawled_at = $historicalPrice->created_at;
-
-                        if (!$crawler->lastCrawlerWithinHour()) {
-                            return false;
-                        }
-                        event(new CrawlerSavingPrice($crawler));
-                        $site->save();
-                        $site->statusOK();
-                        event(new CrawlerFinishing($crawler));
-                        $crawler->resetStatus();
-                        return true;
-                    } else {
-                        /*TODO handle error, price is incorrect*/
-                        $site->statusFailPrice();
-                        continue;
+                    if (!$crawler->lastCrawlerWithinHour()) {
+                        return false;
                     }
+                    event(new CrawlerSavingPrice($crawler));
+                    $site->save();
+                    $site->statusOK();
+                    event(new CrawlerFinishing($crawler));
+                    $crawler->resetStatus();
+                    return true;
                 } else {
-                    /*TODO handle error, xpath is incorrect*/
-                    $site->statusFailXpath();
-                    continue;
+                    $status = false;
+                    if (isset($result['error'])) {
+                        if ($result['error'] == "incorrect price") {
+                            $site->statusFailPrice();
+                            continue;
+                        } elseif ($result['error'] == "incorrect xpath") {
+                            $site->statusFailXpath();
+                            continue;
+                        }
+                    }
                 }
-            } else {
+            }else{
                 /*TODO handle error, cannot find xpath*/
                 if ($xpathIndex == 1) {
                     $site->statusNullXpath();
@@ -180,5 +255,47 @@ class CrawlerRepository implements CrawlerContract
         }
         $crawler->resetStatus();
         return false;
+    }
+
+    public function crawlPage($options, CrawlerInterface $crawlerClass)
+    {
+        $crawlerClass->setOptions($options);
+        $crawlerClass->loadHTML();
+        $html = $crawlerClass->getHTML();
+        return $html;
+    }
+
+    public function parserPrice($xpath, $content, ParserInterface $parserClass)
+    {
+        $options = array(
+            "xpath" => $xpath,
+        );
+        $parserClass->setOptions($options);
+        $parserClass->setHTML($content);
+        $parserClass->init();
+        $result = $parserClass->parseHTML();
+        if (!is_null($result) && (is_string($result) || is_numeric($result))) {
+            $price = $result;
+            foreach (config("constants.price_describers") as $priceDescriber) {
+                $price = str_replace($priceDescriber, '', $price);
+            }
+
+            $price = floatval($price);
+            if ($price > 0) {
+                /*correct price*/
+                $status = true;
+                return compact(['status', 'price']);
+            } else {
+                /*incorrect price*/
+                $status = false;
+                $error = "incorrect price";
+                return compact('status', 'error');
+            }
+        } else {
+            /*crawled content is not a price*/
+            $status = false;
+            $error = "incorrect xpath";
+            return compact(['status', 'error']);
+        }
     }
 }

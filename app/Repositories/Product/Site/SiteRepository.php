@@ -158,5 +158,10 @@ class SiteRepository implements SiteContract
         $preference->xpath_4 = $targetPreference->xpath_4;
         $preference->xpath_5 = $targetPreference->xpath_5;
         $preference->save();
+
+        $site->crawler->update(array(
+            "crawler_class" => $targetDomain->crawler_class,
+            "parser_class" => $targetDomain->parser_class
+        ));
     }
 }
