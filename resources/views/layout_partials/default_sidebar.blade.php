@@ -47,7 +47,7 @@
                         <span>App Preferences</span>
                     </a>
                 </li>
-                <li class="treeview {{Style::set_active_and(array('admin', 'site'))}}">
+                <li class="treeview {{Style::set_active_and(array('admin', 'site'))}} {{Style::set_active_and(array('admin', 'domain'))}}">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
                         <span>Crawler Management</span>

@@ -130,7 +130,11 @@ class CrawlerRepository implements CrawlerContract
                 event(new CrawlerLoadingPrice($crawler));
                 $result = $parserClass->parseHTML();
                 if (!is_null($result) && (is_string($result) || is_numeric($result))) {
-                    $price = str_replace('$', '', $result);
+                    $price = $result;
+                    foreach(config("constants.price_describers") as $priceDescriber){
+                        $price = str_replace($priceDescriber, '', $price);
+                    }
+
                     $price = floatval($price);
                     if ($price > 0) {
                         /*TODO now you got the $price*/

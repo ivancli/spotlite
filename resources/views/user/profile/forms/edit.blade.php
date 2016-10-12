@@ -7,10 +7,10 @@
     <div class="col-md-9">
         {!! Form::select('title', array(
         "" => "Please select",
-        "Ms" => "Ms",
-        "Mrs" => "Mrs",
         "Miss" => "Miss",
         "Mr" => "Mr",
+        "Mrs" => "Mrs",
+        "Ms" => "Ms",
         ), null, ['class'=>'form-control sl-form-control']) !!}
     </div>
 </div>

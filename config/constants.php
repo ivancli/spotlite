@@ -21,5 +21,11 @@ return [
         "utm_campaign",
         "utm_term",
         "utm_content",
+    ],
+
+    "price_describers" => [
+        ",",
+        "now",
+        "$"
     ]
 ];

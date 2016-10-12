@@ -117,7 +117,6 @@ class SiteController extends Controller
         $crawler->setOptions($options);
         $crawler->loadHTML();
         $html = $crawler->getHTML();
-
         if (is_null($html) || strlen($html) == 0) {
             $status = false;
             $errors = array("HTML is blank");
@@ -152,7 +151,10 @@ class SiteController extends Controller
                 $parser->init();
                 $result = $parser->parseHTML();
                 if (!is_null($result) && (is_string($result) || is_numeric($result))) {
-                    $price = str_replace('$', '', $result);
+                    $price = $result;
+                    foreach(config("constants.price_describers") as $priceDescriber){
+                        $price = str_replace($priceDescriber, '', $price);
+                    }
                     $price = floatval($price);
                     if ($price > 0) {
                         $status = true;
