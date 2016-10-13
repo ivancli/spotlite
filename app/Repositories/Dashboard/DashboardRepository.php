@@ -19,15 +19,18 @@ class DashboardRepository implements DashboardContract
 
     public function __construct(Dashboard $dashboard, Request $request)
     {
-//        $this->dashboard = $dashboard;
-        $this->dashboard = auth()->user()->dashboards();
+        if (auth()->check()) {
+            $this->dashboard = auth()->user()->dashboards();
+        } else {
+            $this->dashboard = $dashboard;
+        }
 
         $this->request = $request;
     }
 
     public function getDashboards()
     {
-        return auth()->user()->dashboards;
+        return $this->dashboard->all();
     }
 
     public function getDashboard($id, $fail = true)

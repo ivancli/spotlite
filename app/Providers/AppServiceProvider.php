@@ -49,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\Product\Domain\DomainContract', 'App\Repositories\Product\Domain\DomainRepository');
         $this->app->bind('App\Contracts\Repository\Dashboard\DashboardContract', 'App\Repositories\Dashboard\DashboardRepository');
         $this->app->bind('App\Contracts\Repository\Dashboard\DashboardTemplateContract', 'App\Repositories\Dashboard\DashboardTemplateRepository');
+        $this->app->bind('App\Contracts\Repository\Dashboard\DashboardWidgetContract', 'App\Repositories\Dashboard\DashboardWidgetRepository');
+        $this->app->bind('App\Contracts\Repository\Dashboard\DashboardWidgetTypeContract', 'App\Repositories\Dashboard\DashboardWidgetTypeRepository');
 
         /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')

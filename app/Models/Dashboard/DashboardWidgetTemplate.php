@@ -15,7 +15,7 @@ class DashboardWidgetTemplate extends Model
 {
     protected $primaryKey = "dashboard_widget_template_id";
     protected $fillable = [
-        "dashboard_widget_template_name", "is_hidden"
+        "dashboard_widget_template_name", "dashboard_widget_template_display_name", "is_hidden"
     ];
     public $timestamps = false;
 

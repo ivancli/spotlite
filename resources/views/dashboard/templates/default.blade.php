@@ -2,7 +2,7 @@
     {{$dashboard->dashboard_name}}
     <div class="pull-right">
         <button class="btn btn-primary btn-sm">Apply Filters</button>
-        <button class="btn btn-primary btn-sm">Add Content</button>
+        <button class="btn btn-primary btn-sm" onclick="addWidget();">Add Content</button>
     </div>
 @stop
 

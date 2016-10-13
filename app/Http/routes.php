@@ -16,6 +16,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/', 'Dashboard\DashboardController@index')->name("dashboard.index");
         Route::get('dashboard/manage', 'Dashboard\DashboardController@manage')->name('dashboard.manage');
+        Route::resource('dashboard/widget', 'Dashboard\DashboardWidgetController');
         Route::resource('dashboard', 'Dashboard\DashboardController');
 
 
