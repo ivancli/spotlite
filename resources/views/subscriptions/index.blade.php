@@ -69,7 +69,7 @@
                                     <tbody>
 
                                     @foreach($transactions as $item)
-                                        @if(is_null($item->transaction->kind) || $item->transaction->kind == "initial")
+                                        @if($item->transaction->kind == "baseline" || $item->transaction->kind == "initial")
                                             <tr>
                                                 <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($item->transaction->created_at))}}</td>
                                                 <td>
@@ -79,7 +79,7 @@
                                                         Initial Setup
                                                     @endif
                                                 </td>
-                                                <td>${{number_format($item->transaction->amount_in_cents/100, 2)}}</td>
+                                                <td>${{number_format($item->transaction->ending_balance_in_cents/100, 2)}}</td>
                                             </tr>
                                         @endif
                                     @endforeach
