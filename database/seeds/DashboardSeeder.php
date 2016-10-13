@@ -28,5 +28,10 @@ class DashboardSeeder extends Seeder
             "dashboard_widget_template_id" => $dashboardWidgetTemplate->getKey(),
             "dashboard_widget_type_name" => "Chart"
         ]);
+
+        $dashboardWidgetType = \App\Models\Dashboard\DashboardWidgetType::create([
+            "dashboard_widget_template_id" => $dashboardWidgetTemplate->getKey(),
+            "dashboard_widget_type_name" => "Chart"
+        ]);
     }
 }

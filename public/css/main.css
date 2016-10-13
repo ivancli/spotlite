@@ -13828,6 +13828,12 @@ body {
     }
 }
 
+@media (max-width: 991px) {
+    .main-header .navbar-custom-menu a.btn-success, .main-header .navbar-right a.btn-success {
+        background: #00a65a !important;
+    }
+}
+
 /*preloader*/
 /*
 
