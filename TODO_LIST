@@ -1,3 +1,6 @@
+check subscription index tables correctness
+
+
 WHEN CHECK PRICE, DEDUPLICATE BY PRICE
 
 double check charts
