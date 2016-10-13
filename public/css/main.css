@@ -13786,6 +13786,11 @@ th.ellipsis {
     min-height: 41px;
 }
 
+.sidebar-menu .divider {
+    min-height: 1px;
+    background: #8aa4af;
+}
+
 body {
     padding-right: 0px !important;
 }

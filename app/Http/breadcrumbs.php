@@ -20,6 +20,15 @@ Breadcrumbs::register('home', function ($breadcrumbs) {
 });
 
 /**
+ * Dashboard
+ */
+Breadcrumbs::register('manage_dashboard', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Manage Dashboard', route('dashboard.manage'));
+});
+
+
+/**
  * User
  */
 
@@ -241,7 +250,7 @@ Breadcrumbs::register('report_index', function ($breadcrumbs) {
 /**
  * Alert Page
  */
-Breadcrumbs::register('alert_index', function($breadcrumbs){
+Breadcrumbs::register('alert_index', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Alerts', route('alert.index'));
 });

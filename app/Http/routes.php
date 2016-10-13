@@ -14,7 +14,9 @@
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['subs']], function () {
 
-        Route::get('/', 'DashboardController@index')->name("dashboard.index");
+        Route::get('/', 'Dashboard\DashboardController@index')->name("dashboard.index");
+        Route::get('dashboard/manage', 'Dashboard\DashboardController@manage')->name('dashboard.manage');
+        Route::resource('dashboard', 'Dashboard\DashboardController');
 
 
         Route::get('msg/subscription/welcome/{raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");

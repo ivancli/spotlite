@@ -15,7 +15,8 @@ class CreateDashboardTemplatesTable extends Migration
         Schema::create('dashboard_templates', function (Blueprint $table) {
             $table->increments('dashboard_template_id');
             $table->text('dashboard_template_name');
-            $table->char('is_hidden', 1)->default(0);
+            $table->text('dashboard_template_display_name');
+            $table->char('is_hidden', 1)->default('n');
         });
     }
 

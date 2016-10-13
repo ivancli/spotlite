@@ -18,7 +18,7 @@ class CreateDashboardsTable extends Migration
             $table->integer('dashboard_template_id')->unsigned();
             $table->text('dashboard_name');
             $table->text('dashboard_order')->nullable();
-            $table->char('is_hidden', 1)->default(0);
+            $table->char('is_hidden', 1)->default('n');
         });
     }
 

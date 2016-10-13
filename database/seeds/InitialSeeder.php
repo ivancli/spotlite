@@ -159,7 +159,6 @@ class InitialSeeder extends Seeder
         ]);
 
 
-
         /* SYNC USER CHECKPOINT*/
 
         DB::table("app_preferences")->insert([
@@ -196,5 +195,11 @@ class InitialSeeder extends Seeder
             "value" => null,
         ]);
 
+
+        /*DASHBOARD*/
+        DB::table("dashboard_templates")->insert([
+            "dashboard_template_name" => "default",
+            "is_hidden" => "n"
+        ]);
     }
 }

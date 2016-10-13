@@ -47,6 +47,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\Product\Category\CategoryContract', 'App\Repositories\Product\Category\CategoryRepository');
         $this->app->bind('App\Contracts\Repository\Product\Site\SiteContract', 'App\Repositories\Product\Site\SiteRepository');
         $this->app->bind('App\Contracts\Repository\Product\Domain\DomainContract', 'App\Repositories\Product\Domain\DomainRepository');
+        $this->app->bind('App\Contracts\Repository\Dashboard\DashboardContract', 'App\Repositories\Dashboard\DashboardRepository');
+        $this->app->bind('App\Contracts\Repository\Dashboard\DashboardTemplateContract', 'App\Repositories\Dashboard\DashboardTemplateRepository');
 
         /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')
@@ -79,6 +81,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when('App\Models\ReportTask')
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\ReportTaskFilters');
+
+        /* Dashboard Query Filters */
+        $this->app->when('App\Http\Controllers\Dashboard\DashboardController')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\DashboardFilters');
+        $this->app->when('App\Models\Dashboard')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\DashboardFilters');
 
 
         /*************************************************************************

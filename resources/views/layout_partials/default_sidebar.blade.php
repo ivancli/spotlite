@@ -4,12 +4,27 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             @if(auth()->check() && (auth()->user()->hasValidSubscription() || auth()->user()->isStaff()))
-                {{--<li class="{{Style::set_active('/')}}">--}}
-                    {{--<a href="{{url('/')}}">--}}
-                        {{--<i class="fa fa-dashboard"></i>--}}
-                        {{--<span>Dashboard</span>--}}
-                    {{--</a>--}}
-                {{--</li>--}}
+                <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        @foreach(auth()->user()->nonHiddenDashboard as $dashboard)
+                            <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
+                                <a href="{{route('dashboard.show', $dashboard->getKey())}}">
+                                    <i class="fa fa-circle-o"></i> {{$dashboard->dashboard_name}}
+                                </a>
+                            </li>
+                        @endforeach
+                        <li class="divider"></li>
+                        <li class="{{Style::set_active_and(array('dashboard', 'manage'))}}">
+                            <a href="{{route('dashboard.manage')}}">
+                                <i class="fa fa-gear"></i> Manage Dashboards
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i
                                 class="fa fa-line-chart"></i> Reports</a></li>
@@ -18,16 +33,16 @@
                 <li class="{{Style::set_active_starts_with('product')}}"><a href="{{url('product')}}"><i
                                 class="fa fa-square-o"></i> <span>Products</span></a></li>
                 {{--<li class="treeview {{Style::set_active_or(array('report', 'alert'))}}">--}}
-                    {{--<a href="#">--}}
-                        {{--<i class="fa fa-envelope"></i>--}}
-                        {{--<span>Reports and Alerts</span>--}}
-                    {{--</a>--}}
-                    {{--<ul class="treeview-menu">--}}
-                        {{--<li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i--}}
-                                        {{--class="fa fa-line-chart"></i> Reports</a></li>--}}
-                        {{--<li class="{{Style::set_active('alert')}}"><a href="{{url('alert')}}"><i--}}
-                                        {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
-                    {{--</ul>--}}
+                {{--<a href="#">--}}
+                {{--<i class="fa fa-envelope"></i>--}}
+                {{--<span>Reports and Alerts</span>--}}
+                {{--</a>--}}
+                {{--<ul class="treeview-menu">--}}
+                {{--<li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i--}}
+                {{--class="fa fa-line-chart"></i> Reports</a></li>--}}
+                {{--<li class="{{Style::set_active('alert')}}"><a href="{{url('alert')}}"><i--}}
+                {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
+                {{--</ul>--}}
                 {{--</li>--}}
 
                 {{--<li class="treeview {{Style::set_active_starts_with(array('group.'))}}">--}}
@@ -53,7 +68,6 @@
                         <span>Crawler Management</span>
                     </a>
                     <ul class="treeview-menu">
-                        {{--TODO enable this in the second phase--}}
                         <li class="{{Style::set_active_and(array('admin', 'domain'))}}">
                             <a href="{{route('admin.domain.index')}}">
                                 <i class="fa fa-circle-o"></i> Domains
@@ -115,22 +129,22 @@
             @endif
         </ul>
         {{--@if(auth()->check() && auth()->user()->hasValidSubscription() && starts_with(Request::route()->getName(), 'product'))--}}
-            {{--<hr class="sidebar-divider">--}}
-            {{--<div class="subscription-panel">--}}
-                {{--<div class="text-center">--}}
-                    {{--My Plan: {{auth()->user()->cachedAPISubscription()->product->name}}--}}
-                {{--</div>--}}
-                {{--<div class="block-button-container">--}}
-                    {{--<a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}" class="btn btn-block btn-success">--}}
-                        {{--UPGRADE--}}
-                    {{--</a>--}}
-                {{--</div>--}}
-                {{--<div class="text-center">--}}
-                    {{--<a href="#" style="text-decoration: underline;">--}}
-                        {{--Need Help?--}}
-                    {{--</a>--}}
-                {{--</div>--}}
-            {{--</div>--}}
+        {{--<hr class="sidebar-divider">--}}
+        {{--<div class="subscription-panel">--}}
+        {{--<div class="text-center">--}}
+        {{--My Plan: {{auth()->user()->cachedAPISubscription()->product->name}}--}}
+        {{--</div>--}}
+        {{--<div class="block-button-container">--}}
+        {{--<a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}" class="btn btn-block btn-success">--}}
+        {{--UPGRADE--}}
+        {{--</a>--}}
+        {{--</div>--}}
+        {{--<div class="text-center">--}}
+        {{--<a href="#" style="text-decoration: underline;">--}}
+        {{--Need Help?--}}
+        {{--</a>--}}
+        {{--</div>--}}
+        {{--</div>--}}
         {{--@endif--}}
     </section>
     <!-- /.sidebar -->

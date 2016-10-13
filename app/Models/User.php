@@ -64,6 +64,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Report', 'user_id', 'user_id');
     }
 
+    public function dashboards()
+    {
+        return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->orderBy("dashboard_order", "asc");
+    }
+
+    public function nonHiddenDashboard()
+    {
+        return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->where("is_hidden", "!=", "y")->orderBy("dashboard_order", "asc");
+    }
+
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * indirect relationship
