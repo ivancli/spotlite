@@ -287,11 +287,12 @@ class SubscriptionController extends Controller
         $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
 
         if ($request->has('coupon_code')) {
-            $fields = new \stdClass();
-            $updatedSubscription = new \stdClass();
-            $updatedSubscription->coupon_code = $request->get('coupon_code');
-            $fields->subscription = $updatedSubscription;
-            $result = $this->subscriptionRepo->updateSubscription($apiSubscription->id, json_encode($fields));
+//            $fields = new \stdClass();
+//            $updatedSubscription = new \stdClass();
+//            $updatedSubscription->coupon_code = $request->get('coupon_code');
+//            $fields->subscription = $updatedSubscription;
+//            $result = $this->subscriptionRepo->updateSubscription($apiSubscription->id, json_encode($fields));
+            $result = $this->subscriptionRepo->addCouponCode($apiSubscription->id, $request->get('coupon_code'));
             if ($result == false) {
                 if ($request->ajax()) {
                     $status = false;

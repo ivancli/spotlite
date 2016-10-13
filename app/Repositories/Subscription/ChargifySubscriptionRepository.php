@@ -141,6 +141,24 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         }
     }
 
+    public function addCouponCode($subscription_id, $coupon_code)
+    {
+        $apiURL = config('chargify.api_url') . "subscriptions/{$subscription_id}/add_coupon.json?code={$coupon_code}";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $method = "post";
+        $data_type = 'json';
+        $fields = "";
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+
+    }
+
     /**
      * Cancel an existing subscription in Payment Management Site
      * @param $subscription_id
@@ -349,7 +367,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
     {
         $subscription = $this->getSubscription($subscription_id);
         $creditCard = $subscription->credit_card;
-        if(!is_null($creditCard)){
+        if (!is_null($creditCard)) {
             $creditCardID = $creditCard->id;
 
             $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id/payment_profiles/$creditCardID.json";
@@ -357,7 +375,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             $method = "delete";
             $data_type = 'json';
             $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
-            if(!isset($result->errors) || is_null($result->errors)){
+            if (!isset($result->errors) || is_null($result->errors)) {
                 return true;
             }
         }

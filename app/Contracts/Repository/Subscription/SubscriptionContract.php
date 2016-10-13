@@ -54,6 +54,15 @@ interface SubscriptionContract
     public function updateSubscription($subscription_id, $options);
 
     /**
+     * Add coupon code to subscription
+     *
+     * @param $subscription_id
+     * @param $coupon_code
+     * @return mixed
+     */
+    public function addCouponCode($subscription_id, $coupon_code);
+
+    /**
      * Cancel an existing subscription in Payment Management Site
      * @param $subscription_id
      * @return mixed
