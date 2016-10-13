@@ -30,7 +30,7 @@ class DashboardRepository implements DashboardContract
 
     public function getDashboards()
     {
-        return $this->dashboard->all();
+        return $this->dashboard->get();
     }
 
     public function getDashboard($id, $fail = true)

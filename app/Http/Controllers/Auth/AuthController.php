@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\Repository\Mailer\MailerContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
+use App\Jobs\SendMail;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserPreference;
@@ -38,7 +39,7 @@ class AuthController extends Controller
     protected $username = 'email';
 
     protected $subscriptionRepo;
-    protected $mailer;
+    protected $mailerRepo;
 
     /**
      * Create a new authentication controller instance.
@@ -50,7 +51,7 @@ class AuthController extends Controller
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
         $this->subscriptionRepo = $subscriptionContract;
-        $this->mailer = $mailerContract;
+        $this->mailerRepo = $mailerContract;
     }
 
     /**
@@ -89,6 +90,7 @@ class AuthController extends Controller
             'phone' => isset($data['phone']) ? $data['phone'] : null,
             'verification_code' => $verificationCode
         ]);
+
         $role = UMRole::where("name", "client")->first();
         if ($role != null) {
             $user->attachRole($role);
@@ -97,7 +99,12 @@ class AuthController extends Controller
         UserPreference::setPreference($user, "DATE_FORMAT", "Y-m-d");
         UserPreference::setPreference($user, "TIME_FORMAT", "g:i a");
 
-        $this->mailer->sendWelcomeEmail($user);
+        $options = $user->toArray();
+        $options['subject'] = "Welcome to SpotLite";
+        $this->dispatch((new SendMail("auth.emails.welcome", compact(['user']), $options))->onQueue("mailing"));
+
+
+
         if (request()->has('api_product_id')) {
             $product = $this->subscriptionRepo->getProduct(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;

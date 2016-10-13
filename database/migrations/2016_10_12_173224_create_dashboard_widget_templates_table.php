@@ -27,6 +27,6 @@ class CreateDashboardWidgetTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('dashboard_widget_types');
+        Schema::drop('dashboard_widget_templates');
     }
 }

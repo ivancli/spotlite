@@ -183,10 +183,12 @@ class User extends Authenticatable
 
         Dashboard::create(array(
             "user_id" => $user->getKey(),
-            'dashboard_template' => 1,
+            'dashboard_template_id' => 1,
             'dashboard_name' => 'Default Dashboard',
             'dashboard_order' => 1
         ));
+        return $user;
     }
+
 }
 

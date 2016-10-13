@@ -194,12 +194,5 @@ class InitialSeeder extends Seeder
             "element" => "REPORT_LAST_RESERVED_AT",
             "value" => null,
         ]);
-
-
-        /*DASHBOARD*/
-        DB::table("dashboard_templates")->insert([
-            "dashboard_template_name" => "default",
-            "is_hidden" => "n"
-        ]);
     }
 }
