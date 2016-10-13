@@ -69,7 +69,7 @@
                                     <tbody>
 
                                     @foreach($transactions as $item)
-                                        @if($item->transaction->kind != "trial")
+                                        @if(is_null($item->transaction->kind) || $item->transaction->kind == "initial")
                                             <tr>
                                                 <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($item->transaction->created_at))}}</td>
                                                 <td>
