@@ -313,48 +313,48 @@ class SiteController extends Controller
 
         $domainURL = parse_url($request->get('site_url'))['host'];
         $domain = Domain::where("domain_url", $domainURL)->first();
+        if(!is_null($domain)){
+            if (!is_null($domain->crawler_class)) {
+                $crawlerClass = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
+            }
+            if (!is_null($domain->parser_class)) {
+                $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
+            }
 
-        if (!is_null($domain->crawler_class)) {
-            $crawlerClass = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
-        }
-        if (!is_null($domain->parser_class)) {
-            $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
-        }
-
-        if (!is_null($domain)) {
-            $options = array(
-                "url" => $request->get('site_url'),
-            );
-
-            $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
-            if (!is_null($content) && strlen($content) != 0) {
-                for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
-                    $xpath = $domain->preference->toArray()["xpath_{$xpathIndex}"];
-                    if ($xpath != null || (!is_null($domain->crawler_class) || !is_null($domain->parser_class))) {
-                        $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass);
-                        if (isset($result['status']) && $result['status'] == true) {
-                            $price = $result['price'];
-                            break;
-                        } else {
-                            if (isset($result['error'])) {
-                                if ($result['error'] == "incorrect price") {
-                                    continue;
-                                } elseif ($result['error'] == "incorrect xpath") {
-                                    continue;
+            if (!is_null($domain)) {
+                $options = array(
+                    "url" => $request->get('site_url'),
+                );
+                $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
+                if (!is_null($content) && strlen($content) != 0) {
+                    for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
+                        $xpath = $domain->preference->toArray()["xpath_{$xpathIndex}"];
+                        if ($xpath != null || (!is_null($domain->crawler_class) || !is_null($domain->parser_class))) {
+                            $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass);
+                            if (isset($result['status']) && $result['status'] == true) {
+                                $price = $result['price'];
+                                break;
+                            } else {
+                                if (isset($result['error'])) {
+                                    if ($result['error'] == "incorrect price") {
+                                        continue;
+                                    } elseif ($result['error'] == "incorrect xpath") {
+                                        continue;
+                                    }
                                 }
                             }
+                        } else {
+                            break;
                         }
-                    } else {
-                        break;
                     }
                 }
             }
-        }
-        if (isset($price) && $price > 0) {
-            $targetDomain = array(
-                "domain_id" => $domain->getKey(),
-                "recent_price" => $price
-            );
+            if (isset($price) && $price > 0) {
+                $targetDomain = array(
+                    "domain_id" => $domain->getKey(),
+                    "recent_price" => $price
+                );
+            }
         }
 
         $sites = Site::where("site_url", $request->get('site_url'))->whereNotNull("recent_price")->get();
