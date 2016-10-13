@@ -188,31 +188,5 @@ class User extends Authenticatable
             'dashboard_order' => 1
         ));
     }
-
-//    public static function create(array $attributes = [])
-//    {
-//        $site = parent::create($attributes);
-//
-//        /* create one-to-one crawler when site is created */
-//        Crawler::create(array(
-//            "site_id" => $site->getKey()
-//        ));
-//
-//        /* create one-to-one site preference when site is created */
-//        SitePreference::create(array(
-//            "site_id" => $site->getKey()
-//        ));
-//
-//        /* create domain if the domain of site url does not exist */
-//        $newDomain = parse_url($site->site_url)['host'];
-//
-//        if (Domain::where('domain_url', $newDomain)->count() == 0) {
-//            Domain::create(array(
-//                "domain_url" => $newDomain
-//            ));
-//        }
-//
-//        return $site;
-//    }
 }
 
