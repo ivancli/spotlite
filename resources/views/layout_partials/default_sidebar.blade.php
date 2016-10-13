@@ -4,27 +4,27 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             @if(auth()->check() && (auth()->user()->hasValidSubscription() || auth()->user()->isStaff()))
-                {{--<li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">--}}
-                    {{--<a href="#">--}}
-                        {{--<i class="fa fa-dashboard"></i>--}}
-                        {{--<span>Dashboard</span>--}}
-                    {{--</a>--}}
-                    {{--<ul class="treeview-menu">--}}
-                        {{--@foreach(auth()->user()->nonHiddenDashboard as $dashboard)--}}
-                            {{--<li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">--}}
-                                {{--<a href="{{route('dashboard.show', $dashboard->getKey())}}">--}}
-                                    {{--<i class="fa fa-circle-o"></i> {{$dashboard->dashboard_name}}--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                        {{--@endforeach--}}
-                        {{--<li class="divider"></li>--}}
-                        {{--<li class="{{Style::set_active_and(array('dashboard', 'manage'))}}">--}}
-                            {{--<a href="{{route('dashboard.manage')}}">--}}
-                                {{--<i class="fa fa-gear"></i> Manage Dashboards--}}
-                            {{--</a>--}}
-                        {{--</li>--}}
-                    {{--</ul>--}}
-                {{--</li>--}}
+                <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        @foreach(auth()->user()->nonHiddenDashboard as $dashboard)
+                            <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
+                                <a href="{{route('dashboard.show', $dashboard->getKey())}}">
+                                    <i class="fa fa-circle-o"></i> {{$dashboard->dashboard_name}}
+                                </a>
+                            </li>
+                        @endforeach
+                        <li class="divider"></li>
+                        <li class="{{Style::set_active_and(array('dashboard', 'manage'))}}">
+                            <a href="{{route('dashboard.manage')}}">
+                                <i class="fa fa-gear"></i> Manage Dashboards
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i
                                 class="fa fa-line-chart"></i> Reports</a></li>
