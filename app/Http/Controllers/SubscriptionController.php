@@ -74,11 +74,18 @@ class SubscriptionController extends Controller
                 $portalLink = $this->subscriptionRepo->getBillingPortalLink($sub);
             }
 
+            if (Cache::tags(["user_subscription_transactions_" . $user->getKey()])->has('transactions')) {
+                $transactions = Cache::tags(["user_subscription_transactions_" . $user->getKey()])->get('transactions');
+            } else {
+                $transactions = $this->subscriptionRepo->getTransactions($current_sub_id);
+                Cache::tags(["user_subscription_transactions_" . $user->getKey()])->put("transactions", $transactions, config()->get('cache.ttl'));
+            }
+
             $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($current_sub_id);
             event(new SubscriptionManagementViewed());
-            return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink']));
-        }else{
-            
+            return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions']));
+        } else {
+
         }
     }
 
@@ -99,7 +106,7 @@ class SubscriptionController extends Controller
                 if (!is_null(auth()->user()->subscription)) {
                     $previousSubscription = auth()->user()->subscription;
                     $previousAPISubscription = $this->subscriptionRepo->getSubscription($previousSubscription->api_subscription_id);
-                    if(isset($previousAPISubscription->credit_card)){
+                    if (isset($previousAPISubscription->credit_card)) {
                         $previousAPICreditCard = $previousAPISubscription->credit_card;
                         if (!is_null($previousAPICreditCard)) {
                             if ($previousAPICreditCard->expiration_year > date("Y") || ($previousAPICreditCard->expiration_year == date("Y") && $previousAPICreditCard->expiration_month >= date('n'))) {
@@ -111,7 +118,7 @@ class SubscriptionController extends Controller
                                 $subscription->coupon_code = $couponCode;
                                 $fields->subscription = $subscription;
                                 $result = $this->subscriptionRepo->storeSubscription(json_encode($fields));
-                                Cache::tags(["user_subscription_". $user->getKey()])->flush();
+                                Cache::tags(["user_subscription_" . $user->getKey()])->flush();
                                 if (isset($result->subscription)) {
 //                                $subscription = new Subscription();
 //                                $subscription->user_id = auth()->user()->getKey();
@@ -137,7 +144,7 @@ class SubscriptionController extends Controller
                 );
                 $encryptedReference = rawurlencode(json_encode($reference));
                 $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}";
-                Cache::tags(["user_subscription_". $user->getKey()])->flush();
+                Cache::tags(["user_subscription_" . $user->getKey()])->flush();
                 return redirect()->to($chargifyLink);
             } else {
                 /* create subscription in Chargify by using its API */
@@ -169,7 +176,7 @@ class SubscriptionController extends Controller
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
                         event(new SubscriptionCompleted($sub));
-                        Cache::tags(["user_subscription_". $user->getKey()])->flush();
+                        Cache::tags(["user_subscription_" . $user->getKey()])->flush();
                         return redirect()->route('subscription.index');
                     } catch (Exception $e) {
                         /*TODO need to handle exception properly*/
@@ -207,7 +214,7 @@ class SubscriptionController extends Controller
                             $sub->save();
                             $this->subscriptionRepo->updateCreditCardDetails($sub);
                             event(new SubscriptionUpdated($sub));
-                            Cache::tags(["user_subscription_". $user->getKey()])->flush();
+                            Cache::tags(["user_subscription_" . $user->getKey()])->flush();
                             return redirect()->route('subscription.index');
 //                            }
                         } else {
@@ -222,7 +229,7 @@ class SubscriptionController extends Controller
                             $sub->save();
                             $this->subscriptionRepo->updateCreditCardDetails($sub);
                             event(new SubscriptionCompleted($sub));
-                            Cache::tags(["user_subscription_". $user->getKey()])->flush();
+                            Cache::tags(["user_subscription_" . $user->getKey()])->flush();
                             return redirect()->route('subscription.index');
 //                            return redirect()->route('dashboard.index');
                         }
@@ -254,7 +261,7 @@ class SubscriptionController extends Controller
             abort(403);
         }
         $this->subscriptionRepo->syncUserSubscription(auth()->user());
-        Cache::tags(["user_subscription_". $user_id])->flush();
+        Cache::tags(["user_subscription_" . $user_id])->flush();
         return redirect()->route('subscription.index');
     }
 
@@ -331,7 +338,7 @@ class SubscriptionController extends Controller
                     }
                     $subscription->save();
                     event(new SubscriptionUpdated($subscription));
-                    Cache::tags(["user_subscription_". $subscription->user_id])->flush();
+                    Cache::tags(["user_subscription_" . $subscription->user_id])->flush();
                     if ($request->ajax()) {
                         $status = true;
                         if ($request->wantsJson()) {
@@ -359,7 +366,7 @@ class SubscriptionController extends Controller
         event(new SubscriptionCancelling($subscription));
         $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
         if (!is_null($apiSubscription) && is_null($apiSubscription->canceled_at)) {
-            if(!$request->has('keep_profile') || $request->get('keep_profile') != '1'){
+            if (!$request->has('keep_profile') || $request->get('keep_profile') != '1') {
                 $this->subscriptionRepo->deletePaymentProfile($apiSubscription->id);
             }
             $result = $this->subscriptionRepo->cancelSubscription($apiSubscription->id);
@@ -368,7 +375,7 @@ class SubscriptionController extends Controller
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->subscription->canceled_at));
                 $subscription->save();
                 event(new SubscriptionCancelled($subscription));
-                Cache::tags(["user_subscription_". $subscription->user_id])->flush();
+                Cache::tags(["user_subscription_" . $subscription->user_id])->flush();
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
             } else {
                 abort(500);

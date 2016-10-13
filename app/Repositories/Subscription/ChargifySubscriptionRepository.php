@@ -156,7 +156,20 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             /*TODO need to handle exception properly*/
             return false;
         }
+    }
 
+    public function getTransactions($subscription_id)
+    {
+        $apiURL = config('chargify.api_url') . "subscriptions/{$subscription_id}/transactions.json?";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $result = $this->sendCurl($apiURL, compact(['userpass']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
     }
 
     /**

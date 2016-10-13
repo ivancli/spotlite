@@ -361,6 +361,11 @@ body {
     padding-right: 0px !important;
 }
 
+.thead-inverse th {
+    color: #fff;
+    background-color: #373a3c;
+}
+
 @media (min-width: 992px) {
     .modal-xl {
         width: 900px;

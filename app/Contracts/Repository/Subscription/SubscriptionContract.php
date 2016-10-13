@@ -63,6 +63,15 @@ interface SubscriptionContract
     public function addCouponCode($subscription_id, $coupon_code);
 
     /**
+     * List transactions for a subscription
+     *
+     * @param $subscription_id
+     * @return mixed
+     */
+    public function getTransactions($subscription_id);
+
+
+    /**
      * Cancel an existing subscription in Payment Management Site
      * @param $subscription_id
      * @return mixed

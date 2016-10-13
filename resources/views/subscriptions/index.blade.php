@@ -18,14 +18,73 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <p>You are currently subscribed to <strong>{{$subscription->product->name}}</strong>
-                                package.</p>
-                            <p>Next payment will be processed on
-                                <strong>{{date('Y-m-d', strtotime($subscription->next_assessment_at))}}</strong>.
-                            </p>
+                            <p class="lead">You are currently subscribed to <strong>{{$subscription->product->name}}</strong>
+                                plan.</p>
+
                             @if(!is_null($subscription->trial_ended_at))
-                                <p>Your trial will be ended on
-                                    {{date('Y-m-d', strtotime($subscription->trial_ended_at))}}</p>
+                                <hr>
+                                <h4>Trial</h4>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th>Trial Start Date</th>
+                                        <th>Trial End Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_started_at))}}</td>
+                                        <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_ended_at))}}</td>
+                                    </tr>
+                                    </tbody>
+                                    </table>
+                            @endif
+                            <hr>
+                            <h4>Upcoming Invoice</h4>
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Charge</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->next_assessment_at))}}</td>
+                                    <td>${{number_format($subscription->current_billing_amount_in_cents/100, 2)}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <hr>
+                            @if(isset($transactions))
+                                <h4>Payment History</h4>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Payment</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    @foreach($transactions as $item)
+                                        @if($item->transaction->kind != "trial")
+                                            <tr>
+                                                <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($item->transaction->created_at))}}</td>
+                                                <td>
+                                                    @if(is_null($item->transaction->kind))
+                                                        Subscription
+                                                    @elseif($item->transaction->kind == "initial")
+                                                        Initial Setup
+                                                    @endif
+                                                </td>
+                                                <td>${{number_format($item->transaction->amount_in_cents/100, 2)}}</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                    </tbody>
+                                </table>
                             @endif
                         </div>
                     </div>
