@@ -20,7 +20,6 @@
                         <div class="col-sm-12">
 
                             @if(!is_null($subscription->trial_ended_at))
-                                <hr>
                                 <h4>Trial</h4>
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead class="thead-inverse">
