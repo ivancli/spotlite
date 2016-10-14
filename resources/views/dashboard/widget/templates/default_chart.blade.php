@@ -35,7 +35,14 @@
                         noData: "No side data available!!!"
                     },
                     chart: {
-                        renderTo: "chart-container-{{$widget->getKey()}}"
+                        renderTo: "chart-container-{{$widget->getKey()}}",
+                        events: {
+                            load: function() {
+                                this.showLoading();
+                                this.oldHasData = this.hasData;
+                                this.hasData = function () { return true; };
+                            }
+                        }
                     },
                     title: {
                         text: '{{parse_url($widget->site()->site_url)['host']}}',
@@ -68,7 +75,6 @@
         });
 
         function loadWidgetChart{{$widget->getKey()}}() {
-            widgetChart{{$widget->getKey()}}.showLoading("Loading data...");
             $.ajax({
                 "url": "{{$widget->urls['show']}}",
                 "method": "get",
@@ -86,6 +92,9 @@
 
                             widgetChart{{$widget->getKey()}}.redraw();
                             widgetChart{{$widget->getKey()}}.hideLoading();
+                            if(site.average.length == 0){
+                                widgetChart{{$widget->getKey()}} = false;
+                            }
                         });
                     }
                 },
