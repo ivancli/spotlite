@@ -6,11 +6,13 @@
     </div>
 @stop
 
-<div class="row">
-    @if(isset($widgets))
-        @foreach($widgets as $widget)
-            <div class="col-md-3">
-
+<div class="row widgets-container">
+    @if($dashboard->widgets->count() > 0)
+        @foreach($dashboard->widgets as $widget)
+            <div class="col-md-3 widget-container">
+                @if(!is_null($widget->widgetType) && !is_null($widget->widgetType->template))
+                    @include('dashboard.widget.templates.'.$widget->widgetType->template->dashboard_widget_template_name)
+                @endif
             </div>
         @endforeach
     @endif

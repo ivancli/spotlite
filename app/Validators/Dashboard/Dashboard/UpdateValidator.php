@@ -55,9 +55,9 @@ class UpdateValidator extends ValidatorAbstract
     protected function getMessages()
     {
         return array(
-            "dashboard_name.required" => "Name of the new dashboard is required",
-            "dashboard_name.max" => "Dashboard name accepts maximum 255 characters",
-            "dashboard_name.unique" => "A dashboard with the same name already exists"
+            "dashboard_name.required" => "Name of the new dashboard is required.",
+            "dashboard_name.max" => "Dashboard name accepts maximum 255 characters.",
+            "dashboard_name.unique" => "A dashboard with the same name already exists."
         );
     }
 }

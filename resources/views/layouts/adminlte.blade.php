@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - SpotLite</title>
-    <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
@@ -18,9 +17,13 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+
+    @include('scripts.variable_setter')
+
+    <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-<!-- Site wrapper -->
 <div class="wrapper">
 
     @include('layout_partials.default_header')
@@ -35,29 +38,17 @@
     @if(Auth::check() && Auth::user()->last_login)
 
     @endif
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         @yield('notification_banner')
-        <!-- Content Header (Page header) -->
         @include('layout_partials.default_content_header')
 
-        <!-- Main content -->
         <section class="content">
             @yield('content')
         </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-
-    <!-- Add the sidebar's background. This div must be placed
-         immediately after the control sidebar -->
     <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
-@include('scripts.variable_setter')
-
-<script type="text/javascript" src="{{asset('js/main.js')}}"></script>
 
 @yield('scripts')
 

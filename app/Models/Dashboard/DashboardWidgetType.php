@@ -23,4 +23,9 @@ class DashboardWidgetType extends Model
     {
         return $this->hasMany('App\Models\Dashboard\DashboardWidget', 'dashboard_widget_type_id', 'dashboard_widget_type_id');
     }
+
+    public function template()
+    {
+        return $this->belongsTo('App\Models\Dashboard\DashboardWidgetTemplate', 'dashboard_widget_template_id', 'dashboard_widget_template_id');
+    }
 }

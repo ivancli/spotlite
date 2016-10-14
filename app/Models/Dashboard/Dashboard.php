@@ -28,7 +28,7 @@ class Dashboard extends Model
 
     public function widgets()
     {
-        return $this->hasMany('App\Models\Dashboard\DashboardWidget', 'dashboard_id', 'dashboard_id');
+        return $this->hasMany('App\Models\Dashboard\DashboardWidget', 'dashboard_id', 'dashboard_id')->orderBy('dashboard_widget_order', 'asc')->orderBy('dashboard_widget_id', 'asc');
     }
 
     public function template()

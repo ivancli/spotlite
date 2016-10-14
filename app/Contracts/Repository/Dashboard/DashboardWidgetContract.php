@@ -15,6 +15,8 @@ interface DashboardWidgetContract
 
     public function getWidgets();
 
+    public function getWidgetData($id);
+
     public function storeWidget($options);
 
     public function updateWidget($options, $id);

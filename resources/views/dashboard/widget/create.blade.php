@@ -10,29 +10,61 @@
                 <ul class="text-danger errors-container">
                 </ul>
                 {!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "form-horizontal sl-form-horizontal", "id"=>"frm-dashboard-widget-store")) !!}
+                <input type="hidden" name="dashboard_id" value="{{$dashboard->getKey()}}">
                 @include('dashboard.widget.forms.widget')
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-create-dashboard-widget">Add Chart</button>
+                <button class="btn btn-primary" id="btn-create-dashboard-widget">Add
+                    Content
+                </button>
                 <button data-dismiss="modal" class="btn btn-default">Cancel</button>
             </div>
         </div>
     </div>
     <script type="text/javascript">
         function modalReady(options) {
-            $("#txt-date-range").daterangepicker({
-                "maxDate": moment()
-            }).on('apply.daterangepicker', function (ev, picker) {
-                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-                $("#txt-category-chart-start-date").val(picker.startDate.format('X'));
-                $("#txt-category-chart-end-date").val(picker.endDate.format('X'));
-            });
-
             $("#btn-create-dashboard-widget").on("click", function () {
-                setStartEndDate();
-            });
+                submitAddContent(function (response) {
+                    if ($.isFunction(options.callback)) {
+                        options.callback(response);
+                    }
+                });
+            })
         }
 
+        function submitAddContent(callback) {
+            showLoading();
+            $.ajax({
+                "url": $("#frm-dashboard-widget-store").attr("action"),
+                "method": $("#frm-dashboard-widget-store").attr("method"),
+                "data": $("#frm-dashboard-widget-store").serialize(),
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        if ($.isFunction(callback)) {
+                            callback(response);
+                        }
+                        $("#modal-dashboard-widget-store").modal("hide");
+                    } else {
+                        if (typeof response.errors != 'undefined') {
+                            var $errorContainer = $("#modal-dashboard-widget-store .errors-container");
+                            $errorContainer.empty();
+                            $.each(response.errors, function (index, error) {
+                                $errorContainer.append(
+                                        $("<li>").text(error)
+                                );
+                            });
+                        } else {
+                            alertP("Error", "Unable to create dashboard content, please try again later.");
+                        }
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                }
+            });
+        }
     </script>
 </div>

@@ -31,7 +31,7 @@ class DashboardWidgetRepository implements DashboardWidgetContract
 
     public function storeWidget($options)
     {
-        DashboardWidget::create($options);
+        return DashboardWidget::create($options);
     }
 
     public function updateWidget($options, $id)
@@ -46,5 +46,108 @@ class DashboardWidgetRepository implements DashboardWidgetContract
         $widget = $this->getWidget($id);
         $widget->delete();
         return true;
+    }
+
+    public function getWidgetData($id)
+    {
+        $widget = $this->getWidget($id);
+
+        //this is a chart
+        if ($widget->dashboard_widget_type_id == 1) {
+            $chartType = $widget->getPreference('chart_type');
+            $timespan = $widget->getPreference('timespan');
+            $resolution = $widget->getPreference('resolution');
+
+            switch ($timespan) {
+                case "this_week":
+                    $startDateTime = date("Y-m-d 00:00:00", strtotime("monday this week"));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("today"));
+                    break;
+                case "last_week":
+                    $startDateTime = date("Y-m-d 00:00:00", strtotime("monday last week"));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("sunday last week"));
+                    break;
+                case "last_7_days":
+                    $startDateTime = date("Y-m-d 00:00:00", strtotime("today - 6 days"));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("today"));
+                    break;
+                case "this_month":
+                    $startDateTime = date("Y-m-d 00:00:00", strtotime("first day of this month"));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("today"));
+                    break;
+                case "last_month":
+                    $startDateTime = date("Y-m-d 00:00:00", strtotime("first day of last month"));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("last day of last month"));
+                    break;
+                case "last_30_days":
+                    $startDateTime = date("Y-m-d 00:00:00", strtotime("today - 29 days"));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("today"));
+                    break;
+                case "this_quarter":
+                    $startDateTime = date('Y-m-d 00:00:00', mktime(0, 0, 0, (ceil(date("m") / 4) * 3), 1));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("today"));
+                    break;
+                case "last_quarter":
+                    $startDateTime = date('Y-m-d 00:00:00', mktime(0, 0, 0, ((ceil(date("m") / 4) - 1) * 3), 1));
+                    $endDateTime = date("Y-m-d 23:59:59", mktime(0, 0, 0, (ceil(date("m") / 4) * 3), 0));
+                    break;
+                case "last_90_days":
+                    $startDateTime = date("Y-m-d 00:00:00", strtotime("today - 89 days"));
+                    $endDateTime = date("Y-m-d 23:59:59", strtotime("today"));
+                    break;
+            }
+
+            if (isset($startDateTime) && isset($endDateTime)) {
+                switch ($chartType) {
+                    case "site":
+                        $site = $widget->site();
+                        $site_id = $site->getKey();
+
+                        $sitePrices = array();
+                        $historicalPrices = $site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
+                        foreach ($historicalPrices as $historicalPrice) {
+                            switch ($resolution) {
+                                case "weekly":
+                                    $date = date('Y-\WW', strtotime($historicalPrice->created_at));
+                                    break;
+                                case "monthly":
+                                    $date = date('Y-m', strtotime($historicalPrice->created_at));
+                                    break;
+                                case "daily":
+                                default:
+                                    $date = date('Y-m-d', strtotime($historicalPrice->created_at));
+                            }
+                            $sitePrices[$date] [] = $historicalPrice->price;
+                            unset($date);
+                        }
+
+                        foreach ($sitePrices as $date => $sitePrice) {
+                            $sum = array_sum($sitePrice);
+                            $count = count($sitePrice);
+                            $sitePrices[$date][] = $sum / $count;
+                        }
+
+                        $data[$site_id] = array();
+                        $data[$site_id]["average"] = array();
+                        $data[$site_id]["name"] = parse_url($site->site_url)['host'];
+                        foreach ($sitePrices as $dateStamp => $dateLevelPrices) {
+                            $data[$site_id]["average"][] = array(
+                                strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
+                            );
+                        }
+                        usort($data[$site_id]["average"], function ($a, $b) {
+                            return $a[0] > $b[0];
+                        });
+                        return $data;
+                        break;
+                    case "product":
+                        $product = $widget->product();
+                        break;
+                    case "category":
+                        $category = $widget->category();
+                        break;
+                }
+            }
+        }
     }
 }

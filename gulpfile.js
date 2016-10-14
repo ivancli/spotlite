@@ -38,13 +38,11 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.css',
         'node_modules/dragula/dist/dragula.css',
         'resources/assets/css/file-tree.css',
+        'vendor/almasaeed2010/adminlte/plugins/datepicker/datepicker3.css',
+        'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css',
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
-    mix.styles([
-        'vendor/almasaeed2010/adminlte/plugins/datepicker/datepicker3.css',
-        'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css'
-    ], "public/css/product.css", "./");
     mix.styles([
         'resources/assets/css/email.css'
     ], "public/css/email.css", "./");
@@ -68,6 +66,7 @@ elixir(function (mix) {
         "node_modules/highcharts/highcharts.js",
         "node_modules/highcharts/highcharts-more.js",
         "node_modules/highcharts/modules/exporting.js",
+        "node_modules/highcharts/modules/no-data-to-display.js",
         'vendor/almasaeed2010/adminlte/plugins/datepicker/bootstrap-datepicker.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/moment.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js',

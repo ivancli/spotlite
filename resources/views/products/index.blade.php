@@ -1,8 +1,5 @@
 @extends('layouts.adminlte')
 @section('title', 'Products')
-@section('links')
-    <link rel="stylesheet" href="{{asset('css/product.css')}}">
-@stop
 
 @section('notification_banner')
     @if(auth()->user()->preference("HIDE_PRODUCT_BANNER_MESSAGE") != "1")

@@ -1,3 +1,9 @@
+Highcharts.setOptions({
+    global: {
+        useUTC: false
+    }
+});
+
 $(function () {
     $.ajaxSetup({
         headers: {
@@ -28,7 +34,6 @@ $(function () {
                 var $modal = popupFrame(html);
                 $modal.find(".modal-dialog").addClass("modal-lg");
                 $modal.modal();
-                // $modal.on("hidden.bs.modal", showCreateGroupFirstLogin);
 
                 $modal.on("hidden.bs.modal", function () {
                     if (cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
