@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Current Subscription</h3>
+                    <h3 class="box-title">You are currently subscribed to {{$subscription->product->name}} plan</h3>
 
                     <div class="box-tools pull-right">
                         Reference ID: {{$subscription->customer->id}}
@@ -18,11 +18,8 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <p class="lead">You are currently subscribed to <strong>{{$subscription->product->name}}</strong>
-                                plan.</p>
 
                             @if(!is_null($subscription->trial_ended_at))
-                                <hr>
                                 <h4>Trial</h4>
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead class="thead-inverse">
