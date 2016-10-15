@@ -58,16 +58,16 @@ class Subscription extends Model
     public function save(array $options = [])
     {
         $result = parent::save($options);
-        Cache::tags(Config::get('user_subscriptions'))->flush();
-        Cache::tags(config()->get('user_api_subscription'))->flush();
+        Cache::forget("user.{$result->user_id}.subscription");
+        Cache::forget("user.{$result->user_id}.subscription.api");
         return $result;
     }
 
     public function delete(array $options = [])
     {
         $result = parent::delete($options);
-        Cache::tags(Config::get('user_subscriptions'))->flush();
-        Cache::tags(config()->get('user_api_subscription'))->flush();
+        Cache::forget("user.{$result->user_id}.subscription");
+        Cache::forget("user.{$result->user_id}.subscription.api");
         return $result;
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "db165e19b1432ad5c13f9f5502557a27",
+    "hash": "69bd4c078f2f2fd95656e6c9e9011edc",
     "content-hash": "bf16ec13f3c4420f3d8fd44edb020a9a",
     "packages": [
         {
@@ -572,11 +572,11 @@
         },
         {
             "name": "invigor/um",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "ssh://git@repo.globalit.net.au:234/srv/repo/git/invigor-user-management",
-                "reference": "7ed28d9fb10d232f9e23957ac5bb0c92f2d062f2"
+                "reference": "1ed2bc4e395922758a5bad0d32b0cdc771a197b9"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -615,7 +615,7 @@
                 }
             ],
             "description": "User management package",
-            "time": "2016-09-08 01:44:02"
+            "time": "2016-10-14 22:34:35"
         },
         {
             "name": "jakub-onderka/php-console-color",

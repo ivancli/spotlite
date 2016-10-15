@@ -33174,7 +33174,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
  *   MIT License http://www.opensource.org/licenses/mit-license
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
- * Date: 2016-08-27T11:09:09.141Z
+ * Date: 2016-10-11T14:20:03.931Z
  */
 
 (function (factory) {
@@ -33701,7 +33701,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 if(opt.$selected) {
                                     opt.$selected.find('input, textarea, select').blur();
                                 }
-                                opt.$menu.trigger('prevcommand');
+                                if (opt.$menu != null) opt.$menu.trigger('prevcommand');
                                 return;
                             } else if (e.keyCode === 38 && opt.$selected.find('input, textarea, select').prop('type') === 'checkbox') {
                                 // checkboxes don't capture this key
@@ -33709,7 +33709,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 return;
                             }
                         } else if (e.keyCode !== 9 || e.shiftKey) {
-                            opt.$menu.trigger('prevcommand');
+                            if (opt.$menu != null) opt.$menu.trigger('prevcommand');
                             return;
                         }
                         break;
@@ -33723,7 +33723,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 if(opt.$selected) {
                                     opt.$selected.find('input, textarea, select').blur();
                                 }
-                                opt.$menu.trigger('nextcommand');
+                                if (opt.$menu != null) opt.$menu.trigger('nextcommand');
                                 return;
                             } else if (e.keyCode === 40 && opt.$selected.find('input, textarea, select').prop('type') === 'checkbox') {
                                 // checkboxes don't capture this key
@@ -33731,7 +33731,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 return;
                             }
                         } else {
-                            opt.$menu.trigger('nextcommand');
+                            if (opt.$menu != null) opt.$menu.trigger('nextcommand');
                             return;
                         }
                         break;
@@ -33801,7 +33801,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
 
                     case 27: // esc
                         handle.keyStop(e, opt);
-                        opt.$menu.trigger('contextmenu:hide');
+                        if (opt.$menu != null) opt.$menu.trigger('contextmenu:hide');
                         return;
 
                     default: // 0-9, a-z
@@ -34340,7 +34340,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'text':
-                                $input = $('<input type="text" value="1" name="" value="">')
+                                $input = $('<input type="text" value="1" name="" />')
                                     .attr('name', 'context-menu-input-' + key)
                                     .val(item.value || '')
                                     .appendTo($label);
@@ -34358,7 +34358,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'checkbox':
-                                $input = $('<input type="checkbox" value="1" name="" value="">')
+                                $input = $('<input type="checkbox" value="1" name="" />')
                                     .attr('name', 'context-menu-input-' + key)
                                     .val(item.value || '')
                                     .prop('checked', !!item.selected)
@@ -34366,7 +34366,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'radio':
-                                $input = $('<input type="radio" value="1" name="" value="">')
+                                $input = $('<input type="radio" value="1" name="" />')
                                     .attr('name', 'context-menu-input-' + item.radio)
                                     .val(item.value || '')
                                     .prop('checked', !!item.selected)
@@ -34374,7 +34374,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'select':
-                                $input = $('<select name="">')
+                                $input = $('<select name=""></select>')
                                     .attr('name', 'context-menu-input-' + key)
                                     .appendTo($label);
                                 if (item.options) {

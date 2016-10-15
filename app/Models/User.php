@@ -115,7 +115,7 @@ class User extends Authenticatable
     public function cachedSubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-        return Cache::tags(["user_subscription_" . $this->$userPrimaryKey])->remember("subscription", config()->get('cache.ttl'), function () {
+        return Cache::remember("user.{$this->$userPrimaryKey}.subscription", config()->get('cache.ttl'), function () {
             return $this->subscription;
         });
     }
@@ -123,10 +123,7 @@ class User extends Authenticatable
     public function cachedAPISubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-        if (Cache::tags(["user_subscription_" . $this->$userPrimaryKey])->has('api_subscription')) {
-            return Cache::tags(["user_subscription_" . $this->$userPrimaryKey])->get('api_subscription');
-        } else {
-            return Cache::tags(["user_subscription_" . $this->$userPrimaryKey])->remember('api_subscription', config()->get('cache.ttl'), function () {
+            return Cache::remember("user.{$this->$userPrimaryKey}.subscription.api", config()->get('cache.ttl'), function () {
                 $subscriptionRepo = app()->make('App\Contracts\Repository\Subscription\SubscriptionContract');
                 if ($this->hasValidSubscription()) {
                     $subscription = $subscriptionRepo->getSubscription($this->cachedSubscription()->api_subscription_id);
@@ -135,7 +132,6 @@ class User extends Authenticatable
                 }
                 return $subscription;
             });
-        }
     }
 
     public function needSubscription()
@@ -173,7 +169,7 @@ class User extends Authenticatable
     {
         $result = parent::save($options);
         $userPrimaryKey = $this->primaryKey;
-        Cache::tags(["user_subscription_" . $this->$userPrimaryKey])->flush();
+        Cache::forget("user.{$this->$userPrimaryKey}.subscription");
         return $result;
     }
 

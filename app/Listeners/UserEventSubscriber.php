@@ -2,6 +2,7 @@
 namespace App\Listeners;
 
 
+use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Jobs\LogUserActivity;
 
 /**
@@ -12,6 +13,12 @@ use App\Jobs\LogUserActivity;
  */
 class UserEventSubscriber
 {
+    protected $subscriptionRepo;
+
+    public function __construct(SubscriptionContract $subscriptionContract)
+    {
+        $this->subscriptionRepo = $subscriptionContract;
+    }
 
     /**
      * Handle user login events.
@@ -29,6 +36,10 @@ class UserEventSubscriber
             $user->is_first_login = 'n';
         }
         $user->save();
+        /*TODO disable the following line*/
+        if (!is_null($user->validSubscription())) {
+            $this->subscriptionRepo->updateCreditCardDetails($user->validSubscription());
+        }
     }
 
     public function onUserLogout($event)

@@ -76,7 +76,7 @@ return [
     |
     */
 
-    'prefix' => 'laravel',
+    'prefix' => 'spotlite',
 
     'ttl' => 60 * 24,
 ];

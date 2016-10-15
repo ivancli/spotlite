@@ -65,22 +65,15 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $sub = $user->validSubscription();
         if (!is_null($sub)) {
-            $this->subscriptionRepo->updateCreditCardDetails($sub);
             $current_sub_id = $sub->api_subscription_id;
-            $subscription = $this->subscriptionRepo->getSubscription($current_sub_id);
-
+            $subscription = $user->cachedAPISubscription();
             $portalEnabled = !is_null($subscription->customer->portal_customer_created_at);
             if ($portalEnabled) {
                 $portalLink = $this->subscriptionRepo->getBillingPortalLink($sub);
             }
-
-            if (Cache::tags(["user_subscription_transactions_" . $user->getKey()])->has('transactions')) {
-                $transactions = Cache::tags(["user_subscription_transactions_" . $user->getKey()])->get('transactions');
-            } else {
-                $transactions = $this->subscriptionRepo->getTransactions($current_sub_id);
-                Cache::tags(["user_subscription_transactions_" . $user->getKey()])->put("transactions", $transactions, config()->get('cache.ttl'));
-            }
-
+            $transactions = Cache::remember("user.{$user->getKey()}.subscription.transaction", config()->get('cache.ttl'), function () use ($current_sub_id) {
+                return $this->subscriptionRepo->getTransactions($current_sub_id);
+            });
             $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($current_sub_id);
             event(new SubscriptionManagementViewed());
             return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions']));
