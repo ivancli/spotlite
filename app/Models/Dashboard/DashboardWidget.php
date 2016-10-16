@@ -104,6 +104,7 @@ class DashboardWidget extends Model
     {
         return array(
             "show" => route("dashboard.widget.show", $this->getKey()),
+            "edit" => route("dashboard.widget.edit", $this->getKey()),
             "delete" => route("dashboard.widget.destroy", $this->getKey()),
         );
     }

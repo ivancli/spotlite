@@ -105,12 +105,10 @@
                     renderTo: 'chart-container'
                 },
                 title: {
-                    text: '{{parse_url($site->site_url)['host']}}',
-                    x: -20 //center
+                    text: '{{parse_url($site->site_url)['host']}}'
                 },
                 subtitle: {
-                    text: '{{$site->product->product_name}}',
-                    x: -20
+                    text: '{!! addslashes(htmlentities($site->product->product_name)) !!}'
                 },
                 xAxis: {
                     type: "datetime"

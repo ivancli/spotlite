@@ -106,12 +106,10 @@
                     renderTo: 'chart-container'
                 },
                 title: {
-                    text: '{{$product->product_name}}',
-                    x: -20 //center
+                    text: '{!! addslashes(htmlentities($product->product_name)) !!}'
                 },
                 subtitle: {
-                    text: '{{$product->category->category_name}}',
-                    x: -20
+                    text: '{!! addslashes(htmlentities($product->category->category_name)) !!}'
                 },
                 xAxis: {
                     type: "datetime"

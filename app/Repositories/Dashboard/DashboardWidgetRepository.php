@@ -10,10 +10,20 @@ namespace App\Repositories\Dashboard;
 
 
 use App\Contracts\Repository\Dashboard\DashboardWidgetContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Models\Dashboard\DashboardWidget;
 
 class DashboardWidgetRepository implements DashboardWidgetContract
 {
+    protected $siteRepo;
+    protected $productRepo;
+
+    public function __construct(SiteContract $siteContract, ProductContract $productContract)
+    {
+        $this->siteRepo = $siteContract;
+        $this->productRepo = $productContract;
+    }
 
     public function getWidget($id, $fail = true)
     {
@@ -142,9 +152,112 @@ class DashboardWidgetRepository implements DashboardWidgetContract
                         break;
                     case "product":
                         $product = $widget->product();
+
+                        $productPrices = array();
+                        $sites = $product->sites;
+                        foreach ($sites as $site) {
+                            $sitePrices = array();
+                            $historicalPrices = $site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
+                            foreach ($historicalPrices as $historicalPrice) {
+                                switch ($resolution) {
+                                    case "weekly":
+                                        $date = date('Y-\WW', strtotime($historicalPrice->created_at));
+                                        break;
+                                    case "monthly":
+                                        $date = date('Y-m', strtotime($historicalPrice->created_at));
+                                        break;
+                                    case "daily":
+                                    default:
+                                        $date = date('Y-m-d', strtotime($historicalPrice->created_at));
+                                }
+                                $sitePrices[$date] [] = $historicalPrice->price;
+                                unset($date);
+                            }
+
+                            foreach ($sitePrices as $date => $sitePrice) {
+                                $sum = array_sum($sitePrice);
+                                $count = count($sitePrice);
+                                $sitePrices[$date][] = $sum / $count;
+                            }
+                            $productPrices[$site->getKey()] = $sitePrices;
+                        }
+
+                        $data = array();
+                        foreach ($productPrices as $siteId => $siteLevelPrices) {
+                            $data[$siteId] = array();
+                            $data[$siteId]["average"] = array();
+                            $data[$siteId]["name"] = parse_url($this->siteRepo->getSite($siteId)->site_url)['host'];
+                            foreach ($siteLevelPrices as $dateStamp => $dateLevelPrices) {
+                                $data[$siteId]["average"][] = array(
+                                    strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
+                                );
+                            }
+
+                            usort($data[$siteId]["average"], function ($a, $b) {
+                                return $a[0] > $b[0];
+                            });
+                        }
+                        return $data;
+
                         break;
                     case "category":
                         $category = $widget->category();
+
+                        $categoryPrices = array();
+                        foreach ($category->products as $product) {
+                            $productPrices = array();
+                            $sites = $product->sites;
+                            foreach ($sites as $site) {
+                                $sitePrices = array();
+                                $historicalPrices = $site->historicalPrices()->orderBy("created_at", "asc")->whereBetween("created_at", array($startDateTime, $endDateTime))->get();
+                                foreach ($historicalPrices as $historicalPrice) {
+                                    switch ($resolution) {
+                                        case "weekly":
+                                            $date = date('Y-\WW', strtotime($historicalPrice->created_at));
+                                            break;
+                                        case "monthly":
+                                            $date = date('Y-m', strtotime($historicalPrice->created_at));
+                                            break;
+                                        case "daily":
+                                        default:
+                                            $date = date('Y-m-d', strtotime($historicalPrice->created_at));
+                                    }
+                                    $sitePrices[$date] [] = $historicalPrice->price;
+                                    unset($date);
+                                }
+
+                                foreach ($sitePrices as $date => $sitePrice) {
+                                    $sum = array_sum($sitePrice);
+                                    $count = count($sitePrice);
+                                    $productPrices[$date][] = $sum / $count;
+                                }
+                            }
+                            $categoryPrices[$product->getKey()] = $productPrices;
+                        }
+
+                        $data = array();
+                        foreach ($categoryPrices as $productId => $productLevelPrices) {
+                            $data[$productId] = array();
+                            $data[$productId]["range"] = array();
+                            $data[$productId]["average"] = array();
+                            $data[$productId]["name"] = $this->productRepo->getProduct($productId)->product_name;
+                            foreach ($productLevelPrices as $dateStamp => $dateLevelPrices) {
+                                $data[$productId]["range"][] = array(
+                                    strtotime($dateStamp) * 1000, min($dateLevelPrices), max($dateLevelPrices)
+                                );
+                                $data[$productId]["average"][] = array(
+                                    strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
+                                );
+                            }
+
+                            usort($data[$productId]["range"], function ($a, $b) {
+                                return $a[0] > $b[0];
+                            });
+                            usort($data[$productId]["average"], function ($a, $b) {
+                                return $a[0] > $b[0];
+                            });
+                        }
+                        return $data;
                         break;
                 }
             }

@@ -86,7 +86,7 @@ class DashboardWidgetController extends Controller
                     $dashboardWidget->setPreference("product_id", $this->request->get('product_id'));
                     break;
                 case "category":
-                    $dashboardWidget->setPreference("product_id", $this->request->get('category_id'));
+                    $dashboardWidget->setPreference("category_id", $this->request->get('category_id'));
                 default:
             }
             $dashboardWidget->setPreference("timespan", $this->request->get('timespan'));
@@ -108,16 +108,20 @@ class DashboardWidgetController extends Controller
     {
         $widget = $this->dashboardWidgetRepo->getWidget($id);
 
+        $widgetTypes = $this->dashboardWidgetTypeRepo->getDashboardWidgetTypes();
+        $widgetTypes = $widgetTypes->pluck('dashboard_widget_type_name', 'dashboard_widget_type_id')->all();
+
+        $categories = auth()->user()->categories()->with('products.sites')->get();
+
         if ($this->request->ajax()) {
             if ($this->request->wantsJson()) {
 
             } else {
-
+                return view('dashboard.widget.edit')->with(compact(['widgetTypes', 'categories', 'widget']));
             }
         } else {
-
+            return view('dashboard.widget.edit')->with(compact(['widgetTypes', 'categories', 'widget']));
         }
-        return view('dashboard.widget.edit')->with(compact(['widget']));
     }
 
     public function show($id)

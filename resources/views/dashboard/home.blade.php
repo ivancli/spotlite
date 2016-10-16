@@ -69,6 +69,39 @@
             });
         }
 
+        function editWidget(el) {
+            showLoading();
+            $.ajax({
+                "url": $(el).attr("data-url"),
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+//                                    window.location.reload();
+                                    if (response.status == true && typeof response.dashboardWidget != 'undefined') {
+//                                        getWidget(response.dashboardWidget.urls['show']);
+                                        /*TODO update existing widget*/
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-dashboard-widget-update").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    alertP("Error", "Unable to edit widget, please try again later.");
+                }
+            })
+        }
+
         function deleteWidget(el) {
             confirmP("Delete content", "Do you want to delete this content?", {
                 "affirmative": {

@@ -113,7 +113,7 @@
                     renderTo: 'chart-container'
                 },
                 title: {
-                    text: '{{$category->category_name}}'
+                    text: '{!! addslashes(htmlentities($category->category_name)) !!}'
                 },
 
                 xAxis: {

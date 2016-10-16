@@ -16,7 +16,9 @@
     <div class="form-group required">
         {!! Form::label('chart_type', 'Chart type', array('class' => 'control-label col-md-4')) !!}
         <div class="col-md-8">
-            {!! Form::select('chart_type', array('category' => 'Category', 'product' => 'Product', 'site' => 'Site'), null, array('class' => 'form-control', 'id'=>'sel-chart-type', 'onchange' => 'updateFormComponentVisibility(); return false;')) !!}
+            {!! Form::select('chart_type', array('category' => 'Category', 'product' => 'Product', 'site' => 'Site'),
+             (isset($widget) ? $widget->getPreference('chart_type') : null),
+              array('class' => 'form-control', 'id'=>'sel-chart-type', 'onchange' => 'updateFormComponentVisibility(); return false;')) !!}
         </div>
     </div>
     <div class="on-category-show">
@@ -88,6 +90,13 @@
         var categories = {!! json_encode($categories) !!};
     </script>
 @endif
+
+@if(isset($widget))
+    <script type="text/javascript">
+        var widgetPreferences = {!! $widget->preferences->pluck('value', 'element')->toJson() !!};
+    </script>
+@endif
+
 <script type="text/javascript">
     var $selCategory, $selProduct, $selSite;
 
@@ -96,6 +105,7 @@
         $selProduct = $("#sel-product");
         $selSite = $("#sel-site");
         populateSelCategory();
+
 
         setTimeout(function () {
             updateFormComponentVisibility();
