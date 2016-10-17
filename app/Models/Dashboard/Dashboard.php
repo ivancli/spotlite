@@ -36,6 +36,53 @@ class Dashboard extends Model
         return $this->belongsTo('App\Models\Dashboard\DashboardTemplate', 'dashboard_template_id', 'dashboard_template_id');
     }
 
+    public function clearPreferences()
+    {
+        $preferences = $this->preferences;
+        foreach ($preferences as $pref) {
+            $pref->delete();
+        }
+    }
+
+    public function preferences()
+    {
+        return $this->hasMany('App\Models\Dashboard\DashboardPreference', 'dashboard_id', 'dashboard_id');
+    }
+
+    public function preference($dashboard_preference_element){
+        return $this->hasMany('App\Models\Dashboard\DashboardPreference', 'dashboard_id', 'dashboard_id')->where('element', $dashboard_preference_element)->first();
+    }
+
+    public function getPreference($dashboard_preference_element)
+    {
+        $preference = $this->preference($dashboard_preference_element);
+        return is_null($preference) ? null : $preference->value;
+    }
+
+    public function setPreference($dashboard_preference_element, $dashboard_preference_value)
+    {
+        $pref = $this->preference($dashboard_preference_element);
+        if (!is_null($pref)) {
+            $pref->value = $dashboard_preference_value;
+            $pref->save();
+            return $pref;
+        } else {
+            $pref = DashboardPreference::create(array(
+                "dashboard_id" => $this->getKey(),
+                "element" => $dashboard_preference_element,
+                "value" => $dashboard_preference_value
+            ));
+        }
+        return $pref;
+    }
+
+    public function deletePreference($dashboard_preference_element)
+    {
+        $preference = $this->preferences()->where('element', $dashboard_preference_element)->first();
+        $preference->delete();
+        return true;
+    }
+
     public function hide()
     {
         $this->is_hidden = 'y';

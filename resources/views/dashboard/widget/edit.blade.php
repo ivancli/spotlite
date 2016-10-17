@@ -4,12 +4,12 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Edit Content</h4>
+                <h4 class="modal-title">Update Content</h4>
             </div>
             <div class="modal-body">
                 <ul class="text-danger errors-container">
                 </ul>
-                {!! Form::model($widget, array('route' => array('dashboard.widget.update', $widget->getKey()), 'method'=>'post', "onsubmit"=>"return false", "class" => "form-horizontal sl-form-horizontal", "id"=>"frm-dashboard-widget-update")) !!}
+                {!! Form::model($widget, array('route' => array('dashboard.widget.update', $widget->getKey()), 'method'=>'put', "onsubmit"=>"return false", "class" => "form-horizontal sl-form-horizontal", "id"=>"frm-dashboard-widget-update")) !!}
                 @include('dashboard.widget.forms.widget')
                 {!! Form::close() !!}
             </div>
@@ -24,7 +24,7 @@
     <script type="text/javascript">
         function modalReady(options) {
             $("#btn-create-dashboard-widget").on("click", function () {
-                submitAddContent(function (response) {
+                submitEditContent(function (response) {
                     if ($.isFunction(options.callback)) {
                         options.callback(response);
                     }
@@ -32,11 +32,11 @@
             })
         }
 
-        function submitAddContent(callback) {
+        function submitEditContent(callback) {
             showLoading();
             $.ajax({
                 "url": $("#frm-dashboard-widget-update").attr("action"),
-                "method": $("#frm-dashboard-widget-update").attr("method"),
+                "method": "put",
                 "data": $("#frm-dashboard-widget-update").serialize(),
                 "dataType": "json",
                 "success": function (response) {
@@ -56,7 +56,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to create dashboard content, please try again later.");
+                            alertP("Error", "Unable to update dashboard content, please try again later.");
                         }
                     }
                 },

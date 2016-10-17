@@ -95,6 +95,10 @@
     <script type="text/javascript">
         var widgetPreferences = {!! $widget->preferences->pluck('value', 'element')->toJson() !!};
     </script>
+@else
+    <script type="text/javascript">
+        var widgetPreferences = null;
+    </script>
 @endif
 
 <script type="text/javascript">
@@ -106,11 +110,32 @@
         $selSite = $("#sel-site");
         populateSelCategory();
 
+        populateSelectedFields();
 
         setTimeout(function () {
             updateFormComponentVisibility();
         }, 300);
     });
+
+    function populateSelectedFields() {
+        if (typeof widgetPreferences != 'undefined' && widgetPreferences != null) {
+            if (typeof widgetPreferences['category_id'] != 'undefined') {
+                populateSelCategory();
+                $("input[name=category_id], select[name=category_id]").val(widgetPreferences['category_id']);
+            }
+            if (typeof widgetPreferences['product_id'] != 'undefined') {
+                populateSelProduct();
+                $("input[name=product_id], select[name=product_id]").val(widgetPreferences['product_id']);
+            }
+            if (typeof widgetPreferences['site_id'] != 'undefined') {
+                populateSelSite();
+                $("input[name=site_id], select[name=site_id]").val(widgetPreferences['site_id']);
+            }
+            $.each(widgetPreferences, function (element, value) {
+                $("input[name=" + element + "], select[name=" + element + "]").val(value);
+            });
+        }
+    }
 
     function populateSelCategory() {
         if (typeof categories != 'undefined') {

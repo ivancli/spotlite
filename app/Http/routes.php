@@ -16,8 +16,12 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/', 'Dashboard\DashboardController@index')->name("dashboard.index");
         Route::get('dashboard/manage', 'Dashboard\DashboardController@manage')->name('dashboard.manage');
-        Route::resource('dashboard/widget', 'Dashboard\DashboardWidgetController');
+        Route::get('dashboard/{dashboard_id}/filter', 'Dashboard\DashboardController@editFilter')->name('dashboard.filter.edit');
+        Route::put('dashboard/{dashboard_id}/filter', 'Dashboard\DashboardController@updateFilter')->name('dashboard.filter.update');
+        Route::delete('dashboard/{dashboard_id}/filter', 'Dashboard\DashboardController@deleteFilter')->name('dashboard.filter.destroy');
         Route::resource('dashboard', 'Dashboard\DashboardController');
+        Route::resource('dashboard/widget', 'Dashboard\DashboardWidgetController');
+
 
 
         Route::get('msg/subscription/welcome/{raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");

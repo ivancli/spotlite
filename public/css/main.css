@@ -14824,6 +14824,10 @@ body {
     background-color: #373a3c;
 }
 
+h3.box-title {
+    padding-right: 100px;
+}
+
 @media (min-width: 992px) {
     .modal-xl {
         width: 900px;

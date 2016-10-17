@@ -39,15 +39,21 @@ class DashboardWidget extends Model
         return $this->hasMany('App\Models\Dashboard\DashboardWidgetPreference', 'dashboard_widget_id', 'dashboard_widget_id');
     }
 
+    public function preference($dashboard_widget_preference_element)
+    {
+        return $this->hasMany('App\Models\Dashboard\DashboardWidgetPreference', 'dashboard_widget_id', 'dashboard_widget_id')
+            ->where('element', $dashboard_widget_preference_element)->first();
+    }
+
     public function getPreference($dashboard_widget_preference_element)
     {
-        $preference = $this->preferences()->where('element', $dashboard_widget_preference_element)->first();
+        $preference = $this->preference($dashboard_widget_preference_element);
         return is_null($preference) ? null : $preference->value;
     }
 
     public function setPreference($dashboard_widget_preference_element, $dashboard_widget_preference_value)
     {
-        $pref = $this->getPreference($this->getKey(), $dashboard_widget_preference_element);
+        $pref = $this->preference($dashboard_widget_preference_element);
         if (!is_null($pref)) {
             $pref->value = $dashboard_widget_preference_value;
             $pref->save();

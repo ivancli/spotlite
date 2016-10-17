@@ -9,7 +9,32 @@
 @section('scripts')
     <script type="text/javascript">
         function applyFilters() {
+            showLoading();
+            $.ajax({
+                "url": "{{route("dashboard.filter.edit", $dashboard->getKey())}}",
+                "method": "get",
+                "success": function (html) {
 
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    window.location.reload();
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-dashboard-filter-update").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                }
+            })
         }
 
         function addWidget() {
@@ -30,7 +55,12 @@
                                 "callback": function (response) {
 //                                    window.location.reload();
                                     if (response.status == true && typeof response.dashboardWidget != 'undefined') {
-                                        getWidget(response.dashboardWidget.urls['show']);
+                                        getWidget(response.dashboardWidget.urls['show'], function ($newWidget) {
+                                            $(".widgets-container").append(
+                                                    $newWidget
+                                            );
+                                            $newWidget.slideDown();
+                                        });
                                     }
 
                                     console.info('response', response);
@@ -49,7 +79,7 @@
             })
         }
 
-        function getWidget(url) {
+        function getWidget(url, callback) {
             showLoading();
             $.ajax({
                 "url": url,
@@ -57,10 +87,9 @@
                 "success": function (html) {
                     hideLoading();
                     var $newWidget = $("<div>").addClass("col-md-3 widget-container").css("display", "none").html(html);
-                    $(".widgets-container").append(
-                            $newWidget
-                    );
-                    $newWidget.slideDown();
+                    if ($.isFunction(callback)) {
+                        callback($newWidget);
+                    }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
@@ -84,7 +113,12 @@
                                 "callback": function (response) {
 //                                    window.location.reload();
                                     if (response.status == true && typeof response.dashboardWidget != 'undefined') {
-//                                        getWidget(response.dashboardWidget.urls['show']);
+                                        getWidget(response.dashboardWidget.urls['show'], function ($savedWidget) {
+                                            $(el).closest(".widget-container").slideUp(function () {
+                                                $(this).replaceWith($savedWidget)
+                                                $savedWidget.slideDown();
+                                            });
+                                        });
                                         /*TODO update existing widget*/
                                     }
                                 }

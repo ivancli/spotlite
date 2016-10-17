@@ -1,7 +1,14 @@
 @section('header_title')
     {{$dashboard->dashboard_name}}
     <div class="pull-right">
-        <button class="btn btn-primary btn-sm">Apply Filters</button>
+        <button class="btn {{!is_null($dashboard->getPreference('timespan')) ? 'btn-success' : 'btn-primary'}} btn-sm"
+                onclick="applyFilters();">
+            @if(!is_null($dashboard->getPreference('timespan')))
+                Update Filters
+            @else
+                Apply Filters
+            @endif
+        </button>
         <button class="btn btn-primary btn-sm" onclick="addWidget();">Add Content</button>
     </div>
 @stop

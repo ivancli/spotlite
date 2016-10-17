@@ -25,14 +25,16 @@ class DashboardController extends Controller
     protected $dashboardTemplateRepo;
 
     protected $queryFilter;
+    protected $request;
 
-    public function __construct(QueryFilter $queryFilter,
+    public function __construct(QueryFilter $queryFilter, Request $request,
                                 DashboardContract $dashboardContract, DashboardTemplateContract $dashboardTemplateContract)
     {
         $this->dashboardRepo = $dashboardContract;
         $this->dashboardTemplateRepo = $dashboardTemplateContract;
 
         $this->queryFilter = $queryFilter;
+        $this->request = $request;
     }
 
     /**
@@ -51,12 +53,12 @@ class DashboardController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function manage(Request $request)
+    public function manage()
     {
-        if ($request->ajax()) {
+        if ($this->request->ajax()) {
             /*TODO load dashboards*/
             $dashboard = $this->dashboardRepo->getDataTableDashboards($this->queryFilter);
-            if ($request->wantsJson()) {
+            if ($this->request->wantsJson()) {
                 return response()->json($dashboard);
             } else {
                 return $dashboard;
@@ -64,11 +66,66 @@ class DashboardController extends Controller
         } else {
             return view('dashboard.manage');
         }
-
-
     }
 
-    public function show(Request $request, $id)
+    public function editFilter($dashboard_id)
+    {
+        $dashboard = $this->dashboardRepo->getDashboard($dashboard_id);
+        return view('dashboard.filter')->with(compact(['dashboard']));
+    }
+
+    public function updateFilter($dashboard_id)
+    {
+        $dashboard = $this->dashboardRepo->getDashboard($dashboard_id);
+        if ($dashboard->user_id != auth()->user()->getKey()) {
+            abort(404);
+            return false;
+        }
+        if ($this->request->has('timespan')) {
+            $dashboard->setPreference('timespan', $this->request->get('timespan'));
+        }
+
+        if ($this->request->has('resolution')) {
+            $dashboard->setPreference('resolution', $this->request->get('resolution'));
+        }
+
+        $status = true;
+
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['dashboard', 'status']));
+            } else {
+                return compact(['dashboard', 'status']);
+            }
+        } else {
+            return redirect()->route('dashboard.show', $dashboard->getKey())->with(compact(['dashboard']));
+        }
+    }
+
+    public function deleteFilter($dashboard_id)
+    {
+        $dashboard = $this->dashboardRepo->getDashboard($dashboard_id);
+        if ($dashboard->user_id != auth()->user()->getKey()) {
+            abort(404);
+            return false;
+        }
+
+        $dashboard->deletePreference('timespan');
+        $dashboard->deletePreference('resolution');
+        $status = true;
+
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            return redirect()->route('dashboard.show', $dashboard)->with(compact(['dashboard']));
+        }
+    }
+
+    public function show($id)
     {
         $dashboard = $this->dashboardRepo->getDashboard($id);
         if ($dashboard->user->getKey() != auth()->user()->getKey()) {
@@ -79,7 +136,7 @@ class DashboardController extends Controller
         return view('dashboard.home')->with(compact(['dashboard']));
     }
 
-    public function create(Request $request)
+    public function create()
     {
         $templates = $this->dashboardTemplateRepo->getTemplates();
         $templates = $templates->pluck("dashboard_template_name", (new DashboardTemplate())->getKeyName())->all();
@@ -96,8 +153,8 @@ class DashboardController extends Controller
         $orders = collect($orders);
         $orders->prepend('At the beginning', 1);
 
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
 
             } else {
                 return view('dashboard.create')->with(compact(['templates', 'orders']));
@@ -107,15 +164,15 @@ class DashboardController extends Controller
         }
     }
 
-    public function store(StoreValidator $storeValidator, Request $request)
+    public function store(StoreValidator $storeValidator)
     {
         try {
-            $storeValidator->validate($request->all());
+            $storeValidator->validate($this->request->all());
         } catch (ValidationException $e) {
             $status = false;
             $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
+            if ($this->request->ajax()) {
+                if ($this->request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
                 } else {
                     return compact(['status', 'errors']);
@@ -125,7 +182,7 @@ class DashboardController extends Controller
             }
         }
 
-        $dashboard = $this->dashboardRepo->storeDashboard($request->all());
+        $dashboard = $this->dashboardRepo->storeDashboard($this->request->all());
         $dashboards = $this->dashboardRepo->getDashboards();
         $dashboards = $dashboards->reject(function ($tempDashboard, $index) use ($dashboard) {
             return $tempDashboard->getKey() == $dashboard->getKey();
@@ -139,8 +196,8 @@ class DashboardController extends Controller
         }
 
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['dashboard', 'status']));
             } else {
                 return compact(['dashboard', 'status']);
@@ -150,7 +207,7 @@ class DashboardController extends Controller
         }
     }
 
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         $dashboard = $this->dashboardRepo->getDashboard($id);
         if ($dashboard->user->getKey() != auth()->user()->getKey()) {
@@ -179,8 +236,8 @@ class DashboardController extends Controller
         $orders = collect($orders);
         $orders->prepend('At the beginning', 1);
 
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
 
             } else {
                 return view('dashboard.edit')->with(compact(['templates', 'dashboard', 'orders']));
@@ -190,7 +247,7 @@ class DashboardController extends Controller
         }
     }
 
-    public function update(UpdateValidator $updateValidator, Request $request, $id)
+    public function update(UpdateValidator $updateValidator, $id)
     {
         $tempDashboard = $this->dashboardRepo->getDashboard($id);
         if ($tempDashboard->user->getKey() != auth()->user()->getKey()) {
@@ -199,14 +256,14 @@ class DashboardController extends Controller
         }
 
         try {
-            $input = $request->all();
+            $input = $this->request->all();
             $input['dashboard_id'] = $id;
             $updateValidator->validate($input);
         } catch (ValidationException $e) {
             $status = false;
             $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
+            if ($this->request->ajax()) {
+                if ($this->request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
                 } else {
                     return compact(['status', 'errors']);
@@ -234,11 +291,9 @@ class DashboardController extends Controller
         }
 
 
-
-
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['dashboard', 'status']));
             } else {
                 return compact(['dashboard', 'status']);
@@ -248,7 +303,7 @@ class DashboardController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $dashboard = $this->dashboardRepo->getDashboard($id);
         if ($dashboard->user->getKey() != auth()->user()->getKey()) {
@@ -258,8 +313,8 @@ class DashboardController extends Controller
         $this->dashboardRepo->deleteDashboard($id);
         $status = true;
 
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);

@@ -15,6 +15,7 @@ use App\Contracts\Repository\Dashboard\DashboardWidgetTypeContract;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Validators\Dashboard\DashboardWidget\StoreValidator;
+use App\Validators\Dashboard\DashboardWidget\UpdateValidator;
 use Illuminate\Http\Request;
 
 class DashboardWidgetController extends Controller
@@ -81,12 +82,11 @@ class DashboardWidgetController extends Controller
             switch ($this->request->get('chart_type')) {
                 case "site":
                     $dashboardWidget->setPreference("site_id", $this->request->get('site_id'));
-                    break;
                 case "product":
                     $dashboardWidget->setPreference("product_id", $this->request->get('product_id'));
-                    break;
                 case "category":
                     $dashboardWidget->setPreference("category_id", $this->request->get('category_id'));
+                    break;
                 default:
             }
             $dashboardWidget->setPreference("timespan", $this->request->get('timespan'));
@@ -145,9 +145,53 @@ class DashboardWidgetController extends Controller
         }
     }
 
-    public function update($id)
+    public function update(UpdateValidator $updateValidator, $id)
     {
+        try {
+            $updateValidator->validate($this->request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($this->request->ajax()) {
+                if ($this->request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+        $dashboardWidget = $this->dashboardWidgetRepo->updateWidget($this->request->all(), $id);
 
+        $dashboardWidget->clearPreferences();
+
+        //widget type is chart
+        if ($dashboardWidget->dashboard_widget_type_id == 1) {
+            $dashboardWidget->setPreference("chart_type", $this->request->get('chart_type'));
+            switch ($this->request->get('chart_type')) {
+                case "site":
+                    $dashboardWidget->setPreference("site_id", $this->request->get('site_id'));
+                case "product":
+                    $dashboardWidget->setPreference("product_id", $this->request->get('product_id'));
+                case "category":
+                    $dashboardWidget->setPreference("category_id", $this->request->get('category_id'));
+                    break;
+                default:
+            }
+            $dashboardWidget->setPreference("timespan", $this->request->get('timespan'));
+            $dashboardWidget->setPreference("resolution", $this->request->get('resolution'));
+        }
+        $status = true;
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status', 'dashboardWidget']));
+            } else {
+                return compact(['status', 'dashboardWidget']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
     }
 
     public function destroy($id)
