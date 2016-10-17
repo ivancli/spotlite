@@ -95,8 +95,10 @@
                                         <div class="box-body">
                                             <div class="row m-b-10">
                                                 <div class="col-sm-12">
+                                                    <ul class="text-danger errors-container">
+                                                    </ul>
                                                     {!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "form-horizontal sl-form-horizontal", "id"=>"frm-dashboard-widget-store")) !!}
-
+                                                    <input type="hidden" name="dashboard_widget_type_id" value="1">
                                                     <div class="form-group required">
                                                         <label class="col-sm-4 control-label">Dashboard</label>
                                                         <div class="col-sm-8">
@@ -193,24 +195,40 @@
         }
 
         function submitAddContent(callback) {
+            showLoading();
             $.ajax({
                 "url": $("#frm-dashboard-widget-store").attr("action"),
                 "method": "post",
                 "data": {
-                    "dash_board_id": $("#sel-dashboard-id").val(),
+                    "dashboard_id": $("#sel-dashboard-id").val(),
                     "dashboard_widget_name": $("#txt-dashboard-widget-name").val(),
                     "timespan": $("#sel-timespan").val(),
-                    "resolution": $("#sel-period-resolution").val()
+                    "resolution": $("#sel-period-resolution").val(),
+                    "dashboard_widget_type_id": 1,
+                    "category_id": "{{$category->getKey()}}",
+                    "chart_type": "category"
                 },
                 "dataType": "json",
                 "success": function (response) {
+                    hideLoading();
                     if (response.status == true) {
                         alertP("Add to Dashboard", "Chart has been added successfully");
                     } else {
-                        alertP("Error", "Unable to add chart to dashboard, please try again later.");
+                        if (typeof response.errors != 'undefined') {
+                            var $errorContainer = $("#modal-category-chart .errors-container");
+                            $errorContainer.empty();
+                            $.each(response.errors, function (index, error) {
+                                $errorContainer.append(
+                                        $("<li>").text(error)
+                                );
+                            });
+                        } else {
+                            alertP("Error", "Unable to add chart to dashboard, please try again later.");
+                        }
                     }
                 },
                 "error": function (xhr, status, error) {
+                    hideLoading();
                     alertP("Error", "Unable to add chart to dashboard, please try again later.");
                 }
             })
