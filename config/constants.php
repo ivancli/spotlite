@@ -26,6 +26,7 @@ return [
     "price_describers" => [
         ",",
         "now",
-        "$"
+        "$",
+        "AU",
     ]
 ];
