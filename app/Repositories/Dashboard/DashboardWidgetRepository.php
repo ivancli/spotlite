@@ -61,12 +61,20 @@ class DashboardWidgetRepository implements DashboardWidgetContract
     public function getWidgetData($id)
     {
         $widget = $this->getWidget($id);
+        $dashboard = $widget->dashboard;
 
         //this is a chart
         if ($widget->dashboard_widget_type_id == 1) {
             $chartType = $widget->getPreference('chart_type');
-            $timespan = $widget->getPreference('timespan');
-            $resolution = $widget->getPreference('resolution');
+
+            $timespan = $dashboard->getPreference('timespan');
+            if (is_null($timespan)) {
+                $timespan = $widget->getPreference('timespan');
+            }
+            $resolution = $dashboard->getPreference('resolution');
+            if (is_null($resolution)) {
+                $resolution = $widget->getPreference('resolution');
+            }
 
             switch ($timespan) {
                 case "this_week":

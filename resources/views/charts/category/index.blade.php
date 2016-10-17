@@ -9,77 +9,129 @@
             <div class="modal-body" style="background-color: #f5f5f5;">
                 <div class="row">
                     <div class="col-lg-5 col-md-6 col-sm-12">
-
-                        <div class="box box-solid">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Chart Characteristics</h3>
-                            </div>
-                            <div class="box-body">
-                                <div class="row m-b-10">
-                                    <div class="col-sm-12">
-                                        <form action="" class="form-horizontal" id="frm-category-chart-characteristics">
-                                            <div class="form-group required">
-                                                <label class="col-sm-4 control-label">Timespan</label>
-                                                <div class="col-sm-8">
-                                                    <select id="sel-timespan" name="timespan" class="form-control"
-                                                            onchange="timespanOnChange(this)">
-                                                        <option value="this_week">This week</option>
-                                                        <option value="last_week">Last week</option>
-                                                        <option value="last_7_days">Last 7 days</option>
-                                                        <option value="this_month">This month</option>
-                                                        <option value="last_month">Last month</option>
-                                                        <option value="last_30_days">Last 30 days</option>
-                                                        <option value="this_quarter">This quarter</option>
-                                                        <option value="last_quarter">Last quarter</option>
-                                                        <option value="last_90_days">Last 90 days</option>
-                                                        <option value="custom">Custom</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group show-when-custom" style="display: none;">
-                                                <label class="col-sm-4 control-label">Date range:</label>
-
-                                                <div class="col-sm-8">
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="text" class="form-control pull-right"
-                                                               name="date_range"
-                                                               id="txt-date-range" readonly="readonly">
-                                                        <input type="hidden" name="start_date"
-                                                               id="txt-category-chart-start-date">
-                                                        <input type="hidden" name="end_date"
-                                                               id="txt-category-chart-end-date">
-                                                    </div>
-                                                </div>
-                                                <!-- /.input group -->
-                                            </div>
-                                            <div class="form-group required">
-                                                <label class="col-sm-4 control-label">Period Resolution</label>
-                                                <div class="col-sm-8">
-                                                    <select id="sel-period-resolution" name="resolution"
-                                                            class="form-control"
-                                                            onchange="periodResolutionOnChange(this)">
-                                                        <option value="daily">Daily</option>
-                                                        <option value="weekly">Weekly</option>
-                                                        <option value="monthly">Monthly</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </form>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="box box-solid">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Chart Characteristics</h3>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <button class="btn btn-primary" onclick="loadCategoryChartData()">
-                                            Generate Chart
-                                        </button>
-                                        <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <div class="box-body">
+                                        <div class="row m-b-10">
+                                            <div class="col-sm-12">
+                                                <form action="" class="form-horizontal sl-form-horizontal"
+                                                      id="frm-category-chart-characteristics">
+                                                    <div class="form-group required">
+                                                        <label class="col-sm-4 control-label">Timespan</label>
+                                                        <div class="col-sm-8">
+                                                            <select id="sel-timespan" name="timespan"
+                                                                    class="form-control"
+                                                                    onchange="timespanOnChange(this)">
+                                                                <option value="this_week">This week</option>
+                                                                <option value="last_week">Last week</option>
+                                                                <option value="last_7_days">Last 7 days</option>
+                                                                <option value="this_month">This month</option>
+                                                                <option value="last_month">Last month</option>
+                                                                <option value="last_30_days">Last 30 days</option>
+                                                                <option value="this_quarter">This quarter</option>
+                                                                <option value="last_quarter">Last quarter</option>
+                                                                <option value="last_90_days">Last 90 days</option>
+                                                                <option value="custom">Custom</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group show-when-custom" style="display: none;">
+                                                        <label class="col-sm-4 control-label">Date range:</label>
+
+                                                        <div class="col-sm-8">
+                                                            <div class="input-group">
+                                                                <div class="input-group-addon">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </div>
+                                                                <input type="text" class="form-control pull-right"
+                                                                       name="date_range"
+                                                                       id="txt-date-range" readonly="readonly">
+                                                                <input type="hidden" name="start_date"
+                                                                       id="txt-category-chart-start-date">
+                                                                <input type="hidden" name="end_date"
+                                                                       id="txt-category-chart-end-date">
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.input group -->
+                                                    </div>
+                                                    <div class="form-group required">
+                                                        <label class="col-sm-4 control-label">Period Resolution</label>
+                                                        <div class="col-sm-8">
+                                                            <select id="sel-period-resolution" name="resolution"
+                                                                    class="form-control"
+                                                                    onchange="periodResolutionOnChange(this)">
+                                                                <option value="daily">Daily</option>
+                                                                <option value="weekly">Weekly</option>
+                                                                <option value="monthly">Monthly</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button class="btn btn-primary" onclick="loadCategoryChartData()">
+                                                    Generate Chart
+                                                </button>
+                                                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @if(auth()->user()->dashboards->count() > 0)
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Add to Dashboard</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row m-b-10">
+                                                <div class="col-sm-12">
+                                                    {!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "form-horizontal sl-form-horizontal", "id"=>"frm-dashboard-widget-store")) !!}
+
+                                                    <div class="form-group required">
+                                                        <label class="col-sm-4 control-label">Dashboard</label>
+                                                        <div class="col-sm-8">
+                                                            <select id="sel-dashboard-id" name="dashboard_id"
+                                                                    class="form-control">
+                                                                @foreach(auth()->user()->dashboards as $dashboard)
+                                                                    <option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group required">
+                                                        <label class="col-sm-4 control-label">Chart Name</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" name="dashboard_widget_name"
+                                                                   id="txt-dashboard-widget-name" class="form-control">
+                                                        </div>
+                                                    </div>
+
+                                                    {!! Form::close() !!}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <button class="btn btn-primary" id="btn-add-chart">
+                                                        Add Chart
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-lg-7 col-md-6 col-sm-12">
                         <div id="chart-container">
@@ -96,6 +148,10 @@
         var categoryChart = null;
 
         function modalReady() {
+            $("#btn-add-chart").on("click", function () {
+                submitAddContent();
+            })
+
 
             $("#txt-date-range").daterangepicker({
                 "maxDate": moment()
@@ -134,6 +190,30 @@
             });
 //            categoryChart = $('#chart-container').highcharts({
 //            });
+        }
+
+        function submitAddContent(callback) {
+            $.ajax({
+                "url": $("#frm-dashboard-widget-store").attr("action"),
+                "method": "post",
+                "data": {
+                    "dash_board_id": $("#sel-dashboard-id").val(),
+                    "dashboard_widget_name": $("#txt-dashboard-widget-name").val(),
+                    "timespan": $("#sel-timespan").val(),
+                    "resolution": $("#sel-period-resolution").val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    if (response.status == true) {
+                        alertP("Add to Dashboard", "Chart has been added successfully");
+                    } else {
+                        alertP("Error", "Unable to add chart to dashboard, please try again later.");
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    alertP("Error", "Unable to add chart to dashboard, please try again later.");
+                }
+            })
         }
 
         function timespanOnChange(el) {
