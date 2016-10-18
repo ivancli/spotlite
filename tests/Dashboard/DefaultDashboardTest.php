@@ -31,23 +31,23 @@ class DefaultDashboardTest extends TestCase
             ->assertResponseOk();
     }
 
-    public function testCreateWidget()
-    {
-        $this->withoutMiddleware();
-
-        $email = 'admin@spotlite.com.au';
-        $password = "password_with_0987654321_!@#$%^&*()";
-
-        $user = App\Models\User::create([
-            'first_name' => 'Barack',
-            'last_name' => 'Obama',
-            'email' => $email,
-            'password' => bcrypt($password)
-        ]);
-
-        $this->actingAs($user)
-            ->visit(route('dashboard.index'))
-            ->press('Add Content')
-            ->see('Content Characteristics');
-    }
+//    public function testCreateWidget()
+//    {
+//        $this->withoutMiddleware();
+//
+//        $email = 'admin@spotlite.com.au';
+//        $password = "password_with_0987654321_!@#$%^&*()";
+//
+//        $user = App\Models\User::create([
+//            'first_name' => 'Barack',
+//            'last_name' => 'Obama',
+//            'email' => $email,
+//            'password' => bcrypt($password)
+//        ]);
+//
+//        $this->actingAs($user)
+//            ->visit(route('dashboard.index'))
+//            ->press('Add Content')
+//            ->see('Content Characteristics');
+//    }
 }

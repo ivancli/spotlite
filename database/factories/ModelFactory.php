@@ -20,6 +20,14 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Models\Subscription::class, function(Faker\Generator $faker){
+    return [
+        "api_product_id" => 123456789,
+        "api_customer_id" => 123456789,
+        "api_subscription_id" => 123456789
+    ];
+});
+
 $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
     return [
         "user_id"=> 1,

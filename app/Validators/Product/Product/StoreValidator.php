@@ -21,13 +21,15 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-            "product_name" => "required|max:255"
+            "product_name" => "required|max:255",
+            "category_id" => "required"
         );
     }
 
     protected function getMessages()
     {
         return array(
+            "category_id.required" => "Category is required.",
             "product_name.required" => "Product name is required.",
             "product_name.max" => "Product name accepts maximum 255 characters."
         );

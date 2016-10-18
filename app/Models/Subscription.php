@@ -58,16 +58,18 @@ class Subscription extends Model
     public function save(array $options = [])
     {
         $result = parent::save($options);
-        Cache::forget("user.{$result->user_id}.subscription");
-        Cache::forget("user.{$result->user_id}.subscription.api");
+        if(isset($this->user_id)){
+            Cache::forget("user.{$this->user_id}.subscription");
+            Cache::forget("user.{$this->user_id}.subscription.api");
+        }
         return $result;
     }
 
     public function delete(array $options = [])
     {
         $result = parent::delete($options);
-        Cache::forget("user.{$result->user_id}.subscription");
-        Cache::forget("user.{$result->user_id}.subscription.api");
+        Cache::forget("user.{$this->user_id}.subscription");
+        Cache::forget("user.{$this->user_id}.subscription.api");
         return $result;
     }
 }

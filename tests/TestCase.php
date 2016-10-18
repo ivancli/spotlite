@@ -7,7 +7,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      *
      * @var string
      */
-    protected $baseUrl = 'http://staging.spotlite.com.au';
+    protected $baseUrl = 'http://localhost';
 
     /**
      * Creates the application.

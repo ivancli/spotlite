@@ -48,7 +48,7 @@ class ProductController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function index(Request $request, MailerContract $mailer)
+    public function index(Request $request)
     {
         if ($request->ajax()) {
             $data = $this->categoryRepo->lazyLoadCategories($this->filter);
@@ -95,7 +95,6 @@ class ProductController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
-
         try {
             $storeValidator->validate($request->all());
         } catch (ValidationException $e) {
@@ -136,10 +135,11 @@ class ProductController extends Controller
     public function show(Request $request, $id)
     {
         $product = $this->productRepo->getProduct($id);
+        $status = true;
         event(new ProductSingleViewed($product));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
-                return response()->json(compact(['product']));
+                return response()->json(compact(['product', 'status']));
             } else {
                 return view('products.product.partials.single_product')->with(compact(['product']));
             }
@@ -178,6 +178,7 @@ class ProductController extends Controller
         $product = $this->productRepo->updateProduct($id, $request->all());
         event(new ProductUpdated($product));
         $status = true;
+        dd($product);
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['status', 'product']));

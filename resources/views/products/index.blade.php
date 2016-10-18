@@ -7,7 +7,7 @@
             <button type="button" class="close" onclick="hideProductBannerMessage(this); return false;">×</button>
             <h4>Track how your competitors are pricing identical and similar products.</h4>
             Configure your categories and products by adding URLs below. Make sure to set up the
-            <a href="#">alerts</a> so you and more team members can receive timely notifications about price changes.
+            alerts so you and more team members can receive timely notifications about price changes.
         </div>
     @endif
 @stop

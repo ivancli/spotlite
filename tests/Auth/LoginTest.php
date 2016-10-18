@@ -3,10 +3,30 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Session;
 
 class LoginTest extends TestCase
 {
     use DatabaseTransactions;
+    public $user;
+    public $email;
+    public $password;
+
+    public function setUp()
+    {
+        parent::setUp();
+        Session::start();
+
+        $this->email = 'admin@spotlite.com.au';
+        $this->password = "password_with_0987654321_!@#$%^&*()";
+
+        $this->user = factory(App\Models\User::class)->create([
+            'first_name' => 'Barack',
+            'last_name' => 'Obama',
+            'email' => $this->email,
+            'password' => bcrypt($this->password)
+        ]);
+    }
 
     /**
      * A basic test example.
@@ -21,22 +41,12 @@ class LoginTest extends TestCase
 
     public function testVisitWithLogin()
     {
-        $email = 'admin@spotlite.com.au';
-        $password = "password_with_0987654321_!@#$%^&*()";
-
-        $user = factory(App\Models\User::class)->create([
-            'first_name' => 'Barack',
-            'last_name' => 'Obama',
-            'email' => $email,
-            'password' => bcrypt($password)
-        ]);
-
         /**
          * expect success login and redirection to subscription page
          */
         $this->visit(route('login.get'))
-            ->type($email, 'email')
-            ->type($password, 'password')
+            ->type($this->user->email, 'email')
+            ->type($this->password, 'password')
             ->press('Login')
             ->visit(route('login.get'))
             ->seePageIs(route('subscription.back'));
@@ -58,43 +68,36 @@ class LoginTest extends TestCase
 
     public function testLoginFormSuccess()
     {
-        $email = 'admin@spotlite.com.au';
-        $password = "password_with_0987654321_!@#$%^&*()";
-
-        $user = factory(App\Models\User::class)->create([
-            'first_name' => 'Barack',
-            'last_name' => 'Obama',
-            'email' => $email,
-            'password' => bcrypt($password)
-        ]);
-
         /**
          * expect success login and redirection to subscription page
          */
         $this->visit(route('login.get'))
-            ->type($email, 'email')
-            ->type($password, 'password')
+            ->type($this->email, 'email')
+            ->type($this->password, 'password')
             ->press('Login')
             ->seePageIs(route('subscription.back'));
     }
 
-    public function testLoginFormFail()
+    public function testLoginFormWithIncorrectPassword()
     {
-        $email = 'admin@spotlite.com.au';
-        $password = "password_with_0987654321_!@#$%^&*()";
-
-        $user = factory(App\Models\User::class)->create([
-            'first_name' => 'Barack',
-            'last_name' => 'Obama',
-            'email' => $email,
-            'password' => bcrypt($password)
-        ]);
-
         /**
          * expect success login and redirection to subscription page
          */
         $this->visit(route('login.get'))
-            ->type($email, 'email')
+            ->type($this->email, 'email')
+            ->type('this is an incorrect password', 'password')
+            ->press('Login')
+            ->seePageIs(route('login.get'));
+    }
+
+    public function testLoginFormWithIncorrectEmail()
+    {
+        /**
+         * expect success login and redirection to subscription page
+         */
+        $this->visit(route('login.get'))
+            ->type('random_email@example.com', 'email')
+            ->type($this->password, 'password')
             ->press('Login')
             ->seePageIs(route('login.get'));
     }
