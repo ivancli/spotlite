@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('dashboard/{dashboard_id}/filter', 'Dashboard\DashboardController@updateFilter')->name('dashboard.filter.update');
         Route::delete('dashboard/{dashboard_id}/filter', 'Dashboard\DashboardController@deleteFilter')->name('dashboard.filter.destroy');
         Route::resource('dashboard', 'Dashboard\DashboardController');
+        Route::put('dashboard/widget/order', 'Dashboard\DashboardWidgetController@updateOrder')->name('dashboard.widget.order.update');
         Route::resource('dashboard/widget', 'Dashboard\DashboardWidgetController');
 
 

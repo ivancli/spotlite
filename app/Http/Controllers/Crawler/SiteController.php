@@ -118,6 +118,7 @@ class SiteController extends Controller
             "url" => $site->site_url,
         );
         $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
+
         if (is_null($content) || strlen($content) == 0) {
             $status = false;
             $errors = array("HTML is blank");
@@ -131,6 +132,14 @@ class SiteController extends Controller
                 /*TODO implement if needed*/
             }
         }
+
+        dd($content);
+
+        $existingContent = file_get_contents("/home/vagrant/Code/spotlite/storage/logs/htmls/nike.log");
+        file_put_contents("/home/vagrant/Code/spotlite/storage/logs/htmls/nike.log", $existingContent . "\r\n" . $content . "\r\n");
+
+
+
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
 

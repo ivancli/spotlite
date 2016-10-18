@@ -194,6 +194,29 @@ class DashboardWidgetController extends Controller
         }
     }
 
+    public function updateOrder()
+    {
+        $order = $this->request->get('widget_order');
+
+        foreach ($order as $key => $ord) {
+            $widget = $this->dashboardWidgetRepo->getWidget($ord['dashboard_widget_id'], false);
+            if (!is_null($widget) && intval($ord['dashboard_widget_order']) != 0) {
+                $widget->dashboard_widget_order = intval($ord['dashboard_widget_order']);
+                $widget->save();
+            }
+        }
+        $status = true;
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+
+        }
+    }
+
     public function destroy($id)
     {
         $dashboardWidget = $this->dashboardWidgetRepo->getWidget($id);

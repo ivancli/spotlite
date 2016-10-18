@@ -15,8 +15,8 @@
 
 <div class="row widgets-container">
     @if($dashboard->widgets->count() > 0)
-        @foreach($dashboard->widgets as $widget)
-            <div class="col-lg-3 col-md-4 widget-container">
+        @foreach($dashboard->widgets()->orderBy('dashboard_widget_order', 'asc')->get() as $widget)
+            <div class="col-lg-3 col-md-4 widget-container" data-id="{{$widget->getKey()}}">
                 @if(!is_null($widget->widgetType) && !is_null($widget->widgetType->template))
                     @include('dashboard.widget.templates.'.$widget->widgetType->template->dashboard_widget_template_name)
                 @endif
@@ -24,3 +24,50 @@
         @endforeach
     @endif
 </div>
+
+
+<script type="text/javascript">
+
+    widgetDrake = dragula([$(".widgets-container").get(0)]).on('drop', function (el, target, source, sibling) {
+        updateWidgetOrder();
+    });
+
+    function updateWidgetOrder() {
+        assignWidgetOrderNumber();
+        var orderList = [];
+        $(".widget-container").filter(function () {
+            return !$(this).hasClass("gu-mirror");
+        }).each(function () {
+            if ($(this).attr("data-id")) {
+                var widgetId = $(this).attr("data-id");
+                var widgetOrder = parseInt($(this).attr("data-order"));
+                orderList.push({
+                    "dashboard_widget_id": widgetId,
+                    "dashboard_widget_order": widgetOrder
+                });
+            }
+        });
+        $.ajax({
+            "url": "{{route('dashboard.widget.order.update')}}",
+            "method": "put",
+            "data": {
+                "widget_order": orderList
+            },
+            "dataType": 'json',
+            "success": function (response) {
+                if(response.status != true){
+                    alertP("Error", "Unable to update widget order, please try again later.");
+                }
+            },
+            "error": function (xhr, status, error) {
+                alertP("Error", "Unable to update widget order, please try again later.");
+            }
+        })
+    }
+
+    function assignWidgetOrderNumber() {
+        $(".widget-container").each(function (index) {
+            $(this).attr("data-order", index + 1);
+        });
+    }
+</script>

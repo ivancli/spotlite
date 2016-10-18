@@ -96,9 +96,6 @@ class AuthController extends Controller
             $user->attachRole($role);
         }
 
-        UserPreference::setPreference($user, "DATE_FORMAT", "Y-m-d");
-        UserPreference::setPreference($user, "TIME_FORMAT", "g:i a");
-
         $options = $user->toArray();
         $options['subject'] = "Welcome to SpotLite";
         $this->dispatch((new SendMail("auth.emails.welcome", compact(['user']), $options))->onQueue("mailing"));

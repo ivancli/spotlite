@@ -40,10 +40,14 @@ class DashboardController extends Controller
     /**
      * Go to Dashboard page
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function index()
     {
+        $dashboard = auth()->user()->dashboards()->orderBy('dashboard_order', 'asc')->first();
+        if (!is_null($dashboard)) {
+            return view('dashboard.home')->with(compact(['dashboard']));
+        }
         return redirect()->route("product.index");
     }
 
