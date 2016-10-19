@@ -5,8 +5,6 @@
     {!! Breadcrumbs::render('subscription_index') !!}
 @stop
 @section('content')
-    {{dump($subscription)}}
-    {{dump($component)}}
     <div class="row subscription-info-panel">
         <div class="col-sm-12">
             <div class="box box-solid">
