@@ -7,6 +7,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionDetail;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Created by PhpStorm.
@@ -393,5 +394,123 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             }
         }
         return false;
+    }
+
+    public function getProductFamilies()
+    {
+        $apiURL = config('chargify.api_url') . "product_families.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $productFamilies = $this->sendCurl($apiURL, compact(['userpass']));
+        try {
+            $productFamilies = json_decode($productFamilies);
+            return $productFamilies;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+    }
+
+    public function getProductsByProductFamily($product_family_id)
+    {
+        $apiURL = config('chargify.api_url') . "product_families/$product_family_id/products.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $products = $this->sendCurl($apiURL, compact(['userpass']));
+        try {
+            $products = json_decode($products);
+            return $products;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+    }
+
+    public function getComponentsByProductFamily($product_family_id)
+    {
+        $apiURL = config('chargify.api_url') . "product_families/$product_family_id/components.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $components = $this->sendCurl($apiURL, compact(['userpass']));
+        try {
+            $components = json_decode($components);
+            return $components;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+    }
+
+    public function getComponent($product_family_id, $component_id)
+    {
+        $apiURL = config('chargify.api_url') . "product_families/$product_family_id/components.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $components = $this->sendCurl($apiURL, compact(['userpass']));
+        try {
+            $components = json_decode($components);
+            return $components;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+    }
+
+    public function getComponentsBySubscription($subscription_id)
+    {
+        $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id/components.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $components = $this->sendCurl($apiURL, compact(['userpass']));
+        try {
+            $components = json_decode($components);
+            return $components;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+    }
+
+    public function setComponentBySubscription($subscription_id, $component_id, $quantity)
+    {
+        if (is_null($quantity)) {
+            $quantity = 0;
+        }
+        $apiURL = config('chargify.api_url') . "subscriptions/{$subscription_id}.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $method = "put";
+        $data_type = 'json';
+        $component = new \stdClass();
+        $component->component = new \stdClass();
+        $component->component->component_id = $component_id;
+//        $component->component->allocated_quantity = $quantity;
+//        $component->component->usage_balance = $quantity;
+        $subscription = new \stdClass();
+        $subscription->subscription = new \stdClass();
+        $subscription->subscription->components = array($component);
+        $fields = json_encode($subscription);
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+    }
+
+    public function setComponentAllocationBySubscription($subscription_id, $component_id, $quantity)
+    {
+        $apiURL = config('chargify.api_url') . "subscriptions/$subscription_id/components/$component_id/allocations.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $method = "post";
+        $data_type = 'json';
+        $data = new \stdClass();
+        $data->allocation = new \stdClass();
+        $data->allocation->quantity = $quantity;
+        $fields = json_encode($data);
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
     }
 }

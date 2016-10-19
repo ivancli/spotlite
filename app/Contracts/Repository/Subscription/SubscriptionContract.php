@@ -120,4 +120,18 @@ interface SubscriptionContract
     public function updateCreditCardDetails(Subscription $subscription);
 
     public function deletePaymentProfile($subscription_id);
+
+    public function getProductFamilies();
+
+    public function getProductsByProductFamily($product_family_id);
+
+    public function getComponentsByProductFamily($product_family_id);
+
+    public function getComponent($product_family_id, $component_id);
+
+    public function getComponentsBySubscription($subscription_id);
+
+    public function setComponentBySubscription($subscription_id, $component_id, $quantity);
+
+    public function setComponentAllocationBySubscription($subscription_id, $component_id, $quantity);
 }

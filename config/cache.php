@@ -79,4 +79,6 @@ return [
     'prefix' => 'spotlite',
 
     'ttl' => 60 * 24,
+
+    'subscription_info_cache_expiry' => 60 * 24,
 ];
