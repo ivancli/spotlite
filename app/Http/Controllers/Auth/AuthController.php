@@ -69,6 +69,10 @@ class AuthController extends Controller
             'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'signup_link' => 'required',
+            'component_id' => 'required',
+            'family_id' => 'required',
+            'api_product_id' => 'required',
         ]);
     }
 
@@ -89,7 +93,7 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'phone' => isset($data['phone']) ? $data['phone'] : null,
-            'verification_code' => $verificationCode
+            'verification_code' => $verificationCode,
         ]);
 
         $role = UMRole::where("name", "client")->first();

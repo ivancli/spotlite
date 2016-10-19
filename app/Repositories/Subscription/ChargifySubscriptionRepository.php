@@ -70,7 +70,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         $userpass = config('chargify.api_key') . ":" . config('chargify.password');
         $subscriptions = $this->sendCurl($apiURL, compact(['userpass']));
         try {
-            $subscriptions = json_decode($subscriptions)->subscription;
+            $subscriptions = json_decode($subscriptions);
             return $subscriptions;
         } catch (Exception $e) {
             /*TODO need to handle exception properly*/
