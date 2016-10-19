@@ -370,6 +370,12 @@ h3.box-title {
     padding-right: 100px;
 }
 
+.widget-container .popover {
+    min-width: 200px;
+    text-align: center;
+    font-size: 12px;
+}
+
 @media (min-width: 992px) {
     .modal-xl {
         width: 900px;

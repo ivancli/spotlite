@@ -1,9 +1,18 @@
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">{{$widget->dashboard_widget_name}}</h3>
-
         <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+            <button type="button" class="btn btn-box-tool" data-content="{{
+            '<div>'.$widget->getPreference('chart_type') . ' - ' .
+            '<strong>' .
+            ($widget->getPreference('chart_type') == 'category' ? $widget->category()->category_name : '') .
+            ($widget->getPreference('chart_type') == 'product' ? $widget->product()->product_name : '') .
+            ($widget->getPreference('chart_type') == 'site' ? parse_url($widget->site()->site_url)['host'] : '') .
+            '</strong></div>' .
+            "<div>Timespan: <strong>" . (!is_null($widget->dashboard->getPreference('timespan')) ? str_replace('_', ' ', $widget->dashboard->getPreference('timespan')) : str_replace('_', ' ', $widget->getPreference('timespan'))) . "</strong></div>" .
+            "<div>Period resolution: <strong>" . (!is_null($widget->dashboard->getPreference('resolution')) ? $widget->dashboard->getPreference('resolution') : $widget->getPreference('resolution')) . "</strong></div>"
+            }}"
+                   data-html="true" data-trigger="hover" data-placement="bottom" data-toggle="popover">
                 <i class="fa fa-info"></i>
             </button>
 
@@ -64,6 +73,7 @@
 @if($widget->getPreference('chart_type') == 'site')
     <script type="text/javascript">
         $(function () {
+            $("[data-toggle=popover]").popover();
             setTimeout(function () {
                 widgetChart{{$widget->getKey()}} = new Highcharts.Chart({
                     credits: {
