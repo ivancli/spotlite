@@ -34,7 +34,7 @@
                                         <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_ended_at))}}</td>
                                     </tr>
                                     </tbody>
-                                    </table>
+                                </table>
                             @endif
                             <hr>
                             <h4>Upcoming Invoice</h4>
@@ -59,6 +59,7 @@
                                     <thead class="thead-inverse">
                                     <tr>
                                         <th>Date</th>
+                                        <th>Description</th>
                                         <th>Type</th>
                                         <th>Payment</th>
                                     </tr>
@@ -66,17 +67,29 @@
                                     <tbody>
 
                                     @foreach($transactions as $item)
-                                        @if($item->transaction->kind == "baseline" || $item->transaction->kind == "initial")
+                                        @if($item->transaction->kind == "baseline"|| $item->transaction->kind == "initial")
                                             <tr>
                                                 <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($item->transaction->created_at))}}</td>
+                                                <td>{{$item->transaction->memo}}</td>
                                                 <td>
-                                                    @if(is_null($item->transaction->kind))
+                                                    @if($item->transaction->kind == "baseline")
                                                         Subscription
                                                     @elseif($item->transaction->kind == "initial")
                                                         Initial Setup
                                                     @endif
                                                 </td>
-                                                <td>${{number_format($item->transaction->ending_balance_in_cents/100, 2)}}</td>
+                                                <td>
+                                                    @if(isset($item->transaction->taxations) && is_array($item->transaction->taxations))
+                                                        @foreach($item->transaction->taxations as $taxation)
+                                                            <?php $item->transaction->ending_balance_in_cents += $taxation->tax_amount_in_cents ?>
+                                                        @endforeach
+                                                    @endif
+                                                    @if($item->transaction->ending_balance_in_cents < 0)
+                                                            ${{number_format(0, 2)}}
+                                                    @else
+                                                        ${{number_format($item->transaction->ending_balance_in_cents/100, 2)}}
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endif
                                     @endforeach

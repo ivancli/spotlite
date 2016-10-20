@@ -11,7 +11,6 @@
             <p>
                 {!! $productFamily->product->description !!}
             </p>
-
             @if(!is_null($productFamily->component))
                 @foreach($productFamily->component->prices as $price)
                     <p style="color: #78a300;">
@@ -47,7 +46,7 @@
                     </div>
                 @endif
                 <div style="font-weight: bold; color: #78a300;">
-                    ${{number_format($productFamily->product->price_in_cents/100, 2)}}
+                    ${{number_format($productFamily->product->price_in_cents/100, 2)}} (GST exc)
                 </div>
                 <span class="text-sm">{{$productFamily->product->trial_interval_unit}}-to-{{$productFamily->product->trial_interval_unit}}</span>
             </div>
