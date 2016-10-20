@@ -133,13 +133,6 @@ class SiteController extends Controller
             }
         }
 
-        dd($content);
-
-        $existingContent = file_get_contents("/home/vagrant/Code/spotlite/storage/logs/htmls/nike.log");
-        file_put_contents("/home/vagrant/Code/spotlite/storage/logs/htmls/nike.log", $existingContent . "\r\n" . $content . "\r\n");
-
-
-
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
 
