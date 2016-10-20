@@ -246,7 +246,6 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
     public function generateUpdatePaymentLink($subscription_id)
     {
-        /* "update_payment--" + subscription id + "--" + share key */
         $message = "update_payment--$subscription_id--" . config("chargify.share_key");
         $token = $this->generateToken($message);
         $link = config('chargify.api_url') . "update_payment/$subscription_id/" . $token;

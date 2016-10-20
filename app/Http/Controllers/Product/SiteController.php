@@ -88,6 +88,27 @@ class SiteController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
+
+        $component = auth()->user()->cachedAPIComponent();
+        if (!auth()->user()->isStaff()) {
+            if (!is_null($component) && isset($component->allocated_quantity)) {
+                $numberOfSites = auth()->user()->sites->count();
+                if ($component->allocated_quantity != 0 && $component->allocated_quantity < $numberOfSites) {
+                    $errors = array("You can only have ". $component->allocated_quantity ." product URLs. Please upgrade your subscription plan if you need to track more product URLs.");
+                    $status = false;
+                    if ($request->ajax()) {
+                        if ($request->wantsJson()) {
+                            return response()->json(compact(['status', 'errors']));
+                        } else {
+                            return compact(['status', 'errors']);
+                        }
+                    } else {
+                        return redirect()->back()->withInput()->withErrors($errors);
+                    }
+                }
+            }
+        }
+
         try {
             $storeValidator->validate($request->all());
         } catch (ValidationException $e) {
@@ -313,7 +334,7 @@ class SiteController extends Controller
 
         $domainURL = parse_url($request->get('site_url'))['host'];
         $domain = Domain::where("domain_url", $domainURL)->first();
-        if(!is_null($domain)){
+        if (!is_null($domain)) {
             if (!is_null($domain->crawler_class)) {
                 $crawlerClass = app()->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
             }

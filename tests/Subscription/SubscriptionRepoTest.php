@@ -66,4 +66,99 @@ class SubscriptionRepoTest extends TestCase
             }
         }
     }
+
+    public function testGetProducts()
+    {
+        $products = $this->subscriptionRepo->getProducts();
+        $this->assertTrue(is_array($products) && !empty($products));
+        foreach ($products as $product) {
+            $this->assertTrue(isset($product->product));
+            $this->assertTrue(is_object($product->product));
+            $this->assertTrue(isset($product->product->id));
+        }
+    }
+
+    public function testGetProductById()
+    {
+        $products = $this->subscriptionRepo->getProducts();
+        $this->assertTrue(is_array($products) && !empty($products));
+        foreach ($products as $product) {
+            $this->assertTrue(isset($product->product));
+            $this->assertTrue(is_object($product->product));
+            $this->assertTrue(isset($product->product->id));
+            $targetProduct = $this->subscriptionRepo->getProduct($product->product->id);
+            $this->assertTrue(!is_null($targetProduct));
+            $this->assertTrue(is_object($targetProduct));
+            $this->assertTrue(isset($targetProduct->id));
+        }
+    }
+
+    public function testGetSubscriptions()
+    {
+        $subscriptions = $this->subscriptionRepo->getSubscriptions();
+        $this->assertTrue(is_array($subscriptions));
+    }
+
+    public function testGetSubscription()
+    {
+        $subscriptions = $this->subscriptionRepo->getSubscriptions();
+        $this->assertTrue(is_array($subscriptions));
+        foreach ($subscriptions as $subscription) {
+            $this->assertTrue(isset($subscription->subscription));
+            $this->assertTrue(is_object($subscription->subscription));
+            $this->assertTrue(isset($subscription->subscription->id));
+            $targetSubscription = $this->subscriptionRepo->getSubscription($subscription->subscription->id);
+            $this->assertTrue(!is_null($targetSubscription));
+            $this->assertTrue(is_object($targetSubscription));
+            $this->assertTrue(isset($targetSubscription->id));
+        }
+    }
+
+    public function testGetTransactions()
+    {
+        $subscriptions = $this->subscriptionRepo->getSubscriptions();
+        $this->assertTrue(is_array($subscriptions));
+        foreach($subscriptions as $subscription){
+            $this->assertTrue(isset($subscription->subscription));
+            $this->assertTrue(is_object($subscription->subscription));
+            $this->assertTrue(isset($subscription->subscription->id));
+            $transactions = $this->subscriptionRepo->getTransactions($subscription->subscription->id);
+            $this->assertTrue(is_array($transactions));
+            foreach($transactions as $transaction){
+                $this->assertTrue(isset($transaction->transaction));
+                $this->assertTrue(is_object($transaction->transaction));
+                $this->assertTrue(isset($transaction->transaction->id));
+            }
+        }
+    }
+
+    public function testGetComponentsBySubscription()
+    {
+        $subscriptions = $this->subscriptionRepo->getSubscriptions();
+        foreach ($subscriptions as $subscription) {
+            $components = $this->subscriptionRepo->getComponentsBySubscription($subscription->subscription->id);
+            $this->assertTrue(is_array($components));
+            $this->assertTrue(!empty($components));
+            foreach ($components as $component) {
+                $this->assertTrue(isset($component->component));
+                $this->assertTrue(is_object($component->component));
+                $this->assertTrue(isset($component->component->component_id));
+            }
+        }
+    }
+
+//    public function testGenerateUpdatePaymentLink()
+//    {
+//        $subscriptions = $this->subscriptionRepo->getSubscriptions();
+//        $this->assertTrue(is_array($subscriptions));
+//        foreach($subscriptions as $subscription){
+//            $this->assertTrue(isset($subscription->subscription));
+//            $this->assertTrue(is_object($subscription->subscription));
+//            $this->assertTrue(isset($subscription->subscription->id));
+//            $link = $this->subscriptionRepo->generateUpdatePaymentLink($subscription->subscription->id);
+//
+//        }
+//    }
+
+
 }

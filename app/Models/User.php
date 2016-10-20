@@ -123,15 +123,31 @@ class User extends Authenticatable
     public function cachedAPISubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-            return Cache::remember("user.{$this->$userPrimaryKey}.subscription.api", config()->get('cache.ttl'), function () {
-                $subscriptionRepo = app()->make('App\Contracts\Repository\Subscription\SubscriptionContract');
-                if ($this->hasValidSubscription()) {
-                    $subscription = $subscriptionRepo->getSubscription($this->cachedSubscription()->api_subscription_id);
-                } else {
-                    $subscription = false;
-                }
-                return $subscription;
-            });
+        return Cache::remember("user.{$this->$userPrimaryKey}.subscription.api", config()->get('cache.ttl'), function () {
+            $subscriptionRepo = app()->make('App\Contracts\Repository\Subscription\SubscriptionContract');
+            if ($this->hasValidSubscription()) {
+                $subscription = $subscriptionRepo->getSubscription($this->cachedSubscription()->api_subscription_id);
+            } else {
+                $subscription = false;
+            }
+            return $subscription;
+        });
+    }
+
+    public function cachedAPIComponent()
+    {
+        $userPrimaryKey = $this->primaryKey;
+        $subscription = $this->cachedSubscription();
+        $current_sub_id = $subscription->api_subscription_id;
+        $component = Cache::remember("user.{$this->$userPrimaryKey}.subscription.component", config()->get('cache.ttl'), function () use ($current_sub_id) {
+            $subscriptionRepo = app()->make('App\Contracts\Repository\Subscription\SubscriptionContract');
+            $components = $subscriptionRepo->getComponentsBySubscription($current_sub_id);
+            if (count($components) > 0) {
+                return $components[0]->component;
+            }
+            return null;
+        });
+        return $component;
     }
 
     public function needSubscription()
