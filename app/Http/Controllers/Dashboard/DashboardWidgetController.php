@@ -74,6 +74,20 @@ class DashboardWidgetController extends Controller
                 return redirect()->back()->withInput()->withErrors($errors);
             }
         }
+        if($this->request->get('timespan') == 'custom'){
+            $status = false;
+            $errors = array("Cannot add content with custom timespan, please choose different timespan to add to dashboard.");
+            if ($this->request->ajax()) {
+                if ($this->request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
         $dashboardWidget = $this->dashboardWidgetRepo->storeWidget($this->request->all());
 
         //widget type is chart
