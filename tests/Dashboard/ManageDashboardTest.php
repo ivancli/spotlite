@@ -1,14 +1,12 @@
 <?php
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Session;
 
 /**
  * Created by PhpStorm.
  * User: ivan.li
- * Date: 10/18/2016
- * Time: 10:39 AM
+ * Date: 10/21/2016
+ * Time: 11:55 AM
  */
-class DefaultDashboardTest extends TestCase
+class ManageDashboardTest extends TestCase
 {
     use DatabaseTransactions;
     protected $user;
@@ -22,10 +20,10 @@ class DefaultDashboardTest extends TestCase
         $this->be($user);
     }
 
-    public function testVisitDefaultDashboard()
+    public function testVisitManageDashboard()
     {
-        $this->visit(route('dashboard.index'))
-            ->see("Default Dashboard")
+        $this->visit(route('dashboard.manage'))
+            ->see("Manage Dashboard")
             ->assertResponseOk();
     }
 }

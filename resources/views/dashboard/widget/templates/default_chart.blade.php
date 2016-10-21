@@ -1,4 +1,4 @@
-<div class="box box-success">
+<div class="box box-success" data-order="{{$widget->dashboard_widget_order}}" data-id="{{$widget->getKey()}}">
     <div class="box-header with-border">
         <h3 class="box-title">{{$widget->dashboard_widget_name}}</h3>
         <div class="box-tools pull-right">

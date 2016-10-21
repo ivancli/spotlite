@@ -16,7 +16,7 @@
 <div class="row widgets-container">
     @if($dashboard->widgets->count() > 0)
         @foreach($dashboard->widgets()->orderBy('dashboard_widget_order', 'asc')->get() as $widget)
-            <div class="col-lg-3 col-md-4 widget-container" data-id="{{$widget->getKey()}}">
+            <div class="col-lg-3 col-md-4 widget-container">
                 @if(!is_null($widget->widgetType) && !is_null($widget->widgetType->template))
                     @include('dashboard.widget.templates.'.$widget->widgetType->template->dashboard_widget_template_name)
                 @endif
@@ -38,9 +38,9 @@
         $(".widget-container").filter(function () {
             return !$(this).hasClass("gu-mirror");
         }).each(function () {
-            if ($(this).attr("data-id")) {
-                var widgetId = $(this).attr("data-id");
-                var widgetOrder = parseInt($(this).attr("data-order"));
+            if ($(this).find("[data-id]").attr("data-id")) {
+                var widgetId = $(this).find("[data-id]").attr("data-id");
+                var widgetOrder = parseInt($(this).find("[data-order]").attr("data-order"));
                 orderList.push({
                     "dashboard_widget_id": widgetId,
                     "dashboard_widget_order": widgetOrder
@@ -67,7 +67,7 @@
 
     function assignWidgetOrderNumber() {
         $(".widget-container").each(function (index) {
-            $(this).attr("data-order", index + 1);
+            $(this).find("[data-order]").attr("data-order", index + 1);
         });
     }
 </script>

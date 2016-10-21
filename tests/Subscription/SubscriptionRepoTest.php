@@ -28,6 +28,9 @@ class SubscriptionRepoTest extends TestCase
             $this->assertTrue(isset($productFamily->product_family));
             $this->assertTrue(is_object($productFamily->product_family));
             $this->assertTrue(isset($productFamily->product_family->id));
+            if (isset($productFamily->product_family) && is_object($productFamily->product_family) && isset($productFamily->product_family->id)) {
+                return true;
+            }
         }
     }
 
@@ -41,6 +44,9 @@ class SubscriptionRepoTest extends TestCase
                 $this->assertTrue(isset($product->product));
                 $this->assertTrue(is_object($product->product));
                 $this->assertTrue(isset($product->product->id));
+                if (isset($product->product) && is_object($product->product) && isset($product->product->id)) {
+                    return true;
+                }
             }
         }
     }
@@ -62,6 +68,13 @@ class SubscriptionRepoTest extends TestCase
                     $this->assertTrue(is_int($price->starting_quantity) || is_null($price->starting_quantity));
                     $this->assertTrue(isset($price->ending_quantity) || is_null($price->ending_quantity));
                     $this->assertTrue(is_int($price->ending_quantity) || is_null($price->ending_quantity));
+                    if ((isset($price->starting_quantity) || is_null($price->starting_quantity))
+                        && (is_int($price->starting_quantity) || is_null($price->starting_quantity))
+                        && (isset($price->ending_quantity) || is_null($price->ending_quantity))
+                        && (is_int($price->ending_quantity) || is_null($price->ending_quantity))
+                    ) {
+                        return true;
+                    }
                 }
             }
         }
@@ -75,6 +88,9 @@ class SubscriptionRepoTest extends TestCase
             $this->assertTrue(isset($product->product));
             $this->assertTrue(is_object($product->product));
             $this->assertTrue(isset($product->product->id));
+            if (isset($product->product) && is_object($product->product) && isset($product->product->id)) {
+                return true;
+            }
         }
     }
 
@@ -90,6 +106,9 @@ class SubscriptionRepoTest extends TestCase
             $this->assertTrue(!is_null($targetProduct));
             $this->assertTrue(is_object($targetProduct));
             $this->assertTrue(isset($targetProduct->id));
+            if (!is_null($targetProduct) && is_object($targetProduct) && isset($targetProduct->id)) {
+                return true;
+            }
         }
     }
 
@@ -111,6 +130,9 @@ class SubscriptionRepoTest extends TestCase
             $this->assertTrue(!is_null($targetSubscription));
             $this->assertTrue(is_object($targetSubscription));
             $this->assertTrue(isset($targetSubscription->id));
+            if (!is_null($targetSubscription) && is_object($targetSubscription) && isset($targetSubscription->id)) {
+                return true;
+            }
         }
     }
 
@@ -118,16 +140,19 @@ class SubscriptionRepoTest extends TestCase
     {
         $subscriptions = $this->subscriptionRepo->getSubscriptions();
         $this->assertTrue(is_array($subscriptions));
-        foreach($subscriptions as $subscription){
+        foreach ($subscriptions as $subscription) {
             $this->assertTrue(isset($subscription->subscription));
             $this->assertTrue(is_object($subscription->subscription));
             $this->assertTrue(isset($subscription->subscription->id));
             $transactions = $this->subscriptionRepo->getTransactions($subscription->subscription->id);
             $this->assertTrue(is_array($transactions));
-            foreach($transactions as $transaction){
+            foreach ($transactions as $transaction) {
                 $this->assertTrue(isset($transaction->transaction));
                 $this->assertTrue(is_object($transaction->transaction));
                 $this->assertTrue(isset($transaction->transaction->id));
+                if (isset($transaction->transaction) && is_object($transaction->transaction) && isset($transaction->transaction->id)) {
+                    return true;
+                }
             }
         }
     }
@@ -143,22 +168,28 @@ class SubscriptionRepoTest extends TestCase
                 $this->assertTrue(isset($component->component));
                 $this->assertTrue(is_object($component->component));
                 $this->assertTrue(isset($component->component->component_id));
+                if (isset($component->component) && is_object($component->component) && isset($component->component->component_id)) {
+                    return true;
+                }
             }
         }
     }
 
-//    public function testGenerateUpdatePaymentLink()
-//    {
-//        $subscriptions = $this->subscriptionRepo->getSubscriptions();
-//        $this->assertTrue(is_array($subscriptions));
-//        foreach($subscriptions as $subscription){
-//            $this->assertTrue(isset($subscription->subscription));
-//            $this->assertTrue(is_object($subscription->subscription));
-//            $this->assertTrue(isset($subscription->subscription->id));
-//            $link = $this->subscriptionRepo->generateUpdatePaymentLink($subscription->subscription->id);
-//
-//        }
-//    }
+    public function testGenerateUpdatePaymentLink()
+    {
+        $subscriptions = $this->subscriptionRepo->getSubscriptions();
+        $this->assertTrue(is_array($subscriptions));
+        foreach($subscriptions as $subscription){
+            $this->assertTrue(isset($subscription->subscription));
+            $this->assertTrue(is_object($subscription->subscription));
+            $this->assertTrue(isset($subscription->subscription->id));
+            $link = $this->subscriptionRepo->generateUpdatePaymentLink($subscription->subscription->id);
+            $this->assertTrue(!empty(filter_var($link, FILTER_VALIDATE_URL)));
+            if(!empty(filter_var($link, FILTER_VALIDATE_URL))){
+                return true;
+            }
+        }
+    }
 
 
 }

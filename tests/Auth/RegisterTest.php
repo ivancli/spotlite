@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Session;
 class RegisterTest extends TestCase
 {
     use DatabaseTransactions;
+    protected $user;
 
     protected $email;
     protected $password;
@@ -39,6 +40,13 @@ class RegisterTest extends TestCase
         $this->visit(route('register.get'))
             ->assertResponseOk()
             ->see("Choose a subscription plan");
+    }
+
+    public function testVisitRegisterPageWithUserLoggedIn()
+    {
+        $this->be($this->user);
+        $this->visit(route("register.get"))
+            ->assertResponseStatus(302);
     }
 
     public function testSubmitRegistrationWithoutToken()
