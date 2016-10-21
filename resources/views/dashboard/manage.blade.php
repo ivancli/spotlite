@@ -8,13 +8,11 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-default">
-                <div class="box-header with-border">
+                <div class="box-header with-border text-right">
                     {{--<h3 class="box-title"></h3>--}}
-                    {{--<div class="box-tools pull-right">--}}
                     <button type="button" class="btn btn-primary btn-sm" onclick="showAddDashboardForm(this)">
                         Create New Dashboard
                     </button>
-                    {{--</div>--}}
                 </div>
                 <div class="box-body">
                     <table class="table table-striped table-condensed table-bordered" id="tbl-dashboard">
