@@ -23,12 +23,4 @@ class AlertEmail extends Model
     {
         return $this->belongsTo('App\Models\Alert', 'alert_id', 'alert_id');
     }
-
-    public function delete()
-    {
-        DeletedAlertEmail::create(array(
-            "content" => $this->toJson()
-        ));
-        return parent::delete();
-    }
 }

@@ -88,9 +88,8 @@ class SiteController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
-
-        $component = auth()->user()->cachedAPIComponent();
         if (!auth()->user()->isStaff()) {
+            $component = auth()->user()->cachedAPIComponent();
             if (!is_null($component) && isset($component->allocated_quantity)) {
                 $numberOfSites = auth()->user()->sites->count();
                 if ($component->allocated_quantity != 0 && $component->allocated_quantity < $numberOfSites) {

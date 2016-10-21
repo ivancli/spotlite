@@ -66,7 +66,6 @@
                 "pagingType": "full_numbers",
                 "processing": true,
                 "serverSide": true,
-                "stateSave": true,
                 "pageLength": 25,
                 "order": [[0, "asc"]],
                 "language": {
@@ -122,26 +121,22 @@
                             return $("<div>").append(
                                     $("<div>").addClass("xpath-wrapper").append(
                                             $("<div>").append(
-                                                    $("<span>").text(data.preference.xpath_1).addClass("lbl-site-xpath"),
+                                                    $("<span>").text(data.preference != null ? data.preference.xpath_1 : '').addClass("lbl-site-xpath"),
                                                     $("<input>").attr({
                                                         "type": "text",
                                                         "onkeyup": "if(event.keyCode == 27) togglexPathInput(this); if(event.keyCode == 13) togglexPathInput($(this).closest('.xpath-wrapper').find('[data-url]').get(0));  return false;",
-                                                        "value": data.preference.xpath_1
+                                                        "value": data.preference != null ? data.preference.xpath_1 : ''
                                                     }).hide().addClass("txt-site-xpath form-control input-sm")
                                             ),
                                             $("<a>").attr({
                                                 "href": "#",
-//                                                "onclick": "togglexPathInput(this); return false;",
                                                 "onclick": "showEditxPathForm(this); return false;",
-//                                                "data-url": data.urls.admin_update
                                                 "data-url": data.urls.admin_xpath_edit
                                             }).append(
                                                     $("<i>").addClass("fa fa-pencil text-muted")
                                             ).addClass("btn-edit-xpath")
                                     )
                             ).html();
-
-//                            return data.site_xpath;
                         }
                     },
                     {
@@ -396,7 +391,7 @@
                     if ($.isFunction(modalReady)) {
                         modalReady({
                             "callback": function (response) {
-                                tblSite.ajax.reload();
+                                reloadSiteTable()
                             }
                         })
                     }
@@ -417,7 +412,7 @@
                     if ($.isFunction(modalReady)) {
                         modalReady({
                             "callback": function (response) {
-                                tblSite.ajax.reload();
+                                reloadSiteTable()
                             }
                         })
                     }
@@ -438,7 +433,7 @@
                     if ($.isFunction(modalReady)) {
                         modalReady({
                             "callback": function (response) {
-                                tblSite.ajax.reload();
+                                reloadSiteTable()
                             }
                         })
                     }
@@ -487,7 +482,7 @@
         }
 
         function reloadSiteTable() {
-            tblSite.ajax.reload();
+            tblSite.ajax.reload(null, false);
         }
     </script>
 @stop

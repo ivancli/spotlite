@@ -2,11 +2,29 @@
 
 namespace App\Providers;
 
+use App\Models\Alert;
+use App\Models\AlertEmail;
+use App\Models\Crawler;
+use App\Models\Dashboard\Dashboard;
+use App\Models\DeletedRecordModels\DeletedAlert;
+use App\Models\DeletedRecordModels\DeletedAlertEmail;
+use App\Models\DeletedRecordModels\DeletedCategory;
+use App\Models\DeletedRecordModels\DeletedCrawler;
+use App\Models\DeletedRecordModels\DeletedDomain;
+use App\Models\DeletedRecordModels\DeletedGroup;
+use App\Models\DeletedRecordModels\DeletedProduct;
+use App\Models\DeletedRecordModels\DeletedSite;
 use App\Models\Domain;
+use App\Models\Group;
 use App\Models\Site;
+use App\Models\SitePreference;
+use App\Models\Subscription;
+use App\Models\User;
+use App\Models\UserPreference;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Product;
 use App\Models\Category;
@@ -27,6 +45,147 @@ class AppServiceProvider extends ServiceProvider
             'category' => Category::class,
             'site' => Site::class
         ]);
+
+        /**
+         * create default dashboard and preferences when user is created
+         */
+        User::created(function ($user) {
+            if (!is_null($user->preference('DATE_FORMAT'))) {
+                UserPreference::setPreference($user, "DATE_FORMAT", "Y-m-d");
+            }
+            if (!is_null($user->preference('TIME_FORMAT'))) {
+                UserPreference::setPreference($user, "TIME_FORMAT", "g:i a");
+            }
+            Dashboard::create(array(
+                "user_id" => $user->getKey(),
+                'dashboard_template_id' => 1,
+                'dashboard_name' => 'Default Dashboard',
+                'dashboard_order' => 1
+            ));
+        });
+
+        /* when site is saved, create default site preferences and domain (if domain not exist) */
+        Site::created(function ($site) {
+            /**
+             * Create crawler when site is created
+             */
+            if (is_null($site->crawler)) {
+                Crawler::create(array(
+                    "site_id" => $site->getKey()
+                ));
+            }
+
+            /**
+             * Create site preference when site is created
+             */
+            if (is_null($site->preference)) {
+                SitePreference::create(array(
+                    "site_id" => $site->getKey()
+                ));
+            }
+
+            /* create domain if the domain of site url does not exist */
+            $newDomain = parse_url($site->site_url)['host'];
+            if (Domain::where('domain_url', $newDomain)->count() == 0) {
+                Domain::create(array(
+                    "domain_url" => $newDomain
+                ));
+            }
+            return true;
+        });
+
+        /*************************************************************************
+         * On Delete Back up
+         *************************************************************************/
+        Alert::deleting(function ($alert) {
+            /* delete alert emails if there are any */
+            foreach ($alert->emails as $email) {
+                $email->delete();
+            }
+            DeletedAlert::create(array(
+                "content" => $alert->toJson()
+            ));
+            return true;
+        });
+        AlertEmail::deleting(function ($alertEmail) {
+            DeletedAlertEmail::create(array(
+                "content" => $alertEmail->toJson()
+            ));
+            return true;
+        });
+        Category::deleting(function ($category) {
+            DeletedCategory::create(array(
+                "content" => $category->toJson()
+            ));
+            foreach ($category->products as $product) {
+                $product->delete();
+            }
+            return true;
+        });
+
+        Crawler::deleting(function ($crawler) {
+            DeletedCrawler::create(array(
+                "content" => $crawler->toJson()
+            ));
+            return true;
+        });
+
+        Domain::deleting(function ($domain) {
+            DeletedDomain::create(array(
+                "content" => $domain->toJson()
+            ));
+            return true;
+        });
+
+        Group::deleting(function ($group) {
+            DeletedGroup::create(array(
+                "content" => $group->toJson()
+            ));
+            return true;
+        });
+
+        Product::deleting(function ($product) {
+            if (!is_null($product->alert)) {
+                $product->alert->delete();
+            }
+            DeletedProduct::create(array(
+                "content" => $product->toJson()
+            ));
+            foreach ($product->sites as $site) {
+                $site->delete();
+            }
+            return true;
+        });
+
+        Site::deleting(function ($site) {
+            DeletedSite::create(array(
+                "content" => $site->toJson()
+            ));
+            return true;
+        });
+
+        /************************************************************************
+         * clearing cache
+         ************************************************************************/
+        Subscription::saved(function ($subscription) {
+            if (isset($subscription->user_id)) {
+                Cache::forget("user.{$subscription->user_id}.subscription");
+                Cache::forget("user.{$subscription->user_id}.subscription.api");
+            }
+            return true;
+        });
+
+        Subscription::deleting(function ($subscription) {
+            Cache::forget("user.{$subscription->user_id}.subscription");
+            Cache::forget("user.{$subscription->user_id}.subscription.api");
+            return true;
+        });
+
+        User::saved(function ($user) {
+            $userPrimaryKey = $user->getKeyName();
+            Cache::forget("user.{$user->$userPrimaryKey}.subscription");
+            return true;
+        });
     }
 
     /**
@@ -103,67 +262,5 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('Invigor\Crawler\Contracts\CrawlerInterface', 'Invigor\Crawler\Repositories\Crawlers\DefaultCrawler');
         $this->app->bind('Invigor\Crawler\Contracts\ParserInterface', 'Invigor\Crawler\Repositories\Parsers\XPathParser');
-
-
-//        $this->app->bind(CrawlerInterface::class, function ($app) {
-//            $siteId = $this->app->request->route('site_id');
-//            if (!is_null($siteId)) {
-//                $site = Site::findOrFail($siteId);
-//                if (!is_null($site->crawler)) {
-//                    if (!is_null($site->crawler->crawler_class)) {
-//                        try {
-//                            return $app->make('Invigor\Crawler\Repositories\Crawlers\\' . $site->crawler->crawler_class);
-//                        } catch (Exception $e) {
-//
-//                        }
-//                    }
-//                }
-//
-//                /*check domain settings*/
-//                $domain_url = parse_url($site->site_url)['host'];
-//                $domain = Domain::where("domain_url", $domain_url)->first();
-//                if (!is_null($domain)) {
-//                    if (!is_null($domain->crawler_class)) {
-//                        try {
-//                            return $app->make('Invigor\Crawler\Repositories\Crawlers\\' . $domain->crawler_class);
-//                        } catch (Exception $e) {
-//
-//                        }
-//                    }
-//                }
-//            }
-//            return $app->make('Invigor\Crawler\Repositories\Crawlers\DefaultCrawler');
-//        });
-//
-//        /* dynamic binding for parser */
-//        $this->app->bind(ParserInterface::class, function ($app) {
-//            $siteId = $this->app->request->route('site_id');
-//            if (!is_null($siteId)) {
-//                $site = Site::findOrFail($siteId);
-//                if (!is_null($site->crawler)) {
-//                    if (!is_null($site->crawler->parser_class)) {
-//                        try {
-//                            return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
-//                        } catch (Exception $e) {
-//
-//                        }
-//                    }
-//                }
-//
-//                /*check domain settings*/
-//                $domain_url = parse_url($site->site_url)['host'];
-//                $domain = Domain::where("domain_url", $domain_url)->first();
-//                if (!is_null($domain)) {
-//                    if (!is_null($domain->parser_class)) {
-//                        try {
-//                            return $app->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
-//                        } catch (Exception $e) {
-//
-//                        }
-//                    }
-//                }
-//            }
-//            return $app->make('Invigor\Crawler\Repositories\Parsers\XPathParser');
-//        });
     }
 }

@@ -61,52 +61,13 @@ class Site extends Model
         return $filters->apply($query);
     }
 
-    /**
-     * back up category before deleting
-     * @return bool|null
-     */
-    public function delete()
-    {
-        DeletedSite::create(array(
-            "content" => $this->toJson()
-        ));
-        return parent::delete();
-    }
-
-    public static function create(array $attributes = [])
-    {
-        $site = parent::create($attributes);
-
-        /* create one-to-one crawler when site is created */
-        Crawler::create(array(
-            "site_id" => $site->getKey()
-        ));
-
-        /* create one-to-one site preference when site is created */
-        SitePreference::create(array(
-            "site_id" => $site->getKey()
-        ));
-
-        /* create domain if the domain of site url does not exist */
-        $newDomain = parse_url($site->site_url)['host'];
-
-        if (Domain::where('domain_url', $newDomain)->count() == 0) {
-            Domain::create(array(
-                "domain_url" => $newDomain
-            ));
-        }
-
-        return $site;
-    }
-
-
     public function getUrlsAttribute()
     {
         return array(
             "admin_update" => route("admin.site.update", $this->getKey()),
             "test" => route("admin.site.test", $this->getKey()),
             "admin_delete" => route("admin.site.destroy", $this->getKey()),
-            "admin_crawler_edit" => route("admin.crawler.edit", $this->crawler->getKey()),
+            "admin_crawler_edit" => !is_null($this->crawler) ? route("admin.crawler.edit", $this->crawler->getKey()) : null,
             "show" => route("site.show", $this->getKey()),
 
             "edit" => route("site.edit", $this->getKey()),

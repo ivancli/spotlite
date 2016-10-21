@@ -86,6 +86,7 @@ class AuthController extends Controller
     {
         $chargifyLink = request('signup_link');
         $verificationCode = str_random(10);
+
         $user = User::create([
             'title' => isset($data['title']) ? $data['title'] : null,
             'first_name' => $data['first_name'],
@@ -170,7 +171,7 @@ class AuthController extends Controller
                         $sub->api_product_id = $subscription->product->id;
                         $sub->api_customer_id = $subscription->customer->id;
                         $sub->api_subscription_id = $subscription->id;
-                        if(isset($data['component_id'])){
+                        if (isset($data['component_id'])) {
                             $sub->api_component_id = $data['component_id'];
                         }
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));

@@ -54,22 +54,4 @@ class Subscription extends Model
         $totalDiff = $yearDiff * 12 + $monthDiff;
         return $totalDiff * -1 <= $month;
     }
-
-    public function save(array $options = [])
-    {
-        $result = parent::save($options);
-        if(isset($this->user_id)){
-            Cache::forget("user.{$this->user_id}.subscription");
-            Cache::forget("user.{$this->user_id}.subscription.api");
-        }
-        return $result;
-    }
-
-    public function delete(array $options = [])
-    {
-        $result = parent::delete($options);
-        Cache::forget("user.{$this->user_id}.subscription");
-        Cache::forget("user.{$this->user_id}.subscription.api");
-        return $result;
-    }
 }

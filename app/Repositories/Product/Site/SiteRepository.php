@@ -15,6 +15,7 @@ use App\Filters\QueryFilter;
 use App\Libraries\CommonFunctions;
 use App\Models\Site;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SiteRepository implements SiteContract
 {
