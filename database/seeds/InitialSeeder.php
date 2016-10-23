@@ -18,8 +18,8 @@ class InitialSeeder extends Seeder
             'password' => bcrypt('helloworld'),
         ]);
 
-        $superAdminRole = \Invigor\UM\UMRole::where('name', 'super_admin');
-        $customerRole = \Invigor\UM\UMRole::where('name', 'client');
+        $superAdminRole = \Invigor\UM\UMRole::where('name', 'super_admin')->first();
+        $customerRole = \Invigor\UM\UMRole::where('name', 'client')->first();
 
         DB::table('role_user')->insert([
             'user_id' => $userId,

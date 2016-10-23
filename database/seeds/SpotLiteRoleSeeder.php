@@ -14,11 +14,6 @@ class SpotLiteRoleSeeder extends Seeder
         $superAdmin->save();
 
         $tier_1 = new \Invigor\UM\UMRole();
-        $tier_1->name = "super_admin";
-        $tier_1->display_name = "Super Admin";
-        $tier_1->save();
-
-        $tier_1 = new \Invigor\UM\UMRole();
         $tier_1->name = "tier_1";
         $tier_1->display_name = "Tier 1 Admin";
         $tier_1->save();
