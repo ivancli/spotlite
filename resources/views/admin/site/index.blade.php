@@ -289,14 +289,14 @@
                                                     $("<li>").append(
                                                             $("<a>").attr({
                                                                 "href": "#",
-                                                                "onclick": "setSiteStatus(this, 'invalid')",
+                                                                "onclick": "setSiteStatus(this, 'invalid'); return false;",
                                                                 "data-url": data.urls.admin_status_update
                                                             }).text("Invalid")
                                                     ),
                                                     $("<li>").append(
                                                             $("<a>").attr({
                                                                 "href": "#",
-                                                                "onclick": "setSiteStatus(this, 'waiting')",
+                                                                "onclick": "setSiteStatus(this, 'waiting'); return false;",
                                                                 "data-url": data.urls.admin_status_update
                                                             }).text("Waiting")
                                                     )
