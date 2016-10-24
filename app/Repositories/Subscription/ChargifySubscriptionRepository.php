@@ -323,7 +323,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             $this->updateCreditCardDetails($subscription);
 
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
-            if(!is_null($apiSubscription)){
+            if(!is_null($apiSubscription) && $apiSubscription !== false){
                 if (!is_null($apiSubscription->canceled_at)) {
                     $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
                 } else {
