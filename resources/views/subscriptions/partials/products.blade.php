@@ -46,9 +46,15 @@
                     </div>
                 @endif
                 <div style="font-weight: bold; color: #78a300;">
-                    ${{number_format($productFamily->product->price_in_cents/100, 2)}} (GST exc)
+                    @if(!is_null($productFamily->preview))
+                        ${{number_format($productFamily->preview->next_billing_manifest->total_in_cents/100, 2)}}
+                    @else
+                        ${{number_format($productFamily->product->price_in_cents/100, 2)}} (GST exc)
+                    @endif
                 </div>
-                <span class="text-sm">{{$productFamily->product->trial_interval_unit}}-to-{{$productFamily->product->trial_interval_unit}}</span>
+                <span class="text-sm">
+                    {{$productFamily->product->trial_interval_unit}}-to-{{$productFamily->product->trial_interval_unit}}
+                </span>
             </div>
         </div>
     @endforeach

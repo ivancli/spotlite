@@ -323,7 +323,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             $this->updateCreditCardDetails($subscription);
 
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
-            if(!is_null($apiSubscription) && $apiSubscription !== false){
+            if (!is_null($apiSubscription) && $apiSubscription !== false) {
                 if (!is_null($apiSubscription->canceled_at)) {
                     $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
                 } else {
@@ -503,6 +503,36 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         $data = new \stdClass();
         $data->allocation = new \stdClass();
         $data->allocation->quantity = $quantity;
+        $fields = json_encode($data);
+        $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
+        try {
+            $result = json_decode($result);
+            return $result;
+        } catch (Exception $e) {
+            /*TODO need to handle exception properly*/
+            return false;
+        }
+    }
+
+    public function getPreviewSubscription($product_id, $dummy = true)
+    {
+        $apiURL = config('chargify.api_url') . "subscriptions/preview.json";
+        $userpass = config('chargify.api_key') . ":" . config('chargify.password');
+        $method = "post";
+        $data_type = 'json';
+        $data = new \stdClass();
+        $subscription = new \stdClass();
+        $customer_attributes = new \stdClass();
+        if ($dummy) {
+            $customer_attributes->first_name = "Spot";
+            $customer_attributes->last_name = "Lite";
+            $customer_attributes->email = "admin@spotlite.com.au";
+            $customer_attributes->country = "AU";
+        }
+        $subscription->product_id = $product_id;
+        $subscription->customer_attributes = $customer_attributes;
+        $data->subscription = $subscription;
+
         $fields = json_encode($data);
         $result = $this->sendCurl($apiURL, compact(['userpass', 'fields', 'method', 'data_type']));
         try {

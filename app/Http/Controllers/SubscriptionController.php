@@ -65,10 +65,20 @@ class SubscriptionController extends Controller
             if (count($apiComponents) == 0) {
                 continue;
             }
+
+            $subscriptionPreview = Cache::remember("chargify.product_families.{$family_id}.products.{$product->id}.subscription_preview", config('cache.subscription_info_cache_expiry'), function () use ($product) {
+                $subscriptionPreview = $this->subscriptionRepo->getPreviewSubscription($product->id);
+                if (!is_null($subscriptionPreview)) {
+                    return $subscriptionPreview->subscription_preview;
+                }
+                return null;
+            });
+
             $component = $apiComponents[0]->component;
             $productFamily = new \stdClass();
             $productFamily->product = $product;
             $productFamily->component = $component;
+            $productFamily->preview = $subscriptionPreview;
             $productFamilies[] = $productFamily;
         }
         $productFamilies = collect($productFamilies);
@@ -355,10 +365,20 @@ class SubscriptionController extends Controller
             if (count($apiComponents) == 0) {
                 continue;
             }
+
+            $subscriptionPreview = Cache::remember("chargify.product_families.{$family_id}.products.{$product->id}.subscription_preview", config('cache.subscription_info_cache_expiry'), function () use ($product) {
+                $subscriptionPreview = $this->subscriptionRepo->getPreviewSubscription($product->id);
+                if (!is_null($subscriptionPreview)) {
+                    return $subscriptionPreview->subscription_preview;
+                }
+                return null;
+            });
+
             $component = $apiComponents[0]->component;
             $productFamily = new \stdClass();
             $productFamily->product = $product;
             $productFamily->component = $component;
+            $productFamily->preview = $subscriptionPreview;
             $productFamilies[] = $productFamily;
         }
         $productFamilies = collect($productFamilies);

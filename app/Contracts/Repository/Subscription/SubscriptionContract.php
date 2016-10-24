@@ -134,4 +134,6 @@ interface SubscriptionContract
     public function setComponentBySubscription($subscription_id, $component_id, $quantity);
 
     public function setComponentAllocationBySubscription($subscription_id, $component_id, $quantity);
+
+    public function getPreviewSubscription($product_id, $dummy = true);
 }
