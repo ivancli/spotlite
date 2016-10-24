@@ -93,7 +93,7 @@ class SiteController extends Controller
             if (!is_null($component) && isset($component->allocated_quantity)) {
                 $numberOfSites = auth()->user()->sites->count();
                 if ($component->allocated_quantity != 0 && $component->allocated_quantity < $numberOfSites) {
-                    $errors = array("You can only have ". $component->allocated_quantity ." product URLs. Please upgrade your subscription plan if you need to track more product URLs.");
+                    $errors = array("You can only have " . $component->allocated_quantity . " product URLs. Please upgrade your subscription plan if you need to track more product URLs.");
                     $status = false;
                     if ($request->ajax()) {
                         if ($request->wantsJson()) {
@@ -123,7 +123,6 @@ class SiteController extends Controller
                 return redirect()->back()->withInput()->withErrors($errors);
             }
         }
-
         event(new SiteStoring());
         $input = $request->all();
         $site = $this->siteRepo->createSite($input);
@@ -135,6 +134,7 @@ class SiteController extends Controller
             $this->siteRepo->adoptPreferences($site->getKey(), $request->get('site_id'));
             $site->recent_price = $targetSite->recent_price;
             $site->last_crawled_at = $targetSite->last_crawled_at;
+            $site->comment = null;
             $site->save();
             /* adopt the historical prices of the copied site */
 //            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
@@ -143,6 +143,7 @@ class SiteController extends Controller
             $this->siteRepo->adoptDomainPreferences($site->getKey(), $request->get('domain_id'));
             $site->recent_price = $request->has('domain_price') ? $request->get('domain_price') : null;
             $site->last_crawled_at = null;
+            $site->comment = null;
             $site->save();
         } else {
             $this->siteRepo->clearPreferences($site->getKey());
@@ -286,6 +287,7 @@ class SiteController extends Controller
             $this->siteRepo->adoptPreferences($site->getKey(), $request->get('site_id'));
             $site->recent_price = $targetSite->recent_price;
             $site->last_crawled_at = $targetSite->last_crawled_at;
+            $site->comment = null;
             $site->save();
             /* adopt the historical prices of the copied site */
 //            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
@@ -294,13 +296,16 @@ class SiteController extends Controller
             $this->siteRepo->adoptDomainPreferences($id, $request->get('domain_id'));
             $site->recent_price = $request->has('domain_price') ? $request->get('domain_price') : null;
             $site->last_crawled_at = null;
+            $site->comment = null;
             $site->save();
         } else {
             $this->siteRepo->clearPreferences($site->getKey());
             $site->recent_price = null;
             $site->last_crawled_at = null;
+            $site->comment = $request->get('comment');
             $site->save();
         }
+        $site->statusWaiting();
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {

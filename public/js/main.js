@@ -24434,7 +24434,7 @@ x();"bottom"===a.start?(c.css({top:b.outerHeight()-c.outerHeight()}),n(0,!0)):"t
  * @Author  Almsaeed Studio
  * @Support <http://www.almsaeedstudio.com>
  * @Email   <abdullah@almsaeedstudio.com>
- * @version 2.3.6
+ * @version 2.3.7
  * @license MIT <http://opensource.org/licenses/MIT>
  */
 

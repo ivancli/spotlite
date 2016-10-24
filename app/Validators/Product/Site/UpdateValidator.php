@@ -23,14 +23,14 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-            "site_url" => "required"
+            "site_url" => "required",
         );
     }
 
     protected function getMessages()
     {
         return array(
-            "site_url" => "URL of the product page is required."
+            "site_url" => "URL of the product page is required.",
         );
     }
 }

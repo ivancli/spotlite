@@ -71,7 +71,7 @@
                         <th width="25%">Site</th>
                         {{--<th width="30%" class="hidden-sm hidden-xs">Path</th>--}}
                         <th width="15%">Price</th>
-                        <th width="15%"></th>
+                        <th width="15%">Change</th>
                         <th class="text-center" width="10%">My Price</th>
                         <th width="15%">Last Update</th>
                         <th width="20%"></th>

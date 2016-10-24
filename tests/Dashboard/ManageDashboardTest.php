@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Created by PhpStorm.

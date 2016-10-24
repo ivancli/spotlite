@@ -17,7 +17,7 @@ class Site extends Model
 {
     protected $primaryKey = "site_id";
     protected $fillable = [
-        "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "my_price"
+        "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "my_price", "comment"
     ];
     protected $appends = ['urls', 'domain'];
 
@@ -79,6 +79,8 @@ class Site extends Model
             "chart" => route("chart.site.index", $this->getKey()),
 
             "admin_xpath_edit" => route("admin.site.xpath.edit", $this->getKey()),
+
+            "admin_status_update" => route("admin.site.status.update", $this->getKey()),
         );
     }
 
@@ -121,6 +123,12 @@ class Site extends Model
     public function statusWaiting()
     {
         $this->status = "waiting";
+        $this->save();
+    }
+
+    public function statusInvalid()
+    {
+        $this->status = "invalid";
         $this->save();
     }
 }

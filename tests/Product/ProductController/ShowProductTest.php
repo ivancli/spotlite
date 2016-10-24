@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
  * Date: 10/18/2016
  * Time: 5:16 PM
  */
-class ShowTest extends TestCase
+class ShowProductTest extends TestCase
 {
     use DatabaseTransactions;
     public $user;

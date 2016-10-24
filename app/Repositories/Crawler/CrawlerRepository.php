@@ -88,6 +88,11 @@ class CrawlerRepository implements CrawlerContract
         $this->setCrawlerRunning($crawler->getKey());
 
         $site = $crawler->site;
+
+        if ($site->status == 'invalid') {
+            return false;
+        }
+
         event(new CrawlerLoadingHTML($crawler));
 
         /*check cache*/

@@ -21,36 +21,14 @@
 @section('content')
     {{--@include('products.partials.banner_stats')--}}
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-md-8">
             <div class="box box-solid">
-                {{--<div class="box-header with-border">--}}
-                    {{--<h3 class="box-title"></h3>--}}
-                    {{--<div class="box-tools pull-right">--}}
-                        {{--<div class="btn-group">--}}
-                        {{--<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"--}}
-                        {{--aria-expanded="true">--}}
-                        {{--<i class="fa fa-bars"></i>--}}
-                        {{--</button>--}}
-                        {{--<ul class="dropdown-menu pull-right" role="menu">--}}
-                        {{--<li>--}}
-                        {{--<a href="#" class="btn btn-default" onclick="toggleCollapseCategories();">--}}
-                        {{--Toggle Collapse Categories--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
-                        {{--<li>--}}
-                        {{--<a href="#" class="btn btn-default" onclick="toggleCollapseProducts();">--}}
-                        {{--Toggle Collapse Products--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
-                        {{--</ul>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
                 <div class="box-body">
                     <div class="row m-b-10">
                         <div class="col-sm-12">
-                            <a href="#" class="btn btn-primary btn-xs" onclick="appendCreateCategoryBlock();"><i
-                                        class="fa fa-plus"></i> Add Category</a>
+                            <a href="#" class="btn btn-primary btn-xs" onclick="appendCreateCategoryBlock();">
+                                <i class="fa fa-plus"></i> Add Category
+                            </a>
                         </div>
                     </div>
                     <div class="row">

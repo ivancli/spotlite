@@ -24,6 +24,17 @@
                 <div class="prices-container" style="display: none;">
                     <p>Please select a correct price from below: </p>
                 </div>
+
+                <div class="report-error-container" style="display: none;">
+                    <div class="form-group required">
+                        <label for="">Please give us some hints to locate the price</label>
+                        <a href="#" id="btn-close-report-error" class="close"
+                           onclick="closeReportErrorContainerOnClick(this); return false;">&times;</a>
+                        <textarea name="comment" id="txt-comment" cols="30" rows="5" class="form-control"
+                                  style="resize: vertical;"></textarea>
+                    </div>
+                </div>
+
                 {!! Form::close() !!}
 
             </div>
@@ -40,7 +51,17 @@
             $("[data-toggle=popover]").popover();
 
             $("#btn-create-site").on("click", function () {
+                if (!$(".prices-container").is(":visible")) {
+                    $(".rad-site-id").prop("checked", false);
+
+                    if ($("#txt-comment").val() == "") {
+                        alertP("Error", "Please describe the location of the price in the web page.");
+                        return false;
+                    }
+                }
                 showLoading();
+
+
                 submitSiteStore(function (response) {
                     hideLoading();
                     if (response.status == true) {
@@ -71,33 +92,16 @@
             });
 
             $("#btn-report-error").on("click", function () {
-                $(".rad-site-id").prop("checked", false);
-                showLoading();
-                submitSiteStore(function (response) {
-                    hideLoading();
-                    if (response.status == true) {
-                        if ($.isFunction(options.callback)) {
-                            options.callback(response);
-                        }
-                        $("#modal-site-store").modal("hide");
-                    } else {
-                        if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-site-store .errors-container");
-                            $errorContainer.empty();
-                            $.each(response.errors, function (index, error) {
-                                $errorContainer.append(
-                                        $("<li>").text(error)
-                                );
-                            });
-                        } else {
-                            alertP("Error", "Unable to add site, please try again later.");
-                        }
-                    }
-                }, function (xhr, status, error) {
-                    hideLoading();
-                    alertP("Error", "Unable to add site, please try again later.");
-                });
+                $(".report-error-container").slideDown();
+                $(".prices-container").slideUp();
+                $(this).hide();
             });
+        }
+
+        function closeReportErrorContainerOnClick(el) {
+            $(el).closest(".report-error-container").slideUp();
+            $(".prices-container").slideDown();
+            $("#btn-report-error").show();
         }
 
         function getPricesCreate() {

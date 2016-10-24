@@ -19,11 +19,13 @@ class CreateSitesTable extends Migration
                 "fail_price",
                 "fail_xpath",
                 "null_xpath",
-                "waiting"
+                "waiting",
+                "invalid"
             ))->default("waiting");
             $table->decimal('recent_price', 20, 4)->nullable();
             $table->decimal('price_diff', 20, 4)->nullable();
             $table->timestamp('last_crawled_at')->nullable();
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

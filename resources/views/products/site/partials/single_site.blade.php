@@ -10,16 +10,39 @@
         </a>
     </td>
     <td>
-        {{is_null($site->recent_price) ? '' : "$" . number_format($site->recent_price, 2, '.', ',')}}
+        @if($site->status == 'invalid')
+            <div>
+                <a href="#" onclick="return false;" data-toggle="popover" data-trigger="hover"
+                   data-content="The site you have provided is not a valid page for pricing. Please update the site with product detail page URL.">
+                    <i class="fa fa-ban text-danger"></i>
+                </a>
+                &nbsp;
+                Invalid page for pricing
+            </div>
+        @else
+            @if(is_null($site->recent_price))
+                <div class="p-l-10">
+                    <strong><i class="fa fa-minus"></i></strong>
+                </div>
+            @else
+                {{"$" . number_format($site->recent_price, 2, '.', ',')}}
+            @endif
+        @endif
     </td>
-    <td class="text-center">
+    <td>
         @if(!is_null($site->recent_price))
             @if(!is_null($site->price_diff) && $site->price_diff != 0)
                 <i class="glyphicon {{$site->price_diff > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
                 ${{number_format(abs($site->price_diff), 2, '.', ',')}}
             @else
-                -
+                <div class="p-l-10">
+                    <strong><i class="fa fa-minus"></i></strong>
+                </div>
             @endif
+        @else
+            <div class="p-l-10">
+                <strong><i class="fa fa-minus"></i></strong>
+            </div>
         @endif
     </td>
     <td align="center">
@@ -32,10 +55,14 @@
     <td>
         @if(!is_null($site->last_crawled_at))
             <span title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}"
-                 data-toggle="tooltip">
+                  data-toggle="tooltip">
                 {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->last_crawled_at))}}
                 <span class="hidden-xs hidden-sm">{{date(auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}</span>
             </span>
+        @else
+            <div class="p-l-10">
+                <strong><i class="fa fa-minus"></i></strong>
+            </div>
         @endif
     </td>
     <td class="text-right action-cell">

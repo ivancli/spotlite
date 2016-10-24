@@ -55,6 +55,16 @@
                         <p>Price will be available soon.</p>
                     @endif
                 </div>
+
+                <div class="report-error-container" style="display: none;">
+                    <div class="form-group required">
+                        <label for="">Please give us some hints to locate the price</label>
+                        <a href="#" id="btn-close-report-error" class="close" onclick="closeReportErrorContainerOnClick(this); return false;">&times;</a>
+                        <textarea name="comment" id="txt-comment" cols="30" rows="5" class="form-control"
+                                  style="resize: vertical;"></textarea>
+                    </div>
+                </div>
+
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
@@ -73,6 +83,14 @@
             $("[data-toggle=popover]").popover();
 
             $("#btn-edit-site").on("click", function () {
+                if (!$(".prices-container").is(":visible")) {
+                    $(".rad-site-id").prop("checked", false);
+
+                    if ($("#txt-comment").val() == "") {
+                        alertP("Error", "Please describe the location of the price in the web page.");
+                        return false;
+                    }
+                }
                 showLoading();
                 submitSiteUpdate(function (response) {
                     hideLoading();
@@ -104,33 +122,16 @@
             });
 
             $("#btn-report-error").on("click", function () {
-                $(".rad-site-id").prop("checked", false);
-                showLoading();
-                submitSiteUpdate(function (response) {
-                    hideLoading();
-                    if (response.status == true) {
-                        if ($.isFunction(options.callback)) {
-                            options.callback(response);
-                        }
-                        $("#modal-site-update").modal("hide");
-                    } else {
-                        if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-site-update .errors-container");
-                            $errorContainer.empty();
-                            $.each(response.errors, function (index, error) {
-                                $errorContainer.append(
-                                        $("<li>").text(error)
-                                );
-                            });
-                        } else {
-                            alertP("Error", "Unable to update this site, please try again later.");
-                        }
-                    }
-                }, function (xhr, status, error) {
-                    hideLoading();
-                    alertP("Error", "Unable to update this site, please try again later.");
-                });
+                $(".report-error-container").slideDown();
+                $(".prices-container").slideUp();
+                $(this).hide();
             });
+        }
+
+        function closeReportErrorContainerOnClick(el){
+            $(el).closest(".report-error-container").slideUp();
+            $(".prices-container").slideDown();
+            $("#btn-report-error").show();
         }
 
         function submitSiteUpdate(successCallback, errorCallback) {

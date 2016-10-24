@@ -23,7 +23,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-            "site_url" => "required|url|max:2083"
+            "site_url" => "required|url|max:2083",
         );
     }
 
@@ -32,7 +32,7 @@ class StoreValidator extends ValidatorAbstract
         return array(
             "site_url.required" => "Site URL is required.",
             "site_url.url" => "Please provide a valid URL.",
-            "site_url.max" => "Site URL accepts maximum 2083 characters."
+            "site_url.max" => "Site URL accepts maximum 2083 characters.",
         );
     }
 }

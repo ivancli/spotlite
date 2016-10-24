@@ -179,6 +179,26 @@ class SiteController extends Controller
         }
     }
 
+    public function setStatus(Request $request, $site_id)
+    {
+        $site = $this->siteRepo->getSite($site_id);
+
+        if ($request->has('status')) {
+            $site->status = $request->get('status');
+            $site->save();
+        }
+        $status = true;
+        if($request->ajax()) {
+            if($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            return redirect()->route('admin.site.index');
+        }
+    }
+
     /**
      * @param Request $request
      * @param $site_id

@@ -41,6 +41,7 @@
                             <th>Last Crawl</th>
                             <th>Created at</th>
                             <th>Status</th>
+                            <th>Comment</th>
                             <th width="100"></th>
                         </tr>
                         </thead>
@@ -119,7 +120,7 @@
                         "name": "site_xpath",
                         "data": function (data) {
                             return $("<div>").append(
-                                    $("<div>").addClass("xpath-wrapper").append(
+                                    $("<div>").addClass("xpath-wrapper").css("min-width", "100px").append(
                                             $("<div>").append(
                                                     $("<span>").text(data.preference != null ? data.preference.xpath_1 : '').addClass("lbl-site-xpath"),
                                                     $("<input>").attr({
@@ -181,7 +182,6 @@
                     {
                         "class": "text-center",
                         "name": "status",
-                        "sortable": false,
                         "data": function (data) {
                             var $text = $("<div>");
                             switch (data.status) {
@@ -238,6 +238,14 @@
                                         "data-toggle": "tooltip"
                                     });
                                     break;
+                                case "invalid":
+                                    $text.append(
+                                            $("<i>").addClass("text-danger fa fa-ban")
+                                    ).attr({
+                                        "title": "The site is marked as invalid",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
                                 default:
                             }
                             var $output = $("<div>").append(
@@ -245,6 +253,11 @@
                             );
                             return $output.html();
                         }
+                    },
+                    {
+                        "name": "comment",
+                        "data": "comment",
+                        "sortable": false
                     },
                     {
                         "class": "text-center",
@@ -259,6 +272,34 @@
                                     }).append(
                                             $("<i>").addClass("glyphicon glyphicon-globe")
                                     ).addClass("text-muted"),
+                                    "&nbsp;",
+                                    $("<div>").addClass("btn-group").attr({
+                                        "data-toggle": "tooltip",
+                                        "title": "Update status"
+                                    }).append(
+                                            $("<a>").addClass("dropdown-toggle text-muted").attr({
+                                                "data-toggle": "dropdown",
+                                                "href": "#"
+                                            }).append(
+                                                    $("<i>").addClass("glyphicon glyphicon-tags")
+                                            ),
+                                            $("<ul>").addClass("dropdown-menu").attr("role", "menu").append(
+                                                    $("<li>").append(
+                                                            $("<a>").attr({
+                                                                "href": "#",
+                                                                "onclick": "setSiteStatus(this, 'invalid')",
+                                                                "data-url": data.urls.admin_status_update
+                                                            }).text("Invalid")
+                                                    ),
+                                                    $("<li>").append(
+                                                            $("<a>").attr({
+                                                                "href": "#",
+                                                                "onclick": "setSiteStatus(this, 'waiting')",
+                                                                "data-url": data.urls.admin_status_update
+                                                            }).text("Waiting")
+                                                    )
+                                            )
+                                    ),
                                     "&nbsp;",
                                     $("<a>").attr({
                                         "href": "#",
@@ -425,7 +466,7 @@
 
         function showEditxPathForm(el) {
             showLoading();
-            $.get($(el).attr("data-url"), function(html){
+            $.get($(el).attr("data-url"), function (html) {
                 hideLoading();
                 var $modal = $(html);
                 $modal.modal();
@@ -483,6 +524,24 @@
 
         function reloadSiteTable() {
             tblSite.ajax.reload(null, false);
+        }
+
+        function setSiteStatus(el, status) {
+            $.ajax({
+                "url": $(el).attr("data-url"),
+                "method": "put",
+                "data": {
+                    "status": status
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    console.info("response", response);
+                    reloadSiteTable();
+                },
+                "error": function (xhr, status, error) {
+
+                }
+            })
         }
     </script>
 @stop

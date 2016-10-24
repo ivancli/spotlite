@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
  * Date: 10/18/2016
  * Time: 2:51 PM
  */
-class IndexTest extends TestCase
+class IndexProductTest extends TestCase
 {
     use DatabaseTransactions;
 

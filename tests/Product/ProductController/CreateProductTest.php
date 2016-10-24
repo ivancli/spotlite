@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
  * Date: 10/18/2016
  * Time: 3:17 PM
  */
-class CreateTest extends TestCase
+class CreateProductTest extends TestCase
 {
     use DatabaseTransactions;
 

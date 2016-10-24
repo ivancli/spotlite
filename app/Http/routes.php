@@ -154,6 +154,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/site/test/{site_id}', 'Crawler\SiteController@sendTest')->name('admin.site.test');
     Route::get('admin/site/xpath/{site_id}/edit', 'Crawler\SiteController@editxPath')->name('admin.site.xpath.edit');
     Route::put('admin/site/xpath/{site_id}/edit', 'Crawler\SiteController@updatexPath')->name('admin.site.xpath.update');
+    Route::put('admin/site/status/{site_id}/edit', 'Crawler\SiteController@setStatus')->name('admin.site.status.update');
     Route::resource('admin/site', 'Crawler\SiteController', ['except' => [
         'show', 'edit'
     ]]);
