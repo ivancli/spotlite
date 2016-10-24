@@ -2,7 +2,7 @@
     data-site-edit-url="{{$site->urls['edit']}}"
     data-site-alert-url="{{$site->urls['alert']}}"
     data-site-update-url="{{$site->urls['update']}}">
-    <td>
+    <td class="site-url">
         <a href="{{$site->site_url}}" target="_blank" class="text-muted" data-toggle="popover"
            data-trigger="hover"
            data-content="{{$site->site_url}}">
@@ -12,7 +12,7 @@
     <td>
         @if($site->status == 'invalid')
             <div>
-                <a href="#" onclick="return false;" data-toggle="popover" data-trigger="hover"
+                <a href="#" onclick="return false;" data-toggle="popover" data-trigger="hover focus click"
                    data-content="The site you have provided is not a valid page for pricing. Please update the site with product detail page URL.">
                     <i class="fa fa-ban text-danger"></i>
                 </a>

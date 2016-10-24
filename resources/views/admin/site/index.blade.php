@@ -30,7 +30,7 @@
         <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-body">
-                    <table id="tbl-site" class="table table-bordered table-hover table-striped">
+                    <table id="tbl-site" class="table table-bordered table-hover table-striped site-wrapper">
                         <thead>
                         <tr>
                             <th class="shrink">ID</th>
@@ -101,6 +101,7 @@
                         }
                     },
                     {
+                        "class": "site-url",
                         "name": "site_url",
                         "data": function (data) {
                             var url = stripDomainFromURL(data.site_url);
@@ -108,9 +109,10 @@
                             return $("<div>").append(
                                     $("<a>").attr({
                                         "href": data.site_url,
-                                        "title": data.site_url,
+                                        "data-content": data.site_url,
+                                        "data-trigger": "hover",
                                         "target": "_blank",
-                                        "data-toggle": "tooltip"
+                                        "data-toggle": "popover"
                                     }).text(url).addClass("text-muted")
                             ).html();
                         }
@@ -333,7 +335,10 @@
                             ).html()
                         }
                     }
-                ]
+                ],
+                "drawCallback": function(){
+                    $("[data-toggle=popover]").popover();
+                }
             });
 
             $(".toolbar-bottom-left").append(

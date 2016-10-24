@@ -21,7 +21,7 @@
 @section('content')
     {{--@include('products.partials.banner_stats')--}}
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="box box-solid">
                 <div class="box-body">
                     <div class="row m-b-10">
