@@ -323,21 +323,22 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             $this->updateCreditCardDetails($subscription);
 
             $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
-
-            if (!is_null($apiSubscription->canceled_at)) {
-                $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
-            } else {
-                $subscription->cancelled_at = null;
+            if(!is_null($apiSubscription)){
+                if (!is_null($apiSubscription->canceled_at)) {
+                    $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
+                } else {
+                    $subscription->cancelled_at = null;
+                }
+                if (!is_null($apiSubscription->expires_at)) {
+                    $subscription->expiry_date = date('Y-m-d h:i:s', strtotime($apiSubscription->expires_at));
+                } else {
+                    $subscription->expiry_date = null;
+                }
+                if (!is_null($apiSubscription->product)) {
+                    $subscription->api_product_id = $apiSubscription->product->id;
+                }
+                $subscription->save();
             }
-            if (!is_null($apiSubscription->expires_at)) {
-                $subscription->expiry_date = date('Y-m-d h:i:s', strtotime($apiSubscription->expires_at));
-            } else {
-                $subscription->expiry_date = null;
-            }
-            if (!is_null($apiSubscription->product)) {
-                $subscription->api_product_id = $apiSubscription->product->id;
-            }
-            $subscription->save();
         }
     }
 
