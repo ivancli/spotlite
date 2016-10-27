@@ -50,10 +50,10 @@ class AppServiceProvider extends ServiceProvider
          * create default dashboard and preferences when user is created
          */
         User::created(function ($user) {
-            if (!is_null($user->preference('DATE_FORMAT'))) {
+            if (is_null($user->preference('DATE_FORMAT'))) {
                 UserPreference::setPreference($user, "DATE_FORMAT", "Y-m-d");
             }
-            if (!is_null($user->preference('TIME_FORMAT'))) {
+            if (is_null($user->preference('TIME_FORMAT'))) {
                 UserPreference::setPreference($user, "TIME_FORMAT", "g:i a");
             }
             Dashboard::create(array(
