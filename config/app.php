@@ -166,6 +166,8 @@ return [
         Invigor\Crawler\CrawlerServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
+
+        Invigor\Chargify\ChargifyServiceProvider::class
     ],
 
     /*
@@ -224,6 +226,8 @@ return [
         'Crawler' => Invigor\Crawler\CrawlerFacade::class,
 
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        'Chargify' => Invigor\Chargify\ChargifyFacade::class
     ],
 
 ];

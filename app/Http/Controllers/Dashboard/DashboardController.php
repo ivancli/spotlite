@@ -18,6 +18,8 @@ use App\Models\Dashboard\DashboardTemplate;
 use App\Validators\Dashboard\Dashboard\StoreValidator;
 use App\Validators\Dashboard\Dashboard\UpdateValidator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Invigor\Chargify\Chargify;
 
 class DashboardController extends Controller
 {
@@ -54,7 +56,6 @@ class DashboardController extends Controller
     /**
      * Go to Dashboard Management page
      *
-     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function manage()
