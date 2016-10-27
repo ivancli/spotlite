@@ -8,6 +8,7 @@ use App\Models\SubscriptionDetail;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Invigor\Chargify\Chargify;
 
 /**
  * Created by PhpStorm.
@@ -246,9 +247,9 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
     public function generateUpdatePaymentLink($subscription_id)
     {
-        $message = "update_payment--$subscription_id--" . config("chargify.share_key");
+        $message = "update_payment--$subscription_id--" . config("chargify.api_share_key");
         $token = $this->generateToken($message);
-        $link = config('chargify.api_url') . "update_payment/$subscription_id/" . $token;
+        $link = config('chargify.api_domain') . "update_payment/$subscription_id/" . $token;
         return $link;
     }
 
@@ -344,11 +345,11 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
     public function updateCreditCardDetails(Subscription $subscription)
     {
-        $apiSubscription = $this->getSubscription($subscription->api_subscription_id);
+        $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
         if (is_null($apiSubscription) || $apiSubscription == false) {
             return false;
         }
-        $creditCard = $apiSubscription->credit_card;
+        $creditCard = $apiSubscription->paymentProfile();
         $expiryYear = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_YEAR');
         $expiryMonth = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_MONTH');
 
@@ -478,8 +479,6 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         $component = new \stdClass();
         $component->component = new \stdClass();
         $component->component->component_id = $component_id;
-//        $component->component->allocated_quantity = $quantity;
-//        $component->component->usage_balance = $quantity;
         $subscription = new \stdClass();
         $subscription->subscription = new \stdClass();
         $subscription->subscription->components = array($component);

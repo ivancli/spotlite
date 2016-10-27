@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserPreference;
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Invigor\Chargify\Chargify;
 use Invigor\UM\UMRole;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -108,7 +109,8 @@ class AuthController extends Controller
 
 
         if (request()->has('api_product_id')) {
-            $product = $this->subscriptionRepo->getProduct(request('api_product_id'));
+
+            $product = Chargify::product()->get(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
             $coupon_code = request()->get('coupon_code');
             if ($requireCreditCard == true) {
@@ -120,10 +122,8 @@ class AuthController extends Controller
                 $encryptedReference = rawurlencode(json_encode($reference));
                 $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$coupon_code}";
                 if (isset($data['component_id']) && isset($data['family_id'])) {
-                    $apiComponents = Cache::remember("chargify.product_families.{$data['family_id']}.components", config('cache.subscription_info_cache_expiry'), function () use ($data) {
-                        return $this->subscriptionRepo->getComponentsByProductFamily($data['family_id']);
-                    });
-                    $allocatedQuantity = $apiComponents[0]->component->prices[0]->ending_quantity;
+                    $apiComponents = Chargify::component()->allByProductFamily($data['family_id']);
+                    $allocatedQuantity = $apiComponents[0]->prices[0]->ending_quantity;
                     if (!is_null($allocatedQuantity)) {
                         $chargifyLink .= "&components[][component_id]={$data['component_id']}&components[][allocated_quantity]={$allocatedQuantity}";
                     }
@@ -134,42 +134,37 @@ class AuthController extends Controller
                 /* CREDIT CARD NOT REQUIRED */
 
                 /* create subscription in chargify */
-                $fields = new \stdClass();
-                $subscription = new \stdClass();
-                $subscription->product_id = $product->id;
-                $subscription->coupon_code = $coupon_code;
+                $fields = array(
+                    "product_id" => $product->id,
+                    "customer_attributes" => array(
+                        "first_name" => $data['first_name'],
+                        "last_name" => $data['last_name'],
+                        "email" => $data['email']
+                    ),
+                    "coupon_code" => $coupon_code
+                );
 
                 if (isset($data['component_id']) && isset($data['family_id'])) {
-                    $apiComponents = Cache::remember("chargify.product_families.{$data['family_id']}.components", config('cache.subscription_info_cache_expiry'), function () use ($data) {
-                        return $this->subscriptionRepo->getComponentsByProductFamily($data['family_id']);
-                    });
-                    $allocatedQuantity = $apiComponents[0]->component->prices[0]->ending_quantity;
-                    $component = new \stdClass();
-                    $component->component_id = $data['component_id'];
-                    $component->allocated_quantity = $allocatedQuantity;
-                    $subscription->components = array($component);
+                    $apiComponents = Chargify::component()->allByProductFamily($data['family_id']);
+                    $allocatedQuantity = $apiComponents[0]->prices[0]->ending_quantity;
+                    $fields["component"] = array(
+                        "component_id" => $data['component_id'],
+                        "allocated_quantity" => $allocatedQuantity
+                    );
                 }
-                $customer_attributes = new \stdClass();
-                $customer_attributes->first_name = $data['first_name'];
-                $customer_attributes->last_name = $data['last_name'];
-                $customer_attributes->email = $data['email'];
-                $subscription->customer_attributes = $customer_attributes;
-                $fields->subscription = $subscription;
-
-
-                $result = $this->subscriptionRepo->storeSubscription(json_encode($fields));
-                if (!is_null($result)) {
+                $result = Chargify::subscription()->create($fields);
+                if (!isset($result->errors)) {
                     /* clear verification code*/
                     $user->verification_code = null;
                     $user->save();
                     try {
                         /* update subscription record */
-                        $subscription = $result->subscription;
+                        $subscription = $result;
                         $expiry_datetime = $subscription->expires_at;
                         $sub = new Subscription();
                         $sub->user_id = $user->getKey();
-                        $sub->api_product_id = $subscription->product->id;
-                        $sub->api_customer_id = $subscription->customer->id;
+                        $sub->api_product_id = $subscription->product_id;
+                        $sub->api_customer_id = $subscription->customer_id;
                         $sub->api_subscription_id = $subscription->id;
                         if (isset($data['component_id'])) {
                             $sub->api_component_id = $data['component_id'];
@@ -188,42 +183,35 @@ class AuthController extends Controller
 
     public function showRegistrationForm()
     {
-        $families = Cache::remember('chargify.product_families', config('cache.subscription_info_cache_expiry'), function () {
-            return $this->subscriptionRepo->getProductFamilies();
-        });
+        $families = Chargify::productFamily()->all();
+
         $productFamilies = array();
-
         foreach ($families as $index => $family) {
-            $family_id = $family->product_family->id;
-            $apiProducts = Cache::remember("chargify.product_families.{$family_id}.products", config('cache.subscription_info_cache_expiry'), function () use ($family_id) {
-                return $this->subscriptionRepo->getProductsByProductFamily($family_id);
-            });
+            $family_id = $family->id;
+            $apiProducts = Chargify::product()->allByProductFamily($family_id);
 
-            if (is_null($apiProducts)) {
+            if (isset($apiProducts->errors) || count($apiProducts) == 0) {
                 continue;
             }
-            $product = $apiProducts[0]->product;
-            $apiComponents = Cache::remember("chargify.product_families.{$family_id}.components", config('cache.subscription_info_cache_expiry'), function () use ($family_id) {
-                return $this->subscriptionRepo->getComponentsByProductFamily($family_id);
-            });
-
-            if (count($apiComponents) == 0) {
-                continue;
-            }
+            $product = $apiProducts[0];
 
             /*get preview subscription*/
+            $subscriptionPreview = Chargify::subscription()->preview(array(
+                "product_id" => $product->id,
+                "customer_attributes" => array(
+                    "first_name" => "Spot",
+                    "last_name" => "Lite",
+                    "email" => "admin@spotlite.com.au",
+                    "country" => "AU"
+                )
+            ));
 
-            $subscriptionPreview = Cache::remember("chargify.product_families.{$family_id}.products.{$product->id}.subscription_preview", config('cache.subscription_info_cache_expiry'), function () use ($product) {
-                $subscriptionPreview = $this->subscriptionRepo->getPreviewSubscription($product->id);
-                if (!is_null($subscriptionPreview)) {
-                    return $subscriptionPreview->subscription_preview;
-                }
-                return null;
-            });
-
-
-            $component = $apiComponents[0]->component;
-            $productFamily = new \stdClass();
+            $apiComponents = Chargify::component()->allByProductFamily($family_id);
+            if (isset($apiComponents->errors) || count($apiComponents) == 0) {
+                continue;
+            }
+            $component = $apiComponents[0];
+            $productFamily = $family;
             $productFamily->product = $product;
             $productFamily->component = $component;
             $productFamily->preview = $subscriptionPreview;
@@ -231,8 +219,6 @@ class AuthController extends Controller
         }
         $productFamilies = collect($productFamilies);
         $productFamilies = $productFamilies->sortBy('product.price_in_cents');
-
-//        $products = $this->subscriptionRepo->getProducts();
 
         if (property_exists($this, 'registerView')) {
             return view($this->registerView)->with(compact(['productFamilies']));

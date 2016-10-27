@@ -2,12 +2,11 @@
     @foreach($productFamilies as $productFamily)
         <div class="product-container m-b-10 {{isset($chosenAPIProductID) && $productFamily->product->id == $chosenAPIProductID ? 'chosen': ''}} {{old("api_product_id") == $productFamily->product->id ? "selected" : ""}}"
              data-link="{{array_first($productFamily->product->public_signup_pages)->url}}"
-             data-family-id="{{$productFamily->product->product_family->id}}"
+             data-family-id="{{$productFamily->id}}"
              data-id="{{$productFamily->product->id}}" style="border: 1px solid lightgrey; border-radius: 20px;"
              data-price="{{$productFamily->product->price_in_cents}}"
              data-component-id="{{$productFamily->component->id}}">
             <h4 style="text-transform: uppercase; color: #78a300;">{{$productFamily->product->name}}</h4>
-            {{--product_id: {{$item->product->id}}--}}
             <p>
                 {!! $productFamily->product->description !!}
             </p>

@@ -7,11 +7,15 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "ssh://git@repo.globalit.net.au:234/srv/repo/git/invigor-user-management"
+            "url": "git@bitbucket.org:invigorgroup/invigor-user-management.git"
         },
         {
             "type": "vcs",
             "url": "https://github.com/ketchol/spotlite-crawler.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:invigorgroup/spotlite-chargify.git"
         }
     ],
     "require": {
@@ -26,7 +30,8 @@
         "invigor/crawler": "dev-master",
         "driftyco/ionicons": "2.0.1",
         "mpdf/mpdf": "~5.7.3",
-        "facebook/webdriver": "^1.1"
+        "facebook/webdriver": "^1.1",
+        "invigor/chargify": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

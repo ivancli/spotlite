@@ -12,6 +12,12 @@ use App\Models\User;
  */
 interface SubscriptionContract
 {
+
+
+
+
+
+
     /**
      * Retrieve a list of products/services from Payment Management Site
      * @return mixed

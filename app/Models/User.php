@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Dashboard\Dashboard;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Cache;
+use Invigor\Chargify\Chargify;
 use Invigor\UM\Traits\UMUserTrait;
 
 class User extends Authenticatable
@@ -124,9 +125,8 @@ class User extends Authenticatable
     {
         $userPrimaryKey = $this->primaryKey;
         return Cache::remember("user.{$this->$userPrimaryKey}.subscription.api", config()->get('cache.ttl'), function () {
-            $subscriptionRepo = app()->make('App\Contracts\Repository\Subscription\SubscriptionContract');
             if ($this->hasValidSubscription()) {
-                $subscription = $subscriptionRepo->getSubscription($this->cachedSubscription()->api_subscription_id);
+                $subscription = Chargify::subscription()->get($this->cachedSubscription()->api_subscription_id);
             } else {
                 $subscription = false;
             }
@@ -140,8 +140,7 @@ class User extends Authenticatable
         $subscription = $this->cachedSubscription();
         $current_sub_id = $subscription->api_subscription_id;
         $component = Cache::remember("user.{$this->$userPrimaryKey}.subscription.component", config()->get('cache.ttl'), function () use ($current_sub_id) {
-            $subscriptionRepo = app()->make('App\Contracts\Repository\Subscription\SubscriptionContract');
-            $components = $subscriptionRepo->getComponentsBySubscription($current_sub_id);
+            $components = Chargify::component()->allBySubscription($current_sub_id);
             if (count($components) > 0) {
                 return $components[0]->component;
             }

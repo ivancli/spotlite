@@ -9,10 +9,10 @@
         <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">You are currently subscribed to {{$subscription->product->name}} plan</h3>
+                    <h3 class="box-title">You are currently subscribed to {{$subscription->product()->name}} plan</h3>
 
                     <div class="box-tools pull-right">
-                        Reference ID: {{$subscription->customer->id}}
+                        Reference ID: {{$subscription->customer_id}}
                     </div>
                 </div>
                 <div class="box-body">
@@ -66,28 +66,29 @@
                                     </thead>
                                     <tbody>
 
-                                    @foreach($transactions as $item)
-                                        @if($item->transaction->kind == "baseline"|| $item->transaction->kind == "initial")
+                                    @foreach($transactions as $transaction)
+
+                                        @if($transaction->kind == "baseline"|| $transaction->kind == "initial")
                                             <tr>
-                                                <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($item->transaction->created_at))}}</td>
-                                                <td>{{$item->transaction->memo}}</td>
+                                                <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($transaction->created_at))}}</td>
+                                                <td>{{$transaction->memo}}</td>
                                                 <td>
-                                                    @if($item->transaction->kind == "baseline")
+                                                    @if($transaction->kind == "baseline")
                                                         Subscription
-                                                    @elseif($item->transaction->kind == "initial")
+                                                    @elseif($transaction->kind == "initial")
                                                         Initial Setup
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if(isset($item->transaction->taxations) && is_array($item->transaction->taxations))
-                                                        @foreach($item->transaction->taxations as $taxation)
-                                                            <?php $item->transaction->ending_balance_in_cents += $taxation->tax_amount_in_cents ?>
+                                                    @if(isset($transaction->taxations) && is_array($transaction->taxations))
+                                                        @foreach($transaction->taxations as $taxation)
+                                                            <?php $transaction->ending_balance_in_cents += $taxation->tax_amount_in_cents ?>
                                                         @endforeach
                                                     @endif
-                                                    @if($item->transaction->ending_balance_in_cents < 0)
+                                                    @if($transaction->ending_balance_in_cents < 0)
                                                             ${{number_format(0, 2)}}
                                                     @else
-                                                        ${{number_format($item->transaction->ending_balance_in_cents/100, 2)}}
+                                                        ${{number_format($transaction->ending_balance_in_cents/100, 2)}}
                                                     @endif
                                                 </td>
                                             </tr>
