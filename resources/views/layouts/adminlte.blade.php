@@ -7,8 +7,13 @@
     <title>@yield('title') - SpotLite</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
-
+    <style>
+        body, h1, h2, h3 {
+            font-family: 'Lato', serif;
+        }
+    </style>
     @yield('links')
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
