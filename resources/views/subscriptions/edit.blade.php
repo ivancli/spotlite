@@ -19,7 +19,7 @@
                             {!! Form::model($subscription ,array('route' => array('subscription.update', $subscription->getKey()), 'method' => 'put', "id" => "frm-subscription-update", "onsubmit"=>"return false;")) !!}
                             <input type="hidden" name="api_product_id" id="txt-api-product-id">
                             <input type="hidden" name="coupon_code" id="txt-coupon-code">
-                            {!! Form::submit('Update Subscription', ["href" => "#", "class"=>"btn btn-primary btn-lg",
+                            {!! Form::submit('Change My Plan', ["href" => "#", "class"=>"btn btn-primary btn-lg",
                             "id" => "btn-subscribe", "disabled" => "disabled", "onclick"=>"submitSubscriptionUpdateOnclick();"]) !!}
                             {!! Form::close() !!}
                         </div>

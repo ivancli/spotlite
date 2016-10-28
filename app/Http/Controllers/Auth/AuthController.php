@@ -103,13 +103,12 @@ class AuthController extends Controller
             $user->attachRole($role);
         }
 
-        $options = $user->toArray();
-        $options['subject'] = "Welcome to SpotLite";
-        $this->dispatch((new SendMail("auth.emails.welcome", compact(['user']), $options))->onQueue("mailing"));
+//        $options = $user->toArray();
+//        $options['subject'] = "Welcome to SpotLite";
+//        $this->dispatch((new SendMail("auth.emails.welcome", compact(['user']), $options))->onQueue("mailing"));
 
 
         if (request()->has('api_product_id')) {
-
             $product = Chargify::product()->get(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
             $coupon_code = request()->get('coupon_code');

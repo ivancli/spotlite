@@ -69,19 +69,11 @@
                     <thead>
                     <tr>
                         <th width="25%">Site</th>
-                        {{--<th width="30%" class="hidden-sm hidden-xs">Path</th>--}}
                         <th width="15%">Price</th>
-                        <th width="15%">Change</th>
+                        <th width="15%" class="hidden-xs">Change</th>
                         <th class="text-center" width="10%">My Price</th>
                         <th width="15%">Last Update</th>
                         <th width="20%"></th>
-                        {{--<th >Site</th>--}}
-                        {{--<th  class="hidden-sm hidden-xs">Path</th>--}}
-                        {{--<th>Price</th>--}}
-                        {{--<th></th>--}}
-                        {{--<th class="text-center" width="100">My Price</th>--}}
-                        {{--<th >Last Update</th>--}}
-                        {{--<th ></th>--}}
                     </tr>
                     </thead>
                     <tbody>

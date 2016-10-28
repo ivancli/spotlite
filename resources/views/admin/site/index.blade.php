@@ -169,10 +169,9 @@
                         "name": "created_at",
                         "data": function (data) {
                             if (data.created_at != null) {
-                                var timestamp = strtotime(data.created_at)
                                 return $("<div>").append(
-                                        $("<span>").text(timestampToDateTimeByFormat(timestamp, datefmt)).attr({
-                                            "title": timestampToDateTimeByFormat(timestamp, datefmt + ' ' + timefmt),
+                                        $("<span>").text(timestampToDateTimeByFormat(moment(data.created_at).unix(), datefmt)).attr({
+                                            "title": timestampToDateTimeByFormat(moment(data.created_at).unix(), datefmt + ' ' + timefmt),
                                             "data-toggle": "tooltip"
                                         })
                                 ).html();

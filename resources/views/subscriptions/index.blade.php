@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">You are currently subscribed to {{$subscription->product()->name}} plan</h3>
+                    <h3 class="box-title">You are currently subscribed to {{$subscription->product()->name}}</h3>
 
                     <div class="box-tools pull-right">
                         Reference ID: {{$subscription->customer_id}}

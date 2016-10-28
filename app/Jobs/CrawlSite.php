@@ -38,9 +38,17 @@ class CrawlSite extends Job implements ShouldQueue
     /**
      * Execute the job.
      * @param CrawlerContract $crawler
+     * @return bool
      */
     public function handle(CrawlerContract $crawler)
     {
+
+        if (isset($this->crawler->site) && isset($this->crawler->site->product) && isset($this->crawler->site->product->user)) {
+            $user = $this->crawler->site->product->user;
+            if (!$user->isStaff() && !$this->crawler->site->product->user->hasValidSubscription()) {
+                return false;
+            }
+        }
 
         $crawler_class = "DefaultCrawler";
         $parser_class = "XPathParser";
@@ -66,7 +74,6 @@ class CrawlSite extends Job implements ShouldQueue
             }
         }
         $parserClassFullPath = 'Invigor\Crawler\Repositories\Parsers\\' . $parser_class;
-
 
         $crawlerClass = app()->make($crawlerClassFullPath);
         $parserClass = app()->make($parserClassFullPath);
