@@ -142,7 +142,7 @@ class User extends Authenticatable
         $component = Cache::remember("user.{$this->$userPrimaryKey}.subscription.component", config()->get('cache.ttl'), function () use ($current_sub_id) {
             $components = Chargify::component()->allBySubscription($current_sub_id);
             if (count($components) > 0) {
-                return $components[0]->component;
+                return array_first($components);
             }
             return null;
         });
