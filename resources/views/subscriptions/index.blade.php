@@ -54,6 +54,7 @@
                             </table>
                             <hr>
                             @if(isset($transactions))
+                                    {{dump($transactions)}}
                                 <h4>Payment History</h4>
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead class="thead-inverse">
@@ -68,7 +69,7 @@
 
                                     @foreach($transactions as $transaction)
 
-                                        @if($transaction->kind == "baseline"|| $transaction->kind == "initial")
+                                        @if($transaction->transaction_type == "payment")
                                             <tr>
                                                 <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($transaction->created_at))}}</td>
                                                 <td>{{$transaction->memo}}</td>
@@ -80,16 +81,17 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if(isset($transaction->taxations) && is_array($transaction->taxations))
-                                                        @foreach($transaction->taxations as $taxation)
-                                                            <?php $transaction->ending_balance_in_cents += $taxation->tax_amount_in_cents ?>
-                                                        @endforeach
-                                                    @endif
-                                                    @if($transaction->ending_balance_in_cents < 0)
-                                                            ${{number_format(0, 2)}}
-                                                    @else
-                                                        ${{number_format($transaction->ending_balance_in_cents/100, 2)}}
-                                                    @endif
+                                                    ${{number_format($transaction->amount_in_cents/100, 2)}}
+                                                    {{--@if(isset($transaction->taxations) && is_array($transaction->taxations))--}}
+                                                        {{--@foreach($transaction->taxations as $taxation)--}}
+                                                            <?php /*$transaction->ending_balance_in_cents += $taxation->tax_amount_in_cents*/ ?>
+                                                        {{--@endforeach--}}
+                                                    {{--@endif--}}
+                                                    {{--@if($transaction->ending_balance_in_cents < 0)--}}
+                                                            {{--${{number_format(0, 2)}}--}}
+                                                    {{--@else--}}
+                                                        {{--${{number_format($transaction->ending_balance_in_cents/100, 2)}}--}}
+                                                    {{--@endif--}}
                                                 </td>
                                             </tr>
                                         @endif

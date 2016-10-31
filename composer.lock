@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e27d47c7fc9d3d30b7e4164462d93d85",
-    "content-hash": "9d009e0b142cc31aab068f80a46f1f76",
+    "hash": "604b3a22ce795fcee408048fd6325539",
+    "content-hash": "38332ef43c4704f460f399c55515ff92",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -524,7 +524,7 @@
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-chargify.git",
-                "reference": "c3b03a4fbfed81de25e1a8fd238000e4c1436e19"
+                "reference": "854ebd2d2a2d60617c9626e367327c11b2847f36"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -554,7 +554,7 @@
                 "laravel",
                 "subscription"
             ],
-            "time": "2016-10-28 00:21:08"
+            "time": "2016-10-31 05:58:39"
         },
         {
             "name": "invigor/crawler",
@@ -3496,6 +3496,70 @@
                 "xunit"
             ],
             "time": "2015-10-02 06:51:40"
+        },
+        {
+            "name": "phpunit/phpunit-selenium",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/giorgiosironi/phpunit-selenium.git",
+                "reference": "2bad798ec0daf20d2854400e3bc5329ee0a7b2d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/giorgiosironi/phpunit-selenium/zipball/2bad798ec0daf20d2854400e3bc5329ee0a7b2d1",
+                "reference": "2bad798ec0daf20d2854400e3bc5329ee0a7b2d1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "php": ">=5.3.3",
+                "phpunit/phpunit": "~4.8",
+                "sebastian/comparator": "~1.0"
+            },
+            "require-dev": {
+                "phing/phing": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "PHPUnit/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                ""
+            ],
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Giorgio Sironi",
+                    "email": "info@giorgiosironi.com",
+                    "role": "developer"
+                },
+                {
+                    "name": "Ivan Kurnosov",
+                    "email": "zerkms@zerkms.com",
+                    "role": "developer"
+                },
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sb@sebastian-bergmann.de",
+                    "role": "original developer"
+                }
+            ],
+            "description": "Selenium Server integration for PHPUnit",
+            "homepage": "http://www.phpunit.de/",
+            "keywords": [
+                "phpunit",
+                "selenium",
+                "testing",
+                "xunit"
+            ],
+            "time": "2016-03-01 10:33:56"
         },
         {
             "name": "sebastian/comparator",

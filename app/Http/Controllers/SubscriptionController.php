@@ -43,42 +43,7 @@ class SubscriptionController extends Controller
         if (!is_null($subscription)) {
             $chosenAPIProductID = $subscription->api_product_id;
         }
-
-        $families = Chargify::productFamily()->all();
-        $productFamilies = array();
-        foreach ($families as $index => $family) {
-            $family_id = $family->id;
-            $apiProducts = Chargify::product()->allByProductFamily($family->id);
-
-            if (isset($apiProducts->errors) || count($apiProducts) == 0) {
-                continue;
-            }
-            $product = array_first($apiProducts);
-            $apiComponents = Chargify::component()->allByProductFamily($family->id);
-
-            if (isset($apiComponents->errors) || count($apiComponents) == 0) {
-                continue;
-            }
-
-            $subscriptionPreview = Chargify::subscription()->preview(array(
-                "product_id" => $product->id,
-                "customer_attributes" => array(
-                    "first_name" => "Spot",
-                    "last_name" => "Lite",
-                    "email" => "admin@spotlite.com.au",
-                    "country" => "AU"
-                )
-            ));
-
-            $component = array_first($apiComponents);
-            $productFamily = $family;
-            $productFamily->product = $product;
-            $productFamily->component = $component;
-            $productFamily->preview = $subscriptionPreview;
-            $productFamilies[] = $productFamily;
-        }
-        $productFamilies = collect($productFamilies);
-        $productFamilies = $productFamilies->sortBy('product.price_in_cents');
+        $productFamilies = $this->subscriptionRepo->getProductList();
         event(new SubscriptionViewed());
         return view('subscriptions.subscription_plans')->with(compact(['productFamilies', 'chosenAPIProductID']));
     }
@@ -331,44 +296,7 @@ class SubscriptionController extends Controller
         $chosenAPIProductID = $subscription->api_product_id;
 
         //load all products from Chargify
-
-        $families = Chargify::productFamily()->all();
-
-        $productFamilies = array();
-
-        foreach ($families as $index => $family) {
-            $family_id = $family->id;
-
-            $apiProducts = Chargify::product()->allByProductFamily($family_id);
-            if (isset($apiProducts->errors) || count($apiProducts) == 0) {
-                continue;
-            }
-            $product = array_first($apiProducts);
-            $apiComponents = Chargify::component()->allByProductFamily($family_id);
-
-            if (isset($apiComponents->errors) || count($apiComponents) == 0) {
-                continue;
-            }
-
-            $subscriptionPreview = Chargify::subscription()->preview(array(
-                "product_id" => $product->id,
-                "customer_attributes" => array(
-                    "first_name" => "Spot",
-                    "last_name" => "Lite",
-                    "email" => "admin@spotlite.com.au"
-                )
-            ));
-
-            $component = array_first($apiComponents);
-            $productFamily = $family;
-            $productFamily->product = $product;
-            $productFamily->component = $component;
-            $productFamily->preview = $subscriptionPreview;
-            $productFamilies[] = $productFamily;
-        }
-        $productFamilies = collect($productFamilies);
-        $productFamilies = $productFamilies->sortBy('product.price_in_cents');
-
+        $productFamilies = $this->subscriptionRepo->getProductList();
         event(new SubscriptionEditViewed($subscription));
         return view('subscriptions.edit')->with(compact(['productFamilies', 'chosenAPIProductID', 'subscription']));
     }
@@ -376,6 +304,11 @@ class SubscriptionController extends Controller
     public function update(Request $request, $id)
     {
         $subscription = Subscription::findOrFail($id);
+        if (auth()->user()->getKey() != $subscription->user_id) {
+            abort(403);
+            return false;
+        }
+
         event(new SubscriptionUpdating($subscription));
         $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
 //        $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
@@ -464,10 +397,13 @@ class SubscriptionController extends Controller
     public function destroy(Request $request, $id)
     {
         $subscription = Subscription::findOrFail($id);
+        if (auth()->user()->getKey() != $subscription->user_id) {
+            abort(403);
+            return false;
+        }
+
         event(new SubscriptionCancelling($subscription));
         $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
-
-//        $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
         if (!isset($apiSubscription->errors)) {
             if (!$request->has('keep_profile') || $request->get('keep_profile') != '1') {
                 Chargify::subscription()->deletePaymentProfile($apiSubscription->id, $apiSubscription->credit_card_id);
@@ -475,7 +411,6 @@ class SubscriptionController extends Controller
             }
             Chargify::subscription()->cancel($apiSubscription->id);
             $updatedSubscription = Chargify::subscription()->get($apiSubscription->id);
-
             if (!isset($updatedSubscription->errors)) {
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($updatedSubscription->canceled_at));
                 $subscription->save();

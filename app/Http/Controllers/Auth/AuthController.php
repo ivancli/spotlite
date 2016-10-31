@@ -107,7 +107,6 @@ class AuthController extends Controller
 //        $options['subject'] = "Welcome to SpotLite";
 //        $this->dispatch((new SendMail("auth.emails.welcome", compact(['user']), $options))->onQueue("mailing"));
 
-
         if (request()->has('api_product_id')) {
             $product = Chargify::product()->get(request('api_product_id'));
             $requireCreditCard = $product->require_credit_card == true;
@@ -122,9 +121,14 @@ class AuthController extends Controller
                 $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$coupon_code}";
                 if (isset($data['component_id']) && isset($data['family_id'])) {
                     $apiComponents = Chargify::component()->allByProductFamily($data['family_id']);
-                    $allocatedQuantity = $apiComponents[0]->prices[0]->ending_quantity;
-                    if (!is_null($allocatedQuantity)) {
-                        $chargifyLink .= "&components[][component_id]={$data['component_id']}&components[][allocated_quantity]={$allocatedQuantity}";
+                    if (!isset($apiComponents->errors) && count($apiComponents) > 0) {
+                        $apiComponent = array_first($apiComponents);
+                        if (isset($apiComponent->prices) && count($apiComponent->prices) > 0) {
+                            $allocatedQuantity = array_first($apiComponent->prices)->ending_quantity;
+                            if (!is_null($allocatedQuantity)) {
+                                $chargifyLink .= "&components[][component_id]={$data['component_id']}&components[][allocated_quantity]={$allocatedQuantity}";
+                            }
+                        }
                     }
                 }
 
@@ -182,43 +186,7 @@ class AuthController extends Controller
 
     public function showRegistrationForm()
     {
-        $families = Chargify::productFamily()->all();
-
-        $productFamilies = array();
-        foreach ($families as $index => $family) {
-            $family_id = $family->id;
-            $apiProducts = Chargify::product()->allByProductFamily($family_id);
-
-            if (isset($apiProducts->errors) || count($apiProducts) == 0) {
-                continue;
-            }
-            $product = $apiProducts[0];
-
-            /*get preview subscription*/
-            $subscriptionPreview = Chargify::subscription()->preview(array(
-                "product_id" => $product->id,
-                "customer_attributes" => array(
-                    "first_name" => "Spot",
-                    "last_name" => "Lite",
-                    "email" => "admin@spotlite.com.au",
-                    "country" => "AU"
-                )
-            ));
-
-            $apiComponents = Chargify::component()->allByProductFamily($family_id);
-            if (isset($apiComponents->errors) || count($apiComponents) == 0) {
-                continue;
-            }
-            $component = $apiComponents[0];
-            $productFamily = $family;
-            $productFamily->product = $product;
-            $productFamily->component = $component;
-            $productFamily->preview = $subscriptionPreview;
-            $productFamilies[] = $productFamily;
-        }
-        $productFamilies = collect($productFamilies);
-        $productFamilies = $productFamilies->sortBy('product.price_in_cents');
-
+        $productFamilies = $this->subscriptionRepo->getProductList();
         if (property_exists($this, 'registerView')) {
             return view($this->registerView)->with(compact(['productFamilies']));
         }
