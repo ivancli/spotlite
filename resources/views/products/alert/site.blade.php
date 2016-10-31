@@ -10,13 +10,12 @@
                 <p>{{parse_url($site->site_url)['host']}}</p>
                 <ul class="text-danger errors-container">
                 </ul>
-
                 {!! Form::model($site->alert, array('route' => array('alert.site.update', $site->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-site-update")) !!}
                 <input type="hidden" name="alert_owner_id" value="{{$site->getKey()}}">
                 <input type="hidden" name="alert_owner_type" value="site">
                 <div class="form-group required">
                     {!! Form::label('comparison_price_type', 'Trigger', array('class' => 'control-label')) !!}
-                    {!! Form::select('comparison_price_type', $site->my_price == 'n' ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
+                    {!! Form::select('comparison_price_type', $site->my_price == 'n' && !is_null($site->product->myPriceSite()) ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
                 </div>
                 <div class="form-group required">
                     {!! Form::label('operator', 'Trend', array('class' => 'control-label')) !!}

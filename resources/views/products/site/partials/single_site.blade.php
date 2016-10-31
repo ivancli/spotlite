@@ -48,7 +48,8 @@
     <td align="center">
 
         <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;"
-           data-alert-is-subjected-my-price="{{$site->alert['comparison_price_type'] == 'my price' ? 'y' : 'n'}}">
+           data-product-alert-on-my-price="{{is_null($site->product->alertOnMyPrice()) ? "" : "y"}}"
+           data-site-alerts-on-my-price="{{$site->product->siteAlertsOnMyPrice()->count()}}">
             <i class="fa fa-check-circle-o {{$site->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
         </a>
     </td>
@@ -206,8 +207,8 @@
         }
 
         function toggleMyPrice(el) {
-            if ($(el).attr("data-alert-is-subjected-my-price") == 'y' && !$(el).find("i").hasClass("text-primary")) {
-                confirmP("My Price", "The alert of this site is subjected to 'My Price'. Setting this site to be 'My Price' will disable the alert. Do you want to set this site as 'My Price'?", {
+            if (($(el).attr("data-product-alert-on-my-price") == 'y' || $(el).attr("data-site-alerts-on-my-price") > 0) && $(el).find("i").hasClass("text-primary")) {
+                confirmP("My Price", "The alerts of product or other sites are subjected to 'My Price'. Disabling 'My Price' will remove the related alerts. Do you want to disable 'My Price'?", {
                     "affirmative": {
                         "text": "Yes",
                         "class": "btn-primary",
@@ -241,13 +242,11 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
-                        if ($(el).find("i").hasClass("text-primary")) {
-                            $(el).find("i").removeClass("text-primary").addClass("text-muted-further")
-                        } else {
-                            $(el).closest(".product-wrapper").find(".btn-my-price i").removeClass("text-primary").addClass("text-muted-further")
-                            $(el).find("i").removeClass("text-muted-further").addClass("text-primary")
-
-                        }
+                        showLoading();
+                        $.get('{{$site->product->urls['show']}}', function (html) {
+                            hideLoading();
+                            $(el).closest(".product-wrapper").replaceWith(html);
+                        });
                     } else {
                         alertP("Error", "unable to set my price, please try again later.");
                     }

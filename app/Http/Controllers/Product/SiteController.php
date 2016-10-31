@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repository\Crawler\CrawlerContract;
+use App\Contracts\Repository\Product\Alert\AlertContract;
 use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
@@ -33,13 +34,16 @@ class SiteController extends Controller
     protected $domainRepo;
     protected $productRepo;
     protected $crawlerRepo;
+    protected $alertRepo;
 
-    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract)
+
+    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract, AlertContract $alertContract)
     {
         $this->siteRepo = $siteContract;
         $this->domainRepo = $domainContract;
         $this->productRepo = $productContract;
         $this->crawlerRepo = $crawlerContract;
+        $this->alertRepo = $alertContract;
     }
 
     /**
@@ -417,6 +421,20 @@ class SiteController extends Controller
             foreach ($allSitesOfThisProduct as $allOtherSites) {
                 $allOtherSites->my_price = "n";
                 $allOtherSites->save();
+            }
+
+            /*remove my price alert*/
+            if (!is_null($site->alert) && $site->alert->comparison_price_type == "my price") {
+                $this->alertRepo->deleteAlert($site->alert->getKey());
+            }
+        } else {
+            $productMyPriceAlert = $site->product->alertOnMyPrice();
+            if (!is_null($productMyPriceAlert)) {
+                $this->alertRepo->deleteAlert($productMyPriceAlert->getKey());
+            }
+            $siteMyPriceAlerts = $site->product->siteAlertsOnMyPrice();
+            foreach ($siteMyPriceAlerts as $siteMyPriceAlert) {
+                $this->alertRepo->deleteAlert($siteMyPriceAlert->getKey());
             }
         }
         $site->my_price = $myPrice;

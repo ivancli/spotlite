@@ -195,7 +195,7 @@
                         $(el).hide();
                         $(el).closest(".tbl-category").find(".btn-action.editing").removeClass("editing");
                     } else {
-                        var errorMsg = "Unable to add product. ";
+                        var errorMsg = "Unable to edit category name. ";
                         if (response.errors != null) {
                             $.each(response.errors, function (index, error) {
                                 errorMsg += error + " ";

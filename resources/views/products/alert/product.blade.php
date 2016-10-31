@@ -15,7 +15,7 @@
                 <input type="hidden" name="alert_owner_type" value="product">
                 <div class="form-group required">
                     {!! Form::label('comparison_price_type', 'Trigger', array('class' => 'control-label')) !!}
-                    {!! Form::select('comparison_price_type', array('specific price' => 'Specific Price', 'my price' => 'My Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
+                    {!! Form::select('comparison_price_type', !is_null($product->myPriceSite()) ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
                 </div>
                 <div class="form-group required">
                     {!! Form::label('operator', 'Trend', array('class' => 'control-label')) !!}
@@ -32,7 +32,6 @@
                 </div>
                 <div class="form-group required">
                     {!! Form::label('email[]', 'Notify Emails', array('class' => 'control-label')) !!}
-{{--                    {!! Form::select('email[]', $emails, $emails, ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email']) !!}--}}
                     {!! Form::select('email[]', [auth()->user()->email], [auth()->user()->email], ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email', 'disabled' => 'disabled']) !!}
                     <input type="hidden" name="email[]" value="{{auth()->user()->email}}">
                 </div>

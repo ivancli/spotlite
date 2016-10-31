@@ -11,6 +11,7 @@ namespace App\Models;
 
 use App\Models\DeletedRecordModels\DeletedProduct;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -61,12 +62,27 @@ class Product extends Model
 
     public function siteAlerts()
     {
-        return $this->hasManyThrough('App\Models\Alert', 'App\Models\Product', 'product_id', 'alert_owner_id', 'product_id')->where('alert_owner_type', 'site');
+        return $this->hasManyThrough('App\Models\Alert', 'App\Models\Site', 'product_id', 'alert_owner_id', 'product_id')->where('alert_owner_type', 'site');
     }
 
     public function getSiteCountAttribute()
     {
-        return $this->sites->count();
+        return $this->sites()->count();
+    }
+
+    public function myPriceSite()
+    {
+        return $this->sites()->where('my_price', 'y')->first();
+    }
+
+    public function alertOnMyPrice()
+    {
+        return $this->alert()->where("comparison_price_type", "my price")->first();
+    }
+
+    public function siteAlertsOnMyPrice()
+    {
+        return $this->siteAlerts()->where("comparison_price_type", "my price")->get();
     }
 
     public function getUrlsAttribute()
