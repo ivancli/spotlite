@@ -129,13 +129,14 @@ Route::group(['middleware' => ['auth']], function () {
      * Subscription Related Routes
      */
     //for those users who registered but not yet subscribe
-    Route::get('subscription/back', 'SubscriptionController@viewProducts')->name('subscription.back');
+    Route::get('subscription/back', 'Subscription\SubscriptionController@viewProducts')->name('subscription.back');
     //redirect route for chargify sign up page
-    Route::get('subscription/finalise', 'SubscriptionController@finalise')->name('subscription.finalise');
-    Route::get('subscription/update', 'SubscriptionController@externalUpdate')->name('subscription.external_update');
-    Route::resource('subscription', 'SubscriptionController', ['except' => [
+    Route::get('subscription/finalise', 'Subscription\SubscriptionController@finalise')->name('subscription.finalise');
+    Route::get('subscription/update', 'Subscription\SubscriptionController@externalUpdate')->name('subscription.external_update');
+    Route::resource('subscription', 'Subscription\SubscriptionController', ['except' => [
         'create', 'show'
     ]]);
+    Route::match(['get', 'post', 'put', 'delete'], 'subscription/webhook', 'Subscription\SubscriptionController@webhookUpdate')->name('subscription.webhook_update');
 
 
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");

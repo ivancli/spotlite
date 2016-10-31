@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Subscription;
 
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Events\Subscription\SubscriptionCancelled;
@@ -12,15 +12,14 @@ use App\Events\Subscription\SubscriptionManagementViewed;
 use App\Events\Subscription\SubscriptionUpdated;
 use App\Events\Subscription\SubscriptionUpdating;
 use App\Events\Subscription\SubscriptionViewed;
+use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 use Invigor\Chargify\Chargify;
 
 class SubscriptionController extends Controller
@@ -426,6 +425,11 @@ class SubscriptionController extends Controller
             abort(404);
             return false;
         }
+    }
+
+    public function webhookUpdate(Request $request)
+    {
+        
     }
 
     private function _flushUserSubscriptionCache($user_id)
