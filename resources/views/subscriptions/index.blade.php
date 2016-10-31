@@ -54,7 +54,6 @@
                             </table>
                             <hr>
                             @if(isset($transactions))
-                                    {{dump($transactions)}}
                                 <h4>Payment History</h4>
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead class="thead-inverse">
