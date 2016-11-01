@@ -57,9 +57,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                 } else {
                     $subscription->expiry_date = null;
                 }
-                if (!is_null($apiSubscription->product)) {
-                    $subscription->api_product_id = $apiSubscription->product->id;
-                }
+                $subscription->api_product_id = $apiSubscription->product_id;
                 $subscription->save();
             }
         }
