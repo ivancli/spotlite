@@ -77,6 +77,10 @@
         function modalReady(options) {
             $("#btn-update-dashboard-filter").on("click", function () {
                 submitUpdateFilters(function (response) {
+                    gaDashboardApplyFilter({
+                        "Timespan": $("#sel-timespan").val(),
+                        "Period Resolution": $("#sel-period-resolution").val()
+                    });
                     if ($.isFunction(options.callback)) {
                         options.callback(response);
                     }

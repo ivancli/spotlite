@@ -95,6 +95,8 @@
                 submitSiteUpdate(function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaEditSite();
+
                         if ($.isFunction(options.callback)) {
                             options.callback(response);
                         }

@@ -14,7 +14,6 @@
                 "url": "{{route("dashboard.filter.edit", $dashboard->getKey())}}",
                 "method": "get",
                 "success": function (html) {
-
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -172,5 +171,7 @@
                 }
             })
         }
+
+        gaDisplayDashboard();
     </script>
 @stop

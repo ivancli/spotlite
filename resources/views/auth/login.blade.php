@@ -8,7 +8,9 @@
                     <h3 class="box-title">Account login</h3>
 
                     <div class="box-tools pull-right">
-                        <a class="btn btn-default btn-sm" href="{{route('register.get')}}">Don't have an account? Sign Up Now</a>
+                        <a class="btn btn-default btn-sm" href="{{route('register.get')}}" onclick="gaRegister();">
+                            Don't have an account? Sign Up Now
+                        </a>
                     </div>
                 </div>
                 <div class="box-body">
@@ -20,11 +22,11 @@
                                 @endforeach
                             </ul>
                         @endif
-                        {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "class"=>"form-horizontal sl-form-horizontal")) !!}
+                        {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "class"=>"form-horizontal sl-form-horizontal", "onsubmit" => "gaLogin();")) !!}
                         @include('auth.forms.login_form')
                         <div class="row m-b-5">
                             <div class="col-sm-6 text-left">
-                                <a href="{{route('password.get')}}">Forgot password?</a>
+                                <a href="{{route('password.get')}}" onclick="gaForgotPassword();">Forgot password?</a>
                             </div>
                             <div class="col-sm-6 text-right">
                                 {!! Form::submit('Login', ["class"=>"btn btn-default btn-sm"]) !!}
@@ -36,4 +38,10 @@
             </div>
         </div>
     </div>
+@stop
+
+@section('scripts')
+    <script type="text/javascript">
+
+    </script>
 @stop

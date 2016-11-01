@@ -66,6 +66,16 @@
             $("#btn-update-site-alert").on("click", function () {
                 submitUpdateSiteAlert(function (response) {
                     if (response.status == true) {
+                        var gaParams = {
+                            "Trigger": $("#comparison_price_type option:selected").text(),
+                            "Trend": $("#operator option:selected").text(),
+                            "One-off": $("#one_off").is(":checked") ? "yes" : "no"
+                        };
+                        if ($("#comparison_price_type").val() == "specific price") {
+                            gaParams["Price Point"] = $("#txt-comparison-price").val();
+                        }
+                        gaSiteAlert(gaParams);
+
                         alertP("Create/Update Alert", "Alert has been updated.");
                         $("#modal-alert-site").modal("hide");
                         if ($.isFunction(options.updateCallback)) {

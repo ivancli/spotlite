@@ -218,7 +218,8 @@
                                             $("<a>").addClass("text-muted").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['edit'],
-                                                "onclick": "showAlertForm(this); return false;"
+                                                "onclick": "showAlertForm(this); return false;",
+                                                "data-alert-type": data.alert_owner_type
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-cog")
                                             ),
@@ -226,7 +227,8 @@
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],
-                                                "onclick": "deleteAlert(this); return false"
+                                                "onclick": "deleteAlert(this); return false",
+                                                "data-alert-type": data.alert_owner_type
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-trash")
                                             )
@@ -339,6 +341,10 @@
                 "url": $(el).attr("data-url"),
                 "method": "get",
                 "success": function (html) {
+                    gaEditAlertFromAlertsPage({
+                        "Type": $(el).attr("data-alert-type")
+                    });
+
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -381,6 +387,10 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
+                                    gaDeleteAlertFromAlertsPage({
+                                        "Type": $(el).attr("data-alert-type")
+                                    });
+
                                     tblAlert.row($(el).closest("tr")).remove().draw();
                                 } else {
                                     alertP("Error", "Unable to delete alert, please try again later.");

@@ -218,7 +218,8 @@
                                             $("<a>").addClass("text-muted").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['edit'],
-                                                "onclick": "showReportTaskForm(this)"
+                                                "onclick": "showReportTaskForm(this)",
+                                                "data-report-type": data.report_task_owner_type
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-cog")
                                             ),
@@ -226,7 +227,8 @@
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],
-                                                "onclick": "deleteReportTask(this)"
+                                                "onclick": "deleteReportTask(this)",
+                                                "data-report-type": data.report_task_owner_type
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-trash")
                                             )
@@ -429,6 +431,10 @@
                 "url": $(el).attr("data-url"),
                 "method": "get",
                 "success": function (html) {
+                    gaEditReportFromReportsPage({
+                        "Type": $(el).attr("data-report-type")
+                    });
+
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -471,6 +477,10 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
+                                    gaDeleteReportFromReportsPage({
+                                        "Type": $(el).attr("data-report-type")
+                                    });
+
                                     tblReportTask.row($(el).closest("tr")).remove().draw();
                                 } else {
                                     alertP("Error", "Unable to delete report schedule, please try again later.");

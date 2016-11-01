@@ -49,6 +49,7 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaAddCategory();
                         if (response.category != null) {
                             showLoading();
                             loadSingleCategory(response.category.urls.show, function (html) {

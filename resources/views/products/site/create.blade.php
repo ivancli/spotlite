@@ -65,6 +65,8 @@
                 submitSiteStore(function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaAddSite();
+
                         if ($.isFunction(options.callback)) {
                             options.callback(response);
                         }

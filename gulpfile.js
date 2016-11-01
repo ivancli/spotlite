@@ -72,6 +72,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js',
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.js',
         'resources/assets/js/commonFunctions.js',
+        'resources/assets/js/google_analytics.js',
         'resources/assets/js/sidebar.js',
         'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");

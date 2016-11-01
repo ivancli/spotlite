@@ -50,6 +50,7 @@
         submitProfileUpdate(function (response) {
             hideLoading();
             if (response.status == true) {
+                gaUpdateUserProfile();
                 alertP("Update Profile", "Profile has been updated.");
             } else {
                 if (typeof response.errors != 'undefined') {

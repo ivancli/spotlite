@@ -136,6 +136,26 @@
                     if (response.status == true) {
                         alertP("Create/Update Report Schedule", "Report has been scheduled.");
                         $("#modal-report-task-category").modal("hide");
+
+                        var gaParams = {
+                            "Frequency": $("#frequency").val()
+                        };
+                        switch ($("#frequency").val()) {
+                            case "daily":
+                                if ($("#weekday_only").is(":checked")) {
+                                    gaParams['Weekday Only'] = "yes";
+                                }
+                                gaParams['Delivery Time'] = $("#time").val();
+                                break;
+                            case "weekly":
+                                gaParams['Delivery Day'] = $("#day option:selected").text();
+                                break;
+                            case "monthly":
+                                gaParams['Delivery Date'] = $("#date").val();
+                                break;
+                        }
+                        gaCategoryReport(gaParams);
+
                         if ($.isFunction(options.updateCallback)) {
                             options.updateCallback(response);
                         }

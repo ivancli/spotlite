@@ -43,6 +43,9 @@
             "success": function (response) {
                 hideLoading();
                 if (response.status == true) {
+                    gaAddProduct();
+
+
                     if (response.product != null) {
                         showLoading();
                         loadSingleProduct(response.product.urls.show, function (html) {

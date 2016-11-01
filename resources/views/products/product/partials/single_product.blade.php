@@ -109,6 +109,7 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
+                                    gaDeleteProduct();
                                     alertP("Delete Product", "Product has been deleted.");
                                     $(el).closest(".product-wrapper").remove();
                                 } else {
@@ -153,6 +154,8 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaEditProduct();
+
                         alertP("Update Product", "Product name has been updated.");
                         $(el).siblings(".product-name-link").text($(el).find(".product-name").val()).show();
                         $(el).hide();

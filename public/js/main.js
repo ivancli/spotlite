@@ -33161,9 +33161,9 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
 }));
 
 /*!
- * jQuery contextMenu v2.3.1-dev - Plugin for simple contextMenu handling
+ * jQuery contextMenu v2.2.5-dev - Plugin for simple contextMenu handling
  *
- * Version: v2.3.1-dev
+ * Version: v2.2.5-dev
  *
  * Authors: Björn Brala (SWIS.nl), Rodney Rehm, Addy Osmani (patches for FF)
  * Web: http://swisnl.github.io/jQuery-contextMenu/
@@ -33174,7 +33174,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
  *   MIT License http://www.opensource.org/licenses/mit-license
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
- * Date: 2016-10-25T19:12:34.446Z
+ * Date: 2016-08-27T11:09:09.141Z
  */
 
 (function (factory) {
@@ -33278,6 +33278,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
 
             // Default classname configuration to be able avoid conflicts in frameworks
             classNames : {
+
                 hover: 'context-menu-hover', // Item hover
                 disabled: 'context-menu-disabled', // Item disabled
                 visible: 'context-menu-visible', // Item visible
@@ -33290,8 +33291,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                 iconPaste: 'context-menu-icon-paste',
                 iconDelete: 'context-menu-icon-delete',
                 iconAdd: 'context-menu-icon-add',
-                iconQuit: 'context-menu-icon-quit',
-                iconLoadingClass: 'context-menu-icon-loading'
+                iconQuit: 'context-menu-icon-quit'
             },
 
             // determine position to show menu at
@@ -33356,12 +33356,6 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
             },
             // position the sub-menu
             positionSubmenu: function ($menu) {
-                if ($menu === undefined) {
-                    // When user hovers over item (which has sub items) handle.focusItem will call this.
-                    // but the submenu does not exist yet if opt.items is a promise. just return, will
-                    // call positionSubmenu after promise is completed.
-                    return;
-                }
                 if ($.ui && $.ui.position) {
                     // .position() is provided as a jQuery UI utility
                     // (...and it won't work on hidden elements)
@@ -33707,7 +33701,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 if(opt.$selected) {
                                     opt.$selected.find('input, textarea, select').blur();
                                 }
-                                if (opt.$menu != null) opt.$menu.trigger('prevcommand');
+                                opt.$menu.trigger('prevcommand');
                                 return;
                             } else if (e.keyCode === 38 && opt.$selected.find('input, textarea, select').prop('type') === 'checkbox') {
                                 // checkboxes don't capture this key
@@ -33715,7 +33709,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 return;
                             }
                         } else if (e.keyCode !== 9 || e.shiftKey) {
-                            if (opt.$menu != null) opt.$menu.trigger('prevcommand');
+                            opt.$menu.trigger('prevcommand');
                             return;
                         }
                         break;
@@ -33729,7 +33723,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 if(opt.$selected) {
                                     opt.$selected.find('input, textarea, select').blur();
                                 }
-                                if (opt.$menu != null) opt.$menu.trigger('nextcommand');
+                                opt.$menu.trigger('nextcommand');
                                 return;
                             } else if (e.keyCode === 40 && opt.$selected.find('input, textarea, select').prop('type') === 'checkbox') {
                                 // checkboxes don't capture this key
@@ -33737,7 +33731,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 return;
                             }
                         } else {
-                            if (opt.$menu != null) opt.$menu.trigger('nextcommand');
+                            opt.$menu.trigger('nextcommand');
                             return;
                         }
                         break;
@@ -33807,7 +33801,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
 
                     case 27: // esc
                         handle.keyStop(e, opt);
-                        if (opt.$menu != null) opt.$menu.trigger('contextmenu:hide');
+                        opt.$menu.trigger('contextmenu:hide');
                         return;
 
                     default: // 0-9, a-z
@@ -34327,8 +34321,6 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                             $t.addClass('context-menu-separator ' + root.classNames.notSelectable);
                         } else if (item.type === 'html') {
                             $t.addClass('context-menu-html ' + root.classNames.notSelectable);
-                        } else if (item.type === 'sub') {
-                           // We don't want to execute the next else-if if it is a sub.
                         } else if (item.type) {
                             $label = $('<label></label>').appendTo($t);
                             createNameNode(item).appendTo($label);
@@ -34348,7 +34340,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'text':
-                                $input = $('<input type="text" value="1" name="" />')
+                                $input = $('<input type="text" value="1" name="" value="">')
                                     .attr('name', 'context-menu-input-' + key)
                                     .val(item.value || '')
                                     .appendTo($label);
@@ -34366,7 +34358,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'checkbox':
-                                $input = $('<input type="checkbox" value="1" name="" />')
+                                $input = $('<input type="checkbox" value="1" name="" value="">')
                                     .attr('name', 'context-menu-input-' + key)
                                     .val(item.value || '')
                                     .prop('checked', !!item.selected)
@@ -34374,7 +34366,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'radio':
-                                $input = $('<input type="radio" value="1" name="" />')
+                                $input = $('<input type="radio" value="1" name="" value="">')
                                     .attr('name', 'context-menu-input-' + item.radio)
                                     .val(item.value || '')
                                     .prop('checked', !!item.selected)
@@ -34382,7 +34374,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                                 break;
 
                             case 'select':
-                                $input = $('<select name=""></select>')
+                                $input = $('<select name="">')
                                     .attr('name', 'context-menu-input-' + key)
                                     .appendTo($label);
                                 if (item.options) {
@@ -34395,20 +34387,11 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
 
                             case 'sub':
                                 createNameNode(item).appendTo($t);
+
                                 item.appendTo = item.$node;
+                                op.create(item, root);
                                 $t.data('contextMenu', item).addClass('context-menu-submenu');
                                 item.callback = null;
-
-                                // If item contains items, and this is a promise, we should create it later
-                                // check if subitems is of type promise. If it is a promise we need to create
-                                // it later, after promise has been resolved.
-                                if ('function' === typeof item.items.then) {
-                                  // probably a promise, process it, when completed it will create the sub menu's.
-                                  op.processPromises(item, root, item.items);
-                                } else {
-                                  // normal submenu.
-                                  op.create(item, root);
-                                }
                                 break;
 
                             case 'html':
@@ -34590,46 +34573,6 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                 }
 
                 return $layer;
-            },
-            processPromises: function (opt, root, promise) {
-                // Start
-                opt.$node.addClass(root.classNames.iconLoadingClass);
-
-                function completedPromise(opt,root,items) {
-                    // Completed promise (dev called promise.resolve). We now have a list of items which can
-                    // be used to create the rest of the context menu.
-                    if (items === undefined) {
-                        // Null result, dev should have checked
-                        errorPromise(undefined);//own error object
-                    }
-                    finishPromiseProcess(opt,root, items);
-                };
-                function errorPromise(opt,root,errorItem) {
-                    // User called promise.reject() with an error item, if not, provide own error item.
-                    if (errorItem === undefined) {
-                        errorItem = { "error": { name: "No items and no error item", icon: "context-menu-icon context-menu-icon-quit" } };
-                        if (window.console) {
-                            (console.error || console.log).call(console, 'When you reject a promise, provide an "items" object, equal to normal sub-menu items');
-                        }
-                    } else if(typeof errorItem === 'string'){
-						            errorItem = { "error": { name: errorItem } };
-					          }
-                    finishPromiseProcess(opt,root,errorItem);
-                };
-                function finishPromiseProcess(opt,root,items) {
-                    if(root.$menu === undefined || !root.$menu.is(':visible')){
-                        return;
-                    }
-                    opt.$node.removeClass(root.classNames.iconLoadingClass);
-                    opt.items = items;
-                    op.create(opt, root, true); // Create submenu
-                    op.update(opt, root); // Correctly update position if user is already hovered over menu item
-                    root.positionSubmenu.call(opt.$node, opt.$menu); // positionSubmenu, will only do anything if user already hovered over menu item that just got new subitems.
-                };
-
-                // Wait for promise completion. .then(success, error, notify) (we don't track notify). Bind the opt
-                // and root to avoid scope problems
-                promise.then(completedPromise.bind(this, opt, root), errorPromise.bind(this, opt, root));
             }
         };
 
@@ -34811,10 +34754,6 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                     // get proper options
                     var context = o.context;
                     $.each(menus, function (ns, o) {
-                        
-                        if (!o) {
-                            return true;
-                        }
 
                         // Is this menu equest to the context called from
                         if (!$(context).is(o.selector)) {
@@ -35592,6 +35531,216 @@ function camelize(str) {
         return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(/\s+/g, '');
 }
+function gaSendEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+    eventCategory = typeof eventCategory != "undefined" ? eventCategory : null;
+    eventAction = typeof eventAction != "undefined" ? eventAction : null;
+    eventLabel = typeof eventLabel != "undefined" ? eventLabel : null;
+    eventValue = typeof eventValue != "undefined" ? eventValue : null;
+    fieldsObject = typeof fieldsObject != "undefined" ? fieldsObject : null;
+    ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject)
+}
+
+function gaFormatParams(params) {
+    var label = "";
+    $.each(params, function (index, value) {
+        label += index + "=" + value + ":";
+    });
+    label = label.slice(0, -1);
+    return label;
+}
+
+/**********************************************************
+ * auth
+ **********************************************************/
+
+function gaForgotPassword() {
+    gaSendEvent("Login", "Forgot Password")
+}
+
+function gaLogin() {
+    gaSendEvent("Login", "Click Login");
+}
+
+function gaRegister() {
+    gaSendEvent("Login", "Register Account");
+}
+
+/**********************************************************
+ * dashboard
+ **********************************************************/
+
+function gaDisplayDashboard() {
+    gaSendEvent("Dashboard", "Display Dashboard");
+}
+
+function gaDashboardApplyFilter(params) {
+    var label = gaFormatParams(params)
+    gaSendEvent("Dashboard", "Apply Filters", label);
+}
+
+function gaDashboardAddContent(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Dashboard", "Apply Filters", label);
+}
+
+/**********************************************************
+ * category
+ **********************************************************/
+
+function gaAddCategory() {
+    gaSendEvent("Products", "Add Category");
+}
+
+function gaEditCategory() {
+    gaSendEvent("Products", "Edit Category");
+}
+
+function gaDeleteCategory() {
+    gaSendEvent("Products", "Delete Category");
+}
+
+function gaMoveCategory() {
+    gaSendEvent("Products", "Move Category");
+}
+
+function gaCategoryReport(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Reports", "Category Report", label);
+}
+
+function gaGenerateCategoryChart(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Products", "Generate Category Chart", label);
+}
+
+function gaAddCategoryChartToDashboard(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Products", "Add Category Chart to Dashboard", label);
+}
+
+/**********************************************************
+ * product
+ **********************************************************/
+
+function gaAddProduct() {
+    gaSendEvent("Products", "Add Product");
+}
+
+function gaEditProduct() {
+    gaSendEvent("Products", "Edit Product");
+}
+
+function gaDeleteProduct() {
+    gaSendEvent("Products", "Delete Product");
+}
+
+function gaMoveProduct() {
+    gaSendEvent("Products", "Move Product");
+}
+
+function gaAddProductReport(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Reports", "Add Product Report", label);
+}
+
+function gaAddProductAlert(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Alerts", "Add Product Alert", label);
+}
+
+function gaGenerateProductChart(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Products", "Generate Product Chart", label);
+}
+
+function gaAddProductChartToDashboard(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Products", "Add Product Chart to Dashboard", label);
+}
+
+/**********************************************************
+ * site
+ **********************************************************/
+
+function gaAddSite() {
+    gaSendEvent("Products", "Add Site");
+}
+
+function gaEditSite() {
+    gaSendEvent("Products", "Edit Site");
+}
+
+function gaDeleteSite() {
+    gaSendEvent("Products", "Delete Site");
+}
+
+function gaSetMyPrice() {
+    gaSendEvent("Products", "Set My Price");
+}
+
+function gaSiteAlert(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Alerts", "Site Alert", params);
+}
+
+function gaGenerateSiteChart(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Products", "Generate Site Chart", label);
+}
+
+function gaAddSiteChartToDashboard(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Products", "Add SiteChart to Dashboard", label);
+}
+
+/**********************************************************
+ * reports
+ **********************************************************/
+
+function gaDeleteReportFromReportsPage(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Reports", "Delete Report", label);
+}
+
+function gaEditReportFromReportsPage(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Reports", "Edit Report", label);
+}
+
+/**********************************************************
+ * alerts
+ **********************************************************/
+
+function gaDeleteAlertFromAlertsPage(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Alerts", "Delete Alert", label);
+}
+
+function gaEditAlertFromAlertsPage(params) {
+    var label = gaFormatParams(params);
+    gaSendEvent("Alerts", "Edit Alert", label);
+}
+
+/**********************************************************
+ * settings
+ **********************************************************/
+
+function gaUpdateDateTime() {
+    gaSendEvent("Settings", "Update Date Time");
+}
+
+function gaUpdateUserProfile() {
+    gaSendEvent("Settings", "Update User Profile");
+}
+
+function gaResetPassword() {
+    gaSendEvent("Settings", "Reset Password");
+}
+
+function gaLogout() {
+    gaSendEvent("Settings", "Logout");
+}
+
 //
 //
 // /*sidebar*/

@@ -26,6 +26,21 @@
         function modalReady(options) {
             $("#btn-create-dashboard-widget").on("click", function () {
                 submitAddContent(function (response) {
+                    var params = {
+                        "Content Type": $("#sel-dashboard-widget-type-id option:selected").text(),
+                        "Chart Type": $("#sel-chart-type").val(),
+                        "Timespan": $("#sel-timespan").val(),
+                        "Period Resolution": $("#sel-period-resolution").val()
+                    };
+                    switch ($("#sel-chart-type").val()) {
+                        case "site":
+                            params["site"] = $("#sel-site option:selected").text();
+                        case "product":
+                            params["Product"] = $("#sel-product option:selected").text();
+                        case "category":
+                            params["Category"] = $("#sel-category option:selected").text();
+                    }
+                    gaDashboardAddContent(params);
                     if ($.isFunction(options.callback)) {
                         options.callback(response);
                     }

@@ -68,7 +68,7 @@
                                         @endif
                                     @endif
                                     <li>
-                                        <a href="{{route('logout')}}">
+                                        <a href="{{route('logout')}}" onclick="gaLogout();">
                                             <h3>
                                                 Logout
                                             </h3>

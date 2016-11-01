@@ -104,6 +104,7 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaResetPassword();
                         alertP('Email Sent', 'An email with reset password link has been sent to provided email address.', function () {
                             window.location.href = "{{route('login.get')}}";
                         });
@@ -142,6 +143,7 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaUpdateDateTime();
                         alertP("Display settings", "Display settings has been updated.");
                     } else {
                         var $errorContainer = $("#display-settings .errors-container");

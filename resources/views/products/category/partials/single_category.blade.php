@@ -119,6 +119,7 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
+                                    gaDeleteCategory();
                                     alertP("Delete Category", "Category has been deleted.");
                                     $(el).closest(".category-wrapper").remove();
                                 } else {
@@ -190,6 +191,7 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaEditCategory();
                         alertP("Update Category", "Category name has been updated.");
                         $(el).siblings(".category-name-link").text($(el).find(".category-name").val()).show();
                         $(el).hide();
@@ -246,6 +248,8 @@
                 "success": function (response) {
                     if (response.status == false) {
                         alertP("Error", "Unable to update product order, please try again later.");
+                    }else{
+                        gaMoveProduct();
                     }
                 },
                 "error": function (xhr, status, error) {

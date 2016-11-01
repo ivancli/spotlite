@@ -213,6 +213,12 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaAddProductChartToDashboard({
+                            "Timespan": $("#sel-timespan").val(),
+                            "Period Resolution": $("#sel-period-resolution").val(),
+                            "Dashboard": $("#sel-dashboard-id option:selected").text()
+                        });
+
                         alertP("Add to Dashboard", "Chart has been added successfully");
                     } else {
                         if (typeof response.errors != 'undefined') {
@@ -313,6 +319,11 @@
                 "dataType": "json",
                 "success": function (response) {
                     if (response.status == true) {
+                        gaGenerateProductChart({
+                            "Timespan": $("#sel-timespan").val(),
+                            "Period Resolution": $("#sel-period-resolution").val()
+                        });
+
                         removeSeries();
 
                         $.each(response.data, function (siteId, site) {

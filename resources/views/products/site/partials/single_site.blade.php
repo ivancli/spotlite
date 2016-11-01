@@ -107,6 +107,7 @@
                             "success": function (response) {
                                 hideLoading();
                                 if (response.status == true) {
+                                    gaDeleteSite();
                                     alertP("Delete Site", "The site has been deleted.");
                                     $(el).closest(".site-wrapper").remove();
                                 } else {
@@ -242,6 +243,7 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
+                        gaSetMyPrice();
                         showLoading();
                         $.get('{{$site->product->urls['show']}}', function (html) {
                             hideLoading();

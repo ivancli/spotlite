@@ -197,6 +197,8 @@
                 "success": function (response) {
                     if (response.status == false) {
                         alertP("Error", "Unable to update category order, please try again later.");
+                    } else {
+                        gaMoveCategory();
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -206,7 +208,7 @@
         }
 
         function hideProductBannerMessage(el) {
-            $(el).closest(".callout").slideUp(function(){
+            $(el).closest(".callout").slideUp(function () {
                 $(this).remove();
             })
             $.ajax({
