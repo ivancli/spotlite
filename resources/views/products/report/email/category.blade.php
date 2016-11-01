@@ -1,7 +1,7 @@
 <p>
     Our
-    {{ucfirst($reportTask->reportable->category_name)}}
-    {{ucfirst($reportTask->frequency)}}
+    {{$reportTask->reportable->category_name}}
+    {{$reportTask->frequency}}
     Report is attached.
 </p>
 
