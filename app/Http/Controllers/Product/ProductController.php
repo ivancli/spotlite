@@ -178,7 +178,6 @@ class ProductController extends Controller
         $product = $this->productRepo->updateProduct($id, $request->all());
         event(new ProductUpdated($product));
         $status = true;
-        dd($product);
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['status', 'product']));
