@@ -136,7 +136,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('subscription', 'Subscription\SubscriptionController', ['except' => [
         'create', 'show'
     ]]);
-    Route::match(['get', 'post', 'put', 'delete'], 'subscription/webhook', 'Subscription\SubscriptionController@webhookUpdate')->name('subscription.webhook_update');
 
 
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
@@ -199,3 +198,7 @@ Route::get('password', 'Auth\PasswordController@getEmail')->name('password.get')
 Route::post('password', 'Auth\PasswordController@postEmail')->name('password.post');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset')->name('password.reset.get');
 Route::post('password/reset', 'Auth\PasswordController@postReset')->name('password.reset.post');
+
+
+Route::match(['get', 'post', 'put', 'delete'], 'subscription/webhook', 'Subscription\SubscriptionController@webhookUpdate')->name('subscription.webhook_update');
+Route::get('subscription/product_families', 'Subscription\SubscriptionController@productFamilies')->name('subscription.product_families');

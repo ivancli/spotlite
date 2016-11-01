@@ -429,7 +429,18 @@ class SubscriptionController extends Controller
 
     public function webhookUpdate(Request $request)
     {
-        
+
+    }
+
+    public function productFamilies(Request $request)
+    {
+        $productFamilies = $this->subscriptionRepo->getProductList();
+        $status = true;
+        if ($request->wantsJson()) {
+            return response()->json(compact(['productFamilies', 'status']));
+        } else {
+            return compact(['productFamilies', 'status']);
+        }
     }
 
     private function _flushUserSubscriptionCache($user_id)

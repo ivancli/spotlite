@@ -103,42 +103,43 @@ class ChargifySubscriptionRepository implements SubscriptionContract
      */
     public function getProductList()
     {
+        return Cache::rememberForever('product_families.products.components', function () {
+            $families = Chargify::productFamily()->all();
+            $productFamilies = array();
+            foreach ($families as $index => $family) {
+                $family_id = $family->id;
+                $apiProducts = Chargify::product()->allByProductFamily($family->id);
 
-        $families = Chargify::productFamily()->all();
-        $productFamilies = array();
-        foreach ($families as $index => $family) {
-            $family_id = $family->id;
-            $apiProducts = Chargify::product()->allByProductFamily($family->id);
+                if (isset($apiProducts->errors) || count($apiProducts) == 0) {
+                    continue;
+                }
+                $product = array_first($apiProducts);
+                $apiComponents = Chargify::component()->allByProductFamily($family->id);
 
-            if (isset($apiProducts->errors) || count($apiProducts) == 0) {
-                continue;
+                if (isset($apiComponents->errors) || count($apiComponents) == 0) {
+                    continue;
+                }
+
+                $subscriptionPreview = Chargify::subscription()->preview(array(
+                    "product_id" => $product->id,
+                    "customer_attributes" => array(
+                        "first_name" => "Spot",
+                        "last_name" => "Lite",
+                        "email" => "admin@spotlite.com.au",
+                        "country" => "AU"
+                    )
+                ));
+
+                $component = array_first($apiComponents);
+                $productFamily = $family;
+                $productFamily->product = $product;
+                $productFamily->component = $component;
+                $productFamily->preview = $subscriptionPreview;
+                $productFamilies[] = $productFamily;
             }
-            $product = array_first($apiProducts);
-            $apiComponents = Chargify::component()->allByProductFamily($family->id);
-
-            if (isset($apiComponents->errors) || count($apiComponents) == 0) {
-                continue;
-            }
-
-            $subscriptionPreview = Chargify::subscription()->preview(array(
-                "product_id" => $product->id,
-                "customer_attributes" => array(
-                    "first_name" => "Spot",
-                    "last_name" => "Lite",
-                    "email" => "admin@spotlite.com.au",
-                    "country" => "AU"
-                )
-            ));
-
-            $component = array_first($apiComponents);
-            $productFamily = $family;
-            $productFamily->product = $product;
-            $productFamily->component = $component;
-            $productFamily->preview = $subscriptionPreview;
-            $productFamilies[] = $productFamily;
-        }
-        $productFamilies = collect($productFamilies);
-        $productFamilies = $productFamilies->sortBy('product.price_in_cents');
-        return $productFamilies;
+            $productFamilies = collect($productFamilies);
+            $productFamilies = $productFamilies->sortBy('product.price_in_cents');
+            return $productFamilies;
+        });
     }
 }
