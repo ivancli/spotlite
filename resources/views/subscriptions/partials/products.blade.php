@@ -2,7 +2,7 @@
     @foreach($productFamilies as $productFamily)
         <div class="product-container m-b-10
         {{isset($chosenAPIProductID) && $productFamily->product->id == $chosenAPIProductID ? 'chosen': ''}}
-                {{(\Request::route()->getName() == "register.get"  && \Request::has("pid") && \Request::get("pid") == $productFamily->product->id) ? 'selected' : ''}}
+                {{(is_null(old("api_product_id")) && \Request::route()->getName() == "register.get"  && \Request::has("pid") && \Request::get("pid") == $productFamily->product->id) ? 'selected' : ''}}
         {{old("api_product_id") == $productFamily->product->id ? "selected" : ""}}
                 "
              data-link="{{array_first($productFamily->product->public_signup_pages)->url}}"
