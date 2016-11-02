@@ -125,7 +125,7 @@
                                                         ),
                                                         $("<div>").append(
                                                                 "Number of sites: ",
-                                                                $("<strong>").text(data.alert_owner.sites.length)
+                                                                $("<strong>").text(data.alert_owner.siteCount)
                                                         )
                                                 ).html(),
                                                 "data-html": true,
