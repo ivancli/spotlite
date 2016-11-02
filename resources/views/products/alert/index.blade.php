@@ -277,7 +277,7 @@
                                         ),
                                         $("<div>").append(
                                                 "Number of sites: ",
-                                                $("<strong>").text(data.alert_activity_log_owner.sites.length)
+                                                $("<strong>").text(data.alert_activity_log_owner.siteCount)
                                         )
                                 ).html()
 
