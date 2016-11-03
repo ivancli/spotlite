@@ -4,8 +4,6 @@
             <div class="box-body">
                 <h4>Subscription has been cancelled</h4>
                 <p>You have cancelled the subscription of <strong>{{$apiSubscription->product()->name}}</strong>.</p>
-                {{-- TODO --}}
-                <h4>Provide a survey to user.</h4>
             </div>
         </div>
     </div>
