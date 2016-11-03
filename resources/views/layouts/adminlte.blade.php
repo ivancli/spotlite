@@ -6,14 +6,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - SpotLite</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    {{--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">--}}
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
     {{--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">--}}
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
-    {{--<style>--}}
-        {{--body, h1, h2, h3 {--}}
-            {{--font-family: 'Lato', serif;--}}
-        {{--}--}}
-    {{--</style>--}}
+    <style>
+        body, h1, h2, h3, a, .main-header .header-label, div{
+            font-family: 'Gloria Hallelujah', cursive;
+        }
+    </style>
     @yield('links')
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -28,7 +30,7 @@
 
     <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-black-light sidebar-mini">
 <div class="wrapper">
 
     @include('layout_partials.default_header')

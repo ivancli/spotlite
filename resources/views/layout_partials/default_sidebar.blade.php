@@ -26,39 +26,28 @@
                     </ul>
                 </li>
 
-                <li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i
-                                class="fa fa-line-chart"></i> Reports</a></li>
-                <li class="{{Style::set_active('alert')}}"><a href="{{url('alert')}}"><i
-                                class="fa fa-bell-o"></i> Alerts</a></li>
-                <li class="{{Style::set_active_starts_with('product')}}"><a href="{{url('product')}}"><i
-                                class="fa fa-square-o"></i> <span>Products</span></a></li>
-                {{--<li class="treeview {{Style::set_active_or(array('report', 'alert'))}}">--}}
-                {{--<a href="#">--}}
-                {{--<i class="fa fa-envelope"></i>--}}
-                {{--<span>Reports and Alerts</span>--}}
-                {{--</a>--}}
-                {{--<ul class="treeview-menu">--}}
-                {{--<li class="{{Style::set_active('report')}}"><a href="{{url('report')}}"><i--}}
-                {{--class="fa fa-line-chart"></i> Reports</a></li>--}}
-                {{--<li class="{{Style::set_active('alert')}}"><a href="{{url('alert')}}"><i--}}
-                {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
-                {{--</ul>--}}
-                {{--</li>--}}
-
-                {{--<li class="treeview {{Style::set_active_starts_with(array('group.'))}}">--}}
-                {{--<a href="#">--}}
-                {{--<i class="fa fa-users"></i>--}}
-                {{--<span>Group Management</span>--}}
-                {{--</a>--}}
-                {{--<ul class="treeview-menu">--}}
-                {{--<li class="{{Style::set_active('dashboard')}}"><a href="{{url('alert')}}"><i--}}
-                {{--class="fa fa-bell-o"></i> Alerts</a></li>--}}
-                {{--</ul>--}}
-                {{--</li>--}}
+                <li class="{{Style::set_active('report')}}">
+                    <a href="{{url('report')}}">
+                        <i class="fa fa-line-chart"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li class="{{Style::set_active('alert')}}">
+                    <a href="{{url('alert')}}">
+                        <i class="fa fa-bell-o"></i>
+                        <span>Alerts</span></a>
+                </li>
+                <li class="{{Style::set_active_starts_with('product')}}">
+                    <a href="{{url('product')}}">
+                        <i class="fa fa-square-o"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
             @endif
             @if(auth()->check() && auth()->user()->isStaff())
                 <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
-                    <a href="{{route("admin.app_preference.index")}}"><i class="fa fa-gears"></i>
+                    <a href="{{route("admin.app_preference.index")}}">
+                        <i class="fa fa-gears"></i>
                         <span>App Preferences</span>
                     </a>
                 </li>
@@ -88,22 +77,26 @@
                     <ul class="treeview-menu">
                         <li class="{{Style::set_active_starts_with('um.user')}}">
                             <a href="{{route('um.user.index')}}">
-                                <i class="fa fa-user"></i> Users
+                                <i class="fa fa-user"></i>
+                                <span>Users</span>
                             </a>
                         </li>
                         <li class="{{Style::set_active_starts_with('um.group')}}">
                             <a href="{{route('um.group.index')}}">
-                                <i class="fa fa-users"></i> Groups
+                                <i class="fa fa-users"></i>
+                                <span>Groups</span>
                             </a>
                         </li>
                         <li class="{{Style::set_active_starts_with('um.role')}}">
                             <a href="{{route('um.role.index')}}">
-                                <i class="fa fa-tags"></i> Roles
+                                <i class="fa fa-tags"></i>
+                                <span>Roles</span>
                             </a>
                         </li>
                         <li class="{{Style::set_active_starts_with('um.permission')}}">
                             <a href="{{route('um.permission.index')}}">
-                                <i class="fa fa-key"></i> Permissions
+                                <i class="fa fa-key"></i>
+                                <span>Permissions</span>
                             </a>
                         </li>
                     </ul>
@@ -116,36 +109,20 @@
                     <ul class="treeview-menu">
                         <li class="{{Style::set_active_starts_with('log.crawler_activity')}}">
                             <a href="{{route('log.crawler_activity.index')}}">
-                                <i class="fa fa-gear"></i> Crawler Logs
+                                <i class="fa fa-gear"></i>
+                                <span>Crawler Logs</span>
                             </a>
                         </li>
                         <li class="{{Style::set_active_starts_with('log.user_activity')}}">
                             <a href="{{route('log.user_activity.index')}}">
-                                <i class="fa fa-map-o"></i> User Activity Logs
+                                <i class="fa fa-map-o"></i>
+                                <span>User Activity Logs</span>
                             </a>
                         </li>
                     </ul>
                 </li>
             @endif
         </ul>
-        {{--@if(auth()->check() && auth()->user()->hasValidSubscription() && starts_with(Request::route()->getName(), 'product'))--}}
-        {{--<hr class="sidebar-divider">--}}
-        {{--<div class="subscription-panel">--}}
-        {{--<div class="text-center">--}}
-        {{--My Plan: {{auth()->user()->cachedAPISubscription()->product->name}}--}}
-        {{--</div>--}}
-        {{--<div class="block-button-container">--}}
-        {{--<a href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}" class="btn btn-block btn-success">--}}
-        {{--UPGRADE--}}
-        {{--</a>--}}
-        {{--</div>--}}
-        {{--<div class="text-center">--}}
-        {{--<a href="#" style="text-decoration: underline;">--}}
-        {{--Need Help?--}}
-        {{--</a>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--@endif--}}
     </section>
     <!-- /.sidebar -->
 </aside>

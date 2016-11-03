@@ -5,7 +5,7 @@
         <span class="logo-mini"><img src="{{asset('images/favicon.png')}}" alt="SpotLite" height="50"></span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg">
-            <img src="{{asset('images/logo-fixed.png')}}" alt="SpotLite" height="50">
+            <img src="{{asset('images/logo-fixed-custom.png')}}" alt="SpotLite" height="40">
         </span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
