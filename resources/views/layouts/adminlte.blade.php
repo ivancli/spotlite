@@ -7,13 +7,13 @@
     <title>@yield('title') - SpotLite</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {{--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">--}}
-    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
     {{--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">--}}
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     <style>
         body, h1, h2, h3, a, .main-header .header-label, div{
-            font-family: 'Gloria Hallelujah', cursive;
+            font-family: 'Lato', sans-serif;
         }
     </style>
     @yield('links')
