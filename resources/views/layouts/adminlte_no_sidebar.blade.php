@@ -7,13 +7,13 @@
     <title>@yield('title') - SpotLite</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    {{--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">--}}
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
-    {{--<style>--}}
-        {{--body, h1, h2, h3 {--}}
-            {{--font-family: 'Lato', serif;--}}
-        {{--}--}}
-    {{--</style>--}}
+    <style>
+        body, h1, h2, h3, a, .main-header .header-label, div{
+            font-family: 'Lato', sans-serif;
+        }
+    </style>
     @yield('links')
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -23,7 +23,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-black-light sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
 
