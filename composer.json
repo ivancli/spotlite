@@ -31,7 +31,8 @@
         "driftyco/ionicons": "2.0.1",
         "mpdf/mpdf": "~5.7.3",
         "facebook/webdriver": "^1.1",
-        "invigor/chargify": "dev-master"
+        "invigor/chargify": "dev-master",
+        "campaignmonitor/createsend-php": "~5.0.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
