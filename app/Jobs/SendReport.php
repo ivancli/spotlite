@@ -44,15 +44,15 @@ class SendReport extends Job implements ShouldQueue
             case "category":
                 $report = $reportTaskRepo->generateCategoryReport($this->reportTask);
                 $category = $this->reportTask->reportable;
-                $fileName = str_replace(' ', '_', $category->category_name) . "_category_report" . "." . $this->reportTask->file_type;
-                $subject = "SpotLite " . ucfirst($category->category_name) . " " . ucfirst($this->reportTask->frequency) . " " . " Report";
+                $fileName = date("Y-m-d") . " SpotLite Category Report for {$category->category_name}" . "." . $this->reportTask->file_type;
+                $subject = "{$category->category_name} Category Report for " . date("Y-m-d");
                 $view = 'products.report.email.category';
                 break;
             case "product":
                 $report = $reportTaskRepo->generateProductReport($this->reportTask);
                 $product = $this->reportTask->reportable;
-                $subject = "SpotLite " . ucfirst($product->product_name) . " " . ucfirst($this->reportTask->frequency) . " " . " Report";
-                $fileName = str_replace(' ', '_', $product->product_name) . "_product_report" . "." . $this->reportTask->file_type;
+                $subject = "{$product->product_name} Product Report for " . date("Y-m-d");
+                $fileName = date("Y-m-d") . " SpotLite Product Report for {$product->product_name}" . "." . $this->reportTask->file_type;
                 $view = 'products.report.email.product';
                 break;
             default:
@@ -64,7 +64,7 @@ class SendReport extends Job implements ShouldQueue
         if (isset($report) && !is_null($report)) {
             $attachment = array(
                 "data" => $report->content,
-                "file_name" => date("Ymd") . "_" . $fileName
+                "file_name" => $fileName
             );
 
             foreach ($this->reportTask->emails as $email) {
@@ -75,12 +75,10 @@ class SendReport extends Job implements ShouldQueue
                     compact(['report', 'reportTask']),
                     array(
                         "email" => $email->report_email_address,
-                        "subject" => "SpotLite - $subject {$this->reportTask->report_task_owner_type} report",
+                        "subject" => $subject,
                         "attachment" => $attachment
                     )))->onQueue("mailing"));
             }
         }
-
-
     }
 }

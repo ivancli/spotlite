@@ -1,13 +1,18 @@
 <p>
-    Your
-    {{$reportTask->reportable->product_name}}
-    {{$reportTask->frequency}}
-    Report is attached.
+    Dear
+    @if(!is_null($reportTask->reportable->user) && trim($reportTask->reportable->user->first_name) != "")
+        {{$reportTask->reportable->user->first_name}},
+    @else
+        SpotLite user,
+    @endif
 </p>
 
-<p>You can also view this report through your <a href="{{route('dashboard.index')}}">SpotLite Dashboard</a>.</p>
+<p>
+    Please find your SpotLite product report for {{$reportTask->reportable->product_name}} attached.
+</p>
 
-<p>Want to change your alert preference? <a href="{{route('report.index')}}">Click here</a></p>
+<p>If you have any questions or queries, please email <a href="mailto:support@spotlite.com.au">support@spotlite.com.au</a>.</p>
 
-<p>Best regards,</p>
-<p>SpotLite Team</p>
+
+<p>Regards,</p>
+<p>The SpotLite Team</p>
