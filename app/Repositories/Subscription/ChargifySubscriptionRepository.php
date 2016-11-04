@@ -138,7 +138,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                 $productFamilies[] = $productFamily;
             }
             $productFamilies = collect($productFamilies);
-            $productFamilies = $productFamilies->sortBy('product.price_in_cents');
+            $productFamilies = $productFamilies->sortBy('product.price_in_cents')->values();
             return $productFamilies;
         });
     }

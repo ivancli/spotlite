@@ -436,7 +436,9 @@ class SubscriptionController extends Controller
     {
         $productFamilies = $this->subscriptionRepo->getProductList();
         $status = true;
-        if ($request->wantsJson()) {
+        if ($request->has('callback')) {
+            return response()->json(compact(['productFamilies', 'status']))->setCallback($request->get('callback'));
+        } else if ($request->wantsJson()) {
             return response()->json(compact(['productFamilies', 'status']));
         } else {
             return compact(['productFamilies', 'status']);

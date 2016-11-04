@@ -14672,6 +14672,14 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
     cursor: pointer;
 }
 
+.callout.callout-default {
+    border-color: lightgrey;
+}
+
+.callout.callout-default {
+    background-color: white;
+}
+
 .product-container.chosen {
     border-color: #24e900;
     outline: 0;
