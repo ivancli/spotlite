@@ -18,8 +18,6 @@ use App\Models\Dashboard\DashboardTemplate;
 use App\Validators\Dashboard\Dashboard\StoreValidator;
 use App\Validators\Dashboard\Dashboard\UpdateValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Invigor\Chargify\Chargify;
 
 class DashboardController extends Controller
 {

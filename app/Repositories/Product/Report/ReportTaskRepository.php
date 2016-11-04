@@ -73,28 +73,25 @@ class ReportTaskRepository implements ReportTaskContract
     {
         event(new ReportCreating());
         $category = $reportTask->reportable;
-        $products = $category->products;
 
-
-        /*TODO update the following code to generate real data and store it in $data variable*/
-        $data = array();
-        foreach ($products as $product) {
-            $data[] = $product->toArray();
-            $sites = $product->sites;
-            foreach ($sites as $site) {
-                $data[] = $site->toArray();
-                $historicalPrices = $site->historicalPrices;
-                foreach ($historicalPrices as $historicalPrice) {
-                    $data[] = $historicalPrice->toArray();
-                }
-            }
-        }
-        /*TODO up to this point the $data variable should have report data in correct format*/
-
+        $data = $category;
         $fileName = str_replace(' ', '_', $category->category_name) . "_category_report";
-        $excel = Excel::create($fileName, function ($excel) use ($data, $fileName) {
-            $excel->sheet("sheet_1", function ($sheet) use ($data) {
-                $sheet->fromArray($data);
+        $excel = Excel::create($fileName, function ($excel) use ($category, $data, $fileName) {
+            $excel->sheet($category->category_name, function ($sheet) use ($data) {
+                $sheet->loadview('products.report.excel.category')->with(compact(['data']));
+                $sheet->setColumnFormat(array(
+                    'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                ));
+                $sheet->setWidth('A', 30);
+                $sheet->setWidth('B', 30);
+                $sheet->setWidth('C', 30);
+                $sheet->setWidth('D', 20);
+                $sheet->setWidth('E', 20);
+                $sheet->setWidth('F', 20);
+                $sheet->setWidth('G', 20);
             });
         });
         $excelFileContent = $excel->string($reportTask->file_type);
@@ -117,23 +114,24 @@ class ReportTaskRepository implements ReportTaskContract
         $product = $reportTask->reportable;
 
 
-        /*TODO update the following code to generate real data and store it in $data variable*/
-        $data = array();
-        $data[] = $product->toArray();
-        $sites = $product->sites;
-        foreach ($sites as $site) {
-            $data[] = $site->toArray();
-            $historicalPrices = $site->historicalPrices;
-            foreach ($historicalPrices as $historicalPrice) {
-                $data[] = $historicalPrice->toArray();
-            }
-        }
-        /*TODO up to this point the $data variable should have report data in correct format*/
-
+        $data = $product;
         $fileName = str_replace(' ', '_', $product->product_name) . "_product_report";
         $excel = Excel::create($fileName, function ($excel) use ($data, $fileName) {
             $excel->sheet("sheet_1", function ($sheet) use ($data) {
-                $sheet->fromArray($data);
+                $sheet->loadview('products.report.excel.product')->with(compact(['data']));
+                $sheet->setColumnFormat(array(
+                    'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                ));
+                $sheet->setWidth('A', 30);
+                $sheet->setWidth('B', 30);
+                $sheet->setWidth('C', 30);
+                $sheet->setWidth('D', 20);
+                $sheet->setWidth('E', 20);
+                $sheet->setWidth('F', 20);
+                $sheet->setWidth('G', 20);
             });
         });
         $excelFileContent = $excel->string($reportTask->file_type);
