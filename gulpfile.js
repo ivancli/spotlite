@@ -40,6 +40,7 @@ elixir(function (mix) {
         'resources/assets/css/file-tree.css',
         'vendor/almasaeed2010/adminlte/plugins/datepicker/datepicker3.css',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css',
+        'vendor/almasaeed2010/adminlte/plugins/icheck/square/blue.css',
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
@@ -70,6 +71,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/datepicker/bootstrap-datepicker.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/moment.js',
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js',
+        'vendor/almasaeed2010/adminlte/plugins/iCheck/icheck.js',
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.js',
         'resources/assets/js/commonFunctions.js',
         'resources/assets/js/google_analytics.js',
@@ -79,6 +81,8 @@ elixir(function (mix) {
 
     /* copy images */
     mix.copy('resources/assets/images', 'public/images');
+    mix.copy('vendor/almasaeed2010/adminlte/plugins/iCheck/square/blue.png', 'public/images//blue.png');
+    mix.copy('vendor/almasaeed2010/adminlte/plugins/iCheck/square/blue@2x.png', 'public/images//blue@2x.png');
     mix.copy('resources/assets/plugins/jquery.fileTree-1.01/images', 'public/images');
     mix.copy('resources/assets/videos', 'public/videos');
     mix.copy('resources/assets/others', 'public/others');

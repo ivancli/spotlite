@@ -21,11 +21,11 @@
                         @if(!is_null($price->ending_quantity))
                             Up to <strong>{{$price->ending_quantity}}</strong>
                             <br>
-                            {{str_plural($productFamily->component->unit_name)}}
+                            {{title_case(str_plural($productFamily->component->unit_name))}}
                         @else
                             <strong>Unlimited</strong> number of
                             <br>
-                            {{str_plural($productFamily->component->unit_name)}}
+                            {{title_case(str_plural($productFamily->component->unit_name))}}
                         @endif
                     </p>
                 @endforeach
