@@ -310,6 +310,32 @@ class SubscriptionController extends Controller
 
         event(new SubscriptionUpdating($subscription));
         $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
+
+        /* validation*/
+        $targetProduct = Chargify::product()->get($request->get('api_product_id'));
+        $numberOfSites = auth()->user()->sites()->count();
+        $targetProductFamily = $targetProduct->productFamily();
+        $targetComponents = $targetProductFamily->components();
+        if (!isset($targetComponents->errors) && count($targetComponents) > 0) {
+            $targetComponent=array_first($targetComponents);
+            $targetPrice = array_first($targetComponent->prices);
+            $numberOfSitesAllowance = $targetPrice->ending_quantity;
+            if ($numberOfSitesAllowance != 0 && $numberOfSitesAllowance < $numberOfSites) {
+                $errors = array("Please reduce the number of your sites in Products page before changing your plan.");
+                $status = false;
+                if ($request->ajax()) {
+                    if ($request->wantsJson()) {
+                        return response()->json(compact(['errors', 'status']));
+                    } else {
+                        return compact(['errors', 'status']);
+                    }
+                } else {
+                    return redirect()->back()->withErrors($errors);
+                }
+            }
+        }
+
+
 //        $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
 
         if ($request->has('coupon_code')) {
@@ -340,7 +366,6 @@ class SubscriptionController extends Controller
                 "include_coupons" => 1
             );
             $result = Chargify::subscription()->createMigration($apiSubscription->id, $fields);
-//            $result = $this->subscriptionRepo->setMigration($apiSubscription->id, json_encode($fields));
             if (!isset($result->errors)) {
                 $product_family_id = $result->product()->product_family_id;
 
@@ -357,12 +382,9 @@ class SubscriptionController extends Controller
                         )
                     )
                 ));
-//                $this->subscriptionRepo->setComponentBySubscription($result->subscription->id, $component->id, $component->prices[0]->ending_quantity);
                 Chargify::allocation()->create($apiSubscription->id, $component->id, array(
                     "quantity" => $component->prices[0]->ending_quantity
                 ));
-
-//                $this->subscriptionRepo->setComponentAllocationBySubscription($result->subscription->id, $component->id, $component->prices[0]->ending_quantity);
                 $subscription->api_product_id = $apiSubscription->product_id;
                 if (!is_null($result->canceled_at)) {
                     $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->canceled_at));

@@ -50,10 +50,10 @@
             var fromPrice = $(".product-container.chosen").attr("data-price");
             var toPrice = $(".product-container.selected").attr("data-price");
             var title, content;
-            if(parseInt(fromPrice) > parseInt(toPrice)){
+            if (parseInt(fromPrice) > parseInt(toPrice)) {
                 title = "Downgrade Subscription";
                 content = "By downgrading your subscription you will receive a credit for the pro-rata amount for the rest of the month at the next subscription fee. This credit will be offset against future subscription charges.";
-            }else{
+            } else {
                 title = "Upgrade Subscription";
                 content = "By upgrading your subscription you will be immediately charged the pro-rata amount for the rest of the month at the new subscription fee."
             }
@@ -74,7 +74,12 @@
                                 }).addClass("chosen");
                                 updateSubscribeButton();
                             } else {
-                                alertP("Error", "Unable to update your subscription plan, please try again later.")
+                                console.info('response', response);
+                                var errors = "";
+                                $.each(response.errors, function (index, error) {
+                                    errors += error + " ";
+                                });
+                                alertP("Error", errors);
                             }
 
                         }, function (xhr, status, error) {
