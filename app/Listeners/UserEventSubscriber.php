@@ -2,6 +2,7 @@
 namespace App\Listeners;
 
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Jobs\LogUserActivity;
 
@@ -14,10 +15,12 @@ use App\Jobs\LogUserActivity;
 class UserEventSubscriber
 {
     protected $subscriptionRepo;
+    protected $mailingAgentRepo;
 
-    public function __construct(SubscriptionContract $subscriptionContract)
+    public function __construct(SubscriptionContract $subscriptionContract, MailingAgentContract $mailingAgentContract)
     {
         $this->subscriptionRepo = $subscriptionContract;
+        $this->mailingAgentRepo = $mailingAgentContract;
     }
 
     /**
@@ -36,6 +39,41 @@ class UserEventSubscriber
             $user->is_first_login = 'n';
         }
         $user->save();
+
+        if (!$user->isStaff()) {
+            $subscriber = $this->mailingAgentRepo->getSubscriber($user->email);
+            /*if there is no subscription record in Campaign Monitor, add a new subscription record*/
+            if (is_null($subscriber)) {
+                $this->mailingAgentRepo->addSubscriber(array(
+                    'EmailAddress' => $user->email,
+                    'Name' => $user->first_name . " " . $user->last_name,
+                    'CustomFields' => array(
+                        array(
+                            "Key" => "NumberofSites",
+                            "Value" => $user->sites()->count()
+                        ),
+                        array(
+                            "Key" => "NumberofProducts",
+                            "Value" => $user->products()->count()
+                        ),
+                        array(
+                            "Key" => "NumberofCategories",
+                            "Value" => $user->categories()->count()
+                        ),
+                    ),
+                ));
+            }
+        }
+
+        $this->mailingAgentRepo->editSubscriber($user->email, array(
+            'CustomFields' => array(
+                array(
+                    'Key' => 'LastLoginOn',
+                    'Value' => date("Y/m/d"),
+                ),
+            )
+        ));
+
         /*TODO disable the following line*/
         if (!is_null($user->validSubscription())) {
             $this->subscriptionRepo->updateCreditCardDetails($user->validSubscription());

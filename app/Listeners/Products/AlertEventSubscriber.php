@@ -9,14 +9,23 @@
 namespace App\Listeners\Products;
 
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Jobs\LogAlertActivity;
 use App\Jobs\LogUserActivity;
 
 class AlertEventSubscriber
 {
+    protected $mailingAgentRepo;
+
+    public function __construct(MailingAgentContract $mailingAgentContract)
+    {
+        $this->mailingAgentRepo = $mailingAgentContract;
+    }
+
     public function onAlertCreated($event)
     {
         $alert = $event->alert;
+        $this->mailingAgentRepo->updateLastSetupAlertDate();
         dispatch((new LogUserActivity(auth()->user(), "created alert - {$alert->getKey()}"))->onQueue("logging"));
     }
 
@@ -45,6 +54,7 @@ class AlertEventSubscriber
     public function onAlertEdited($event)
     {
         $alert = $event->alert;
+        $this->mailingAgentRepo->updateLastSetupAlertDate();
         dispatch((new LogUserActivity(auth()->user(), "edited alert - {$alert->getKey()}"))->onQueue("logging"));
     }
 

@@ -9,12 +9,18 @@
 namespace App\Listeners\Products;
 
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Jobs\LogReportActivity;
 use App\Jobs\LogUserActivity;
 
 class ReportEventSubscriber
 {
+    protected $mailingAgentRepo;
 
+    public function __construct(MailingAgentContract $mailingAgentContract)
+    {
+        $this->mailingAgentRepo = $mailingAgentContract;
+    }
 
     public function onReportCreated($event)
     {
@@ -28,6 +34,7 @@ class ReportEventSubscriber
     public function onReportTaskCreated($event)
     {
         $reportTask = $event->reportTask;
+        $this->mailingAgentRepo->updateLastSetupReportDate();
         dispatch((new LogUserActivity(auth()->user(), "created report task - {$reportTask->getKey()}"))->onQueue("logging"));
     }
 
@@ -88,6 +95,7 @@ class ReportEventSubscriber
     public function onReportTaskEdited($event)
     {
         $reportTask = $event->reportTask;
+        $this->mailingAgentRepo->updateLastSetupReportDate();
         dispatch((new LogUserActivity(auth()->user(), "edited report task - {$reportTask->getKey()}"))->onQueue("logging"));
     }
 

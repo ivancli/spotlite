@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Products;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Jobs\LogUserActivity;
 
 /**
@@ -11,6 +12,12 @@ use App\Jobs\LogUserActivity;
  */
 class ProductEventSubscriber
 {
+    protected $mailingAgentRepo;
+
+    public function __construct(MailingAgentContract $mailingAgentContract)
+    {
+        $this->mailingAgentRepo = $mailingAgentContract;
+    }
 
     public function onProductCreateViewed($event)
     {
@@ -20,6 +27,8 @@ class ProductEventSubscriber
     public function onProductDeleted($event)
     {
         $product = $event->product;
+        $this->mailingAgentRepo->updateNumberOfProducts();
+        $this->mailingAgentRepo->updateNumberOfSites();
         dispatch((new LogUserActivity(auth()->user(), "deleted product - {$product->getKey()}"))->onQueue("logging"));
     }
 
@@ -43,6 +52,8 @@ class ProductEventSubscriber
     public function onProductStored($event)
     {
         $product = $event->product;
+        $this->mailingAgentRepo->updateNumberOfProducts();
+        $this->mailingAgentRepo->updateLastAddProductDate();
         dispatch((new LogUserActivity(auth()->user(), "stored product - {$product->getKey()}"))->onQueue("logging"));
     }
 

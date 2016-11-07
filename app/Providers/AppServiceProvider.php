@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Models\Alert;
 use App\Models\AlertEmail;
 use App\Models\Crawler;

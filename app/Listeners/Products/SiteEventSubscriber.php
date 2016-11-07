@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Products;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Jobs\LogUserActivity;
 
 
@@ -12,24 +13,29 @@ use App\Jobs\LogUserActivity;
  */
 class SiteEventSubscriber
 {
+    protected $mailingAgentRepo;
 
-    public function onSiteAttached($event)
+    public function __construct(MailingAgentContract $mailingAgentContract)
+    {
+        $this->mailingAgentRepo = $mailingAgentContract;
+    }
+
+    public function onSiteDeleting($event)
     {
         $site = $event->site;
-        $product = $event->product;
-        dispatch((new LogUserActivity(auth()->user(), "attached product - {$product->getKey()} and site - {$site->getKey()}"))->onQueue("logging"));
+        dispatch((new LogUserActivity(auth()->user(), "deleting site - {$site->getKey()}"))->onQueue("logging"));
+    }
+
+    public function onSiteDeleted($event)
+    {
+        $site = $event->site;
+        $this->mailingAgentRepo->updateNumberOfSites();
+        dispatch((new LogUserActivity(auth()->user(), "deleted site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSiteCreateViewed($event)
     {
         dispatch((new LogUserActivity(auth()->user(), "viewed create site page"))->onQueue("logging"));
-    }
-
-    public function onSiteDetached($event)
-    {
-        $site = $event->site;
-        $product = $event->product;
-        dispatch((new LogUserActivity(auth()->user(), "detached product - {$product->getKey()} and site - {$site->getKey()}"))->onQueue("logging"));
     }
 
     public function onSiteEditViewed($event)
@@ -52,6 +58,8 @@ class SiteEventSubscriber
     public function onSiteStored($event)
     {
         $site = $event->site;
+        $this->mailingAgentRepo->updateNumberOfSites();
+        $this->mailingAgentRepo->updateLastAddSiteDate();
         dispatch((new LogUserActivity(auth()->user(), "stored site - {$site->getKey()}"))->onQueue("logging"));
     }
 
@@ -72,6 +80,14 @@ class SiteEventSubscriber
         dispatch((new LogUserActivity(auth()->user(), "updating site - {$site->getKey()}"))->onQueue("logging"));
     }
 
+    public function onSiteMyPriceSet($event)
+    {
+        $site = $event->site;
+        $this->mailingAgentRepo->updateLastNominatedMyPriceDate();
+        dispatch((new LogUserActivity(auth()->user(), "setting my price with site - {$site->getKey()}"))->onQueue("logging"));
+    }
+
+
     /**
      * Register the listeners for the subscriber.
      *
@@ -80,17 +96,17 @@ class SiteEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\Products\Site\SiteAttached',
-            'App\Listeners\Products\SiteEventSubscriber@onSiteAttached'
+            'App\Events\Products\Site\SiteDeleting',
+            'App\Listeners\Products\SiteEventSubscriber@onSiteDeleting'
+        );
+        $events->listen(
+            'App\Events\Products\Site\SiteDeleted',
+            'App\Listeners\Products\SiteEventSubscriber@onSiteDeleted'
         );
 
         $events->listen(
             'App\Events\Products\Site\SiteCreateViewed',
             'App\Listeners\Products\SiteEventSubscriber@onSiteCreateViewed'
-        );
-        $events->listen(
-            'App\Events\Products\Site\SiteDetached',
-            'App\Listeners\Products\SiteEventSubscriber@onSiteDetached'
         );
         $events->listen(
             'App\Events\Products\Site\SiteEditViewed',
@@ -119,6 +135,10 @@ class SiteEventSubscriber
         $events->listen(
             'App\Events\Products\Site\SiteUpdating',
             'App\Listeners\Products\SiteEventSubscriber@onSiteUpdating'
+        );
+        $events->listen(
+            'App\Events\Products\Site\SiteMyPriceSet',
+            'App\Listeners\Products\SiteEventSubscriber@onSiteMyPriceSet'
         );
 
     }

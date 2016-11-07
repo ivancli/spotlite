@@ -11,13 +11,31 @@ namespace App\Contracts\Repository\Mailer;
 
 interface MailingAgentContract
 {
-    public function getSubscriber($listId, $email);
+    public function getSubscriber($email);
 
-    public function addSubscriber($listId, $fields);
+    public function addSubscriber($fields);
 
-    public function editSubscriber($listId, $email, $fields);
+    public function editSubscriber($email, $fields);
 
-    public function deleteSubscriber($listId, $email);
+    public function deleteSubscriber($email);
 
-    public function unsubscribe($listId, $email);
+    public function unsubscribe($email);
+
+    public function updateNumberOfSites();
+
+    public function updateNumberOfProducts();
+
+    public function updateNumberOfCategories();
+
+    public function updateLastAddCategoryDate();
+
+    public function updateLastAddProductDate();
+
+    public function updateLastAddSiteDate();
+
+    public function updateLastNominatedMyPriceDate();
+
+    public function updateLastSetupAlertDate();
+
+    public function updateLastSetupReportDate();
 }

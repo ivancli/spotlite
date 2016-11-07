@@ -8,9 +8,16 @@ use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Events\Products\Site\SiteCreateViewed;
+use App\Events\Products\Site\SiteDeleted;
+use App\Events\Products\Site\SiteDeleting;
+use App\Events\Products\Site\SiteEditViewed;
+use App\Events\Products\Site\SiteMyPriceSet;
 use App\Events\Products\Site\SitePricesViewed;
+use App\Events\Products\Site\SiteSingleViewed;
 use App\Events\Products\Site\SiteStored;
 use App\Events\Products\Site\SiteStoring;
+use App\Events\Products\Site\SiteUpdated;
+use App\Events\Products\Site\SiteUpdating;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Libraries\CommonFunctions;
@@ -57,6 +64,8 @@ class SiteController extends Controller
     {
         /* TODO there is yet no way to get around with this, unable to get last attached product_site_id */
         $site = $this->siteRepo->getSite($id);
+
+        event(new SiteSingleViewed($site));
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['site']));
@@ -245,7 +254,7 @@ class SiteController extends Controller
                 }
             }
         }
-
+        event(new SiteEditViewed($site));
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -282,6 +291,7 @@ class SiteController extends Controller
             }
         }
         $site = $this->siteRepo->getSite($id);
+        event(new SiteUpdating($site));
 
         $site = $this->siteRepo->updateSite($site->getKey(), array("site_url" => $request->get('site_url'),));
 
@@ -310,6 +320,7 @@ class SiteController extends Controller
             $site->save();
         }
         $site->statusWaiting();
+        event(new SiteUpdated($site));
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -439,6 +450,7 @@ class SiteController extends Controller
         }
         $site->my_price = $myPrice;
         $site->save();
+        event(new SiteMyPriceSet($site));
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
@@ -463,7 +475,9 @@ class SiteController extends Controller
     public function destroy(Request $request, $id)
     {
         $site = $this->siteRepo->getSite($id);
+        event(new SiteDeleting($site));
         $this->siteRepo->deleteSite($id);
+        event(new SiteDeleted($site));
         $status = true;
         if ($request->ajax()) {
             if ($request->wantsJson()) {
