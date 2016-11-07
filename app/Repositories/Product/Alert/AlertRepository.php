@@ -116,7 +116,7 @@ class AlertRepository implements AlertContract
 
             $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
 
-            if ($alertUser) {
+            if ($alertUser && $site->price_diff != 0) {
                 $alertingSites[] = $site;
             }
         }
@@ -175,7 +175,7 @@ class AlertRepository implements AlertContract
         }
 
         $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
-        if ($alertUser) {
+        if ($alertUser && $site->price_diff != 0) {
             $emails = $alert->emails;
             foreach ($emails as $email) {
                 dispatch((new SendMail('products.alert.email.site',
