@@ -19,7 +19,7 @@ class Site extends Model
     protected $fillable = [
         "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "my_price", "comment"
     ];
-    protected $appends = ['urls', 'domain'];
+    protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt'];
 
     public function preference()
     {
@@ -82,6 +82,32 @@ class Site extends Model
 
             "admin_status_update" => route("admin.site.status.update", $this->getKey()),
         );
+    }
+
+    public function getPreviousPriceAttribute()
+    {
+        return $this->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $this->recent_price)->first();
+    }
+
+    public function getDiffPriceAttribute()
+    {
+        $historicalPrice = $this->previousPrice;
+        if (!is_null($historicalPrice)) {
+            return $this->recent_price - $historicalPrice->price;
+        }
+        return null;
+    }
+
+    public function getPriceLastChangedAtAttribute()
+    {
+        $historicalPrice = $this->previousPrice;
+        if (!is_null($historicalPrice)) {
+            $firstChangedHistoricalPrice = $this->historicalPrices()->orderBy('created_at', 'asc')->where('price', $this->recent_price)->where('price_id', '>', $historicalPrice->getKey())->first();
+            if (!is_null($firstChangedHistoricalPrice)) {
+                return $firstChangedHistoricalPrice->created_at;
+            }
+        }
+        return null;
     }
 
     public function getDomainAttribute()

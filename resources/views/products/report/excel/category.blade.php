@@ -56,18 +56,18 @@
                         -
                     </td>
                 @endif
-                @if(!is_null($site->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $site->recent_price)->first()))
+                @if(!is_null($site->previousPrice))
                     <td>
-                        {{$site->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $site->recent_price)->first()->price}}
+                        {{$site->previousPrice->price}}
                     </td>
                 @else
                     <td class="text-center">
                         -
                     </td>
                 @endif
-                @if(!is_null($site->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $site->recent_price)->first()))
+                @if(!is_null($site->priceLastChangedAt))
                     <td>
-                        {{$site->historicalPrices()->orderBy('created_at', 'asc')->where('price', $site->recent_price)->where('price_id', '>', $site->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $site->recent_price)->first()->getKey())->first()->created_at}}
+                        {{$site->priceLastChangedAt}}
                     </td>
                 @else
                     <td class="text-center">

@@ -68,9 +68,10 @@
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th width="25%">Site</th>
+                        <th width="15%">Site</th>
                         <th width="15%">Price</th>
                         <th width="15%" class="hidden-xs">Change</th>
+                        <th width="10%" class="hidden-xs">Changed At</th>
                         <th class="text-center" width="10%">My Price</th>
                         <th width="15%">Last Update</th>
                         <th width="20%"></th>

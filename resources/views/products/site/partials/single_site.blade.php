@@ -30,15 +30,25 @@
         @endif
     </td>
     <td class="hidden-xs">
-        @if(!is_null($site->recent_price))
-            @if(!is_null($site->price_diff) && $site->price_diff != 0)
-                <i class="glyphicon {{$site->price_diff > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
-                ${{number_format(abs($site->price_diff), 2, '.', ',')}}
+        @if(!is_null($site->diffPrice))
+            @if($site->diffPrice != 0)
+                <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
+                ${{number_format(abs($site->diffPrice), 2, '.', ',')}}
             @else
                 <div class="p-l-10">
                     <strong><i class="fa fa-minus"></i></strong>
                 </div>
             @endif
+        @else
+            <div class="p-l-10">
+                <strong><i class="fa fa-minus"></i></strong>
+            </div>
+        @endif
+    </td>
+    <td class="hidden-xs">
+        @if(!is_null($site->priceLastChangedAt))
+            {{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->priceLastChangedAt))}}
+
         @else
             <div class="p-l-10">
                 <strong><i class="fa fa-minus"></i></strong>
