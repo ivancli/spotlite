@@ -32,6 +32,10 @@ return [
         "£",
         "AUD",
         "USD",
-        "Our Price :"
+        "Our Price :",
+        "6pk",
+        "3pk",
+        "(",
+        "\""
     ]
 ];
