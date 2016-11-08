@@ -24,11 +24,13 @@
 }
 
 .product-container {
-    width: 200px;
+    width: 250px;
     display: inline-block;
     padding: 15px;
     vertical-align: top;
     cursor: pointer;
+    border: 1px solid lightgrey;
+    border-radius: 20px;
 }
 
 .callout.callout-default {

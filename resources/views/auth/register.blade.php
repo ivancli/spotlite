@@ -38,8 +38,6 @@
                         @endif
                         {!! Form::open(array('route' => 'register.post', 'method' => 'post', "class" => "form-horizontal sl-form-horizontal", "id" => "frm-register", "onsubmit" => "$('#txt-coupon-code').val($('#visual-coupon-code').val())")) !!}
                         @include('auth.forms.register_form')
-                        <input type="hidden" name="component_id" id="txt-component-id" value="{{old("component_id")}}">
-                        <input type="hidden" name="family_id" id="txt-family-id" value="{{old("family_id")}}">
                         <input type="hidden" name="signup_link" id="txt-signup-link" value="{{old("signup_link")}}">
                         <input type="hidden" name="api_product_id" id="txt-api-product-id" value="{{old("api_product_id")}}">
                         <input type="hidden" name="coupon_code" id="txt-coupon-code" value="{{old("coupon_code")}}">
@@ -67,12 +65,8 @@
                 $(this).addClass("selected");
                 var link = $(this).attr("data-link");
                 var apiProductID = $(this).attr("data-id");
-                var componentID = $(this).attr("data-component-id");
-                var familyID = $(this).attr("data-family-id");
                 $("#txt-signup-link").val(link);
                 $("#txt-api-product-id").val(apiProductID);
-                $("#txt-component-id").val(componentID);
-                $("#txt-family-id").val(familyID);
                 updateRegistrationPanelStatus();
                 updateBtnRegisterStatus();
             });

@@ -63,16 +63,8 @@ class SubscriptionController extends Controller
                 $transactions = Chargify::transaction()->allBySubscription($current_sub_id);
                 $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($current_sub_id);
 
-                $components = Chargify::component()->allBySubscription($current_sub_id);
-                if (!isset($components->errors) && count($components) > 0) {
-                    $component = array_first($components);
-                } else {
-                    abort(403);
-                    return false;
-                }
-
                 event(new SubscriptionManagementViewed());
-                return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions', 'component']));
+                return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions']));
             } else {
                 abort(403);
                 return false;
@@ -94,99 +86,77 @@ class SubscriptionController extends Controller
         $productId = $request->get('api_product_id');
         $couponCode = $request->get('coupon_code');
         $product = Chargify::product()->get($productId);
-        $product_family_id = $product->product_family_id;
 
-        $components = Chargify::component()->allByProductFamily($product_family_id);
-        if (!isset($components->errors) && count($components) > 0) {
-            $component = array_first($components);
-
-            if (!isset($product->errors)) {
-                if ($product->require_credit_card) {
-                    if (!is_null(auth()->user()->subscription)) {
-                        $previousSubscription = auth()->user()->subscription;
-                        $previousAPISubscription = Chargify::subscription()->get($previousSubscription->api_subscription_id);
-                        $paymentProfile = $previousAPISubscription->paymentProfile();
-                        if (!isset($paymentProfile->errors) && !is_null($paymentProfile)) {
-                            if ($paymentProfile->expiration_year > date("Y") || ($paymentProfile->expiration_year == date("Y") && $paymentProfile->expiration_month >= date('n'))) {
-                                $newSubscription = Chargify::subscription()->create(array(
-                                    "product_id" => $product->id,
-                                    "customer_id" => $previousSubscription->api_customer_id,
-                                    "payment_profile_id" => $paymentProfile->id,
-                                    "coupon_code" => $couponCode,
-                                ));
-                                $user->clearCache();
-                                if (!isset($newSubscription->errors)) {
-
-                                    $newSubscription = Chargify::subscription()->update($newSubscription->id, array(
-                                        "components" => array(
-                                            array(
-                                                "component" => array(
-                                                    "component_id" => $component->id
-                                                )
-                                            )
-                                        )
-                                    ));
-
-                                    Chargify::allocation()->create($newSubscription->id, $component->id, array(
-                                        "quantity" => array_first($component->prices)->ending_quantity,
-                                    ));
-
-                                    $previousSubscription->api_product_id = $newSubscription->product_id;
-                                    $previousSubscription->api_subscription_id = $newSubscription->id;
-                                    $previousSubscription->api_customer_id = $newSubscription->customer_id;
-                                    $previousSubscription->cancelled_at = null;
-                                    $previousSubscription->save();
-                                    return redirect()->route('subscription.index');
-                                }
+        if (!isset($product->errors)) {
+            if ($product->require_credit_card) {
+                if (!is_null(auth()->user()->subscription)) {
+                    $previousSubscription = auth()->user()->subscription;
+                    $previousAPISubscription = Chargify::subscription()->get($previousSubscription->api_subscription_id);
+                    $paymentProfile = $previousAPISubscription->paymentProfile();
+                    if (!isset($paymentProfile->errors) && !is_null($paymentProfile)) {
+                        if ($paymentProfile->expiration_year > date("Y") || ($paymentProfile->expiration_year == date("Y") && $paymentProfile->expiration_month >= date('n'))) {
+                            $newSubscription = Chargify::subscription()->create(array(
+                                "product_id" => $product->id,
+                                "customer_id" => $previousSubscription->api_customer_id,
+                                "payment_profile_id" => $paymentProfile->id,
+                                "coupon_code" => $couponCode,
+                            ));
+                            $user->clearCache();
+                            if (!isset($newSubscription->errors)) {
+                                $previousSubscription->api_product_id = $newSubscription->product_id;
+                                $previousSubscription->api_subscription_id = $newSubscription->id;
+                                $previousSubscription->api_customer_id = $newSubscription->customer_id;
+                                $previousSubscription->cancelled_at = null;
+                                $previousSubscription->save();
+                                return redirect()->route('subscription.index');
                             }
                         }
                     }
-                    /* redirect to Chargify payment gateway (signup page) */
-                    $chargifyLink = array_first($product->public_signup_pages)->url;
-                    $verificationCode = str_random(10);
-                    $user->verification_code = $verificationCode;
+                }
+                /* redirect to Chargify payment gateway (signup page) */
+                $chargifyLink = array_first($product->public_signup_pages)->url;
+                $verificationCode = str_random(10);
+                $user->verification_code = $verificationCode;
+                $user->save();
+                $reference = array(
+                    "user_id" => $user->getKey(),
+                    "verification_code" => $verificationCode
+                );
+
+                $encryptedReference = rawurlencode(json_encode($reference));
+                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}";
+                $user->clearCache();
+                return redirect()->to($chargifyLink);
+            } else {
+                $newSubscription = Chargify::subscription()->create(array(
+                    "product_id" => $product->id,
+                    "customer_attributes" => array(
+                        "first_name" => $user->first_name,
+                        "last_name" => $user->last_name,
+                        "email" => $user->email
+                    )
+                ));
+
+                if (!isset($newSubscription->errors)) {
+                    /* clear verification code*/
+                    $user->verification_code = null;
                     $user->save();
-                    $reference = array(
-                        "user_id" => $user->getKey(),
-                        "verification_code" => $verificationCode
-                    );
-
-                    $component_quantity = is_null(array_first($component->prices)->ending_quantity) ? 0 : array_first($component->prices)->ending_quantity;
-                    $encryptedReference = rawurlencode(json_encode($reference));
-                    $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}&components[][component_id]={$component->id}&components[][allocated_quantity]={$component_quantity}";
-                    $user->clearCache();
-                    return redirect()->to($chargifyLink);
-                } else {
-                    $newSubscription = Chargify::subscription()->create(array(
-                        "product_id" => $product->id,
-                        "customer_attributes" => array(
-                            "first_name" => $user->first_name,
-                            "last_name" => $user->last_name,
-                            "email" => $user->email
-                        )
-                    ));
-
-                    if (!isset($newSubscription->errors)) {
-                        /* clear verification code*/
-                        $user->verification_code = null;
-                        $user->save();
-                        try {
-                            /* update subscription record */
-                            $expiry_datetime = $newSubscription->expires_at;
-                            $sub = new Subscription();
-                            $sub->user_id = $user->getKey();
-                            $sub->api_product_id = $newSubscription->product_id;
-                            $sub->api_customer_id = $newSubscription->customer_id;
-                            $sub->api_subscription_id = $newSubscription->id;
-                            $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
-                            $sub->save();
-                            event(new SubscriptionCompleted($sub));
-                            $user->clearCache();
-                            return redirect()->route('subscription.index');
-                        } catch (Exception $e) {
-                            /*TODO need to handle exception properly*/
-                            return $user;
-                        }
+                    try {
+                        /* update subscription record */
+                        $expiry_datetime = $newSubscription->expires_at;
+                        $sub = new Subscription();
+                        $sub->user_id = $user->getKey();
+                        $sub->api_product_id = $newSubscription->product_id;
+                        $sub->api_customer_id = $newSubscription->customer_id;
+                        $sub->api_subscription_id = $newSubscription->id;
+                        $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
+                        $sub->save();
+                        event(new SubscriptionCompleted($sub));
+                        $user->clearCache();
+                        return redirect()->route('subscription.index');
+                    } catch (Exception $e) {
+                        /*TODO need to handle exception properly*/
+                        return $user;
                     }
                 }
             }
@@ -214,14 +184,6 @@ class SubscriptionController extends Controller
                             $sub->api_product_id = $subscription->product_id;
                             $sub->api_customer_id = $subscription->customer_id;
                             $sub->api_subscription_id = $subscription->id;
-                            $components = Chargify::component()->allBySubscription($subscription_id);
-                            if (!isset($components->errors) && count($components) > 0) {
-                                $component = array_first($components);
-                            } else {
-                                abort(403);
-                                return false;
-                            }
-                            $sub->api_component_id = $component->id;
                             $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
                             $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
                             $sub->save();
@@ -238,14 +200,6 @@ class SubscriptionController extends Controller
                             $sub->api_product_id = $subscription->product_id;
                             $sub->api_customer_id = $subscription->customer_id;
                             $sub->api_subscription_id = $subscription->id;
-                            $components = Chargify::component()->allBySubscription($subscription->id);
-                            if (!isset($components->errors) && count($components) > 0) {
-                                $component = array_first($components);
-                            } else {
-                                abort(403);
-                                return false;
-                            }
-                            $sub->api_component_id = $component->id;
                             $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
                             $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
                             $sub->save();
@@ -313,25 +267,33 @@ class SubscriptionController extends Controller
 
         /* validation*/
         $targetProduct = Chargify::product()->get($request->get('api_product_id'));
-        $numberOfSites = auth()->user()->sites()->count();
-        $targetProductFamily = $targetProduct->productFamily();
-        $targetComponents = $targetProductFamily->components();
-        if (!isset($targetComponents->errors) && count($targetComponents) > 0) {
-            $targetComponent=array_first($targetComponents);
-            $targetPrice = array_first($targetComponent->prices);
-            $numberOfSitesAllowance = $targetPrice->ending_quantity;
-            if ($numberOfSitesAllowance != 0 && $numberOfSitesAllowance < $numberOfSites) {
-                $errors = array("Please reduce the number of your sites in Products page before changing your plan.");
-                $status = false;
-                if ($request->ajax()) {
-                    if ($request->wantsJson()) {
-                        return response()->json(compact(['errors', 'status']));
-                    } else {
-                        return compact(['errors', 'status']);
-                    }
-                } else {
-                    return redirect()->back()->withErrors($errors);
+        if (!is_null($targetProduct->description)) {
+            $targetCriteria = json_decode($targetProduct->description);
+            if (!is_null($targetCriteria)) {
+                $productLimit = $targetCriteria->product;
+                $siteLimit = $targetCriteria->site;
+                $status = true;
+                $errors = array();
+                if (!is_null($productLimit) && $productLimit < auth()->user()->products()->count()) {
+                    $status = false;
+                    $errors = array("Please reduce number of products to meet target subscription plans criteria.");
                 }
+                if (!is_null($siteLimit) && $siteLimit < auth()->user()->sites()->count()) {
+                    $status = false;
+                    $errors = array("Please reduce number of sites to meet target subscription plans criteria.");
+                }
+                if ($status = false) {
+                    if ($request->ajax()) {
+                        if ($request->wantsJson()) {
+                            return response()->json(compact(['status', 'errors']));
+                        } else {
+                            return compact(['status', 'errors']);
+                        }
+                    } else {
+                        return redirect()->back()->withErrors($errors);
+                    }
+                }
+
             }
         }
 
@@ -365,27 +327,10 @@ class SubscriptionController extends Controller
                 "product_id" => request()->get('api_product_id'),
                 "include_coupons" => 1
             );
+
             $result = Chargify::subscription()->createMigration($apiSubscription->id, $fields);
             if (!isset($result->errors)) {
-                $product_family_id = $result->product()->product_family_id;
-
-                $apiComponents = Chargify::component()->allByProductFamily($product_family_id);
-
-                $component = array_first($apiComponents);
-
-                $apiSubscription = Chargify::subscription()->update($apiSubscription->id, array(
-                    "components" => array(
-                        array(
-                            "component" => array(
-                                "component_id" => $component->id
-                            )
-                        )
-                    )
-                ));
-                Chargify::allocation()->create($apiSubscription->id, $component->id, array(
-                    "quantity" => $component->prices[0]->ending_quantity
-                ));
-                $subscription->api_product_id = $apiSubscription->product_id;
+                $subscription->api_product_id = $result->product_id;
                 if (!is_null($result->canceled_at)) {
                     $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($result->canceled_at));
                 }
@@ -464,6 +409,62 @@ class SubscriptionController extends Controller
             return response()->json(compact(['productFamilies', 'status']));
         } else {
             return compact(['productFamilies', 'status']);
+        }
+    }
+
+    public function onboardingStore(Request $request)
+    {
+        $user = auth()->user();
+        if ($user->isStaff()) {
+            $status = false;
+            $errors = array("Staff does not need to subscribe.");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withErrors($errors);
+            }
+        }
+
+        $subscription = $user->cachedAPISubscription();
+        $product = $subscription->product();
+        $productFamily = $product->productFamily();
+        $products = $productFamily->products();
+
+        /* get onboarding product */
+        $onboardingProduct = null;
+        foreach ($products as $product) {
+            if (strpos($product->name, 'onboarding') !== false) {
+                $onboardingProduct = $product;
+                break;
+            }
+        }
+        if (is_null($onboardingProduct)) {
+            $status = false;
+            $errors = array("Onboarding service is not available for this subscription plan.");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withErrors($errors);
+            }
+        }
+        $paymentProfile = $subscription->paymentProfile();
+
+        $onboardingSubscription = Chargify::subscription()->create(array(
+            "product_id" => $onboardingProduct->id,
+            "customer_id" => $subscription->customer_id,
+            "payment_profile_id" => $paymentProfile->id,
+        ));
+
+        if(!isset($onboardingSubscription->errors)){
+            return $onboardingSubscription;
         }
     }
 }

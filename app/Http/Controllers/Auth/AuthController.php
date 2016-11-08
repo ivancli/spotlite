@@ -71,8 +71,6 @@ class AuthController extends Controller
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
             'signup_link' => 'required',
-            'component_id' => 'required',
-            'family_id' => 'required',
             'api_product_id' => 'required',
         ]);
     }
@@ -119,18 +117,6 @@ class AuthController extends Controller
                 );
                 $encryptedReference = rawurlencode(json_encode($reference));
                 $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$coupon_code}";
-                if (isset($data['component_id']) && isset($data['family_id'])) {
-                    $apiComponents = Chargify::component()->allByProductFamily($data['family_id']);
-                    if (!isset($apiComponents->errors) && count($apiComponents) > 0) {
-                        $apiComponent = array_first($apiComponents);
-                        if (isset($apiComponent->prices) && count($apiComponent->prices) > 0) {
-                            $allocatedQuantity = array_first($apiComponent->prices)->ending_quantity;
-                            if (!is_null($allocatedQuantity)) {
-                                $chargifyLink .= "&components[][component_id]={$data['component_id']}&components[][allocated_quantity]={$allocatedQuantity}";
-                            }
-                        }
-                    }
-                }
 
                 $this->redirectTo = $chargifyLink;
             } else {
@@ -147,14 +133,6 @@ class AuthController extends Controller
                     "coupon_code" => $coupon_code
                 );
 
-                if (isset($data['component_id']) && isset($data['family_id'])) {
-                    $apiComponents = Chargify::component()->allByProductFamily($data['family_id']);
-                    $allocatedQuantity = $apiComponents[0]->prices[0]->ending_quantity;
-                    $fields["component"] = array(
-                        "component_id" => $data['component_id'],
-                        "allocated_quantity" => $allocatedQuantity
-                    );
-                }
                 $result = Chargify::subscription()->create($fields);
                 if (!isset($result->errors)) {
                     /* clear verification code*/
@@ -169,9 +147,6 @@ class AuthController extends Controller
                         $sub->api_product_id = $subscription->product_id;
                         $sub->api_customer_id = $subscription->customer_id;
                         $sub->api_subscription_id = $subscription->id;
-                        if (isset($data['component_id'])) {
-                            $sub->api_component_id = $data['component_id'];
-                        }
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
                         $this->redirectTo = route('msg.subscription.welcome');

@@ -103,20 +103,20 @@ class ChargifySubscriptionRepository implements SubscriptionContract
      */
     public function getProductList()
     {
-        return Cache::rememberForever('product_families.products.components', function () {
+        return Cache::rememberForever('product_families.products', function () {
             $families = Chargify::productFamily()->all();
             $productFamilies = array();
             foreach ($families as $index => $family) {
-                $family_id = $family->id;
                 $apiProducts = Chargify::product()->allByProductFamily($family->id);
-
                 if (isset($apiProducts->errors) || count($apiProducts) == 0) {
                     continue;
                 }
-                $product = array_first($apiProducts);
-                $apiComponents = Chargify::component()->allByProductFamily($family->id);
-
-                if (isset($apiComponents->errors) || count($apiComponents) == 0) {
+                foreach ($apiProducts as $apiProduct) {
+                    if (strpos($apiProduct->handle, 'onboarding') === false) {
+                        $product = $apiProduct;
+                    }
+                }
+                if (!isset($product)) {
                     continue;
                 }
 
@@ -130,12 +130,16 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                     )
                 ));
 
-                $component = array_first($apiComponents);
+                $product->criteria = json_decode($product->description);
+
                 $productFamily = $family;
                 $productFamily->product = $product;
-                $productFamily->component = $component;
                 $productFamily->preview = $subscriptionPreview;
                 $productFamilies[] = $productFamily;
+
+                unset($product);
+                unset($apiProducts);
+                unset($productFamily);
             }
             $productFamilies = collect($productFamilies);
             $productFamilies = $productFamilies->sortBy('product.price_in_cents')->values();

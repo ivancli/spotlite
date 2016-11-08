@@ -33,6 +33,7 @@ class ProductController extends Controller
 {
     protected $productRepo;
     protected $categoryRepo;
+
     protected $filter;
 
     public function __construct(ProductContract $productContract, CategoryContract $categoryContract, QueryFilter $filter)
@@ -95,6 +96,22 @@ class ProductController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
+        /*TODO add number of products validation here*/
+
+        if (!auth()->user()->canAddProduct()) {
+            $status = false;
+            $errors = array("Please upgrade your subscription plan to add more products");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
         try {
             $storeValidator->validate($request->all());
         } catch (ValidationException $e) {

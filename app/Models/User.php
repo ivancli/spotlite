@@ -116,7 +116,7 @@ class User extends Authenticatable
     public function cachedSubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-        return Cache::remember("user.{$this->$userPrimaryKey}.subscription", config()->get('cache.ttl'), function () {
+        return Cache::remember("user.{$this->getKey()}.subscription", config()->get('cache.ttl'), function () {
             return $this->subscription;
         });
     }
@@ -124,7 +124,7 @@ class User extends Authenticatable
     public function cachedAPISubscription()
     {
         $userPrimaryKey = $this->primaryKey;
-        return Cache::remember("user.{$this->$userPrimaryKey}.subscription.api", config()->get('cache.ttl'), function () {
+        return Cache::remember("user.{$this->getKey()}.subscription.api", config()->get('cache.ttl'), function () {
             if ($this->hasValidSubscription()) {
                 $subscription = Chargify::subscription()->get($this->cachedSubscription()->api_subscription_id);
             } else {
@@ -134,27 +134,66 @@ class User extends Authenticatable
         });
     }
 
-    public function cachedAPIComponent()
+    public function subscriptionCriteria()
     {
-        $userPrimaryKey = $this->primaryKey;
-        $subscription = $this->cachedSubscription();
-        $current_sub_id = $subscription->api_subscription_id;
-        $component = Cache::remember("user.{$this->$userPrimaryKey}.subscription.component", config()->get('cache.ttl'), function () use ($current_sub_id) {
-            $components = Chargify::component()->allBySubscription($current_sub_id);
-            if (count($components) > 0) {
-                return array_first($components);
+        return Cache::remember("user.{$this->getKey()}.subscription.api.criteria", config()->get('cache.ttl'), function () {
+            $product = Chargify::product()->get($this->cachedAPISubscription()->product_id);
+            if (!is_null($product->description)) {
+                $criteria = json_decode($product->description);
+                return $criteria;
             }
             return null;
         });
-        return $component;
+    }
+
+    /**
+     * Check if the user can still add product
+     *
+     * @return bool
+     */
+    public function canAddProduct()
+    {
+        if ($this->isStaff()) {
+            return true;
+        }
+        $criteria = $this->subscriptionCriteria();
+        if (isset($criteria->product) && $criteria->product != 0) {
+            $maxProducts = $criteria->product;
+            $currentProducts = $this->products()->count();
+            if ($currentProducts >= $maxProducts) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check if the user can still add site
+     *
+     * @return bool
+     */
+    public function canAddSite()
+    {
+        if ($this->isStaff()) {
+            return true;
+        }
+        $criteria = $this->subscriptionCriteria();
+        if (isset($criteria->site) && $criteria->site != 0) {
+            $maxSites = $criteria->site;
+            $currentSites = $this->sites()->count();
+            if ($currentSites >= $maxSites) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function clearCache()
     {
         Cache::forget("user.{$this->getKey()}.subscription");
         Cache::forget("user.{$this->getKey()}.subscription.api");
+        Cache::forget("user.{$this->getKey()}.subscription.api.criteria");
         Cache::forget("user.{$this->getKey()}.subscription.transaction");
-        Cache::forget("user.{$this->getKey()}.subscription.component");
     }
 
     public function needSubscription()

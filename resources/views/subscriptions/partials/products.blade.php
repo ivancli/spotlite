@@ -2,33 +2,80 @@
     @foreach($productFamilies as $productFamily)
         <div class="product-container m-b-10
         {{isset($chosenAPIProductID) && $productFamily->product->id == $chosenAPIProductID ? 'chosen': ''}}
-                {{(is_null(old("api_product_id")) && \Request::route()->getName() == "register.get"  && \Request::has("pid") && \Request::get("pid") == $productFamily->product->id) ? 'selected' : ''}}
+        {{(is_null(old("api_product_id")) && \Request::route()->getName() == "register.get"  && \Request::has("pid") && \Request::get("pid") == $productFamily->product->id) ? 'selected' : ''}}
         {{old("api_product_id") == $productFamily->product->id ? "selected" : ""}}
                 "
              data-link="{{array_first($productFamily->product->public_signup_pages)->url}}"
-             data-family-id="{{$productFamily->id}}"
              data-id="{{$productFamily->product->id}}"
-             style="border: 1px solid lightgrey; border-radius: 20px;"
-             data-price="{{$productFamily->product->price_in_cents}}"
-             data-component-id="{{$productFamily->component->id}}">
+             data-price="{{$productFamily->product->price_in_cents}}">
             <h4 style="text-transform: uppercase; color: #78a300;">{{$productFamily->product->name}}</h4>
-            <p>
-                {!! $productFamily->product->description !!}
-            </p>
-            @if(!is_null($productFamily->component))
-                @foreach($productFamily->component->prices as $price)
-                    <p style="color: #78a300;">
-                        @if(!is_null($price->ending_quantity))
-                            Up to <strong>{{$price->ending_quantity}}</strong>
-                            <br>
-                            {{str_plural($productFamily->component->unit_name)}}
+            {{--criteria--}}
+            @if(!is_null($productFamily->product->criteria))
+                @if(isset($productFamily->product->criteria->product))
+                    <p>
+                        @if($productFamily->product->criteria->product != 0)
+                            Up
+                            to {{$productFamily->product->criteria->product}} {{str_plural('Product', $productFamily->product->criteria->product)}}
                         @else
-                            <strong>Unlimited</strong> number of
-                            <br>
-                            {{str_plural($productFamily->component->unit_name)}}
+                            Unlimited Products
                         @endif
                     </p>
-                @endforeach
+                @endif
+
+                @if(isset($productFamily->product->criteria->site))
+                    <p>
+                        @if($productFamily->product->criteria->site != 0)
+                            Up
+                            to {{$productFamily->product->criteria->site}} {{str_plural('Competitor', $productFamily->product->criteria->site)}}
+                            per Product
+                        @else
+                            Unlimited Competitor Tracking
+                        @endif
+                    </p>
+                @endif
+
+                @if(isset($productFamily->product->criteria->dashboard) && $productFamily->product->criteria->dashboard == true)
+                    <p>
+                        Customisable Dashboard
+                    </p>
+                @endif
+
+                @if(isset($productFamily->product->criteria->alert_report))
+                    <p>
+                        @if($productFamily->product->criteria->alert_report == "basic")
+                            Basic Alerts and Reports
+                        @else
+                            Unlimited Alerts and Reports
+                        @endif
+                    </p>
+                @endif
+
+                @if(isset($productFamily->product->criteria->frequency))
+                    <p>
+                        @if($productFamily->product->criteria->frequency == 24)
+                            Updates Every Day
+                        @else
+                            Updates Every {{$productFamily->product->criteria->frequency}} Hours
+                        @endif
+                    </p>
+                @endif
+
+                @if(isset($productFamily->product->criteria->historic_pricing))
+                    <p>
+                        @if($productFamily->product->criteria->historic_pricing == 0)
+                            Lifetime Historic Pricing
+                        @else
+                            {{$productFamily->product->criteria->historic_pricing}} {{str_plural('Month', $productFamily->product->criteria->historic_pricing)}}
+                            Historic Pricing
+                        @endif
+                    </p>
+                @endif
+
+                @if(isset($productFamily->product->criteria->my_price) && $productFamily->product->criteria->my_price == true)
+                    <p>
+                        'My Price' Nomination
+                    </p>
+                @endif
             @endif
 
             @if(!is_null($productFamily->product->trial_interval) && $productFamily->product->trial_interval != 0)
@@ -57,8 +104,8 @@
                     @endif
                 </div>
                 <span class="text-sm">
-        {{$productFamily->product->trial_interval_unit}}-to-{{$productFamily->product->trial_interval_unit}}
-        </span>
+                    {{$productFamily->product->trial_interval_unit}}-to-{{$productFamily->product->trial_interval_unit}}
+                </span>
             </div>
         </div>
     @endforeach

@@ -92,23 +92,17 @@ class SiteController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
-        if (!auth()->user()->isStaff()) {
-            $component = auth()->user()->cachedAPIComponent();
-            if (!is_null($component) && isset($component->allocated_quantity)) {
-                $numberOfSites = auth()->user()->sites->count();
-                if ($component->allocated_quantity != 0 && $component->allocated_quantity < $numberOfSites) {
-                    $errors = array("You can only have " . $component->allocated_quantity . " product URLs. Please upgrade your subscription plan if you need to track more product URLs.");
-                    $status = false;
-                    if ($request->ajax()) {
-                        if ($request->wantsJson()) {
-                            return response()->json(compact(['status', 'errors']));
-                        } else {
-                            return compact(['status', 'errors']);
-                        }
-                    } else {
-                        return redirect()->back()->withInput()->withErrors($errors);
-                    }
+        if (!auth()->user()->canAddSite()) {
+            $status = false;
+            $errors = array("Please upgrade your subscription plan to add more sites");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
                 }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
 
@@ -130,7 +124,6 @@ class SiteController extends Controller
         event(new SiteStoring());
         $input = $request->all();
         $site = $this->siteRepo->createSite($input);
-
 
         /** if user has chosen a price */
         if ($request->has('site_id')) {
