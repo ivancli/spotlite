@@ -114,7 +114,7 @@ class SubscriptionController extends Controller
                                     "payment_profile_id" => $paymentProfile->id,
                                     "coupon_code" => $couponCode,
                                 ));
-                                $this->_flushUserSubscriptionCache($user->getKey());
+                                $user->clearCache();
                                 if (!isset($newSubscription->errors)) {
 
                                     $newSubscription = Chargify::subscription()->update($newSubscription->id, array(
@@ -154,7 +154,7 @@ class SubscriptionController extends Controller
                     $component_quantity = is_null(array_first($component->prices)->ending_quantity) ? 0 : array_first($component->prices)->ending_quantity;
                     $encryptedReference = rawurlencode(json_encode($reference));
                     $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}&components[][component_id]={$component->id}&components[][allocated_quantity]={$component_quantity}";
-                    $this->_flushUserSubscriptionCache($user->getKey());
+                    $user->clearCache();
                     return redirect()->to($chargifyLink);
                 } else {
                     $newSubscription = Chargify::subscription()->create(array(
@@ -181,7 +181,7 @@ class SubscriptionController extends Controller
                             $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                             $sub->save();
                             event(new SubscriptionCompleted($sub));
-                            $this->_flushUserSubscriptionCache($user->getKey());
+                            $user->clearCache();
                             return redirect()->route('subscription.index');
                         } catch (Exception $e) {
                             /*TODO need to handle exception properly*/
@@ -228,7 +228,7 @@ class SubscriptionController extends Controller
 
                             $this->subscriptionRepo->updateCreditCardDetails($sub);
                             event(new SubscriptionUpdated($sub));
-                            $this->_flushUserSubscriptionCache($user->getKey());
+                            $user->clearCache();
                             return redirect()->route('subscription.index');
 //                            }
                         } else {
@@ -251,7 +251,7 @@ class SubscriptionController extends Controller
                             $sub->save();
                             $this->subscriptionRepo->updateCreditCardDetails($sub);
                             event(new SubscriptionCompleted($sub));
-                            $this->_flushUserSubscriptionCache($user->getKey());
+                            $user->clearCache();
                             return redirect()->route('subscription.index');
                         }
                     } else {
@@ -282,7 +282,7 @@ class SubscriptionController extends Controller
             abort(403);
         }
         $this->subscriptionRepo->syncUserSubscription(auth()->user());
-        $this->_flushUserSubscriptionCache($user_id);
+        auth()->user()->clearCache();
         return redirect()->route('subscription.index');
     }
 
@@ -335,9 +335,9 @@ class SubscriptionController extends Controller
             }
         }
 
-
-//        $apiSubscription = $this->subscriptionRepo->getSubscription($subscription->api_subscription_id);
-
+        /**
+         * add coupon code
+         */
         if ($request->has('coupon_code')) {
 //            $result = $this->subscriptionRepo->addCouponCode($apiSubscription->id, $request->get('coupon_code'));
             $result = Chargify::subscription()->addCoupon($apiSubscription->id, $request->get('coupon_code'));
@@ -354,7 +354,7 @@ class SubscriptionController extends Controller
                 }
             }
         }
-        $coupon_code = $request->get('coupon_code');
+
         /*check current subscription has payment method or not*/
         if (is_null($apiSubscription->payment_type)) {
             //current subscription no payment method
@@ -394,7 +394,7 @@ class SubscriptionController extends Controller
                 }
                 $subscription->save();
                 event(new SubscriptionUpdated($subscription));
-                $this->_flushUserSubscriptionCache($subscription->user_id);
+                auth()->user()->clearCache();
                 if ($request->ajax()) {
                     $status = true;
                     if ($request->wantsJson()) {
@@ -436,7 +436,7 @@ class SubscriptionController extends Controller
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($updatedSubscription->canceled_at));
                 $subscription->save();
                 event(new SubscriptionCancelled($subscription));
-                $this->_flushUserSubscriptionCache($subscription->user_id);
+                auth()->user()->clearCache();
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
             } else {
                 abort(500);
@@ -465,13 +465,5 @@ class SubscriptionController extends Controller
         } else {
             return compact(['productFamilies', 'status']);
         }
-    }
-
-    private function _flushUserSubscriptionCache($user_id)
-    {
-        Cache::forget("user.{$user_id}.subscription");
-        Cache::forget("user.{$user_id}.subscription.api");
-        Cache::forget("user.{$user_id}.subscription.transaction");
-        Cache::forget("user.{$user_id}.subscription.component");
     }
 }

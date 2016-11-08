@@ -149,6 +149,14 @@ class User extends Authenticatable
         return $component;
     }
 
+    public function clearCache()
+    {
+        Cache::forget("user.{$this->getKey()}.subscription");
+        Cache::forget("user.{$this->getKey()}.subscription.api");
+        Cache::forget("user.{$this->getKey()}.subscription.transaction");
+        Cache::forget("user.{$this->getKey()}.subscription.component");
+    }
+
     public function needSubscription()
     {
         return !$this->isStaff() && !$this->hasValidSubscription();
