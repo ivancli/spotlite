@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "604b3a22ce795fcee408048fd6325539",
-    "content-hash": "38332ef43c4704f460f399c55515ff92",
+    "hash": "e893b8e02173695a51f7ac1a5ec6d2ae",
+    "content-hash": "b2c39fca9ad937dbb2c43a1c5420328e",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
-            "version": "v2.3.7",
+            "version": "v2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/almasaeed2010/AdminLTE.git",
-                "reference": "797b65b3ca90525a4e048de5b8d02ba6878ea239"
+                "reference": "ced14b133daed8c163863a497c43dcf69eea4340"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/almasaeed2010/AdminLTE/zipball/797b65b3ca90525a4e048de5b8d02ba6878ea239",
-                "reference": "797b65b3ca90525a4e048de5b8d02ba6878ea239",
+                "url": "https://api.github.com/repos/almasaeed2010/AdminLTE/zipball/ced14b133daed8c163863a497c43dcf69eea4340",
+                "reference": "ced14b133daed8c163863a497c43dcf69eea4340",
                 "shasum": ""
             },
             "type": "library",
@@ -45,7 +45,7 @@
                 "theme",
                 "web"
             ],
-            "time": "2016-10-19 15:34:25"
+            "time": "2016-11-04 14:42:55"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -558,29 +558,18 @@
         },
         {
             "name": "invigor/crawler",
-            "version": "dev-master",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ketchol/spotlite-crawler.git",
-                "reference": "d2321c5d743cdcd4150b2586e85ead3bc56e73d9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ketchol/spotlite-crawler/zipball/d2321c5d743cdcd4150b2586e85ead3bc56e73d9",
-                "reference": "d2321c5d743cdcd4150b2586e85ead3bc56e73d9",
-                "shasum": ""
+                "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git",
+                "reference": "842b34f9fc19a3969d478b7a51d61cdbb2d3fa0e"
             },
             "require": {
                 "illuminate/cache": "~5.0",
-                "illuminate/console": "~5.0",
-                "illuminate/support": "~5.0",
-                "php": ">=5.5.0"
+                "php": ">=5.5.9"
             },
             "require-dev": {
-                "illuminate/database": "~5.0",
-                "mockery/mockery": "dev-master",
-                "phpunit/phpunit": "~4.1",
-                "sami/sami": "dev-master"
+                "phpunit/phpunit": "~4.0"
             },
             "type": "project",
             "autoload": {
@@ -603,11 +592,7 @@
                 }
             ],
             "description": "Invigor Crawler Package",
-            "support": {
-                "source": "https://github.com/ketchol/spotlite-crawler/tree/master",
-                "issues": "https://github.com/ketchol/spotlite-crawler/issues"
-            },
-            "time": "2016-11-01 22:28:38"
+            "time": "2016-11-08 23:07:46"
         },
         {
             "name": "invigor/um",
@@ -4092,7 +4077,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "invigor/crawler": 20,
         "invigor/chargify": 20
     },
     "prefer-stable": false,

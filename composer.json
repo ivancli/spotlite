@@ -11,7 +11,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/ketchol/spotlite-crawler.git"
+            "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git"
         },
         {
             "type": "vcs",
@@ -27,7 +27,7 @@
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "invigor/um": "1.*",
         "maatwebsite/excel": "~2.1.0",
-        "invigor/crawler": "dev-master",
+        "invigor/crawler": "1.*",
         "driftyco/ionicons": "2.0.1",
         "mpdf/mpdf": "~5.7.3",
         "facebook/webdriver": "^1.1",
