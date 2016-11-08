@@ -32,5 +32,6 @@ return [
         "£",
         "AUD",
         "USD",
+        "Our Price :"
     ]
 ];
