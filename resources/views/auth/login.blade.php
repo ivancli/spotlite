@@ -15,10 +15,7 @@
         {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "onsubmit" => "gaLogin();")) !!}
         @include('auth.forms.login_form')
         {!! Form::close() !!}
-
-        <div class="social-auth-links text-center">
-            <p>- OR -</p>
-        </div>
+        <div style="margin-bottom: 10px;"></div>
         <a href="{{route('password.get')}}" onclick="gaForgotPassword();">I forgot my password</a><br>
         <a href="{{route('register.get')}}" onclick="gaRegister();" class="text-center">Register a new membership</a>
 
