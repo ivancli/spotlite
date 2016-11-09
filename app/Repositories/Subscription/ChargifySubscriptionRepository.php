@@ -73,7 +73,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                     "CustomFields" => array(
                         array(
                             "Key" => "SubscriptionPlan",
-                            "Value" => $apiSubscription->name
+                            "Value" => $apiSubscription->product()->name
                         ),
                     ),
                 ));
