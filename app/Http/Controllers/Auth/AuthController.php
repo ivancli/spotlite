@@ -109,12 +109,6 @@ class AuthController extends Controller
         $this->mailingAgentRepo->addSubscriber(array(
             'EmailAddress' => $user->email,
             'Name' => $user->first_name . " " . $user->last_name,
-            'CustomFields' => array(
-                array(
-                    'Key' => 'JoinedOn',
-                    'Value' => date("Y/m/d"),
-                ),
-            )
         ));
 
 

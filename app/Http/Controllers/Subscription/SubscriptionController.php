@@ -187,11 +187,11 @@ class SubscriptionController extends Controller
                             $this->mailingAgentRepo->editSubscriber($user->email, array(
                                 "CustomFields" => array(
                                     array(
-                                        "Key" => "SubscribedOn",
+                                        "Key" => "SubscribedDate",
                                         "Value" => date("Y/m/d")
                                     ),
                                     array(
-                                        "Key" => "SubscribedPlan",
+                                        "Key" => "SubscriptionPlan",
                                         "Value" => $product->name
                                     ),
                                     array(
@@ -211,7 +211,7 @@ class SubscriptionController extends Controller
                                         "Value" => 0
                                     ),
                                     array(
-                                        "Key" => "LastLoginOn",
+                                        "Key" => "LastLoginDate",
                                         "Value" => date('Y/m/d')
                                     ),
                                 ),
