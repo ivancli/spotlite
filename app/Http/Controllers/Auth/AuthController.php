@@ -75,6 +75,10 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
             'signup_link' => 'required',
             'api_product_id' => 'required',
+            'industry' => 'required',
+            'company_type' => 'required',
+            'company_name' => 'required',
+            'agree_terms' => 'required',
         ]);
     }
 
@@ -97,6 +101,10 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
             'phone' => isset($data['phone']) ? $data['phone'] : null,
             'verification_code' => $verificationCode,
+            'industry' => $data['industry'],
+            'company_type' => $data['company_type'],
+            'company_name' => $data['company_name'],
+            'agree_terms' => $data['agree_terms'],
         ]);
 
         $role = UMRole::where("name", "client")->first();
@@ -107,6 +115,20 @@ class AuthController extends Controller
         $this->mailingAgentRepo->addSubscriber(array(
             'EmailAddress' => $user->email,
             'Name' => $user->first_name . " " . $user->last_name,
+            'CustomFields' => array(
+                array(
+                    'Key' => 'Industry',
+                    'Value' => $data['industry']
+                ),
+                array(
+                    'Key' => 'CompanyType',
+                    'Value' => $data['company_type']
+                ),
+                array(
+                    'Key' => 'CompanyName',
+                    'Value' => $data['company_name']
+                ),
+            )
         ));
 
 

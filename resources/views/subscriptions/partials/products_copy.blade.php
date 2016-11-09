@@ -74,7 +74,7 @@
     }
 
     .planContainer .price p span {
-        color: #8394ae;
+        color: #8eaea8;
     }
 
     .planContainer .options {
@@ -92,7 +92,7 @@
         color: #979797;
     }
 
-    .planContainer .button a {
+    .planContainer .button button {
         text-transform: uppercase;
         text-decoration: none;
         color: #3e4f6a;
@@ -105,6 +105,7 @@
         height: 2.8em;
         border-radius: 4px;
         margin: 1.5em 0 1.8em;
+        background-color: white;
     }
 
     #credits {
@@ -138,13 +139,13 @@
         border-radius: 5px 5px 0 0;
     }
 
-    .planContainer.bestPlan .button a {
+    .planContainer.bestPlan .button button {
         color: #fff;
         background: #f7814d;
         border: 2px solid #f7814d;
     }
 
-    .planContainer.bestPlan .button a:hover {
+    .planContainer.bestPlan .button button:hover {
         background: #ff9c70;
         border: 2px solid #ff9c70;
     }
@@ -178,7 +179,7 @@
     @media screen and (min-width: 1025px) {
 
         #pricePlans {
-            margin: 2em auto;
+            margin: 0 auto;
         }
 
         #pricePlans #plans .plan {
@@ -204,7 +205,7 @@
             transform: scale(1.04);
         }
 
-        .planContainer .button a {
+        .planContainer .button button {
             -webkit-transition: all .25s;
             -moz-transition: all .25s;
             -ms-transition: all .25s;
@@ -212,12 +213,49 @@
             transition: all .25s;
         }
 
-        .planContainer .button a:hover {
+        .planContainer .button button:hover {
             background: #3e4f6a;
             color: #fff;
         }
-
     }
+
+    .plan.selected .price p {
+        background: -webkit-linear-gradient(top, #634775, #473661);
+        background: -moz-linear-gradient(top, #634775, #473661);
+        background: -o-linear-gradient(top, #634775, #473661);
+        background: -ms-linear-gradient(top, #634775, #473661);
+        background: linear-gradient(top, #634775, #473661);
+    }
+
+    .plan.selected .recommended p {
+        background: -webkit-linear-gradient(top, #634775, #473661);
+        background: -moz-linear-gradient(top, #634775, #473661);
+        background: -o-linear-gradient(top, #634775, #473661);
+        background: -ms-linear-gradient(top, #634775, #473661);
+        background: linear-gradient(top, #634775, #473661);
+    }
+
+    .plan.selected .price p span {
+        color: #8eaea8;
+    }
+
+    .plan.selected .button button {
+        background: #473661;
+        color: #fff;
+    }
+
+    .plan.selected .title h2 {
+        color: #4c416a;
+    }
+
+    .plan.selected {
+        -webkit-transform: scale(1.04);
+        -moz-transform: scale(1.04);
+        -ms-transform: scale(1.04);
+        -o-transform: scale(1.04);
+        transform: scale(1.04);
+    }
+
 </style>
 
 @if(!is_null($productFamilies))
@@ -225,10 +263,13 @@
         <ul id="plans">
             @foreach($productFamilies as $productFamily)
 
-                <li class="plan"
+                <li class="plan {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'selected' : ''}}"
                     @if(!isset($productFamily->product->criteria->recommended) || $productFamily->product->criteria->recommended != true)
                     style="margin-top: 44px;"
-                        @endif
+                    @endif
+                    data-link="{{array_first($productFamily->product->public_signup_pages)->url}}"
+                    data-id="{{$productFamily->product->id}}"
+                    data-price="{{$productFamily->product->price_in_cents}}"
                 >
                     <ul class="planContainer">
                         @if(isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
@@ -319,14 +360,23 @@
                                 @endif
                             </ul>
                         </li>
-                        <li class="button"><a href="#">Select</a></li>
+                        <li class="button">
+                            <button href="#"
+                                    class="btn-select" {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'disabled="disabled"': '' }}>
+                                @if(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)
+                                    Selected
+                                @else
+                                    Select
+                                @endif
+                            </button>
+                        </li>
                     </ul>
                 </li>
             @endforeach
         </ul>
     </section>
 
-    <div class="row">
+    <div class="row coupon-code-container">
         <div class="col-sm-12 text-center">
             <div class="form-group form-inline">
                 <label for="" class="sl-control-label">Have a Coupon Code?</label>
