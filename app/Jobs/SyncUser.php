@@ -9,6 +9,7 @@
 namespace App\Jobs;
 
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,9 +35,11 @@ class SyncUser extends Job implements ShouldQueue
     /**
      * Execute the job.
      * @param SubscriptionContract $subscriptionRepo
+     * @param MailingAgentContract $mailingAgentRepo
      */
-    public function handle(SubscriptionContract $subscriptionRepo)
+    public function handle(SubscriptionContract $subscriptionRepo, MailingAgentContract $mailingAgentRepo)
     {
         $subscriptionRepo->syncUserSubscription($this->user);
+        $mailingAgentRepo->syncUserSubscription($this->user);
     }
 }

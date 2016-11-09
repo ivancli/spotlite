@@ -10,6 +10,7 @@ namespace App\Repositories\Mailer;
 
 
 use App\Contracts\Repository\Mailer\MailingAgentContract;
+use App\Models\User;
 
 class MailingAgentRepository implements MailingAgentContract
 {
@@ -244,6 +245,73 @@ class MailingAgentRepository implements MailingAgentContract
             return $result;
         } else {
             return $result->response;
+        }
+    }
+
+    public function syncUserSubscription(User $user)
+    {
+        if (!$user->isStaff()) {
+            $subscription = $user->cachedAPISubscription();
+            if ($subscription != false) {
+                $criteria = $user->subscriptionCriteria();
+            }
+            $this->editSubscriber($user->email, array(
+                'Name' => $user->first_name . " " . $user->last_name,
+                "CustomFields" => array(
+                    array(
+                        "Key" => "NumberofSites",
+                        "Value" => $user->sites()->count()
+                    ),
+                    array(
+                        "Key" => "SubscriptionPlan",
+                        "Value" => $subscription != false ? $subscription->product()->name : null,
+                    ),
+                    array(
+                        "Key" => "NumberofProducts",
+                        "Value" => $subscription != false ? $user->products()->count() : null,
+                    ),
+                    array(
+                        "Key" => "NumberofCategories",
+                        "Value" => $user->categories()->count()
+                    ),
+                    array(
+                        "Key" => "SubscribedDate",
+                        "Value" => $subscription != false ? $subscription->created_at : null,
+                    ),
+                    array(
+                        "Key" => "LastSubscriptionUpdatedDate",
+                        "Value" => $subscription != false ? $subscription->updated_at : null,
+                    ),
+                    array(
+                        "Key" => "TrialExpiry",
+                        "Value" => $subscription != false ? $subscription->trial_ended_at : null,
+                    ),
+                    array(
+                        "Key" => "SubscriptionCancelledDate",
+                        "Value" => $subscription != false ? $subscription->canceled_at : null,
+                    ),
+                    array(
+                        "Key" => "MaximumNumberofProducts",
+                        "Value" => isset($criteria) && isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
+                    ),
+                    array(
+                        "Key" => "MaximumNumberofSites",
+                        "Value" => isset($criteria) && isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
+                    ),
+                    array(
+                        "Key" => "LastLoginDate",
+                        "Value" => date('Y/m/d', strtotime($user->last_login))
+                    ),
+                )
+            ));
+        }
+    }
+
+    public function syncAllUsersSubscriptions()
+    {
+        $users = User::all();
+        foreach ($users as $user) {
+            $this->syncUserSubscription($user);
         }
     }
 }

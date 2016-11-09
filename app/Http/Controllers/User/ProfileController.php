@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Events\User\Profile\ProfileEditViewed;
 use App\Events\User\Profile\ProfileUpdated;
 use App\Events\User\Profile\ProfileUpdating;
@@ -17,9 +18,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
-    public function __construct()
+    protected $mailingAgentRepo;
+
+    public function __construct(MailingAgentContract $mailingAgentContract)
     {
         $this->middleware('permission:read_user', ['only' => ['show']]);
+        $this->mailingAgentRepo = $mailingAgentContract;
     }
 
     /**
@@ -79,8 +83,14 @@ class ProfileController extends Controller
 
         $user = User::findOrFail($id);
         event(new ProfileUpdating($user));
-        $user->update($request->all());
+        $input = array_except($request->all(), ['email']);
+        $user->update($input);
         event(new ProfileUpdated($user));
+
+        $this->mailingAgentRepo->editSubscriber($user->email, array(
+            'Name' => $user->first_name . " " . $user->last_name,
+        ));
+
         if ($request->ajax()) {
             $status = true;
             if ($request->wantsJson()) {

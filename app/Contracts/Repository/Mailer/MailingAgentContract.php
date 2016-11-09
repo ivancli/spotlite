@@ -9,6 +9,8 @@
 namespace App\Contracts\Repository\Mailer;
 
 
+use App\Models\User;
+
 interface MailingAgentContract
 {
     public function getSubscriber($email);
@@ -38,4 +40,8 @@ interface MailingAgentContract
     public function updateLastSetupAlertDate();
 
     public function updateLastSetupReportDate();
+
+    public function syncUserSubscription(User $user);
+
+    public function syncAllUsersSubscriptions();
 }
