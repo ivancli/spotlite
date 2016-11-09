@@ -25,14 +25,7 @@
 </head>
 
 <body class="hold-transition login-page">
-<div class="login-box">
-    <div class="login-logo">
-        <a href="{{route('dashboard.index')}}">
-            <img src="{{asset('images/logo.png')}}" alt="" width="250">
-        </a>
-    </div>
     @yield('content')
-</div>
 <!-- /.login-box -->
 
 @include('scripts.variable_setter')
