@@ -255,6 +255,14 @@ class MailingAgentRepository implements MailingAgentContract
             if ($subscription != false) {
                 $criteria = $user->subscriptionCriteria();
             }
+            $subscriber = $this->getSubscriber($user->email);
+            if (is_null($subscriber)) {
+                $this->addSubscriber(array(
+                    'EmailAddress' => $user->email,
+                    'Name' => $user->first_name . " " . $user->last_name,
+                ));
+            }
+
             $this->editSubscriber($user->email, array(
                 'Name' => $user->first_name . " " . $user->last_name,
                 "CustomFields" => array(
