@@ -1,10 +1,8 @@
 @extends('layouts.adminlte_auth')
 @section('title', 'Account Login')
 @section('content')
-
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
-
         @if(isset($errors))
             <ul class="text-danger">
                 @foreach ($errors->all('<li>:message</li>') as $message)
@@ -18,7 +16,6 @@
         <div style="margin-bottom: 10px;"></div>
         <a href="{{route('password.get')}}" onclick="gaForgotPassword();">I forgot my password</a><br>
         <a href="{{route('register.get')}}" onclick="gaRegister();" class="text-center">Register a new membership</a>
-
     </div>
 @stop
 

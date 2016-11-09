@@ -28,7 +28,7 @@
 <div class="login-box">
     <div class="login-logo">
         <a href="{{route('dashboard.index')}}">
-            <img src="{{asset('images/logo-fixed-custom.png')}}" alt="" width="250">
+            <img src="{{asset('images/logo.png')}}" alt="" width="250">
         </a>
     </div>
     @yield('content')
