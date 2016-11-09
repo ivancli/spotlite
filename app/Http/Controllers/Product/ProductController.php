@@ -131,6 +131,7 @@ class ProductController extends Controller
         $product = $this->productRepo->createProduct($request->all());
         event(new ProductStored($product));
         $status = true;
+
         if ($request->ajax()) {
             if ($request->wantsJson()) {
                 return response()->json(compact(['status', 'product']));

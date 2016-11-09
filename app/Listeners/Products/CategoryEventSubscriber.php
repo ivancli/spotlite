@@ -2,6 +2,7 @@
 namespace App\Listeners\Products;
 
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Jobs\LogUserActivity;
 
 /**
@@ -12,6 +13,13 @@ use App\Jobs\LogUserActivity;
  */
 class CategoryEventSubscriber
 {
+    protected $mailingAgentRepo;
+
+    public function __construct(MailingAgentContract $mailingAgentContract)
+    {
+        $this->mailingAgentRepo = $mailingAgentContract;
+    }
+
     public function onCategoryCreateViewed($event)
     {
         dispatch((new LogUserActivity(auth()->user(), "viewed category create form"))->onQueue("logging"));
@@ -26,6 +34,8 @@ class CategoryEventSubscriber
     public function onCategoryStored($event)
     {
         $category = $event->category;
+        $this->mailingAgentRepo->updateNumberOfCategories();
+        $this->mailingAgentRepo->updateLastAddCategoryDate();
         dispatch((new LogUserActivity(auth()->user(), "stored category - {$category->getKey()}"))->onQueue("logging"));
     }
 
@@ -55,6 +65,9 @@ class CategoryEventSubscriber
     public function onCategoryDeleted($event)
     {
         $category = $event->category;
+        $this->mailingAgentRepo->updateNumberOfCategories();
+        $this->mailingAgentRepo->updateNumberOfProducts();
+        $this->mailingAgentRepo->updateNumberOfSites();
         dispatch((new LogUserActivity(auth()->user(), "deleted category - {$category->getKey()}"))->onQueue("logging"));
     }
 

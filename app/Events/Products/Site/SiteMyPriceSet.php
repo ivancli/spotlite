@@ -3,27 +3,23 @@
 namespace App\Events\Products\Site;
 
 use App\Events\Event;
-use App\Models\Product;
 use App\Models\Site;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SiteAttached extends Event
+class SiteMyPriceSet extends Event
 {
     use SerializesModels;
 
     public $site;
-    public $product;
 
     /**
      * Create a new event instance.
      * @param Site $site
-     * @param Product $product
      */
-    public function __construct(Site $site, Product $product)
+    public function __construct(Site $site)
     {
         $this->site = $site;
-        $this->product = $product;
     }
 
     /**

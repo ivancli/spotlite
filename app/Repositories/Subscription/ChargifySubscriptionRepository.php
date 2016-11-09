@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\Subscription;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Libraries\CommonFunctions;
 use App\Models\Subscription;
@@ -19,6 +20,13 @@ use Invigor\Chargify\Chargify;
 class ChargifySubscriptionRepository implements SubscriptionContract
 {
     use CommonFunctions;
+
+    protected $mailingAgentRepo;
+
+    public function __construct(MailingAgentContract $mailingAgentContract)
+    {
+        $this->mailingAgentRepo = $mailingAgentContract;
+    }
 
     private function generateToken($str)
     {
@@ -59,6 +67,18 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                 }
                 $subscription->api_product_id = $apiSubscription->product_id;
                 $subscription->save();
+
+
+                $this->mailingAgentRepo->editSubscriber($user->email, array(
+                    "CustomFields" => array(
+                        array(
+                            "Key" => "SubscribedPlan",
+                            "Value" => $apiSubscription->name
+                        ),
+                    ),
+                ));
+
+
             }
         }
     }

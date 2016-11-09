@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Contracts\Repository\Dashboard\DashboardContract;
 use App\Contracts\Repository\Dashboard\DashboardTemplateContract;
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;

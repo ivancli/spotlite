@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Models\Alert;
 use App\Models\AlertEmail;
 use App\Models\Crawler;
@@ -210,6 +211,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\Dashboard\DashboardTemplateContract', 'App\Repositories\Dashboard\DashboardTemplateRepository');
         $this->app->bind('App\Contracts\Repository\Dashboard\DashboardWidgetContract', 'App\Repositories\Dashboard\DashboardWidgetRepository');
         $this->app->bind('App\Contracts\Repository\Dashboard\DashboardWidgetTypeContract', 'App\Repositories\Dashboard\DashboardWidgetTypeRepository');
+        $this->app->bind('App\Contracts\Repository\Mailer\MailingAgentContract', 'App\Repositories\Mailer\MailingAgentRepository');
 
         /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')

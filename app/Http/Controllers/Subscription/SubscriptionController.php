@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Subscription;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Events\Subscription\SubscriptionCancelled;
 use App\Events\Subscription\SubscriptionCancelling;
@@ -25,10 +26,12 @@ use Invigor\Chargify\Chargify;
 class SubscriptionController extends Controller
 {
     protected $subscriptionRepo;
+    protected $mailingAgentRepo;
 
-    public function __construct(SubscriptionContract $subscriptionContract)
+    public function __construct(SubscriptionContract $subscriptionContract, MailingAgentContract $mailingAgentContract)
     {
         $this->subscriptionRepo = $subscriptionContract;
+        $this->mailingAgentRepo = $mailingAgentContract;
         /*TODO need to handle middleware for each function*/
     }
 
@@ -151,6 +154,42 @@ class SubscriptionController extends Controller
                         $sub->api_subscription_id = $newSubscription->id;
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
+
+                        $this->mailingAgentRepo->editSubscriber($user->email, array(
+                            "CustomFields" => array(
+                                array(
+                                    "Key" => "SubscribedDate",
+                                    "Value" => date("Y/m/d")
+                                ),
+                                array(
+                                    "Key" => "SubscriptionPlan",
+                                    "Value" => $product->name
+                                ),
+                                array(
+                                    "Key" => "TrialExpiry",
+                                    "Value" => date('Y/m/d', strtotime($newSubscription->trial_ended_at))
+                                ),
+                                array(
+                                    "Key" => "NumberofSites",
+                                    "Value" => 0
+                                ),
+                                array(
+                                    "Key" => "NumberofProducts",
+                                    "Value" => 0
+                                ),
+                                array(
+                                    "Key" => "NumberofCategories",
+                                    "Value" => 0
+                                ),
+                                array(
+                                    "Key" => "LastLoginDate",
+                                    "Value" => date('Y/m/d')
+                                ),
+                            ),
+                            'Resubscribe' => true
+                        ));
+
+
                         event(new SubscriptionCompleted($sub));
                         $user->clearCache();
                         return redirect()->route('subscription.index');
@@ -179,6 +218,7 @@ class SubscriptionController extends Controller
 
                         $subscription_id = $request->get('id');
                         $subscription = Chargify::subscription()->get($subscription_id);
+                        $product = $subscription->product();
                         if (!is_null($user->subscription)) {
                             $sub = $user->subscription;
                             $sub->api_product_id = $subscription->product_id;
@@ -189,6 +229,20 @@ class SubscriptionController extends Controller
                             $sub->save();
 
                             $this->subscriptionRepo->updateCreditCardDetails($sub);
+
+                            $this->mailingAgentRepo->editSubscriber($user->email, array(
+                                "CustomFields" => array(
+                                    array(
+                                        "Key" => "SubscriptionUpdatedOn",
+                                        "Value" => date("Y/m/d")
+                                    ),
+                                    array(
+                                        "Key" => "TrialExpiry",
+                                        "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
+                                    ),
+                                )
+                            ));
+
                             event(new SubscriptionUpdated($sub));
                             $user->clearCache();
                             return redirect()->route('subscription.index');
@@ -204,9 +258,46 @@ class SubscriptionController extends Controller
                             $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
                             $sub->save();
                             $this->subscriptionRepo->updateCreditCardDetails($sub);
+
+                            $subscriber = $this->mailingAgentRepo->getSubscriber($user->email);
+
+                            $this->mailingAgentRepo->editSubscriber($user->email, array(
+                                "CustomFields" => array(
+                                    array(
+                                        "Key" => "SubscribedOn",
+                                        "Value" => date("Y/m/d")
+                                    ),
+                                    array(
+                                        "Key" => "SubscribedPlan",
+                                        "Value" => $product->name
+                                    ),
+                                    array(
+                                        "Key" => "TrialExpiry",
+                                        "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
+                                    ),
+                                    array(
+                                        "Key" => "NumberofSites",
+                                        "Value" => 0
+                                    ),
+                                    array(
+                                        "Key" => "NumberofProducts",
+                                        "Value" => 0
+                                    ),
+                                    array(
+                                        "Key" => "NumberofCategories",
+                                        "Value" => 0
+                                    ),
+                                    array(
+                                        "Key" => "LastLoginOn",
+                                        "Value" => date('Y/m/d')
+                                    ),
+                                ),
+                                "Resubscribe" => true
+                            ));
+
                             event(new SubscriptionCompleted($sub));
                             $user->clearCache();
-                            return redirect()->route('subscription.index');
+                            return redirect()->route('dashboard.index');
                         }
                     } else {
                         abort(403, "unauthorised access");
@@ -338,6 +429,23 @@ class SubscriptionController extends Controller
                     $subscription->expiry_date = date('Y-m-d H:i:s', strtotime($result->expires_at));
                 }
                 $subscription->save();
+
+                $this->mailingAgentRepo->editSubscriber(auth()->user()->email, array(
+                    "CustomFields" => array(
+                        array(
+                            "Key" => "SubscriptionUpdatedOn",
+                            "Value" => date("Y/m/d")
+                        ),
+                        array(
+                            "Key" => "TrialExpiry",
+                            "Value" => date('Y/m/d', strtotime($apiSubscription->trial_ended_at))
+                        ),
+                        array(
+                            "Key" => "SubscribedPlan",
+                            "Value" => $apiSubscription->product()->name
+                        ),
+                    )
+                ));
                 event(new SubscriptionUpdated($subscription));
                 auth()->user()->clearCache();
                 if ($request->ajax()) {
@@ -381,6 +489,20 @@ class SubscriptionController extends Controller
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($updatedSubscription->canceled_at));
                 $subscription->save();
                 event(new SubscriptionCancelled($subscription));
+
+                /* update cancel field in campaign monitor*/
+                $this->mailingAgentRepo->editSubscriber(auth()->user()->email, array(
+                    "CustomFields" => array(
+                        array(
+                            "Key" => "CancelledOn",
+                            "Value" => date("Y/m/d")
+                        ),
+                        array(
+                            "Key" => "TrialExpiry",
+                            "Value" => date('Y/m/d', strtotime($apiSubscription->trial_ended_at))
+                        ),
+                    )
+                ));
                 auth()->user()->clearCache();
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
             } else {

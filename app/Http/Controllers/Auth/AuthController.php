@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Contracts\Repository\Mailer\MailerContract;
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Jobs\SendMail;
 use App\Models\Subscription;
@@ -42,6 +43,7 @@ class AuthController extends Controller
 
     protected $subscriptionRepo;
     protected $mailerRepo;
+    protected $mailingAgentRepo;
 
     /**
      * Create a new authentication controller instance.
@@ -49,11 +51,12 @@ class AuthController extends Controller
      * @param SubscriptionContract $subscriptionContract
      * @param MailerContract $mailerContract
      */
-    public function __construct(SubscriptionContract $subscriptionContract, MailerContract $mailerContract)
+    public function __construct(SubscriptionContract $subscriptionContract, MailerContract $mailerContract, MailingAgentContract $mailingAgentContract)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
         $this->subscriptionRepo = $subscriptionContract;
         $this->mailerRepo = $mailerContract;
+        $this->mailingAgentRepo = $mailingAgentContract;
     }
 
     /**
@@ -100,6 +103,12 @@ class AuthController extends Controller
         if ($role != null) {
             $user->attachRole($role);
         }
+
+        $this->mailingAgentRepo->addSubscriber(array(
+            'EmailAddress' => $user->email,
+            'Name' => $user->first_name . " " . $user->last_name,
+        ));
+
 
 //        $options = $user->toArray();
 //        $options['subject'] = "Welcome to SpotLite";
