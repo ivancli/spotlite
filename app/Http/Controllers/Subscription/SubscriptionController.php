@@ -155,6 +155,7 @@ class SubscriptionController extends Controller
                         $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
                         $sub->save();
 
+                        $criteria = auth()->user()->subscriptionCriteria();
                         $this->mailingAgentRepo->editSubscriber($user->email, array(
                             "CustomFields" => array(
                                 array(
@@ -180,6 +181,14 @@ class SubscriptionController extends Controller
                                 array(
                                     "Key" => "NumberofCategories",
                                     "Value" => 0
+                                ),
+                                array(
+                                    "Key" => "MaximumNumberofProducts",
+                                    "Value" => isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
+                                ),
+                                array(
+                                    "Key" => "MaximumNumberofSites",
+                                    "Value" => isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
                                 ),
                                 array(
                                     "Key" => "LastLoginDate",
@@ -233,12 +242,20 @@ class SubscriptionController extends Controller
                             $this->mailingAgentRepo->editSubscriber($user->email, array(
                                 "CustomFields" => array(
                                     array(
-                                        "Key" => "SubscriptionUpdatedOn",
+                                        "Key" => "LastSubscriptionUpdatedDate",
                                         "Value" => date("Y/m/d")
                                     ),
                                     array(
                                         "Key" => "TrialExpiry",
                                         "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
+                                    ),
+                                    array(
+                                        "Key" => "SubscriptionCancelledDate",
+                                        "Value" => null
+                                    ),
+                                    array(
+                                        "Key" => "SubscriptionPlan",
+                                        "Value" => $product->name
                                     ),
                                 )
                             ));
@@ -259,16 +276,15 @@ class SubscriptionController extends Controller
                             $sub->save();
                             $this->subscriptionRepo->updateCreditCardDetails($sub);
 
-                            $subscriber = $this->mailingAgentRepo->getSubscriber($user->email);
-
+                            $criteria = auth()->user()->subscriptionCriteria();
                             $this->mailingAgentRepo->editSubscriber($user->email, array(
                                 "CustomFields" => array(
                                     array(
-                                        "Key" => "SubscribedOn",
+                                        "Key" => "SubscribedDate",
                                         "Value" => date("Y/m/d")
                                     ),
                                     array(
-                                        "Key" => "SubscribedPlan",
+                                        "Key" => "SubscriptionPlan",
                                         "Value" => $product->name
                                     ),
                                     array(
@@ -288,13 +304,24 @@ class SubscriptionController extends Controller
                                         "Value" => 0
                                     ),
                                     array(
-                                        "Key" => "LastLoginOn",
+                                        "Key" => "MaximumNumberofProducts",
+                                        "Value" => isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
+                                    ),
+                                    array(
+                                        "Key" => "MaximumNumberofSites",
+                                        "Value" => isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
+                                    ),
+                                    array(
+                                        "Key" => "LastLoginDate",
                                         "Value" => date('Y/m/d')
+                                    ),
+                                    array(
+                                        "Key" => "SubscriptionCancelledDate",
+                                        "Value" => null
                                     ),
                                 ),
                                 "Resubscribe" => true
                             ));
-
                             event(new SubscriptionCompleted($sub));
                             $user->clearCache();
                             return redirect()->route('dashboard.index');
@@ -312,7 +339,6 @@ class SubscriptionController extends Controller
                 abort(404, "page not found");
                 return false;
             }
-
         }
     }
 
@@ -429,25 +455,38 @@ class SubscriptionController extends Controller
                     $subscription->expiry_date = date('Y-m-d H:i:s', strtotime($result->expires_at));
                 }
                 $subscription->save();
-
+                $newSubscription = $result;
+                auth()->user()->clearCache();
+                $criteria = auth()->user()->subscriptionCriteria();
                 $this->mailingAgentRepo->editSubscriber(auth()->user()->email, array(
                     "CustomFields" => array(
                         array(
-                            "Key" => "SubscriptionUpdatedOn",
+                            "Key" => "LastSubscriptionUpdatedDate",
                             "Value" => date("Y/m/d")
                         ),
                         array(
                             "Key" => "TrialExpiry",
-                            "Value" => date('Y/m/d', strtotime($apiSubscription->trial_ended_at))
+                            "Value" => date('Y/m/d', strtotime($newSubscription->trial_ended_at))
                         ),
                         array(
-                            "Key" => "SubscribedPlan",
-                            "Value" => $apiSubscription->product()->name
+                            "Key" => "MaximumNumberofProducts",
+                            "Value" => isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
+                        ),
+                        array(
+                            "Key" => "MaximumNumberofSites",
+                            "Value" => isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
+                        ),
+                        array(
+                            "Key" => "SubscriptionPlan",
+                            "Value" => $newSubscription->product()->name
+                        ),
+                        array(
+                            "Key" => "SubscriptionCancelledDate",
+                            "Value" => null
                         ),
                     )
                 ));
                 event(new SubscriptionUpdated($subscription));
-                auth()->user()->clearCache();
                 if ($request->ajax()) {
                     $status = true;
                     if ($request->wantsJson()) {
@@ -494,12 +533,16 @@ class SubscriptionController extends Controller
                 $this->mailingAgentRepo->editSubscriber(auth()->user()->email, array(
                     "CustomFields" => array(
                         array(
-                            "Key" => "CancelledOn",
+                            "Key" => "SubscriptionCancelledDate",
                             "Value" => date("Y/m/d")
                         ),
                         array(
-                            "Key" => "TrialExpiry",
-                            "Value" => date('Y/m/d', strtotime($apiSubscription->trial_ended_at))
+                            "Key" => "MaximumNumberofProducts",
+                            "Value" => null
+                        ),
+                        array(
+                            "Key" => "MaximumNumberofSites",
+                            "Value" => null
                         ),
                     )
                 ));
@@ -585,7 +628,7 @@ class SubscriptionController extends Controller
             "payment_profile_id" => $paymentProfile->id,
         ));
 
-        if(!isset($onboardingSubscription->errors)){
+        if (!isset($onboardingSubscription->errors)) {
             return $onboardingSubscription;
         }
     }

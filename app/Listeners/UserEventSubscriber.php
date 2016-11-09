@@ -68,7 +68,7 @@ class UserEventSubscriber
         $this->mailingAgentRepo->editSubscriber($user->email, array(
             'CustomFields' => array(
                 array(
-                    'Key' => 'LastLoginOn',
+                    'Key' => 'LastLoginDate',
                     'Value' => date("Y/m/d"),
                 ),
             )

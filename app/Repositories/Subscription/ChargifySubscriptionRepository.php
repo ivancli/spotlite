@@ -72,13 +72,11 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                 $this->mailingAgentRepo->editSubscriber($user->email, array(
                     "CustomFields" => array(
                         array(
-                            "Key" => "SubscribedPlan",
+                            "Key" => "SubscriptionPlan",
                             "Value" => $apiSubscription->name
                         ),
                     ),
                 ));
-
-
             }
         }
     }

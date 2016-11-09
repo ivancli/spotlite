@@ -145,7 +145,7 @@ class MailingAgentRepository implements MailingAgentContract
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
-                    "Key" => "LastAddCategoryOn",
+                    "Key" => "LastAddedCategoryDate",
                     "Value" => date("Y/m/d")
                 )
             )
@@ -163,7 +163,7 @@ class MailingAgentRepository implements MailingAgentContract
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
-                    "Key" => "LastAddProductOn",
+                    "Key" => "LastAddedProductDate",
                     "Value" => date("Y/m/d")
                 )
             )
@@ -181,7 +181,7 @@ class MailingAgentRepository implements MailingAgentContract
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
-                    "Key" => "LastAddSiteOn",
+                    "Key" => "LastAddedSiteDate",
                     "Value" => date("Y/m/d")
                 )
             )
@@ -199,7 +199,7 @@ class MailingAgentRepository implements MailingAgentContract
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
-                    "Key" => "LastNominatedMySiteOn",
+                    "Key" => "LastNominatedMySiteDate",
                     "Value" => date("Y/m/d")
                 )
             )
@@ -217,7 +217,7 @@ class MailingAgentRepository implements MailingAgentContract
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
-                    "Key" => "LastSetupAlertOn",
+                    "Key" => "LastSetupAlertDate",
                     "Value" => date("Y/m/d")
                 )
             )
@@ -235,7 +235,7 @@ class MailingAgentRepository implements MailingAgentContract
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
-                    "Key" => "LastSetupReportOn",
+                    "Key" => "LastSetupReportDate",
                     "Value" => date("Y/m/d")
                 )
             )
