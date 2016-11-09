@@ -127,7 +127,7 @@ class SubscriptionController extends Controller
                 );
 
                 $encryptedReference = rawurlencode(json_encode($reference));
-                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$couponCode}";
+                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&organization={$user->company_name}&coupon_code={$couponCode}";
                 $user->clearCache();
                 return redirect()->to($chargifyLink);
             } else {

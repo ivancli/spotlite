@@ -147,7 +147,7 @@ class AuthController extends Controller
                     "verification_code" => $verificationCode
                 );
                 $encryptedReference = rawurlencode(json_encode($reference));
-                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&coupon_code={$coupon_code}";
+                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&organization={$user->company_name}&coupon_code={$coupon_code}";
 
                 $this->redirectTo = $chargifyLink;
             } else {
@@ -159,7 +159,8 @@ class AuthController extends Controller
                     "customer_attributes" => array(
                         "first_name" => $data['first_name'],
                         "last_name" => $data['last_name'],
-                        "email" => $data['email']
+                        "email" => $data['email'],
+                        "organization" => $data['company_name'],
                     ),
                     "coupon_code" => $coupon_code
                 );
