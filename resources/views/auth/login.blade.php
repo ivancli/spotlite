@@ -1,47 +1,38 @@
-@extends('layouts.adminlte')
+@extends('layouts.adminlte_auth')
 @section('title', 'Account Login')
 @section('content')
-    <div class="row">
-        <div class="col-md-offset-3 col-md-6 col-sm-12">
-            <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Account login</h3>
 
-                    <div class="box-tools pull-right">
-                        <a class="btn btn-default btn-sm" href="{{route('register.get')}}" onclick="gaRegister();">
-                            Don't have an account? Sign Up Now
-                        </a>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="um-form-container">
-                        @if(isset($errors))
-                            <ul class="text-danger">
-                                @foreach ($errors->all('<li>:message</li>') as $message)
-                                    {!! $message !!}
-                                @endforeach
-                            </ul>
-                        @endif
-                        {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "class"=>"form-horizontal sl-form-horizontal", "onsubmit" => "gaLogin();")) !!}
-                        @include('auth.forms.login_form')
-                        <div class="row m-b-5">
-                            <div class="col-sm-6 text-left">
-                                <a href="{{route('password.get')}}" onclick="gaForgotPassword();">Forgot password?</a>
-                            </div>
-                            <div class="col-sm-6 text-right">
-                                {!! Form::submit('Login', ["class"=>"btn btn-default btn-sm"]) !!}
-                            </div>
-                        </div>
-                        {!! Form::close() !!}
-                    </div>
-                </div>
-            </div>
+    <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+
+        @if(isset($errors))
+            <ul class="text-danger">
+                @foreach ($errors->all('<li>:message</li>') as $message)
+                    {!! $message !!}
+                @endforeach
+            </ul>
+        @endif
+        {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "onsubmit" => "gaLogin();")) !!}
+        @include('auth.forms.login_form')
+        {!! Form::close() !!}
+
+        <div class="social-auth-links text-center">
+            <p>- OR -</p>
         </div>
+        <a href="{{route('password.get')}}" onclick="gaForgotPassword();">I forgot my password</a><br>
+        <a href="{{route('register.get')}}" onclick="gaRegister();" class="text-center">Register a new membership</a>
+
     </div>
 @stop
 
 @section('scripts')
     <script type="text/javascript">
-
+        $(function(){
+            $(".icheck").iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
+            });
+        })
     </script>
 @stop
