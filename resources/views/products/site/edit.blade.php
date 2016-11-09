@@ -18,7 +18,7 @@
                        data-content="Add the URL for the product you wish to track by going to the product's webpage, copying the URL from the address bar of your browser and pasting it in this field.">
                         <i class="fa fa-question-circle"></i>
                     </a>
-                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'onkeyup'=>'updateEditSiteModelButtonStatus(this)', 'placeholder'=>'Enter or copy URL')) !!}
+                    {!! Form::text('site_url', null, array('class' => 'form-control', 'id'=>'txt-site-url', 'oninput'=>'updateEditSiteModelButtonStatus(this)', 'placeholder'=>'Enter or copy URL')) !!}
                 </div>
 
                 @if(!is_null($site->recent_price))
@@ -57,12 +57,6 @@
                 </div>
 
                 <div class="report-error-container" style="display: none;">
-                    <div class="form-group required">
-                        <label for="">Please give us some hints to locate the price</label>
-                        <a href="#" id="btn-close-report-error" class="close" onclick="closeReportErrorContainerOnClick(this); return false;">&times;</a>
-                        <textarea name="comment" id="txt-comment" cols="30" rows="5" class="form-control"
-                                  style="resize: vertical;"></textarea>
-                    </div>
                 </div>
 
                 {!! Form::close() !!}
@@ -124,14 +118,36 @@
             });
 
             $("#btn-report-error").on("click", function () {
+                appendReportErrorContainer();
                 $(".report-error-container").slideDown();
                 $(".prices-container").slideUp();
                 $(this).hide();
             });
         }
 
+        function appendReportErrorContainer() {
+            $(".report-error-container").append(
+                    $("<div>").addClass("form-group required").append(
+                            $("<label>").text("Please give us some hints to locate the price"),
+                            $("<a>").attr({
+                                "href": "#",
+                                "id": "btn-close-report-error",
+                                "onclick": "closeReportErrorContainerOnClick(this); return false;"
+                            }).addClass("close").html("&times;"),
+                            $("<textarea>").attr({
+                                "name": "comment",
+                                "id": "txt-comment",
+                                "cols": "30",
+                                "rows": "5"
+                            }).addClass("form-control").css("resize", "vertical")
+                    )
+            )
+        }
+
         function closeReportErrorContainerOnClick(el){
-            $(el).closest(".report-error-container").slideUp();
+            $(el).closest(".report-error-container").slideUp(function(){
+                $(this).html("");
+            });
             $(".prices-container").slideDown();
             $("#btn-report-error").show();
         }
@@ -199,13 +215,34 @@
                             $(".prices-container").show();
                             $("#btn-report-error").show();
                         } else {
-                            $(".prices-container").html("Price will be available soon.");
+                            $(".prices-container").empty().append(
+                                    $("<div>").text("Price will be available soon."),
+                                    $("<div>").css("margin-top", "10px").append(
+                                            $("<textarea>").attr({
+                                                "placeholder": "If there are multiple prices on this page, please advise the specific price required.",
+                                                "cols": "30",
+                                                "rows": "5",
+                                                "id": "txt-comment",
+                                                "name": "comment"
+                                            }).addClass("form-control")
+                                    )
+                            );
                         }
                         $(".prices-container").show();
                         $("#btn-check-price").hide();
                         $("#btn-edit-site").show();
                     } else {
-                        alertP("Error", "Unable to get price, please try again later");
+                        if (typeof response.errors != 'undefined') {
+                            var $errorContainer = $("#modal-site-update .errors-container");
+                            $errorContainer.empty();
+                            $.each(response.errors, function (index, error) {
+                                $errorContainer.append(
+                                        $("<li>").text(error)
+                                );
+                            });
+                        } else {
+                            alertP("Error", "Unable to get price, please try again later.");
+                        }
                     }
                 },
                 "error": function () {

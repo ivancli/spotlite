@@ -26,13 +26,6 @@
                 </div>
 
                 <div class="report-error-container" style="display: none;">
-                    <div class="form-group required">
-                        <label for="">Please give us some hints to locate the price</label>
-                        <a href="#" id="btn-close-report-error" class="close"
-                           onclick="closeReportErrorContainerOnClick(this); return false;">&times;</a>
-                        <textarea name="comment" id="txt-comment" cols="30" rows="5" class="form-control"
-                                  style="resize: vertical;"></textarea>
-                    </div>
                 </div>
 
                 {!! Form::close() !!}
@@ -48,14 +41,30 @@
     </div>
     <script type="text/javascript">
         function modalReady(options) {
+            $("#txt-site-url").on("input", function () {
+                $(".report-error-container").slideUp(function () {
+                    $(this).html("");
+                });
+                $("#btn-check-price").show();
+                $("#btn-create-site").hide();
+                $("#btn-report-error").hide();
+                $(".prices-container").empty().append(
+                        $("<p>").text("Please select a correct price from below: ")
+                ).slideUp();
+            });
+
             $("[data-toggle=popover]").popover();
 
             $("#btn-create-site").on("click", function () {
                 if (!$(".prices-container").is(":visible")) {
                     $(".rad-site-id").prop("checked", false);
-
-                    if ($("#txt-comment").val() == "") {
+                    if ($("#txt-comment").length > 0 && $("#txt-comment").val() == "") {
                         alertP("Error", "Please describe the location of the price in the web page.");
+                        return false;
+                    }
+                } else {
+                    if ($("#txt-comment").length == 0 && $(".prices-container input[type=radio]:checked").length == 0) {
+                        alertP("Error", "Please select a correct price from the list");
                         return false;
                     }
                 }
@@ -94,14 +103,36 @@
             });
 
             $("#btn-report-error").on("click", function () {
+                appendReportErrorContainer();
                 $(".report-error-container").slideDown();
                 $(".prices-container").slideUp();
                 $(this).hide();
             });
         }
 
+        function appendReportErrorContainer() {
+            $(".report-error-container").append(
+                    $("<div>").addClass("form-group required").append(
+                            $("<label>").text("Please give us some hints to locate the price"),
+                            $("<a>").attr({
+                                "href": "#",
+                                "id": "btn-close-report-error",
+                                "onclick": "closeReportErrorContainerOnClick(this); return false;"
+                            }).addClass("close").html("&times;"),
+                            $("<textarea>").attr({
+                                "name": "comment",
+                                "id": "txt-comment",
+                                "cols": "30",
+                                "rows": "5"
+                            }).addClass("form-control").css("resize", "vertical")
+                    )
+            )
+        }
+
         function closeReportErrorContainerOnClick(el) {
-            $(el).closest(".report-error-container").slideUp();
+            $(el).closest(".report-error-container").slideUp(function () {
+                $(this).html("");
+            });
             $(".prices-container").slideDown();
             $("#btn-report-error").show();
         }
@@ -157,7 +188,18 @@
                             $(".prices-container").show();
                             $("#btn-report-error").show();
                         } else {
-                            $(".prices-container").html("Price will be available soon.");
+                            $(".prices-container").empty().append(
+                                    $("<div>").text("Price will be available soon."),
+                                    $("<div>").css("margin-top", "10px").append(
+                                            $("<textarea>").attr({
+                                                "placeholder": "If there are multiple prices on this page, please advise the specific price required.",
+                                                "cols": "30",
+                                                "rows": "5",
+                                                "id": "txt-comment",
+                                                "name": "comment"
+                                            }).addClass("form-control")
+                                    )
+                            );
                         }
                         $(".prices-container").show();
                         $("#btn-check-price").hide();
