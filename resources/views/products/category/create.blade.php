@@ -69,7 +69,7 @@
                         }
                     } else {
 
-                        var errorMsg = "Unable to add category. ";
+                        var errorMsg = "";
                         if (response.errors != null) {
                             $.each(response.errors, function (index, error) {
                                 errorMsg += error + " ";

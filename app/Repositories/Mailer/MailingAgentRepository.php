@@ -89,6 +89,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfSites()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -107,6 +110,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfProducts()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -125,6 +131,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfCategories()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -143,6 +152,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddCategoryDate()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -161,6 +173,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddProductDate()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -179,6 +194,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddSiteDate()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -197,6 +215,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastNominatedMyPriceDate()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -215,6 +236,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastSetupAlertDate()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
@@ -233,6 +257,9 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastSetupReportDate()
     {
         $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
         $result = $this->editSubscriber($user->email, array(
             "CustomFields" => array(
                 array(
