@@ -33,7 +33,7 @@
                 <i class="fa fa-cog"></i>
             </button>
             <button type="button" class="btn btn-box-tool" id="btn-delete-widget-{{$widget->getKey()}}"
-                    data-url="{{$widget->urls['delete']}}" onclick="deleteWidget(this)">
+                    data-url="{{$widget->urls['delete']}}" data-name="{{$widget->dashboard_widget_name}}" onclick="deleteWidget(this)">
                 <i class="fa fa-times"></i>
             </button>
         </div>

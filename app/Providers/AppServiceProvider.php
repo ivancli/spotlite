@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
             Dashboard::create(array(
                 "user_id" => $user->getKey(),
                 'dashboard_template_id' => 1,
-                'dashboard_name' => 'Default Dashboard',
+                'dashboard_name' => 'Default',
                 'dashboard_order' => 1
             ));
         });

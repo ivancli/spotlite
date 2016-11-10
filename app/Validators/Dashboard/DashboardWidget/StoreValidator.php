@@ -31,9 +31,9 @@ class StoreValidator extends ValidatorAbstract
     {
         return array(
             "dashboard_id.required" => "Dashboard is required.",
-            "dashboard_widget_type_id.required" => "Content type is required.",
-            "dashboard_widget_name.required" => "Content name is required.",
-            "dashboard_widget_name.max" => "Content name accept maximum 255 characters.",
+            "dashboard_widget_type_id.required" => "Chart type is required.",
+            "dashboard_widget_name.required" => "Chart name is required.",
+            "dashboard_widget_name.max" => "Chart name accept maximum 255 characters.",
         );
     }
 }

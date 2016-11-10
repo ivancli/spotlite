@@ -20,29 +20,39 @@
                                             <div class="col-sm-12">
                                                 <form action="" class="form-horizontal sl-form-horizontal"
                                                       id="frm-category-chart-characteristics">
-                                                    <div class="form-group required">
-                                                        <label class="col-sm-4 control-label">Timespan</label>
-                                                        <div class="col-sm-8">
-                                                            <select id="sel-timespan" name="timespan"
-                                                                    class="form-control"
-                                                                    onchange="timespanOnChange(this)">
-                                                                <option value="this_week">This week</option>
-                                                                <option value="last_week">Last week</option>
-                                                                <option value="last_7_days">Last 7 days</option>
-                                                                <option value="this_month">This month</option>
-                                                                <option value="last_month">Last month</option>
-                                                                <option value="last_30_days">Last 30 days</option>
-                                                                <option value="this_quarter">This quarter</option>
-                                                                <option value="last_quarter">Last quarter</option>
-                                                                <option value="last_90_days">Last 90 days</option>
-                                                                <option value="custom">Custom</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group show-when-custom" style="display: none;">
-                                                        <label class="col-sm-4 control-label">Date range:</label>
 
-                                                        <div class="col-sm-8">
+
+                                                    <p>
+                                                        Generate a chart for
+                                                        &nbsp;
+                                                        <select id="sel-timespan" name="timespan"
+                                                                class="form-control form-control-inline"
+                                                                onchange="timespanOnChange(this)">
+                                                            <option value="this_week">this week</option>
+                                                            <option value="last_week">last week</option>
+                                                            <option value="last_7_days">last 7 days</option>
+                                                            <option value="this_month">this month</option>
+                                                            <option value="last_month">last month</option>
+                                                            <option value="last_30_days">last 30 days</option>
+                                                            <option value="this_quarter">this quarter</option>
+                                                            <option value="last_quarter">last quarter</option>
+                                                            <option value="last_90_days">last 90 days</option>
+                                                            <option value="custom">&lt;start date&gt; to &lt;end date&gt;</option>
+                                                        </select>
+                                                        &nbsp;
+                                                        showing a price for each
+                                                        &nbsp;
+                                                        <select id="sel-period-resolution" name="resolution"
+                                                                class="form-control form-control-inline"
+                                                                onchange="periodResolutionOnChange(this)">
+                                                            <option value="daily">day</option>
+                                                            <option value="weekly">week</option>
+                                                            <option value="monthly">month</option>
+                                                        </select>
+
+
+                                                    <div class="form-group show-when-custom" style="display: none;">
+                                                        <div class="col-sm-12">
                                                             <div class="input-group">
                                                                 <div class="input-group-addon">
                                                                     <i class="fa fa-calendar"></i>
@@ -58,25 +68,66 @@
                                                         </div>
                                                         <!-- /.input group -->
                                                     </div>
-                                                    <div class="form-group required">
-                                                        <label class="col-sm-4 control-label">Period Resolution</label>
-                                                        <div class="col-sm-8">
-                                                            <select id="sel-period-resolution" name="resolution"
-                                                                    class="form-control"
-                                                                    onchange="periodResolutionOnChange(this)">
-                                                                <option value="daily">Daily</option>
-                                                                <option value="weekly">Weekly</option>
-                                                                <option value="monthly">Monthly</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                    </p>
+
+
+                                                    {{--<div class="form-group required">--}}
+                                                    {{--<label class="col-sm-4 control-label">Timespan</label>--}}
+                                                    {{--<div class="col-sm-8">--}}
+                                                    {{--<select id="sel-timespan" name="timespan"--}}
+                                                    {{--class="form-control"--}}
+                                                    {{--onchange="timespanOnChange(this)">--}}
+                                                    {{--<option value="this_week">This week</option>--}}
+                                                    {{--<option value="last_week">Last week</option>--}}
+                                                    {{--<option value="last_7_days">Last 7 days</option>--}}
+                                                    {{--<option value="this_month">This month</option>--}}
+                                                    {{--<option value="last_month">Last month</option>--}}
+                                                    {{--<option value="last_30_days">Last 30 days</option>--}}
+                                                    {{--<option value="this_quarter">This quarter</option>--}}
+                                                    {{--<option value="last_quarter">Last quarter</option>--}}
+                                                    {{--<option value="last_90_days">Last 90 days</option>--}}
+                                                    {{--<option value="custom">Custom</option>--}}
+                                                    {{--</select>--}}
+                                                    {{--</div>--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="form-group show-when-custom" style="display: none;">--}}
+                                                    {{--<label class="col-sm-4 control-label">Date range:</label>--}}
+
+                                                    {{--<div class="col-sm-8">--}}
+                                                    {{--<div class="input-group">--}}
+                                                    {{--<div class="input-group-addon">--}}
+                                                    {{--<i class="fa fa-calendar"></i>--}}
+                                                    {{--</div>--}}
+                                                    {{--<input type="text" class="form-control pull-right"--}}
+                                                    {{--name="date_range"--}}
+                                                    {{--id="txt-date-range" readonly="readonly">--}}
+                                                    {{--<input type="hidden" name="start_date"--}}
+                                                    {{--id="txt-category-chart-start-date">--}}
+                                                    {{--<input type="hidden" name="end_date"--}}
+                                                    {{--id="txt-category-chart-end-date">--}}
+                                                    {{--</div>--}}
+                                                    {{--</div>--}}
+                                                    {{--<!-- /.input group -->--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="form-group required">--}}
+                                                    {{--<label class="col-sm-4 control-label">Period Resolution</label>--}}
+                                                    {{--<div class="col-sm-8">--}}
+                                                    {{--<select id="sel-period-resolution" name="resolution"--}}
+                                                    {{--class="form-control"--}}
+                                                    {{--onchange="periodResolutionOnChange(this)">--}}
+                                                    {{--<option value="daily">Daily</option>--}}
+                                                    {{--<option value="weekly">Weekly</option>--}}
+                                                    {{--<option value="monthly">Monthly</option>--}}
+                                                    {{--</select>--}}
+                                                    {{--</div>--}}
+                                                    {{--</div>--}}
                                                 </form>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <button class="btn btn-primary" onclick="loadCategoryChartData()">
-                                                    Generate Chart
+                                                    Go
                                                 </button>
                                                 <button class="btn btn-default" data-dismiss="modal">Cancel</button>
                                             </div>
@@ -99,25 +150,45 @@
                                                     </ul>
                                                     {!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "form-horizontal sl-form-horizontal", "id"=>"frm-dashboard-widget-store")) !!}
                                                     <input type="hidden" name="dashboard_widget_type_id" value="1">
-                                                    <div class="form-group required">
-                                                        <label class="col-sm-4 control-label">Dashboard</label>
-                                                        <div class="col-sm-8">
-                                                            <select id="sel-dashboard-id" name="dashboard_id"
-                                                                    class="form-control">
-                                                                @foreach(auth()->user()->dashboards as $dashboard)
-                                                                    <option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
 
-                                                    <div class="form-group required">
-                                                        <label class="col-sm-4 control-label">Chart Name</label>
-                                                        <div class="col-sm-8">
-                                                            <input type="text" name="dashboard_widget_name"
-                                                                   id="txt-dashboard-widget-name" class="form-control">
-                                                        </div>
-                                                    </div>
+                                                    <p style="line-height: 45px;">
+                                                        Name this chart
+                                                        &nbsp;
+                                                        <input type="text" name="dashboard_widget_name"
+                                                               id="txt-dashboard-widget-name"
+                                                               class="form-control form-control-inline"
+                                                               placeholder="chart name">
+                                                        &nbsp;
+                                                        and add it to my
+                                                        &nbsp;
+
+                                                        <select id="sel-dashboard-id" name="dashboard_id"
+                                                                class="form-control form-control-inline">
+                                                            @foreach(auth()->user()->dashboards as $dashboard)
+                                                                <option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </p>
+
+                                                    {{--<div class="form-group required">--}}
+                                                    {{--<label class="col-sm-4 control-label">Dashboard</label>--}}
+                                                    {{--<div class="col-sm-8">--}}
+                                                    {{--<select id="sel-dashboard-id" name="dashboard_id"--}}
+                                                    {{--class="form-control">--}}
+                                                    {{--@foreach(auth()->user()->dashboards as $dashboard)--}}
+                                                    {{--<option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>--}}
+                                                    {{--@endforeach--}}
+                                                    {{--</select>--}}
+                                                    {{--</div>--}}
+                                                    {{--</div>--}}
+
+                                                    {{--<div class="form-group required">--}}
+                                                    {{--<label class="col-sm-4 control-label">Chart Name</label>--}}
+                                                    {{--<div class="col-sm-8">--}}
+                                                    {{--<input type="text" name="dashboard_widget_name"--}}
+                                                    {{--id="txt-dashboard-widget-name" class="form-control">--}}
+                                                    {{--</div>--}}
+                                                    {{--</div>--}}
 
                                                     {!! Form::close() !!}
                                                 </div>
@@ -175,7 +246,10 @@
                 },
 
                 xAxis: {
-                    type: 'datetime'
+                    type: 'datetime',
+                    labels: {
+                        format: '{value:%e %b}'
+                    }
                 },
                 yAxis: {
                     title: {

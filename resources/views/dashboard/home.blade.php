@@ -136,7 +136,7 @@
         }
 
         function deleteWidget(el) {
-            confirmP("Delete content", "Do you want to delete this content?", {
+            confirmP("Delete content", "Are you sure you want to delete the " + $(el).attr("data-name") + " Chart?", {
                 "affirmative": {
                     "text": "Delete",
                     "class": "btn-danger",

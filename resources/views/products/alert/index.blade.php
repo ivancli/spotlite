@@ -227,6 +227,7 @@
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],
+                                                "data-name": data.alert_owner_type == 'site' ? data.alert_owner.domain : data.alert_owner.product_name,
                                                 "onclick": "deleteAlert(this); return false",
                                                 "data-alert-type": data.alert_owner_type
                                             }).append(
@@ -373,7 +374,7 @@
         }
 
         function deleteAlert(el) {
-            confirmP("Delete Alert", "Do you want to delete this alert?", {
+            confirmP("Delete Alert", "Are you sure you want to delete the " + $(el).attr("data-name") +" Alert?", {
                 "affirmative": {
                     "text": "Delete",
                     "class": "btn-danger",

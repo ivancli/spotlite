@@ -32,12 +32,6 @@
         {!! Form::email('email', null, array('class' => 'form-control', 'disabled' => 'disabled')) !!}
     </div>
 </div>
-<div class="form-group">
-    {!! Form::label('phone', 'Phone', array('class' => 'control-label col-md-3')) !!}
-    <div class="col-md-9">
-        {!! Form::text('phone', null, array('class' => 'form-control')) !!}
-    </div>
-</div>
 <div class="text-right">
     {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
 </div>

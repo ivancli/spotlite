@@ -25,7 +25,7 @@ class DefaultDashboardTest extends TestCase
     public function testVisitDefaultDashboard()
     {
         $this->visit(route('dashboard.index'))
-            ->see("Default Dashboard")
+            ->see("Default")
             ->assertResponseOk();
     }
 }

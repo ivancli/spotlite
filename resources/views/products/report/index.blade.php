@@ -227,6 +227,7 @@
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],
+                                                "data-name": data.report_task_owner_type == "product" ? data.report_task_owner.product_name : data.report_task_owner.category_name,
                                                 "onclick": "deleteReportTask(this)",
                                                 "data-report-type": data.report_task_owner_type
                                             }).append(
@@ -463,7 +464,7 @@
         }
 
         function deleteReportTask(el) {
-            confirmP("Delete Report Schedule", "Do you want to delete this schedule?", {
+            confirmP("Delete Report Schedule", "Are you sure you want to delete the " + $(el).attr("data-name") + " " + capitalise($(el).attr("data-report-type")) + " Report?", {
                 "affirmative": {
                     "text": "Delete",
                     "class": "btn-danger",
@@ -502,7 +503,7 @@
         }
 
         function deleteReport(el, callback) {
-            confirmP("Delete Report", "Do you want to delete this report?", {
+            confirmP("Delete Report", "Are you sure you want to delete this report?", {
                 "affirmative": {
                     "text": "Delete",
                     "class": "btn-danger",
