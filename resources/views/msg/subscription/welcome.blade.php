@@ -4,26 +4,19 @@
     <!--<h4 class="modal-title" id="myModalLabel">Welcome to Composer!</h4>-->
     <div class="row">
         <div class="col-sm-12">
-            <h2 class="text-center">
-                {{auth()->user()->first_name}}, Welcome to
-            </h2>
             <h3 class="text-center">
                 <img src="{{asset('images/logo-fixed-2.png')}}" style="width: 30%;">
             </h3>
-
+            <h2 class="text-center">
+                Hi {{auth()->user()->first_name}}, Welcome to SpotLite
+            </h2>
             <p class="text-center">
-                So nice to meet you!
-            </p>
-            <p class="text-center">
-                It's time to let SpotLite do the hard work while you focus on what matters: growing your business.
+                The way you make your pricing decisions is about to change.
             </p>
             <p class="text-center">
                 Here are a few handy guides you might find useful to get you quickly set up!
             </p>
-            <p class="text-center">
-                You can watch our video tutorial
-            </p>
-            <div class="m-b-10">
+            <div class="m-b-10 tutorial-video" style="display: none;">
                 <video width="100%" controls preload="auto">
                     <source src="{{asset('videos/sample_video.mp4')}}" type="video/mp4">
                     Your browser does not support the video tag.
@@ -35,50 +28,65 @@
                     <table class="table">
                         <tbody>
                         <tr>
-                            <td width="33%" style="vertical-align: bottom;" align="center">
-                                <div class="hidden-xs">Download the tutorial</div>
+                            <td width="25%" style="vertical-align: bottom;" align="center">
+                                <div class="hidden-xs">Watch our video tutorial</div>
+                                <div>
+                                    <a href="#" class="text-muted" style="font-size: 50px; color: #ec0000;"
+                                       onclick="showTutorialVideo()">
+                                        <div>
+                                            <i class="fa fa-youtube-play"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </td>
+                            <td width="25%" style="vertical-align: bottom;" align="center">
+                                <div class="hidden-xs">Download our step-by-step guide</div>
                                 <div>
                                     <a href="{{asset('videos/sample_video.mp4')}}" class="text-muted">
-                                        <div style="font-size: 25px;">
+                                        <div style="font-size: 50px; color: #000056;">
                                             <i class=" fa fa-download"></i>
                                         </div>
-                                        <div class="hidden-xs" style="font-weight: bold; color: #3ba83d;">
-                                            GET IT NOW
-                                        </div>
                                     </a>
                                 </div>
                             </td>
-                            <td width="33%" style="vertical-align: bottom;" align="center">
-                                <div class="hidden-xs">Check the FAQ</div>
+                            <td width="25%" style="vertical-align: bottom;" align="center">
+                                <div class="hidden-xs">Check out the FAQ</div>
                                 <div>
-                                    <a href="#" class="text-muted">
-                                        <div style="font-size: 25px;">
+                                    <a href="#" class="text-muted" style="color: #005100;">
+                                        <div style="font-size: 50px;">
                                             <i class=" fa fa-question-circle-o"></i>
                                         </div>
-                                        <div class="hidden-xs" style="font-weight: bold; color: #3ba83d;">
-                                            TAKE ME THERE
+                                    </a>
+                                </div>
+                            </td>
+                            <td width="25%" style="vertical-align: bottom;" align="center">
+                                <div class="hidden-xs">Just get started!</div>
+                                <div>
+                                    <a href="{{route('dashboard.index')}}" class="text-muted">
+                                        <div style="font-size: 50px;">
+                                            <img src="{{asset('images/favicon.png')}}" alt="" width="50">
                                         </div>
                                     </a>
                                 </div>
                             </td>
-                            <td width="34%" style="vertical-align: bottom;" align="center">
-                                <div class="hidden-xs">No need, thanks</div>
-                                <div class="checkbox" style="font-size: 9px; margin-bottom: 0px;">
-                                    <label>
-                                        <input type="checkbox" onclick="updateDontShowWelcomePage(this)"
-                                               style="margin-top: 0;">
-                                        Don't show me this message again, please!
-                                    </label>
-                                </div>
-                                <div>
-                                    <a href="{{route('dashboard.index')}}" class="text-muted">
-                                        <div style="font-size: 25px;">
-                                            <img src="{{asset('images/favicon.png')}}" alt="" width="30">
-                                        </div>
-                                        <div class="hidden-xs" style="font-weight: bold; color: #3ba83d;">GO TO MY
-                                            DASHBOARD
-                                        </div>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="center">
+                                <div>If you have any questions or concerns, don't hesitate to get in touch!</div>
+                                <div class="text-center">
+                                    <a href="mailto:admin@spotlite.com.au" style="font-size: 50px; color: #b97600">
+                                        <i class="fa fa-envelope"></i>
                                     </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" onclick="updateDontShowWelcomePage(this)">
+                                        Do not show this window again
+                                    </label>
                                 </div>
                             </td>
                         </tr>
@@ -110,6 +118,10 @@
                     alertP("Error", "Unable to update preference, please try again later.");
                 }
             })
+        }
+
+        function showTutorialVideo() {
+            $(".tutorial-video").slideDown();
         }
     </script>
 </div>

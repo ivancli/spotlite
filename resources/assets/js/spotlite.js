@@ -36,6 +36,7 @@ $(function () {
                 $modal.modal();
 
                 $modal.on("hidden.bs.modal", function () {
+                    $("video").get(0).pause();
                     if (cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
                         localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
                         showCreditCardExpiry();
