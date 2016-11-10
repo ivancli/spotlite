@@ -25,15 +25,28 @@
                     <strong><i class="fa fa-minus"></i></strong>
                 </div>
             @else
-                {{"$" . number_format($site->recent_price, 2, '.', ',')}}
+                <div class="text-right">
+                    {{"$" . number_format($site->recent_price, 2, '.', ',')}}
+                </div>
             @endif
+        @endif
+    </td>
+    <td>
+        @if(!is_null($site->previousPrice))
+            <div class="text-right">
+                ${{number_format($site->previousPrice->price, 2, '.', ',')}}
+            </div>
+        @else
+            <strong><i class="fa fa-minus"></i></strong>
         @endif
     </td>
     <td class="hidden-xs">
         @if(!is_null($site->diffPrice))
             @if($site->diffPrice != 0)
-                <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
-                ${{number_format(abs($site->diffPrice), 2, '.', ',')}}
+                <div class="text-right">
+                    <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
+                    ${{number_format(abs($site->diffPrice), 2, '.', ',')}}
+                </div>
             @else
                 <div class="p-l-10">
                     <strong><i class="fa fa-minus"></i></strong>
@@ -45,7 +58,7 @@
             </div>
         @endif
     </td>
-    <td class="hidden-xs">
+    <td class="hidden-xs" style="padding-left: 20px;">
         @if(!is_null($site->priceLastChangedAt))
             {{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->priceLastChangedAt))}}
 
@@ -93,7 +106,8 @@
         {{--TODO not yet finished--}}
         {{--change the submitting parameters and update the site controller destroy function--}}
         {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
-        <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}" onclick="btnDeleteSiteOnClick(this); return false;"
+        <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
+           onclick="btnDeleteSiteOnClick(this); return false;"
            data-toggle="tooltip" title="delete">
             <i class="glyphicon glyphicon-trash text-danger"></i>
         </a>

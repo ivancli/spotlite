@@ -51,7 +51,8 @@
                 <i class="fa fa-pencil-square-o"></i>
             </a>
             {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
-            <a href="#" class="btn-action" data-name="{{$product->product_name}}" onclick="btnDeleteProductOnClick(this); return false;"
+            <a href="#" class="btn-action" data-name="{{$product->product_name}}"
+               onclick="btnDeleteProductOnClick(this); return false;"
                data-toggle="tooltip" title="delete">
                 <i class="glyphicon glyphicon-trash text-danger"></i>
             </a>
@@ -69,11 +70,12 @@
                     <thead>
                     <tr>
                         <th width="15%">Site</th>
-                        <th width="15%">Price</th>
-                        <th width="15%" class="hidden-xs">Change</th>
-                        <th width="10%" class="hidden-xs">Changed At</th>
+                        <th width="10%" class="text-right">Current Price</th>
+                        <th width="10%" class="text-right">Previous Price</th>
+                        <th width="10%" class="hidden-xs text-right">Change</th>
+                        <th width="10%" class="hidden-xs" style="padding-left: 20px;">Changed</th>
                         <th class="text-center" width="10%">My Price</th>
-                        <th width="15%">Last Update</th>
+                        <th width="15%">Updated</th>
                         <th width="20%"></th>
                     </tr>
                     </thead>

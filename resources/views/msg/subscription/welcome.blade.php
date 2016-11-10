@@ -1,4 +1,4 @@
-<div class="modal-header">
+<div class="modal-header" style="border-bottom: 0">
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span>
     </button>
     <!--<h4 class="modal-title" id="myModalLabel">Welcome to Composer!</h4>-->
@@ -25,7 +25,7 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <table class="table">
+                    <table class="table" style="margin-bottom: 0px;">
                         <tbody>
                         <tr>
                             <td width="25%" style="vertical-align: bottom;" align="center">
