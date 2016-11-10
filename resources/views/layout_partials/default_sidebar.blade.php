@@ -7,7 +7,7 @@
                 <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
-                        <span>Dashboard</span>
+                        <span>Dashboards</span>
                         <span class="pull-right-container">
                           <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -28,11 +28,10 @@
                         </li>
                     </ul>
                 </li>
-
-                <li class="{{Style::set_active('report')}}">
-                    <a href="{{url('report')}}">
-                        <i class="fa fa-line-chart"></i>
-                        <span>Reports</span>
+                <li class="{{Style::set_active_starts_with('product')}}">
+                    <a href="{{url('product')}}">
+                        <i class="fa fa-square-o"></i>
+                        <span>Products</span>
                     </a>
                 </li>
                 <li class="{{Style::set_active('alert')}}">
@@ -40,10 +39,10 @@
                         <i class="fa fa-bell-o"></i>
                         <span>Alerts</span></a>
                 </li>
-                <li class="{{Style::set_active_starts_with('product')}}">
-                    <a href="{{url('product')}}">
-                        <i class="fa fa-square-o"></i>
-                        <span>Products</span>
+                <li class="{{Style::set_active('report')}}">
+                    <a href="{{url('report')}}">
+                        <i class="fa fa-line-chart"></i>
+                        <span>Reports</span>
                     </a>
                 </li>
             @endif

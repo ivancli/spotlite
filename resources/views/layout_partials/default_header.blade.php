@@ -17,8 +17,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </a>
-        <a href="#" class="header-label">
-            Market intelligence made simple.
+        <a href="#" class="header-label" onclick="return false;" style="color: black;">
+            Focus on what matters
         </a>
 
         <div class="navbar-custom-menu">
