@@ -222,6 +222,9 @@
                 submitAddContent();
             })
             $("#txt-date-range").daterangepicker({
+                "locale": {
+                    format: "YYYY-MM-DD"
+                },
                 "maxDate": moment()
             }).on('apply.daterangepicker', function (ev, picker) {
                 $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
