@@ -247,6 +247,14 @@
                                         "data-toggle": "tooltip"
                                     });
                                     break;
+                                case "sample":
+                                    $text.append(
+                                            $("<i>").addClass("text-warning fa fa-tag")
+                                    ).attr({
+                                        "title": "This is a sample site",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
                                 default:
                             }
                             var $output = $("<div>").append(
@@ -335,7 +343,7 @@
                         }
                     }
                 ],
-                "drawCallback": function(){
+                "drawCallback": function () {
                     $("[data-toggle=popover]").popover();
                 }
             });

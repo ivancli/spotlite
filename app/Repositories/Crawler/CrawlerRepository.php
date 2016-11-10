@@ -89,7 +89,7 @@ class CrawlerRepository implements CrawlerContract
 
         $site = $crawler->site;
 
-        if ($site->status == 'invalid') {
+        if ($site->status == 'invalid' || $site->status == 'sample') {
             return false;
         }
 

@@ -170,12 +170,12 @@ class SiteRepository implements SiteContract
     public function createSampleSite(Product $product)
     {
         $sampleSites = array();
-        $sampleSites [] = $this->createSite(array(
+        $sampleSites [] = Site::create(array(
             "product_id" => $product->getKey(),
             "site_url" => "http://www.myfirstcompetitor.com.au",
             "status" => "sample",
         ));
-        $sampleSites [] = $this->createSite(array(
+        $sampleSites [] = Site::create(array(
             "product_id" => $product->getKey(),
             "site_url" => "http://www.mysite.com.au",
             "status" => "sample",
