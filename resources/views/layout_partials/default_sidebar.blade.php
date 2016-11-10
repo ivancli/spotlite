@@ -79,6 +79,9 @@
                     <a href="#">
                         <i class="fa fa-users"></i>
                         <span>User Management</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{Style::set_active_starts_with('um.user')}}">
