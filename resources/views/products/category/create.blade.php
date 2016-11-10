@@ -54,11 +54,12 @@
                             showLoading();
                             loadSingleCategory(response.category.urls.show, function (html) {
                                 hideLoading();
-                                if (theEnd) {
-                                    $(el).closest(".list-container").append(
-                                            html
-                                    );
-                                }
+//                                if (theEnd) {
+                                $(el).closest(".list-container").prepend(
+                                        html
+                                );
+                                updateCategoryOrder();
+//                                }
                                 $(el).closest(".category-wrapper.create").remove();
                             });
                         } else {

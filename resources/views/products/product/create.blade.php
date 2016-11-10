@@ -50,9 +50,10 @@
                         showLoading();
                         loadSingleProduct(response.product.urls.show, function (html) {
                             hideLoading();
-                            $(el).closest(".collapsible-category-div").append(
+                            $(el).closest(".collapsible-category-div").prepend(
                                     html
                             );
+                            updateProductOrder("{{$category->getKey()}}");
                             $(el).closest(".product-wrapper.create").remove();
                         });
                     } else {
