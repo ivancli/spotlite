@@ -212,6 +212,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\Dashboard\DashboardWidgetContract', 'App\Repositories\Dashboard\DashboardWidgetRepository');
         $this->app->bind('App\Contracts\Repository\Dashboard\DashboardWidgetTypeContract', 'App\Repositories\Dashboard\DashboardWidgetTypeRepository');
         $this->app->bind('App\Contracts\Repository\Mailer\MailingAgentContract', 'App\Repositories\Mailer\MailingAgentRepository');
+        $this->app->bind('App\Contracts\Repository\Legal\PrivacyPolicyContract', 'App\Repositories\Legal\PrivacyPolicyRepository');
+        $this->app->bind('App\Contracts\Repository\Legal\TermAndConditionContract', 'App\Repositories\Legal\TermAndConditionRepository');
 
         /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')

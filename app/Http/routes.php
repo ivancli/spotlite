@@ -201,6 +201,9 @@ Route::post('password', 'Auth\PasswordController@postEmail')->name('password.pos
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset')->name('password.reset.get');
 Route::post('password/reset', 'Auth\PasswordController@postReset')->name('password.reset.post');
 
+Route::resource('privacy_policy', 'Legal\PrivacyPolicyController', ['only' => 'show']);
+Route::resource('term_and_condition', 'Legal\TermAndConditionController', ['only' => 'show']);
+
 
 Route::match(['get', 'post', 'put', 'delete'], 'subscription/webhook', 'Subscription\SubscriptionController@webhookUpdate')->name('subscription.webhook_update');
 Route::get('subscription/product_families', 'Subscription\SubscriptionController@productFamilies')->name('subscription.product_families');

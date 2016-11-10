@@ -50,7 +50,7 @@
                         <div class="checkbox icheck">
                             <label>
                                 <input type="checkbox" value="y" name="agree_terms" id="chk-agree-terms"> &nbsp; I agree
-                                to the <a href="#">terms</a>
+                                to the <a href="#" onclick="showTerms(); return false;">terms</a>
                             </label>
                         </div>
                     </div>
@@ -139,6 +139,32 @@
                 )
             }
             return isValid;
+        }
+
+        function showTerms() {
+            $.ajax({
+                'url': '{{route('term_and_condition.show', 0)}}',
+                'method': 'get',
+                'success': function (html) {
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function () {
+                                    $("#chk-agree-terms").iCheck("check");
+                                }
+                            });
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                'error': function (error, status, xhr) {
+
+                }
+            });
         }
     </script>
 @stop

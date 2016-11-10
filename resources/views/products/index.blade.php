@@ -3,7 +3,7 @@
 
 @section('notification_banner')
     @if(auth()->user()->preference("HIDE_PRODUCT_BANNER_MESSAGE") != "1")
-        <div class="callout callout-primary" style="margin-bottom: 0!important;">
+        <div class="callout callout-default" style="margin-bottom: 0!important;">
             <button type="button" class="close" onclick="hideProductBannerMessage(this); return false;">×</button>
             <h4>Track how your competitors are pricing identical and similar products.</h4>
             Configure your categories and products by adding URLs below. Make sure to set up the
