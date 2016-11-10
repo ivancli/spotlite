@@ -51,7 +51,7 @@
                 <i class="fa fa-pencil-square-o"></i>
             </a>
             {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
-            <a href="#" class="btn-action" onclick="btnDeleteProductOnClick(this); return false;"
+            <a href="#" class="btn-action" data-name="{{$product->product_name}}" onclick="btnDeleteProductOnClick(this); return false;"
                data-toggle="tooltip" title="delete">
                 <i class="glyphicon glyphicon-trash text-danger"></i>
             </a>
@@ -94,7 +94,7 @@
     <script type="text/javascript">
 
         function btnDeleteProductOnClick(el) {
-            confirmP("Delete Product", "Do you want to delete this product?", {
+            confirmP("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?", {
                 "affirmative": {
                     "text": "Delete",
                     "class": "btn-danger",

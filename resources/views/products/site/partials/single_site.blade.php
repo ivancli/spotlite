@@ -93,7 +93,7 @@
         {{--TODO not yet finished--}}
         {{--change the submitting parameters and update the site controller destroy function--}}
         {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
-        <a href="#" class="btn-action" onclick="btnDeleteSiteOnClick(this); return false;"
+        <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}" onclick="btnDeleteSiteOnClick(this); return false;"
            data-toggle="tooltip" title="delete">
             <i class="glyphicon glyphicon-trash text-danger"></i>
         </a>
@@ -101,7 +101,7 @@
     </td>
     <script type="text/javascript">
         function btnDeleteSiteOnClick(el) {
-            confirmP("Delete Site", "Do you want to delete this site?", {
+            confirmP("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + " Site?", {
                 "affirmative": {
                     "text": "Delete",
                     "class": "btn-danger",
