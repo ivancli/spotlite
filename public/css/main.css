@@ -14792,6 +14792,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
     text-align: center;
 }
 
+.form-control-inline {
+    display: inline;
+    width: auto;
+}
+
 @media (max-width: 991px) {
     .navbar-nav > .spotlite-user-menu > .dropdown-menu > li.footer > a {
         background: #fff !important;
