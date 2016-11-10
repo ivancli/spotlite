@@ -13,7 +13,7 @@ class PrivacyPolicy extends Model
 
     public function setActive()
     {
-        $privacyPolicies = (new static)::all();
+        $privacyPolicies = (new static)->all();
         foreach ($privacyPolicies as $privacyPolicy) {
             $privacyPolicy->setInactive();
         }

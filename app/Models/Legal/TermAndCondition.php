@@ -14,7 +14,7 @@ class TermAndCondition extends Model
 
     public function setActive()
     {
-        $termsAndConditions = (new static)::all();
+        $termsAndConditions = (new static)->all();
         foreach ($termsAndConditions as $termAndCondition) {
             $termAndCondition->setInactive();
         }
