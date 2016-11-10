@@ -263,7 +263,9 @@
         <ul id="plans">
             @foreach($productFamilies as $productFamily)
 
-                <li class="plan {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'selected' : ''}}"
+                <li class="plan
+                    {{(is_null(old("api_product_id")) && \Request::route()->getName() == "register.get"  && \Request::has("pid") && \Request::get("pid") == $productFamily->product->id) ? 'selected' : ''}}
+                    {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'selected' : ''}}"
                     @if(!isset($productFamily->product->criteria->recommended) || $productFamily->product->criteria->recommended != true)
                     style="margin-top: 44px;"
                     @endif
