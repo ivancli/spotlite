@@ -22,6 +22,18 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '{{config('google_analytics.ua_code')}}', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
 <!-- Site wrapper -->
@@ -49,21 +61,9 @@
 
 @include('scripts.variable_setter')
 
-<script type="text/javascript" src="{{asset('js/main.js')}}"></script>
-
 @yield('scripts')
 
 @include('scripts.notification')
 
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', '{{config('google_analytics.ua_code')}}', 'auto');
-    ga('send', 'pageview');
-</script>
 </body>
 </html>
-
