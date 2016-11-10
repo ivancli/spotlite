@@ -13,6 +13,30 @@
                 {!! Form::model($product->alert, array('route' => array('alert.product.update', $product->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-update")) !!}
                 <input type="hidden" name="alert_owner_id" value="{{$product->getKey()}}">
                 <input type="hidden" name="alert_owner_type" value="product">
+
+
+                <p style="line-height: 45px;">
+                    Send me a alert when a price goes
+                    &nbsp; {!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control form-control-inline']) !!}
+                    &nbsp; {!! Form::select('comparison_price_type', !is_null($product->myPriceSite()) ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control form-control-inline', 'id'=>'sel-price-type')) !!}
+                <div class="specific-price-sentence">
+                    (
+                    ${!! Form::text('comparison_price', is_null($product->alert) ? null : number_format($product->alert->comparison_price, 2, '.', ''), array('class' => 'form-control form-control-inline', 'placeholder' => '0.00' , 'id' => 'txt-comparison-price')) !!}
+                    )
+                </div>
+                excluding &nbsp;
+                <span style="line-height: normal;">
+                    {!! Form::select('site_id[]', $sites, $excludedSites, array('class' => 'form-control form-control-inline', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
+                    .
+                    </span>
+                <div>
+                    This alert should be sent
+                    &nbsp;
+                    {!! Form::select('operator', array('n'=>'every time', 'y' => 'just once'), null, ['class'=>'form-control form-control-inline']) !!}
+                </div>
+                </p>
+
+
                 <div class="form-group required">
                     {!! Form::label('comparison_price_type', 'Trigger', array('class' => 'control-label')) !!}
                     {!! Form::select('comparison_price_type', !is_null($product->myPriceSite()) ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}
@@ -31,7 +55,7 @@
                     {!! Form::select('site_id[]', $sites, $excludedSites, array('class' => 'form-control', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
                 </div>
                 <div class="form-group required">
-                    {!! Form::label('email[]', 'Notify Emails', array('class' => 'control-label')) !!}
+                    {!! Form::label('email[]', 'Email Address', array('class' => 'control-label')) !!}
                     {!! Form::select('email[]', [auth()->user()->email], [auth()->user()->email], ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email', 'disabled' => 'disabled']) !!}
                     <input type="hidden" name="email[]" value="{{auth()->user()->email}}">
                 </div>

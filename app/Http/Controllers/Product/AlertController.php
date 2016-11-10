@@ -96,6 +96,10 @@ class AlertController extends Controller
     {
         $product = $this->productRepo->getProduct($product_id);
         $sites = $product->sites->pluck('site_url', 'site_id')->toArray();
+        foreach ($sites as $site_id => $site_url) {
+            $sites[$site_id] = parse_url($site_url)['host'];
+        }
+
         if (!is_null($product->alert)) {
             event(new AlertEditViewed($product->alert));
             $emails = $product->alert->emails->pluck('alert_email_address', 'alert_email_address')->toArray();
