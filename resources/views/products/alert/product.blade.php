@@ -33,7 +33,7 @@
                     <div>
                         This alert should be sent
                         &nbsp;
-                        {!! Form::select('operator', array('n'=>'every time', 'y' => 'just once'), null, ['class'=>'form-control form-control-inline']) !!}
+                        {!! Form::select('one_off', array('n'=>'every time', 'y' => 'just once'), is_null($product->alert) ? null : $product->alert->one_off, ['class'=>'form-control form-control-inline']) !!}
                     </div>
                 </p>
 

@@ -11,7 +11,7 @@
     </td>
     <td>
         @if($site->status == 'invalid')
-            <div>
+            <div class="text-right">
                 <a href="#" onclick="return false;" data-toggle="popover" data-trigger="hover focus click"
                    data-content="The site you have provided is not a valid page for pricing. Please update the site with product detail page URL.">
                     <i class="fa fa-ban text-danger"></i>
@@ -20,43 +20,43 @@
                 Invalid page for pricing
             </div>
         @else
-            @if(is_null($site->recent_price))
-                <div class="p-l-10">
-                    <strong><i class="fa fa-minus"></i></strong>
-                </div>
-            @else
-                <div class="text-right">
+            <div class="text-right">
+                @if(is_null($site->recent_price))
+                    <div class="p-l-10">
+                        <strong><i class="fa fa-minus"></i></strong>
+                    </div>
+                @else
                     {{"$" . number_format($site->recent_price, 2, '.', ',')}}
-                </div>
-            @endif
+                @endif
+            </div>
         @endif
     </td>
     <td>
-        @if(!is_null($site->previousPrice))
-            <div class="text-right">
+        <div class="text-right">
+            @if(!is_null($site->previousPrice))
                 ${{number_format($site->previousPrice->price, 2, '.', ',')}}
-            </div>
-        @else
-            <strong><i class="fa fa-minus"></i></strong>
-        @endif
+            @else
+                <strong><i class="fa fa-minus"></i></strong>
+            @endif
+        </div>
     </td>
     <td class="hidden-xs">
-        @if(!is_null($site->diffPrice))
-            @if($site->diffPrice != 0)
-                <div class="text-right">
+        <div class="text-right">
+            @if(!is_null($site->diffPrice))
+                @if($site->diffPrice != 0)
                     <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
                     ${{number_format(abs($site->diffPrice), 2, '.', ',')}}
-                </div>
+                @else
+                    <div class="p-l-10">
+                        <strong><i class="fa fa-minus"></i></strong>
+                    </div>
+                @endif
             @else
                 <div class="p-l-10">
                     <strong><i class="fa fa-minus"></i></strong>
                 </div>
             @endif
-        @else
-            <div class="p-l-10">
-                <strong><i class="fa fa-minus"></i></strong>
-            </div>
-        @endif
+        </div>
     </td>
     <td class="hidden-xs" style="padding-left: 20px;">
         @if(!is_null($site->priceLastChangedAt))
