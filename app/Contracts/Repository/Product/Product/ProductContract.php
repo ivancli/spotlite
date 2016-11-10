@@ -1,5 +1,7 @@
 <?php
 namespace App\Contracts\Repository\Product\Product;
+use App\Models\Category;
+
 /**
  * Created by PhpStorm.
  * User: ivan.li
@@ -19,4 +21,6 @@ interface ProductContract
     public function deleteProduct($id);
 
     public function getProductsCount();
+
+    public function createSampleProduct(Category $category);
 }

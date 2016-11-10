@@ -13,6 +13,7 @@ use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Filters\QueryFilter;
 use App\Libraries\CommonFunctions;
+use App\Models\Product;
 use App\Models\Site;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -163,6 +164,21 @@ class SiteRepository implements SiteContract
         $site->crawler->update(array(
             "crawler_class" => $targetDomain->crawler_class,
             "parser_class" => $targetDomain->parser_class
+        ));
+    }
+
+    public function createSampleSite(Product $product)
+    {
+        $sampleSites = array();
+        $sampleSites [] = $this->createSite(array(
+            "product_id" => $product->getKey(),
+            "site_url" => "http://www.myfirstcompetitor.com.au",
+            "status" => "sample",
+        ));
+        $sampleSites [] = $this->createSite(array(
+            "product_id" => $product->getKey(),
+            "site_url" => "http://www.mysite.com.au",
+            "status" => "sample",
         ));
     }
 }

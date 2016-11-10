@@ -2,6 +2,7 @@
 namespace App\Repositories\Product\Product;
 
 use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Models\Category;
 use App\Models\Product;
 
 /**
@@ -52,5 +53,14 @@ class ProductRepository implements ProductContract
     public function getProductsCount()
     {
         return auth()->user()->products->count();
+    }
+
+    public function createSampleProduct(Category $category)
+    {
+        return Product::create(array(
+            "product_name" => "My First Product",
+            "category_id" => $category->getKey(),
+            "user_id" => $category->user_id,
+        ));
     }
 }

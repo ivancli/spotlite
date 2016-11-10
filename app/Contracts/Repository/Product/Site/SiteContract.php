@@ -10,6 +10,7 @@ namespace App\Contracts\Repository\Product\Site;
 
 
 use App\Filters\QueryFilter;
+use App\Models\Product;
 
 interface SiteContract
 {
@@ -34,4 +35,6 @@ interface SiteContract
     public function copySiteHistoricalPrice($site_id, $target_site_id);
 
     public function getDataTablesSites(QueryFilter $queryFilter);
+
+    public function createSampleSite(Product $product);
 }

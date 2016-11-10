@@ -20,7 +20,8 @@ class CreateSitesTable extends Migration
                 "fail_xpath",
                 "null_xpath",
                 "waiting",
-                "invalid"
+                "invalid",
+                "sample",
             ))->default("waiting");
             $table->decimal('recent_price', 20, 4)->nullable();
             $table->decimal('price_diff', 20, 4)->nullable();

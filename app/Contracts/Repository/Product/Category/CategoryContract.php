@@ -2,6 +2,7 @@
 namespace App\Contracts\Repository\Product\Category;
 
 use App\Filters\QueryFilter;
+use App\Models\User;
 
 /**
  * Created by PhpStorm.
@@ -26,4 +27,6 @@ interface CategoryContract
     public function lazyLoadCategories(QueryFilter $queryFilter);
 
     public function getGreatestCategoryOrder();
+
+    public function createSampleCategory(User $user);
 }

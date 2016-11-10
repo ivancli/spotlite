@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\Repository\Mailer\MailerContract;
 use App\Contracts\Repository\Mailer\MailingAgentContract;
+use App\Contracts\Repository\Product\Category\CategoryContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Jobs\SendMail;
 use App\Models\Subscription;
@@ -44,19 +47,28 @@ class AuthController extends Controller
     protected $subscriptionRepo;
     protected $mailerRepo;
     protected $mailingAgentRepo;
+    protected $categoryRepo, $productRepo, $siteRepo;
 
     /**
      * Create a new authentication controller instance.
      *
      * @param SubscriptionContract $subscriptionContract
      * @param MailerContract $mailerContract
+     * @param MailingAgentContract $mailingAgentContract
+     * @param CategoryContract $categoryContract
+     * @param ProductContract $productContract
+     * @param SiteContract $siteContract
      */
-    public function __construct(SubscriptionContract $subscriptionContract, MailerContract $mailerContract, MailingAgentContract $mailingAgentContract)
+    public function __construct(SubscriptionContract $subscriptionContract, MailerContract $mailerContract, MailingAgentContract $mailingAgentContract, CategoryContract $categoryContract, ProductContract $productContract, SiteContract $siteContract)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
         $this->subscriptionRepo = $subscriptionContract;
         $this->mailerRepo = $mailerContract;
         $this->mailingAgentRepo = $mailingAgentContract;
+
+        $this->categoryRepo = $categoryContract;
+        $this->productRepo = $productContract;
+        $this->siteRepo = $siteContract;
     }
 
     /**
@@ -130,6 +142,11 @@ class AuthController extends Controller
                 ),
             )
         ));
+
+        /*create sample products*/
+        $sampleCategory = $this->categoryRepo->createSampleCategory($user);
+        $sampleProduct = $this->productRepo->createSampleProduct($sampleCategory);
+        $sampleSites = $this->siteRepo->createSampleSite($sampleProduct);
 
 
 //        $options = $user->toArray();

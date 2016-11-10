@@ -5,6 +5,7 @@ use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Filters\QueryFilter;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 /**
@@ -93,5 +94,13 @@ class CategoryRepository implements CategoryContract
     public function getGreatestCategoryOrder()
     {
         return Category::max('category_order');
+    }
+
+    public function createSampleCategory(User $user)
+    {
+        return Category::create(array(
+            "user_id" => $user->getKey(),
+            "category_name" => "My First Category",
+        ));
     }
 }
