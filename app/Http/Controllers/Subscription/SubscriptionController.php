@@ -364,11 +364,12 @@ class SubscriptionController extends Controller
         /*TODO validate the $subscription*/
 
         $chosenAPIProductID = $subscription->api_product_id;
+        $chosenAPIProduct = Chargify::product()->get($subscription->api_product_id);
 
         //load all products from Chargify
         $productFamilies = $this->subscriptionRepo->getProductList();
         event(new SubscriptionEditViewed($subscription));
-        return view('subscriptions.edit')->with(compact(['productFamilies', 'chosenAPIProductID', 'subscription']));
+        return view('subscriptions.edit')->with(compact(['productFamilies', 'chosenAPIProductID', 'subscription', 'chosenAPIProduct']));
     }
 
     public function update(Request $request, $id)

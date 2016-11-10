@@ -7,11 +7,11 @@
 @section('content')
     <div class="row">
         <div class="col-sm-12">
-            <div class="box box-solid">
-                <div class="box-body">
+            {{--<div class="box box-solid">--}}
+                {{--<div class="box-body">--}}
                     <div class="row m-b-10">
                         <div class="col-sm-12 text-center">
-                            @include('subscriptions.partials.products')
+                            @include('subscriptions.partials.products_copy')
                         </div>
                     </div>
                     <div class="row">
@@ -24,8 +24,8 @@
                             {!! Form::close() !!}
                         </div>
                     </div>
-                </div>
-            </div>
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
     </div>
 @stop

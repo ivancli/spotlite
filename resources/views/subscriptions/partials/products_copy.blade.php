@@ -219,7 +219,8 @@
         }
     }
 
-    .plan.selected .price p {
+    .plan.selected .price p,
+    .plan.chosen .price p {
         background: -webkit-linear-gradient(top, #634775, #473661);
         background: -moz-linear-gradient(top, #634775, #473661);
         background: -o-linear-gradient(top, #634775, #473661);
@@ -227,7 +228,8 @@
         background: linear-gradient(top, #634775, #473661);
     }
 
-    .plan.selected .recommended p {
+    .plan.selected .recommended p,
+    .plan.chosen .recommended p {
         background: -webkit-linear-gradient(top, #634775, #473661);
         background: -moz-linear-gradient(top, #634775, #473661);
         background: -o-linear-gradient(top, #634775, #473661);
@@ -235,20 +237,23 @@
         background: linear-gradient(top, #634775, #473661);
     }
 
-    .plan.selected .price p span {
+    .plan.selected .price p span,
+    .plan.chosen .price p span {
         color: #8eaea8;
     }
 
-    .plan.selected .button button {
+    .plan.selected .button button,
+    .plan.chosen .button button{
         background: #473661;
         color: #fff;
     }
 
-    .plan.selected .title h2 {
+    .plan.selected .title h2,
+    .plan.chosen .title h2{
         color: #4c416a;
     }
 
-    .plan.selected {
+    .plan.selected, .plan.chosen {
         -webkit-transform: scale(1.04);
         -moz-transform: scale(1.04);
         -ms-transform: scale(1.04);
@@ -265,7 +270,8 @@
 
                 <li class="plan
                     {{(is_null(old("api_product_id")) && \Request::route()->getName() == "register.get"  && \Request::has("pid") && \Request::get("pid") == $productFamily->product->id) ? 'selected' : ''}}
-                    {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'selected' : ''}}"
+                {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'selected' : ''}}
+                {{isset($chosenAPIProductID) && $productFamily->product->id == $chosenAPIProductID ? 'chosen': ''}}"
                     @if(!isset($productFamily->product->criteria->recommended) || $productFamily->product->criteria->recommended != true)
                     style="margin-top: 44px;"
                     @endif
@@ -364,11 +370,22 @@
                         </li>
                         <li class="button">
                             <button href="#"
-                                    class="btn-select" {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'disabled="disabled"': '' }}>
-                                @if(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)
-                                    Selected
+                                    class="btn-select" {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id? 'disabled="disabled"': '' }}>
+
+                                @if(\Request::route()->getName() == "subscription.edit")
+                                    @if($chosenAPIProduct->price_in_cents > $productFamily->product->price_in_cents)
+                                        Downgrade
+                                    @elseif($chosenAPIProductID == $productFamily->product->id)
+                                        My Plan
+                                    @else
+                                        Upgrade
+                                    @endif
                                 @else
-                                    Select
+                                    @if(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)
+                                        Selected
+                                    @else
+                                        Select
+                                    @endif
                                 @endif
                             </button>
                         </li>
@@ -377,14 +394,15 @@
             @endforeach
         </ul>
     </section>
-
-    <div class="row coupon-code-container">
-        <div class="col-sm-12 text-center">
-            <div class="form-group form-inline">
-                <label for="" class="sl-control-label">Have a Coupon Code?</label>
-                &nbsp;
-                <input type="text" class="form-control sl-form-control" id="visual-coupon-code">
+    @if(\Request::route()->getName() == "register.get")
+        <div class="row coupon-code-container">
+            <div class="col-sm-12 text-center">
+                <div class="form-group form-inline">
+                    <label for="" class="sl-control-label">Have a Coupon Code?</label>
+                    &nbsp;
+                    <input type="text" class="form-control sl-form-control" id="visual-coupon-code">
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 @endif
