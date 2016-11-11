@@ -277,11 +277,7 @@
         tour.init();
 
         function startTour() {
-            if ($(".btn-add-site").length > 0) {
-                tour.restart();
-            } else {
-                alertP("No sites available", "The tour requires at least one site. Alternatively, please visit our video tutorial.");
-            }
+            tour.restart();
         }
     </script>
     @if(auth()->user()->preference('PRODUCT_TOUR_VISITED') != 1)
