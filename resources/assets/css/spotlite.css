@@ -395,6 +395,10 @@ h3.box-title {
     font-size: 12px;
 }
 
+.tour-backdrop {
+    opacity: 0.6 !important;
+}
+
 @media (min-width: 992px) {
     .modal-xl {
         width: 900px;

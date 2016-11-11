@@ -44,6 +44,9 @@ elixir(function (mix) {
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
+    mix.scripts([
+        'node_modules/bootstrap-tour/build/css/bootstrap-tour.css'
+    ], "public/css/product-tour.css", './');
     mix.styles([
         'resources/assets/css/email.css'
     ], "public/css/email.css", "./");
@@ -78,6 +81,10 @@ elixir(function (mix) {
         'resources/assets/js/sidebar.js',
         'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");
+
+    mix.scripts([
+        'node_modules/bootstrap-tour/build/js/bootstrap-tour.js'
+    ], "public/js/product-tour.js", './');
 
     /* copy images */
     mix.copy('resources/assets/images', 'public/images');

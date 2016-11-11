@@ -14,6 +14,14 @@
 
 @section('header_title', "Products")
 
+
+@section('links')
+    @if(auth()->user()->preference('PRODUCT_TOUR_VISITED') != 1)
+        <link rel="stylesheet" href="{{asset('css/product-tour.css')}}">
+    @endif
+@stop
+
+
 @section('breadcrumbs')
     {!! Breadcrumbs::render('product_index') !!}
 @stop
@@ -26,7 +34,8 @@
                 <div class="box-body">
                     <div class="row m-b-10">
                         <div class="col-sm-12">
-                            <a href="#" class="btn btn-primary btn-xs" onclick="appendCreateCategoryBlock();">
+                            <a href="#" class="btn btn-primary btn-xs btn-add-category"
+                               onclick="appendCreateCategoryBlock();">
                                 <i class="fa fa-plus"></i> Add Category
                             </a>
                         </div>
@@ -222,4 +231,75 @@
             })
         }
     </script>
+
+    {{--TOUR--}}
+    <script type="text/javascript" src="{{asset('js/product-tour.js')}}"></script>
+    <script type="text/javascript">
+        var tour = new Tour({
+            steps: [
+                {
+                    element: ".btn-add-category",
+                    content: "Add a category of products you wish to track."
+                },
+                {
+                    element: ".btn-add-product",
+                    content: "Add products within each Category."
+                },
+                {
+                    element: ".btn-add-site:first",
+                    content: "Add webpages from your competitors' Sites for each Product."
+                },
+                {
+                    element: ".action-cell:first",
+                    content: "You can edit or delete a Category, Product or Site.",
+                    placement: "left"
+                },
+                {
+                    element: ".btn-report:first",
+                    content: "You can schedule a report for Categories and Products.",
+                    placement: "left"
+                },
+                {
+                    element: ".btn-alert:first",
+                    content: "You can set an Alert for Products and Sites.",
+                    placement: "left"
+                },
+                {
+                    element: ".btn-chart",
+                    content: "You can generate a chart for Categories, Products and Sites and add them to your Dashboard.",
+                    placement: "left"
+                }
+            ],
+            backdrop: true,
+            storage: false,
+            backdropPadding: 20
+        });
+        tour.init();
+
+        function startTour() {
+            tour.restart();
+        }
+    </script>
+    @if(auth()->user()->preference('PRODUCT_TOUR_VISITED') != 1)
+        <script type="text/javascript">
+            $(function () {
+                startTour();
+                setTourVisited();
+            });
+
+            function setTourVisited() {
+                $.ajax({
+                    "url": "preference/PRODUCT_TOUR_VISITED/1",
+                    "method": "put",
+                    "dataType": "json",
+                    "success": function (response) {
+
+                    },
+                    "error": function (xhr, status, error) {
+
+                    }
+                })
+            }
+        </script>
+    @endif
 @stop

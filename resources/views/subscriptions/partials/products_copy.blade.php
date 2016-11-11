@@ -243,13 +243,13 @@
     }
 
     .plan.selected .button button,
-    .plan.chosen .button button{
+    .plan.chosen .button button {
         background: #473661;
         color: #fff;
     }
 
     .plan.selected .title h2,
-    .plan.chosen .title h2{
+    .plan.chosen .title h2 {
         color: #4c416a;
     }
 
@@ -369,10 +369,12 @@
                             </ul>
                         </li>
                         <li class="button">
-                            <button href="#"
-                                    class="btn-select" {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id? 'disabled="disabled"': '' }}>
+                            @if(\Request::route()->getName() == "subscription.edit")
 
-                                @if(\Request::route()->getName() == "subscription.edit")
+                                <button href="#"
+                                        class="btn-select"
+                                        {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id? 'disabled="disabled"': '' }}
+                                        onclick="submitSubscriptionUpdateOnclick(this)">
                                     @if($chosenAPIProduct->price_in_cents > $productFamily->product->price_in_cents)
                                         Downgrade
                                     @elseif($chosenAPIProductID == $productFamily->product->id)
@@ -380,14 +382,21 @@
                                     @else
                                         Upgrade
                                     @endif
-                                @else
+                                </button>
+                            @elseif(\Request::route()->getName() == "subscription.back")
+                                <button href="#" class="btn-select" onclick="subscribeNowOnClick(this);">
+                                        Subscribe Now
+                                </button>
+                            @else
+                                <button href="#"
+                                        class="btn-select" {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)? 'disabled="disabled"': '' }}>
                                     @if(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)
                                         Selected
                                     @else
                                         Select
                                     @endif
-                                @endif
-                            </button>
+                                </button>
+                            @endif
                         </li>
                     </ul>
                 </li>

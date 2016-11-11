@@ -29,7 +29,7 @@
             </div>
             {!! Form::close() !!}
             &nbsp;
-            <button class="btn btn-primary btn-xs" onclick="showAddSiteForm(this); return false;">
+            <button class="btn btn-primary btn-xs btn-add-site" onclick="showAddSiteForm(this); return false;">
                 <i class="fa fa-plus"></i> Add Site
             </button>
         </th>
@@ -38,7 +38,7 @@
                data-toggle="tooltip" title="chart">
                 <i class="fa fa-line-chart"></i>
             </a>
-            <a href="#" class="btn-action" onclick="showProductAlertForm(this); return false;"
+            <a href="#" class="btn-action btn-alert" onclick="showProductAlertForm(this); return false;"
                data-toggle="tooltip" title="alert">
                 <i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
             </a>

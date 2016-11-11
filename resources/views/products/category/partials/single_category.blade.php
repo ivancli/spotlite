@@ -28,25 +28,25 @@
                     </div>
                     {!! Form::close() !!}
                     &nbsp;
-                    <button class="btn btn-primary btn-xs" onclick="appendCreateProductBlock(this)">
+                    <button class="btn btn-primary btn-xs btn-add-product" onclick="appendCreateProductBlock(this)">
                         <i class="fa fa-plus"></i> Add Product
                     </button>
                 </th>
 
                 <th class="text-right action-cell category-th">
-                    <a href="#" class="btn-action" data-toggle="tooltip" title="chart"
+                    <a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"
                        onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
                         <i class="fa fa-line-chart"></i>
                     </a>
                     {{--<a href="#" class="btn-action" data-toggle="tooltip" title="alert">--}}
                     {{--<i class="fa fa-bell-o"></i>--}}
                     {{--</a>--}}
-                    <a href="#" class="btn-action" onclick="showCategoryReportTaskForm(this); return false;"
+                    <a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"
                        data-toggle="tooltip"
                        title="report">
                         <i class="fa {{!is_null($category->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
                     </a>
-                    <a href="#" class="btn-action" onclick="toggleEditCategoryName(this); return false;"
+                    <a href="#" class="btn-action btn-edit-category" onclick="toggleEditCategoryName(this); return false;"
                        data-toggle="tooltip"
                        title="edit">
                         <i class="fa fa-pencil-square-o"></i>
