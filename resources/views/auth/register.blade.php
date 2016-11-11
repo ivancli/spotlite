@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                @include('subscriptions.partials.products_copy')
+                @include('subscriptions.partials.products')
             </div>
         </div>
         <div class="register-box-body">
