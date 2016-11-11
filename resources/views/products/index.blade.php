@@ -242,7 +242,7 @@
                     content: "Add a category of products you wish to track."
                 },
                 {
-                    element: ".btn-add-product",
+                    element: ".btn-add-product:first",
                     content: "Add products within each Category."
                 },
                 {
@@ -265,7 +265,7 @@
                     placement: "left"
                 },
                 {
-                    element: ".btn-chart",
+                    element: ".btn-chart:first",
                     content: "You can generate a chart for Categories, Products and Sites and add them to your Dashboard.",
                     placement: "left"
                 }
