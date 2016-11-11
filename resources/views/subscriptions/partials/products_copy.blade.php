@@ -393,7 +393,7 @@
                                     @if(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)
                                         Selected
                                     @else
-                                        Select
+                                        Start Free Trial
                                     @endif
                                 </button>
                             @endif

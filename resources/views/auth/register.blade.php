@@ -77,7 +77,7 @@
             });
             $(".btn-select").on("click", function () {
                 /* button */
-                $(".btn-select").text("Select").prop("disabled", false);
+                $(".btn-select").text("Start Free Trial").prop("disabled", false);
                 $(".plan.selected").removeClass("selected");
                 $(this).text("Selected").prop("disabled", true);
                 var $plan = $(this).closest(".plan");
