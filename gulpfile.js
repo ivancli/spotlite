@@ -81,6 +81,18 @@ elixir(function (mix) {
         'resources/assets/js/sidebar.js',
         'resources/assets/js/spotlite.js'
     ], "public/js/main.js", "./");
+    mix.scripts([
+        'vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js',
+        "node_modules/bootstrap/dist/js/bootstrap.js",
+        "node_modules/select2/dist/js/select2.js",
+        'vendor/almasaeed2010/adminlte/plugins/slimScroll/jquery.slimscroll.min.js',
+        'vendor/almasaeed2010/adminlte/plugins/fastclick/fastclick.js',
+        'vendor/almasaeed2010/adminlte/dist/js/app.js',
+        'vendor/almasaeed2010/adminlte/plugins/iCheck/icheck.js',
+        'resources/assets/js/commonFunctions.js',
+        'resources/assets/js/google_analytics.js',
+        'resources/assets/js/spotlite.js'
+    ], "public/js/auth.js", "./");
 
     mix.scripts([
         'node_modules/bootstrap-tour/build/js/bootstrap-tour.js'

@@ -4,7 +4,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
 {{--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">--}}
 <style>
-    body, h1, h2, h3, a, .main-header .header-label, div{
+    body, h1, h2, h3, a, .main-header .header-label, div {
         font-family: 'Lato', sans-serif;
     }
 </style>
@@ -39,9 +39,16 @@
         color: #333;
         text-decoration: none;
     }
+
+    .logo {
+        text-align: center;
+    }
 </style>
 
 <article>
+    <div class="logo">
+        <img src="{{asset("images/logo.png")}}" alt="" width="400">
+    </div>
     <h1>We&rsquo;ll be back soon!</h1>
     <div>
         <p>
