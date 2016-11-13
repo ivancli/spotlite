@@ -1,43 +1,54 @@
-@extends('layouts.adminlte')
-@section('title', 'Forgot Password')
+@extends('layouts.adminlte_auth')
+@section('title', 'Account Login')
 @section('content')
-    <div class="row">
-        <div class="col-lg-offset-4 col-lg-4 col-md-offset-3 col-md-6 col-sm-12">
-            <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Forgot Password</h3>
+
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="{{route('dashboard.index')}}">
+                <img src="{{asset('images/logo.png')}}" alt="" width="250">
+            </a>
+        </div>
+        <div class="login-box-body">
+            <p class="login-box-msg">Sign in to start your session</p>
+            @if(isset($errors))
+                <ul class="text-danger">
+                    @foreach ($errors->all('<li>:message</li>') as $message)
+                        {!! $message !!}
+                    @endforeach
+                </ul>
+            @endif
+            <ul class="text-danger errors-container">
+            </ul>
+            {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
+
+            <div class="form-group has-feedback">
+                {!! Form::email('email', null, array('class' => 'form-control', 'placeholder' => 'Email')) !!}
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-sm-push-6 text-right">
+                    {!! Form::submit('Forgot', ["class"=>"btn btn-default btn-block btn-flat", "href"=>"#"]) !!}
                 </div>
-                <div class="box-body">
-                    <div class="um-form-container">
-                        <ul class="text-danger errors-container">
-                        </ul>
-                        {!! Form::open(array('route' => 'password.post', 'method' => 'post', "class" => "form-horizontal sl-form-horizontal", "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
-
-                        <div class="form-group required">
-                            {!! Form::label('email', 'Email', array('class' => 'control-label col-md-3')) !!}
-                            <div class="col-md-9">
-                                {!! Form::email('email', null, array('class' => 'form-control')) !!}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <a href="{{route('login.get')}}">Back to login page</a>
-                            </div>
-                            <div class="col-sm-6 text-right">
-                                {!! Form::submit('Forgot', ["class"=>"btn btn-default btn-sm", "href"=>"#"]) !!}
-                            </div>
-                        </div>
-                        {!! Form::close() !!}
+                <div class="col-sm-6 col-sm-pull-6">
+                    <div style="padding-top: 5px; padding-bottom: 5px;">
+                        <a href="{{route('login.get')}}">Back to login page</a>
                     </div>
                 </div>
             </div>
+            {!! Form::close() !!}
         </div>
     </div>
 @stop
 
 @section('scripts')
     <script type="text/javascript">
+        $(function () {
+            $(".icheck").iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
+            });
+        })
         function submitForgotPassword() {
             showLoading();
             $.ajax({
@@ -75,6 +86,5 @@
                 }
             })
         }
-
     </script>
 @stop

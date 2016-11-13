@@ -90,8 +90,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/dist/js/app.js',
         'vendor/almasaeed2010/adminlte/plugins/iCheck/icheck.js',
         'resources/assets/js/commonFunctions.js',
-        'resources/assets/js/google_analytics.js',
-        'resources/assets/js/spotlite.js'
+        'resources/assets/js/google_analytics.js'
     ], "public/js/auth.js", "./");
 
     mix.scripts([
