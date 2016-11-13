@@ -342,7 +342,7 @@
                                                 <span>Updates</span> Every Day
                                             @else
                                                 <span>Updates</span>
-                                                Every {{$productFamily->product->criteria->frequency}} Hours
+                                                Every {{$productFamily->product->criteria->frequency}} {{str_plural('Hour', $productFamily->product->criteria->frequency)}}
                                             @endif
                                         </li>
                                     @endif

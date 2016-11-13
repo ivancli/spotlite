@@ -10,17 +10,24 @@ namespace App\Events\Products\Report;
 
 
 use App\Events\Event;
+use App\Models\Report;
+use App\Models\ReportTask;
 use Illuminate\Queue\SerializesModels;
 
 class ReportCreating extends Event
 {
     use SerializesModels;
 
+    public $reportTask;
+
     /**
      * Create a new event instance.
+     * @param ReportTask $reportTask
+     * @internal param Report $report
      */
-    public function __construct()
+    public function __construct(ReportTask $reportTask)
     {
+        $this->reportTask = $reportTask;
     }
 
     /**

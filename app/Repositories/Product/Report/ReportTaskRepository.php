@@ -71,7 +71,7 @@ class ReportTaskRepository implements ReportTaskContract
 
     public function generateCategoryReport(ReportTask $reportTask)
     {
-        event(new ReportCreating());
+        event(new ReportCreating($reportTask));
         $category = $reportTask->reportable;
 
         $data = $category;
@@ -110,7 +110,7 @@ class ReportTaskRepository implements ReportTaskContract
 
     public function generateProductReport(ReportTask $reportTask)
     {
-        event(new ReportCreating());
+        event(new ReportCreating($reportTask));
         $product = $reportTask->reportable;
 
 
