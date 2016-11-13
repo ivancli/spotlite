@@ -16,9 +16,7 @@
 
 
 @section('links')
-    @if(auth()->user()->preference('PRODUCT_TOUR_VISITED') != 1)
-        <link rel="stylesheet" href="{{asset('css/product-tour.css')}}">
-    @endif
+    <link rel="stylesheet" href="{{asset('css/product-tour.css')}}">
 @stop
 
 
@@ -279,27 +277,31 @@
         function startTour() {
             tour.restart();
         }
+
+        function setTourVisited() {
+            $.ajax({
+                "url": "preference/PRODUCT_TOUR_VISITED/1",
+                "method": "put",
+                "dataType": "json",
+                "success": function (response) {
+
+                },
+                "error": function (xhr, status, error) {
+
+                }
+            })
+        }
+
+        function tourNotYetVisit() {
+            return user.preferences.PRODUCT_TOUR_VISITED != 1
+        }
     </script>
     @if(auth()->user()->preference('PRODUCT_TOUR_VISITED') != 1)
         <script type="text/javascript">
             $(function () {
-                startTour();
-                setTourVisited();
+//                startTour();
+//                setTourVisited();
             });
-
-            function setTourVisited() {
-                $.ajax({
-                    "url": "preference/PRODUCT_TOUR_VISITED/1",
-                    "method": "put",
-                    "dataType": "json",
-                    "success": function (response) {
-
-                    },
-                    "error": function (xhr, status, error) {
-
-                    }
-                })
-            }
         </script>
     @endif
 @stop
