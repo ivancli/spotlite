@@ -155,15 +155,19 @@ function randomString(length, chars) {
 function showLoading() {
     var $spinner = $("<div>").addClass("spinner").append(
         $("<div>").addClass("spinner-backdrop"),
-        $("<img>").attr({
-            "src": "/images/spinner.gif"
-        }).addClass("spinner-img")
-    );
+        $("<div>").addClass("spinner-core")
+        // $("<img>").attr({
+        //     "src": "/images/spinner.gif"
+        // }).addClass("spinner-img")
+    ).hide();
     $("body").append($spinner);
+    $spinner.fadeIn(100);
 }
 
 function hideLoading() {
-    $(".spinner").remove();
+    $(".spinner").fadeOut(function () {
+        $(this).remove();
+    });
 }
 
 Number.prototype.formatMoney = function (c, d, t) {
