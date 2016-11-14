@@ -16,7 +16,7 @@
 
                 <p>
                     Send me a alert when a price goes
-                    &nbsp; {!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null) !!}
+                    &nbsp; {!! Form::select('operator', array('=<'=>'equal or below', '<' => 'below', '=>'=>'equal or above', '>'=>'above'), null) !!}
                     &nbsp; {!! Form::select('comparison_price_type', !is_null($site->product->myPriceSite()) ? array('specific price' => 'specific price', 'my price' => 'my price') : array('specific price' => 'specific price'), null, array( 'id'=>'sel-price-type')) !!}
                     <span class="specific-price-sentence">
                         (
