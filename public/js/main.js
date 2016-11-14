@@ -35766,7 +35766,7 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
             this.getinputWrapper.className = 'nl-ti-input';
             this.inputsubmit = document.createElement('button');
             this.inputsubmit.className = 'nl-field-go';
-            this.inputsubmit.innerHTML = '<i class="fa fa-ok"></i>';
+            this.inputsubmit.innerHTML = 'Go';
             this.getinputWrapper.appendChild(this.getinput);
             this.getinputWrapper.appendChild(this.inputsubmit);
             this.optionsList.appendChild(this.getinputWrapper);
@@ -35820,7 +35820,6 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                     self.close();
                 });
             }
-
         },
         _open: function () {
             if (this.open) {
