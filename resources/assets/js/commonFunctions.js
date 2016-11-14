@@ -172,9 +172,6 @@ function hideLoading() {
     var $spinnerElement = $(".spinner-backdrop, .spinner-core");
     $spinnerElement.fadeOut(function () {
         $(this).closest(".spinner").remove();
-        if ($.isFunction(callback)) {
-            callback();
-        }
     });
 }
 
