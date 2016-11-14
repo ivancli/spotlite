@@ -10,60 +10,40 @@
                 <ul class="text-danger errors-container">
                 </ul>
 
-                {!! Form::model($product->alert, array('route' => array('alert.product.update', $product->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-update")) !!}
+                {!! Form::model($product->alert, array('route' => array('alert.product.update', $product->getKey()), 'method'=>'put', "onsubmit"=>"return false", "id"=>"frm-alert-product-update", "class" => "nl-form")) !!}
                 <input type="hidden" name="alert_owner_id" value="{{$product->getKey()}}">
                 <input type="hidden" name="alert_owner_type" value="product">
 
 
-                <p style="line-height: 45px;">
+                <p>
                     Send me a alert when a price goes
-                    &nbsp; {!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control form-control-inline']) !!}
-                    &nbsp; {!! Form::select('comparison_price_type', !is_null($product->myPriceSite()) ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control form-control-inline', 'id'=>'sel-price-type')) !!}
-                    <br>
+                    &nbsp; {!! Form::select('operator', array('=<'=>'equal or below', '<' => 'below', '=>'=>'equal or above', '>'=>'above'), null) !!}
+                    &nbsp; {!! Form::select('comparison_price_type', !is_null($product->myPriceSite()) ? array('specific price' => 'specific price', 'my price' => 'my price') : array('specific price' => 'Specific Price'), null, array('id'=>'sel-price-type')) !!}
                     <span class="specific-price-sentence">
                         (
-                        $ {!! Form::text('comparison_price', is_null($product->alert) ? null : number_format($product->alert->comparison_price, 2, '.', ''), array('class' => 'form-control form-control-inline', 'placeholder' => '0.00' , 'id' => 'txt-comparison-price')) !!}
+                        $ {!! Form::text('comparison_price', is_null($product->alert) ? null : number_format($product->alert->comparison_price, 2, '.', ''),
+                        array('placeholder' => 'enter a price' , 'id' => 'txt-comparison-price')) !!}
                         )
                     </span>
+                    <br>
                     excluding &nbsp;
                     <span style="line-height: normal;">
-                        {!! Form::select('site_id[]', $sites, $excludedSites, array('class' => 'form-control form-control-inline', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}
+                        {!! Form::select('site_id[]', $sites, $excludedSites, array('id'=>'sel-site', 'placeholder' => 'select a site')) !!}
                         .
                         </span>
-                    <div>
+                    <p>
                         This alert should be sent
                         &nbsp;
-                        {!! Form::select('one_off', array('n'=>'every time', 'y' => 'just once'), is_null($product->alert) ? null : $product->alert->one_off, ['class'=>'form-control form-control-inline']) !!}
-                    </div>
+                        {!! Form::select('one_off', array('n'=>'every time', 'y' => 'just once'), is_null($product->alert) ? null : $product->alert->one_off) !!}
+                    </p>
                 </p>
 
-
-                {{--<div class="form-group required">--}}
-                    {{--{!! Form::label('comparison_price_type', 'Trigger', array('class' => 'control-label')) !!}--}}
-                    {{--{!! Form::select('comparison_price_type', !is_null($product->myPriceSite()) ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array('class' => 'form-control sl-form-control', 'id'=>'sel-price-type')) !!}--}}
-                {{--</div>--}}
-                {{--<div class="form-group required">--}}
-                    {{--{!! Form::label('operator', 'Trend', array('class' => 'control-label')) !!}--}}
-                    {{--{!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null, ['class'=>'form-control sl-form-control']) !!}--}}
-                {{--</div>--}}
-                {{--<div class="form-group required" id="comparison-price-container"--}}
-                     {{--style="{{isset($product->alert) && $product->alert->comparison_price_type == "my price" ? 'display: none;' : ''}}">--}}
-                    {{--{!! Form::label('comparison_price', 'Price Point', array('class' => 'control-label')) !!}--}}
-                    {{--{!! Form::text('comparison_price', is_null($product->alert) ? null : number_format($product->alert->comparison_price, 2, '.', ''), array('class' => 'form-control sl-form-control', 'id' => 'txt-comparison-price')) !!}--}}
-                {{--</div>--}}
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('site_id[]', 'Exclude', array('class' => 'control-label')) !!}--}}
-                    {{--{!! Form::select('site_id[]', $sites, $excludedSites, array('class' => 'form-control', 'multiple' => 'multiple', 'id'=>'sel-site')) !!}--}}
-                {{--</div>--}}
                 <div class="form-group required">
                     {!! Form::label('email[]', 'Email Address', array('class' => 'control-label')) !!}
                     {!! Form::select('email[]', [auth()->user()->email], [auth()->user()->email], ['class'=>'form-control', 'multiple' => 'multiple', 'id'=>'sel-email', 'disabled' => 'disabled']) !!}
                     <input type="hidden" name="email[]" value="{{auth()->user()->email}}">
                 </div>
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('one_off', 'One-off', array('class' => 'control-label')) !!}--}}
-                    {{--{!! Form::checkbox('one_off', "y", is_null($product->alert) ? null : $product->alert->one_off == 'y', array('class' => 'sl-form-control')) !!}--}}
-                {{--</div>--}}
+                <div class="nl-overlay"></div>
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
@@ -78,7 +58,6 @@
     <script type="text/javascript">
         function modalReady(options) {
             updateSentenceVisibility();
-            $("#sel-site").select2();
             $("#sel-email").select2({
                 "tags": true,
                 "tokenSeparators": [',', ' ', ';'],
@@ -87,6 +66,7 @@
             $("#sel-price-type").on("change", function () {
                 updateSentenceVisibility();
             });
+            var nlform = new NLForm($("#frm-alert-product-update").get(0));
 
             $("#btn-update-product-alert").on("click", function () {
                 submitUpdateProductAlert(function (response) {

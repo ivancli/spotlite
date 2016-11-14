@@ -42,6 +42,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.css',
         'vendor/almasaeed2010/adminlte/plugins/icheck/square/blue.css',
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
+        'resources/assets/css/nlform.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.scripts([
@@ -76,6 +77,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/daterangepicker/daterangepicker.js',
         'vendor/almasaeed2010/adminlte/plugins/iCheck/icheck.js',
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.js',
+        'resources/assets/js/nlform.js',
         'resources/assets/js/commonFunctions.js',
         'resources/assets/js/google_analytics.js',
         'resources/assets/js/sidebar.js',

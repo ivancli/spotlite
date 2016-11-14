@@ -171,7 +171,9 @@ class AlertController extends Controller
         $alert->excludedSites()->detach();
         if ($request->has('site_id')) {
             foreach ($request->get('site_id') as $site) {
-                $alert->excludedSites()->attach($site);
+                if($site != ''){
+                    $alert->excludedSites()->attach($site);
+                }
             }
         }
 
