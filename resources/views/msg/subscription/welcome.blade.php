@@ -72,6 +72,16 @@
                         </tr>
                         <tr>
                             <td colspan="4" align="center">
+                                <div>Would you like us to set up your products and competitors for you?</div>
+                                <div class="text-center">
+                                    <a href="#" style="font-size: 50px; color: #494b4b">
+                                        <i class="fa fa-cogs"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="center">
                                 <div>If you have any questions or concerns, don't hesitate to get in touch!</div>
                                 <div class="text-center">
                                     <a href="mailto:admin@spotlite.com.au" style="font-size: 50px; color: #b97600">
