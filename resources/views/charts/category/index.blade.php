@@ -105,7 +105,7 @@
                                                         &nbsp;
                                                         <input type="text" name="dashboard_widget_name"
                                                                id="txt-dashboard-widget-name"
-                                                               placeholder="chart name">
+                                                               placeholder="enter a chart name">
                                                         &nbsp;
                                                         and add it to my
                                                         &nbsp;

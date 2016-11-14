@@ -17,10 +17,10 @@
                 <p>
                     Send me a alert when a price goes
                     &nbsp; {!! Form::select('operator', array('=<'=>'Equal or Below', '<' => 'Below', '=>'=>'Equal or Above', '>'=>'Above'), null) !!}
-                    &nbsp; {!! Form::select('comparison_price_type', !is_null($site->product->myPriceSite()) ? array('specific price' => 'Specific Price', 'my price' => 'My Price') : array('specific price' => 'Specific Price'), null, array( 'id'=>'sel-price-type')) !!}
+                    &nbsp; {!! Form::select('comparison_price_type', !is_null($site->product->myPriceSite()) ? array('specific price' => 'specific price', 'my price' => 'my price') : array('specific price' => 'specific price'), null, array( 'id'=>'sel-price-type')) !!}
                     <span class="specific-price-sentence">
                         (
-                        $ {!! Form::text('comparison_price', is_null($site->alert) ? null : number_format($site->alert->comparison_price, 2, '.', ''), array('placeholder' => '0.00' , 'id' => 'txt-comparison-price')) !!}
+                        $ {!! Form::text('comparison_price', is_null($site->alert) ? null : number_format($site->alert->comparison_price, 2, '.', ''), array('placeholder' => 'enter a price' , 'id' => 'txt-comparison-price')) !!}
                         )
                     </span>
                 <p>

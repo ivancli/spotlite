@@ -98,7 +98,7 @@
                                                                 <input type="text" name="dashboard_widget_name"
                                                                        id="txt-dashboard-widget-name"
                                                                        class="form-control form-control-inline"
-                                                                       placeholder="chart name">
+                                                                       placeholder="enter a chart name">
                                                                 &nbsp;
                                                                 and add it to my
                                                                 &nbsp;
