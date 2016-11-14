@@ -34,19 +34,20 @@
         ga('create', '{{config('google_analytics.ua_code')}}', 'auto');
         ga('send', 'pageview');
     </script>
+    <script type="text/javascript" src="{{asset('js/zendesk.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
 <div class="wrapper">
 
-    @include('layout_partials.default_header')
+@include('layout_partials.default_header')
 
-    <!-- =============================================== -->
+<!-- =============================================== -->
 
     <!-- Left side column. contains the sidebar -->
-    @include('layout_partials.default_sidebar')
+@include('layout_partials.default_sidebar')
 
-    <!-- =============================================== -->
+<!-- =============================================== -->
 
     @if(Auth::check() && Auth::user()->last_login)
 

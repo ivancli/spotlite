@@ -32,7 +32,7 @@
         ga('create', '{{config('google_analytics.ua_code')}}', 'auto');
         ga('send', 'pageview');
     </script>
-
+    <script type="text/javascript" src="{{asset('js/zendesk.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">

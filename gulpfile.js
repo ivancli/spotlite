@@ -94,6 +94,10 @@ elixir(function (mix) {
     ], "public/js/auth.js", "./");
 
     mix.scripts([
+        'resources/assets/js/zendesk_widget.js'
+    ], "public/js/zendesk.js", "./");
+
+    mix.scripts([
         'node_modules/bootstrap-tour/build/js/bootstrap-tour.js'
     ], "public/js/product-tour.js", './');
 
