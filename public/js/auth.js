@@ -10363,20 +10363,28 @@ function randomString(length, chars) {
 }
 
 function showLoading() {
-    var $spinner = $("<div>").addClass("spinner").append(
-        $("<div>").addClass("spinner-backdrop"),
-        $("<div>").addClass("spinner-core")
-        // $("<img>").attr({
-        //     "src": "/images/spinner.gif"
-        // }).addClass("spinner-img")
-    ).hide();
-    $("body").append($spinner);
-    $spinner.fadeIn(100);
+    if ($(".spinner").length == 0) {
+        var $spinner = $("<div>").addClass("spinner").append(
+            $("<div>").addClass("spinner-backdrop"),
+            $("<div>").addClass("spinner-core")
+            // $("<img>").attr({
+            //     "src": "/images/spinner.gif"
+            // }).addClass("spinner-img")
+        );
+        $spinner.find(".spinner-backdrop").hide();
+        $spinner.find(".spinner-core").hide();
+        $("body").append($spinner);
+        $(".spinner-backdrop, .spinner-core").fadeIn();
+    }
 }
 
 function hideLoading() {
-    $(".spinner").fadeOut(function () {
-        $(this).remove();
+    var $spinnerElement = $(".spinner-backdrop, .spinner-core");
+    $spinnerElement.fadeOut(function () {
+        $(this).closest(".spinner").remove();
+        if ($.isFunction(callback)) {
+            callback();
+        }
     });
 }
 
