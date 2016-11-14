@@ -70,7 +70,7 @@ class SendReport extends Job implements ShouldQueue
             foreach ($this->reportTask->emails as $email) {
                 $reportTask = $this->reportTask;
                 /* TODO generate email with attachment and send to user */
-                event(new ReportSent($report, $email));
+                event(new ReportSent($reportTask, $email));
                 dispatch((new SendMail($view,
                     compact(['report', 'reportTask']),
                     array(
