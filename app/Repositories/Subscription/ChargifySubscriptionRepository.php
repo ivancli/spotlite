@@ -49,7 +49,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
     public function syncUserSubscription(User $user)
     {
         $subscription = $user->subscription;
-        if (!is_null($subscription)) {
+        if (!$user->isStaff() && !is_null($subscription)) {
 
             $this->updateCreditCardDetails($subscription);
 
