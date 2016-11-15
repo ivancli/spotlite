@@ -46,9 +46,17 @@ class AdminSiteFilters extends QueryFilter
         });
     }
 
-    public function status($status)
+    public function status($status = null)
     {
-        return $this->builder->where('status', $status);
+        if (!is_null($status)) {
+            $this->builder->where(function ($query) use ($status) {
+                foreach ($status as $single_status) {
+                    $query->orWhere('status', $single_status);
+                }
+            });
+            return $this->builder;
+        }
+        return $this->builder;
     }
 
     /**

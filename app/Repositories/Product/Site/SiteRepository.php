@@ -86,7 +86,9 @@ class SiteRepository implements SiteContract
         $output = new \stdClass();
         $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
         $output->recordTotal = $this->getSiteCount();
-        if ($this->request->has('search') && $this->request->get('search')['value'] != '') {
+        if ($this->request->has('status') && $this->request->get('status') != ''
+            || ($this->request->has('search') && $this->request->get('search')['value'] != '')
+        ) {
             $output->recordsFiltered = $sites->count();
         } else {
             $output->recordsFiltered = $this->getSiteCount();

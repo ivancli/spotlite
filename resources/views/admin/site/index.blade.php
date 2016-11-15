@@ -11,15 +11,15 @@
                 <div class="box-body toolbar">
                     <div class="form-inline">
                         Filter by status &nbsp;
-                        <select id="sel-status-filter" class="form-control sl-form-control"
+                        <select id="sel-status-filter" class="form-control sl-form-control" multiple="multiple"
                                 onchange="reloadSiteTable();">
-                            <option value=""></option>
                             <option value="ok">OK</option>
                             <option value="fail_html">No HTML</option>
                             <option value="fail_price">Incorrect Price Format</option>
                             <option value="fail_xpath">Incorrect xPath</option>
                             <option value="null_xpath">No xPath</option>
                             <option value="waiting">Waiting</option>
+                            <option value="sample">Sample</option>
                         </select>
                     </div>
                 </div>
@@ -58,6 +58,8 @@
     <script type="text/javascript">
         var tblSite = null;
         $(function () {
+            $("#sel-status-filter").select2();
+
             jQuery.fn.dataTable.Api.register('processing()', function (show) {
                 return this.iterator('table', function (ctx) {
                     ctx.oApi._fnProcessingDisplay(ctx, show);
@@ -281,7 +283,7 @@
                                     }).append(
                                             $("<i>").addClass("glyphicon glyphicon-globe")
                                     ).addClass("text-muted"),
-                                    "&nbsp;",
+                                    "&nbsp;&nbsp;",
                                     $("<div>").addClass("btn-group").attr({
                                         "data-toggle": "tooltip",
                                         "title": "Update status"
@@ -309,7 +311,7 @@
                                                     )
                                             )
                                     ),
-                                    "&nbsp;",
+                                    "&nbsp;&nbsp;",
                                     $("<a>").attr({
                                         "href": "#",
                                         "onclick": 'showEditCrawlerForm(this); return false;',
