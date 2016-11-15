@@ -454,7 +454,37 @@ class SiteController extends Controller
         } else {
             /*TODO implement this if needed*/
         }
+    }
 
+    /**
+     * @param Request $request
+     * @return array|\Illuminate\Http\JsonResponse
+     */
+    public function updateOrder(Request $request)
+    {
+        /*TODO validation here*/
+        $status = false;
+        if ($request->has('order')) {
+            $order = $request->get('order');
+            foreach ($order as $key => $ord) {
+                $site = $this->siteRepo->getSite($ord['site_id']);
+                if (!is_null($site) && intval($ord['site_order']) != 0) {
+                    $site->site_order = intval($ord['site_order']);
+                    $site->save();
+                }
+            }
+            $status = true;
+        }
+
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if needed*/
+        }
     }
 
 

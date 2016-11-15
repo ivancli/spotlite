@@ -82,7 +82,7 @@
                     <tbody>
                     {{--sites here--}}
                     @if(!is_null($product->sites))
-                        @foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_id')->get() as $site)
+                        @foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)
                             @include('products.site.partials.single_site')
                         @endforeach
                     @endif
@@ -94,6 +94,62 @@
     </tr>
     </tbody>
     <script type="text/javascript">
+        var siteDrake{{$product->getKey()}} = null;
+
+        $(function(){
+            siteDrake{{$product->getKey()}} = dragula([$("#product-{{$product->getKey()}} > table > tbody").get(0)], {
+//                moves: function (el, container, handle) {
+//                    return $(handle).hasClass("btn-product-dragger") || $(handle).closest(".btn-product-dragger").length > 0;
+//                }
+            }).on('drop', function (el, target, source, sibling) {
+                updateSiteOrder({{$product->getKey()}});
+            });
+        });
+
+        function assignSiteOrderNumber(product_id) {
+            $(".product-wrapper").filter(function () {
+                return $(this).attr("data-product-id") == product_id;
+            }).find(".site-wrapper").each(function (index) {
+                $(this).attr("data-order", index + 1);
+            });
+        }
+
+        function updateSiteOrder(product_id) {
+            assignSiteOrderNumber(product_id);
+            var orderList = [];
+            $(".product-wrapper").filter(function () {
+                return $(this).attr("data-product-id") == product_id;
+            }).find(".site-wrapper").filter(function () {
+                return !$(this).hasClass("gu-mirror");
+            }).each(function () {
+                if ($(this).attr("data-site-id")) {
+                    var siteId = $(this).attr("data-site-id");
+                    var siteOrder = parseInt($(this).attr("data-order"));
+                    orderList.push({
+                        "site_id": siteId,
+                        "site_order": siteOrder
+                    });
+                }
+            });
+            $.ajax({
+                "url": "{{route('site.order')}}",
+                "method": "put",
+                "data": {
+                    "order": orderList
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    if (response.status == false) {
+                        alertP("Error", "Unable to update site order, please try again later.");
+                    } else {
+                        gaMoveSite();
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    alertP("Error", "Unable to update product order, please try again later.");
+                }
+            })
+        }
 
         function btnDeleteProductOnClick(el) {
             confirmP("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?", {

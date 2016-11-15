@@ -36452,6 +36452,10 @@ function gaMoveProduct() {
     gaSendEvent("Products", "Move Product");
 }
 
+function gaMoveSite() {
+    gaSendEvent("Products", "Move Site");
+}
+
 function gaAddProductReport(params) {
     var label = gaFormatParams(params);
     gaSendEvent("Reports", "Add Product Report", label);

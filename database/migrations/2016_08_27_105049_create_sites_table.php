@@ -27,6 +27,7 @@ class CreateSitesTable extends Migration
             $table->decimal('price_diff', 20, 4)->nullable();
             $table->timestamp('last_crawled_at')->nullable();
             $table->text('comment')->nullable();
+            $table->integer('site_order')->unsigned()->nullable();
             $table->timestamps();
         });
     }
