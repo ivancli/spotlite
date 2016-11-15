@@ -3,7 +3,7 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            @if(auth()->check() && (auth()->user()->subscription->isValid()) || auth()->user()->isStaff()))
+            @if(auth()->check() && (auth()->user()->isStaff() || auth()->user()->subscription->isValid())))
                 <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
