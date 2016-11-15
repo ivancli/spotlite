@@ -10,7 +10,7 @@
             <div class="box box-default">
                 <div class="box-header with-border text-right">
                     {{--<h3 class="box-title"></h3>--}}
-                    <button type="button" class="btn btn-primary btn-sm" onclick="showAddDashboardForm(this)">
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" onclick="showAddDashboardForm(this)">
                         Create New Dashboard
                     </button>
                 </div>
@@ -173,7 +173,7 @@
             confirmP("Delete dashboard", "Do you want to delete this dashboard?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         showLoading();
@@ -199,7 +199,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             })

@@ -11,7 +11,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{$user->first_name}} {{$user->last_name}}</h3>
                     <div class="box-tools pull-right">
-                        <a href="{{route('profile.edit')}}" class="btn btn-default btn-sm">Edit</a>
+                        <a href="{{route('profile.edit')}}" class="btn btn-default btn-sm btn-flat">Edit</a>
                     </div>
                 </div>
                 <div class="box-body">

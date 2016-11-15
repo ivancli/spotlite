@@ -96,11 +96,11 @@
                         })
                     },
                     "dismiss": true,
-                    "class": "btn-danger"
+                    "class": "btn-danger btn-flat"
                 },
                 "negative": {
                     "dismiss": true,
-                    "class": "btn-default"
+                    "class": "btn-default btn-flat"
                 }
             });
 

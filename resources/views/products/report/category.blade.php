@@ -109,11 +109,11 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-update-category-report">OK</button>
+                <button class="btn btn-primary btn-flat" id="btn-update-category-report">OK</button>
                 @if(!is_null($category->reportTask))
-                    <button class="btn btn-danger" id="btn-delete-category-report">Delete</button>
+                    <button class="btn btn-danger btn-flat" id="btn-delete-category-report">Delete</button>
                 @endif
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>
@@ -178,7 +178,7 @@
                 confirmP("Delete Report Schedule", "Are you sure you want to delete the {{$category->category_name}} Category Report?", {
                     "affirmative": {
                         "text": "Delete",
-                        "class": "btn-danger",
+                        "class": "btn-danger btn-flat",
                         "dismiss": true,
                         "callback": function () {
                             submitDeleteCategoryReportTask(function (response) {
@@ -206,7 +206,7 @@
                     },
                     "negative": {
                         "text": "Cancel",
-                        "class": "btn-default",
+                        "class": "btn-default btn-flat",
                         "dismiss": true
                     }
                 });

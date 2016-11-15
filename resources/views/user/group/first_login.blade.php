@@ -25,7 +25,7 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-create-group" onclick="groupStoreOnClick();">OK</button>
+                <button class="btn btn-primary btn-flat" id="btn-create-group" onclick="groupStoreOnClick();">OK</button>
             </div>
         </div>
     </div>

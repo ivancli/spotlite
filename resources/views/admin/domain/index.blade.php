@@ -166,7 +166,7 @@
                     $("<a>").attr({
                         "href": "#",
                         "onclick": "showAddDomainForm(); return false;"
-                    }).addClass("btn btn-default").text("Add Domain")
+                    }).addClass("btn btn-default btn-flat").text("Add Domain")
             )
         });
 
@@ -337,7 +337,7 @@
             confirmP("Delete domain", "Do you want to delete all preferences of this domain?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         showLoading();
@@ -364,7 +364,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             })

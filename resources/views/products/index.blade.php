@@ -32,7 +32,7 @@
                 <div class="box-body">
                     <div class="row m-b-10">
                         <div class="col-sm-12">
-                            <a href="#" class="btn btn-primary btn-xs btn-add-category"
+                            <a href="#" class="btn btn-primary btn-xs btn-add-category btn-flat"
                                onclick="appendCreateCategoryBlock();">
                                 <i class="fa fa-plus"></i> Add Category
                             </a>

@@ -13,7 +13,7 @@
                     <h3 class="box-title">Role List</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="{{route('um.role.create')}}" class="btn btn-default btn-sm">Create Role</a>
+                        <a href="{{route('um.role.create')}}" class="btn btn-default btn-sm btn-flat">Create Role</a>
                     </div>
                 </div>
                 <div class="box-body">

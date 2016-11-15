@@ -15,10 +15,10 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-create-dashboard-widget">
+                <button class="btn btn-primary btn-flat" id="btn-create-dashboard-widget">
                     Add Content
                 </button>
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>

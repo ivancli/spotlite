@@ -75,8 +75,8 @@ class UserEventSubscriber
         ));
 
         /*TODO disable the following line*/
-        if (!is_null($user->validSubscription())) {
-            $this->subscriptionRepo->updateCreditCardDetails($user->validSubscription());
+        if (!is_null($user->subscription)) {
+            $this->subscriptionRepo->updateCreditCardDetails($user->subscription);
         }
     }
 

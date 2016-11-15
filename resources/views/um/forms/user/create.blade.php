@@ -9,7 +9,7 @@
 {!! Form::open(array('route' => 'um.user.store', 'method'=>'post')) !!}
 @include('um.forms.user.user')
 <div class="text-right">
-    {!! Form::submit('Create', ["class"=>"btn btn-primary btn-sm"]) !!}
-    <a href="{{route('um.user.index')}}" class="btn btn-default btn-sm">Cancel</a>
+    {!! Form::submit('Create', ["class"=>"btn btn-primary btn-sm btn-flat"]) !!}
+    <a href="{{route('um.user.index')}}" class="btn btn-default btn-sm btn-flat">Cancel</a>
 </div>
 {!! Form::close() !!}

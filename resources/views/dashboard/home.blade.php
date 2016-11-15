@@ -139,7 +139,7 @@
             confirmP("Delete content", "Are you sure you want to delete the " + $(el).attr("data-name") + " Chart?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         showLoading();
@@ -166,7 +166,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             })

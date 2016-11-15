@@ -377,7 +377,7 @@
             confirmP("Delete Alert", "Are you sure you want to delete the " + $(el).attr("data-name") +" Alert?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         showLoading();
@@ -406,7 +406,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             })

@@ -13,7 +13,7 @@
                     <h3 class="box-title">Group List</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="{{route('um.group.create')}}" class="btn btn-default btn-sm">Create Group</a>
+                        <a href="{{route('um.group.create')}}" class="btn btn-default btn-sm btn-flat">Create Group</a>
                     </div>
                 </div>
                 <div class="box-body">

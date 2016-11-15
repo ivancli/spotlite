@@ -37,11 +37,11 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-update-site-alert">OK</button>
+                <button class="btn btn-primary btn-flat" id="btn-update-site-alert">OK</button>
                 @if(!is_null($site->alert))
-                    <button class="btn btn-danger" id="btn-delete-site-alert">Delete</button>
+                    <button class="btn btn-danger btn-flat" id="btn-delete-site-alert">Delete</button>
                 @endif
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>
@@ -97,7 +97,7 @@
                 confirmP("Delete alert", "Are you sure you want to delete the {{parse_url($site->site_url)['host']}} Site Alert?", {
                     "affirmative": {
                         "text": "Delete",
-                        "class": "btn-danger",
+                        "class": "btn-danger btn-flat",
                         "dismiss": true,
                         "callback": function () {
                             submitDeleteSiteAlert(function (response) {
@@ -125,7 +125,7 @@
                     },
                     "negative": {
                         "text": "Cancel",
-                        "class": "btn-default",
+                        "class": "btn-default btn-flat",
                         "dismiss": true
                     }
                 });

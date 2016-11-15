@@ -74,7 +74,7 @@
                             <td colspan="4" align="center">
                                 <div>Would you like us to set up your products and competitors for you?</div>
                                 <div class="text-center">
-                                    <a href="#" style="font-size: 50px; color: #494b4b">
+                                    <a href="{{route('onboarding.index')}}" style="font-size: 50px; color: #494b4b">
                                         <i class="fa fa-cogs"></i>
                                     </a>
                                 </div>

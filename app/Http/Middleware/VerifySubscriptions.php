@@ -23,7 +23,7 @@ class VerifySubscriptions
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->guest() || $request->user()->needSubscription()) {
+        if ($this->auth->guest() || (!$this->auth->user()->isStaff() && !$this->auth->user()->subscription->isValid())) {
             /* TODO replace route with actual value */
             return redirect()->route('subscription.back');
         }

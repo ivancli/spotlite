@@ -62,13 +62,13 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-check-price" style="display: none;">Check Price</button>
-                <button class="btn btn-primary" id="btn-edit-site">OK</button>
+                <button class="btn btn-primary btn-flat" id="btn-check-price" style="display: none;">Check Price</button>
+                <button class="btn btn-primary btn-flat" id="btn-edit-site">OK</button>
 
-                <button class="btn btn-warning" id="btn-report-error"
+                <button class="btn btn-warning btn-flat" id="btn-report-error"
                         style="{{(!isset($sites) || $sites->count() == 0) && !isset($targetDomain) ? 'display: none;' : ""}}">Error
                 </button>
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>

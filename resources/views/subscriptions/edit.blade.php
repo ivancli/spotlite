@@ -17,8 +17,6 @@
                     {!! Form::model($subscription ,array('route' => array('subscription.update', $subscription->getKey()), 'method' => 'put', "id" => "frm-subscription-update", "onsubmit"=>"return false;")) !!}
                     <input type="hidden" name="api_product_id" id="txt-api-product-id">
                     <input type="hidden" name="coupon_code" id="txt-coupon-code">
-                    {{--{!! Form::submit('Change My Plan', ["href" => "#", "class"=>"btn btn-primary btn-lg",--}}
-                    {{--"id" => "btn-subscribe", "disabled" => "disabled", "onclick"=>"submitSubscriptionUpdateOnclick();"]) !!}--}}
                     {!! Form::close() !!}
                 </div>
             </div>
@@ -28,19 +26,7 @@
 
 @section('scripts')
     <script type="text/javascript">
-        $(function () {
-//            $(".product-container").on("click", function () {
-//                $(".product-container.selected").removeClass("selected");
-//                $(this).addClass("selected");
-//                var productId = $(".product-container.selected").attr("data-id");
-//                $("#txt-api-product-id").val(productId);
-//                updateSubscribeButton();
-//            });
-        });
 
-        //        function updateSubscribeButton() {
-        //            $("#btn-subscribe").prop("disabled", $(".product-container.selected").length == 0 || $(".product-container.selected").hasClass("chosen"));
-        //        }
 
         function submitSubscriptionUpdateOnclick(el) {
             var productId = $(el).closest(".plan").attr("data-id");
@@ -57,7 +43,7 @@
             }
             confirmP(title, content + "<br><br>Are you sure you want to change your subscription?", {
                 "affirmative": {
-                    "class": "btn-primary",
+                    "class": "btn-primary btn-flat",
                     "callback": function () {
                         $("#txt-coupon-code").val($("#visual-coupon-code").val());
                         showLoading();
@@ -85,7 +71,7 @@
                     "dismiss": true
                 },
                 "negative": {
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             });

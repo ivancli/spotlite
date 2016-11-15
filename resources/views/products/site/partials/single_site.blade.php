@@ -118,7 +118,7 @@
             confirmP("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + " Site?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         var $form = $(el).closest(".frm-delete-site");
@@ -147,7 +147,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             });
@@ -236,7 +236,7 @@
                 confirmP("My Price", "The alerts of product or other sites are subjected to 'My Price'. Disabling 'My Price' will remove the related alerts. Do you want to disable 'My Price'?", {
                     "affirmative": {
                         "text": "Yes",
-                        "class": "btn-primary",
+                        "class": "btn-primary btn-flat",
                         "dismiss": true,
                         "callback": function () {
                             submitToggleMyPrice(el);
@@ -244,7 +244,7 @@
                     },
                     "negative": {
                         "text": "Cancel",
-                        "class": "btn-default",
+                        "class": "btn-default btn-flat",
                         "dismiss": true
                     }
                 });

@@ -467,7 +467,7 @@
             confirmP("Delete Report Schedule", "Are you sure you want to delete the " + $(el).attr("data-name") + " " + capitalise($(el).attr("data-report-type")) + " Report?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         showLoading();
@@ -496,7 +496,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             })
@@ -506,7 +506,7 @@
             confirmP("Delete Report", "Are you sure you want to delete this report?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         console.info($(el).attr("data-delete-url"));
@@ -534,7 +534,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             })

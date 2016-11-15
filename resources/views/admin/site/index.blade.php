@@ -137,7 +137,7 @@
                                                 "data-url": data.urls.admin_xpath_edit
                                             }).append(
                                                     $("<i>").addClass("fa fa-pencil text-muted")
-                                            ).addClass("btn-edit-xpath")
+                                            ).addClass("btn-edit-xpath btn-flat")
                                     )
                             ).html();
                         }
@@ -352,7 +352,7 @@
                     $("<a>").attr({
                         "href": "#",
                         "onclick": "showAddSiteForm(); return false;"
-                    }).addClass("btn btn-default").text("Add Site")
+                    }).addClass("btn btn-default btn-flat").text("Add Site")
             )
         });
 
@@ -502,7 +502,7 @@
             confirmP("Delete site", "Do you want to delete this site?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         showLoading();
@@ -528,7 +528,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             })

@@ -9,7 +9,11 @@
         <div class="col-sm-12">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">You are currently subscribed to {{$subscription->product()->name}}</h3>
+                    <h3 class="box-title">You are currently subscribed to {{$subscription->product()->name}}
+                        @if(!is_null($onboardingSubscription))
+                            and {{$onboardingSubscription->product()->name}}
+                        @endif
+                    </h3>
 
                     <div class="box-tools pull-right">
                         Reference ID: {{$subscription->customer_id}}
@@ -81,16 +85,6 @@
                                                 </td>
                                                 <td>
                                                     ${{number_format($transaction->amount_in_cents/100, 2)}}
-                                                    {{--@if(isset($transaction->taxations) && is_array($transaction->taxations))--}}
-                                                        {{--@foreach($transaction->taxations as $taxation)--}}
-                                                            <?php /*$transaction->ending_balance_in_cents += $taxation->tax_amount_in_cents*/ ?>
-                                                        {{--@endforeach--}}
-                                                    {{--@endif--}}
-                                                    {{--@if($transaction->ending_balance_in_cents < 0)--}}
-                                                            {{--${{number_format(0, 2)}}--}}
-                                                    {{--@else--}}
-                                                        {{--${{number_format($transaction->ending_balance_in_cents/100, 2)}}--}}
-                                                    {{--@endif--}}
                                                 </td>
                                             </tr>
                                         @endif
@@ -102,18 +96,24 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 text-right">
-                            {{--@if(isset($portalLink))--}}
-                            {{--<a href="{{$portalLink}}" class="btn btn-default">--}}
-                            {{--Access Chargify Billing Portal--}}
-                            {{--</a>--}}
-                            {{--@endif--}}
-                            <a href="{{$updatePaymentLink}}" class="btn btn-default">
+{{--                            @if(is_null($onboardingSubscription) || $onboardingSubscription->product()->initial_charge_in_cents < $onboardingProduct->initial_charge_in_cents)--}}
+                            @if(is_null($onboardingSubscription))
+                                <a href="{{route('onboarding.index')}}" class="btn btn-primary btn-flat">
+{{--                                    @if(is_null($onboardingSubscription))--}}
+                                        Purchase Onboarding Service
+                                    {{--@else--}}
+                                        {{--Upgrade Onboarding Service--}}
+                                    {{--@endif--}}
+                                </a>
+                            @endif
+                            <a href="{{$updatePaymentLink}}" class="btn btn-default btn-flat">
                                 Update Payment Details
                             </a>
-                            <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-default">
+                            <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-default btn-flat">
                                 Change My Plan
                             </a>
-                            <button class="btn btn-default" onclick="toggleCancelSubscriptionPanel(); return false;">
+                            <button class="btn btn-default btn-flat"
+                                    onclick="toggleCancelSubscriptionPanel(); return false;">
                                 Cancel Subscription
                             </button>
                         </div>
@@ -169,12 +169,12 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12 text-right">
-                                            <button class="btn btn-default" id="btn-cancel-cancel"
+                                            <button class="btn btn-default btn-flat" id="btn-cancel-cancel"
                                                     onclick="toggleCancelSubscriptionPanel();return false;">
                                                 No, go back
                                             </button>
 
-                                            {!! Form::submit('Yes, cancel my subscription', ["class"=>"btn btn-default"]) !!}
+                                            {!! Form::submit('Yes, cancel my subscription', ["class"=>"btn btn-default btn-flat"]) !!}
                                         </div>
                                     </div>
                                 </div>

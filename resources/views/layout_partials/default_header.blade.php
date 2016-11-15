@@ -34,15 +34,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <ul class="spotlite-menu">
-                                    @if(auth()->user()->hasValidSubscription() || auth()->user()->isStaff())
-                                        {{--<li>--}}
-                                            {{--<a href="{{route('profile.index')}}">--}}
-                                                {{--<h3>--}}
-                                                    {{--Profile <span--}}
-                                                            {{--class="text-muted">{{auth()->user()->first_name}} {{auth()->user()->last_name}}</span>--}}
-                                                {{--</h3>--}}
-                                            {{--</a>--}}
-                                        {{--</li>--}}
+                                    @if(auth()->user()->subscription->isValid() || auth()->user()->isStaff())
                                         <li>
                                             <a href="{{route('account.index')}}">
                                                 <h3>
@@ -51,13 +43,6 @@
                                             </a>
                                         </li>
                                         @if(!auth()->user()->isStaff())
-                                            {{--<li>--}}
-                                                {{--<a href="{{route('group.index')}}">--}}
-                                                    {{--<h3>--}}
-                                                        {{--Group Management--}}
-                                                    {{--</h3>--}}
-                                                {{--</a>--}}
-                                            {{--</li>--}}
                                             <li>
                                                 <a href="{{route('subscription.index')}}">
                                                     <h3>
@@ -74,11 +59,11 @@
                                             </h3>
                                         </a>
                                     </li>
-                                    @if(auth()->user()->hasValidSubscription() && !auth()->user()->isStaff())
+                                    @if(auth()->user()->subscription->isValid() && !auth()->user()->isStaff())
                                         <li>
                                             <div style="padding: 2px;">
 
-                                                <a class="btn btn-success btn-block" href="{{route('subscription.edit', auth()->user()->validSubscription()->getKey())}}">
+                                                <a class="btn btn-success btn-block btn-flat" href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}">
                                                         UPGRADE
                                                 </a>
                                             </div>

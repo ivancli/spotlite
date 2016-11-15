@@ -64,8 +64,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary" onclick="loadProductChartData()">Go</button>
-                                                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                <button class="btn btn-primary btn-flat" onclick="loadProductChartData()">Go</button>
+                                                <button class="btn btn-default btn-flat" data-dismiss="modal">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
@@ -116,7 +116,7 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <button class="btn btn-primary" id="btn-add-chart">
+                                                            <button class="btn btn-primary btn-flat" id="btn-add-chart">
                                                                 Add Chart
                                                             </button>
                                                         </div>

@@ -16,9 +16,9 @@
                 Your credit card will be expired soon, please update your credit card details.
             </p>
             <p class="text-center" style="padding: 20px">
-                <button class="btn btn-default" title="Close this popup" data-dismiss="modal">No, thanks
+                <button class="btn btn-default btn-flat" title="Close this popup" data-dismiss="modal">No, thanks
                 </button>
-                <a class="btn btn-success" href="{{$updatePaymentLink}}">
+                <a class="btn btn-success btn-flat" href="{{$updatePaymentLink}}">
                     Update Payment Details
                 </a>
             </p>

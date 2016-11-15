@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="form-group text-center">
-                                {!! Form::submit('Save', ["class"=>"btn btn-default", "href"=>"#"]) !!}
+                                {!! Form::submit('Save', ["class"=>"btn btn-default btn-flat", "href"=>"#"]) !!}
                             </div>
                             {!! Form::close() !!}
                         </div>
@@ -81,7 +81,7 @@
 
                             <div class="row">
                                 <div class="col-sm-12">
-                                    {!! Form::submit('Update Password', ["class"=>"btn btn-default btn-sm", "href"=>"#"]) !!}
+                                    {!! Form::submit('Update Password', ["class"=>"btn btn-default btn-sm btn-flat", "href"=>"#"]) !!}
                                 </div>
                             </div>
                             {!! Form::close() !!}

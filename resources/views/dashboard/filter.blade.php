@@ -65,11 +65,11 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-update-dashboard-filter">OK</button>
+                <button class="btn btn-primary btn-flat" id="btn-update-dashboard-filter">OK</button>
                 @if($dashboard->preferences->count() > 0)
-                    <button class="btn btn-default" id="btn-reset-dashboard-filter">Reset</button>
+                    <button class="btn btn-default btn-flat" id="btn-reset-dashboard-filter">Reset</button>
                 @endif
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>

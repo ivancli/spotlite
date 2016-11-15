@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Subscription;
 
 use App\Contracts\Repository\Mailer\MailingAgentContract;
+use App\Contracts\Repository\Subscription\OnboardingContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Events\Subscription\SubscriptionCancelled;
 use App\Events\Subscription\SubscriptionCancelling;
@@ -26,11 +27,13 @@ use Invigor\Chargify\Chargify;
 class SubscriptionController extends Controller
 {
     protected $subscriptionRepo;
+    protected $onboardingRepo;
     protected $mailingAgentRepo;
 
-    public function __construct(SubscriptionContract $subscriptionContract, MailingAgentContract $mailingAgentContract)
+    public function __construct(SubscriptionContract $subscriptionContract, MailingAgentContract $mailingAgentContract, OnboardingContract $onboardingContract)
     {
         $this->subscriptionRepo = $subscriptionContract;
+        $this->onboardingRepo = $onboardingContract;
         $this->mailingAgentRepo = $mailingAgentContract;
         /*TODO need to handle middleware for each function*/
     }
@@ -41,7 +44,7 @@ class SubscriptionController extends Controller
      */
     public function viewProducts()
     {
-        $subscription = auth()->user()->validSubscription();
+        $subscription = auth()->user()->subscription;
         if (!is_null($subscription)) {
             $chosenAPIProductID = $subscription->api_product_id;
         }
@@ -57,17 +60,31 @@ class SubscriptionController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $sub = $user->validSubscription();
+        $sub = $user->subscription;
         if (!is_null($sub)) {
             $current_sub_id = $sub->api_subscription_id;
-            $subscription = $user->cachedAPISubscription();
+            $subscription = Chargify::subscription()->get($current_sub_id);
+            $onboardingSubscription = $user->apiOnboardingSubscription;
             if ($subscription != false) {
                 $portalLink = Chargify::customer()->getLink($subscription->customer_id);
-                $transactions = Chargify::transaction()->allBySubscription($current_sub_id);
+                $subscriptionTransactions = Chargify::transaction()->allBySubscription($current_sub_id);
+                if (!is_null($onboardingSubscription)) {
+                    $onboardingTransactions = Chargify::transaction()->allBySubscription($onboardingSubscription->id);
+                    $transactions = array_merge($subscriptionTransactions, $onboardingTransactions);
+                } else {
+                    $transactions = $subscriptionTransactions;
+                }
+
+                $transactions = collect($transactions);
+                $transactions = $transactions->sortBy('created_at');
+
+
                 $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($current_sub_id);
 
+                $onboardingProduct = $this->onboardingRepo->getByProductFamily($subscription->product()->product_family_id);
+
                 event(new SubscriptionManagementViewed());
-                return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions']));
+                return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions', 'onboardingSubscription', 'onboardingProduct']));
             } else {
                 abort(403);
                 return false;
@@ -360,12 +377,11 @@ class SubscriptionController extends Controller
     public function edit($id)
     {
 
-        $subscription = auth()->user()->validSubscription();
+        $subscription = auth()->user()->subscription;
         /*TODO validate the $subscription*/
 
         $chosenAPIProductID = $subscription->api_product_id;
         $chosenAPIProduct = Chargify::product()->get($subscription->api_product_id);
-
         //load all products from Chargify
         $productFamilies = $this->subscriptionRepo->getProductList();
         event(new SubscriptionEditViewed($subscription));
@@ -575,62 +591,6 @@ class SubscriptionController extends Controller
             return response()->json(compact(['productFamilies', 'status']));
         } else {
             return compact(['productFamilies', 'status']);
-        }
-    }
-
-    public function onboardingStore(Request $request)
-    {
-        $user = auth()->user();
-        if ($user->isStaff()) {
-            $status = false;
-            $errors = array("Staff does not need to subscribe.");
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withErrors($errors);
-            }
-        }
-
-        $subscription = $user->cachedAPISubscription();
-        $product = $subscription->product();
-        $productFamily = $product->productFamily();
-        $products = $productFamily->products();
-
-        /* get onboarding product */
-        $onboardingProduct = null;
-        foreach ($products as $product) {
-            if (strpos($product->name, 'onboarding') !== false) {
-                $onboardingProduct = $product;
-                break;
-            }
-        }
-        if (is_null($onboardingProduct)) {
-            $status = false;
-            $errors = array("Onboarding service is not available for this subscription plan.");
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withErrors($errors);
-            }
-        }
-        $paymentProfile = $subscription->paymentProfile();
-
-        $onboardingSubscription = Chargify::subscription()->create(array(
-            "product_id" => $onboardingProduct->id,
-            "customer_id" => $subscription->customer_id,
-            "payment_profile_id" => $paymentProfile->id,
-        ));
-
-        if (!isset($onboardingSubscription->errors)) {
-            return $onboardingSubscription;
         }
     }
 }

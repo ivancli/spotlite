@@ -133,11 +133,12 @@ Route::group(['middleware' => ['auth']], function () {
     //redirect route for chargify sign up page
     Route::get('subscription/finalise', 'Subscription\SubscriptionController@finalise')->name('subscription.finalise');
     Route::get('subscription/update', 'Subscription\SubscriptionController@externalUpdate')->name('subscription.external_update');
-    Route::post('subscription/onboarding', 'Subscription\SubscriptionController@onboardingStore')->name('subscription.onboarding.store');
 
     Route::resource('subscription', 'Subscription\SubscriptionController', ['except' => [
         'create', 'show'
     ]]);
+
+    Route::resource('onboarding', 'Subscription\OnboardingController');
 
 
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");

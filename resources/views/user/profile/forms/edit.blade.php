@@ -33,7 +33,7 @@
     </div>
 </div>
 <div class="text-right">
-    {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
+    {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm btn-flat", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
 </div>
 {!! Form::close() !!}
 

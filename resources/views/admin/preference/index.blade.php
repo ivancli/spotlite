@@ -21,7 +21,7 @@
                     @endforeach
                     <div class="row">
                         <div class="col-sm-12 text-center">
-                            {!! Form::submit('Update Preferences', ["class"=>"btn btn-primary", "href"=>"#"]) !!}
+                            {!! Form::submit('Update Preferences', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
                         </div>
                     </div>
                     {!! Form::close() !!}

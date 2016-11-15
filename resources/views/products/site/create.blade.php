@@ -32,10 +32,10 @@
 
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-check-price">Check Price</button>
-                <button class="btn btn-primary" id="btn-create-site" style="display: none;">OK</button>
-                <button class="btn btn-warning" id="btn-report-error" style="display: none;">Error</button>
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button class="btn btn-primary btn-flat" id="btn-check-price">Check Price</button>
+                <button class="btn btn-primary btn-flat" id="btn-create-site" style="display: none;">OK</button>
+                <button class="btn btn-warning btn-flat" id="btn-report-error" style="display: none;">Error</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>

@@ -28,7 +28,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12 text-right">
-                                {!! Form::submit('Reset', ["class"=>"btn btn-default btn-sm", "href"=>"#"]) !!}
+                                {!! Form::submit('Reset', ["class"=>"btn btn-default btn-sm btn-flat", "href"=>"#"]) !!}
                             </div>
                         </div>
                         {!! Form::close() !!}

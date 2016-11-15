@@ -278,7 +278,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function syncUserSubscription(User $user)
     {
         if (!$user->isStaff()) {
-            $subscription = $user->cachedAPISubscription();
+            $subscription = $user->apiSubscription;
             if ($subscription != false) {
                 $criteria = $user->subscriptionCriteria();
             }

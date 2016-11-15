@@ -28,7 +28,7 @@
                     </div>
                     {!! Form::close() !!}
                     &nbsp;
-                    <button class="btn btn-primary btn-xs btn-add-product" onclick="appendCreateProductBlock(this)">
+                    <button class="btn btn-primary btn-xs btn-flat btn-add-product" onclick="appendCreateProductBlock(this)">
                         <i class="fa fa-plus"></i> Add Product
                     </button>
                 </th>
@@ -109,7 +109,7 @@
             confirmP("Delete Category", "Are you sure you want to delete the " + $(el).attr("data-name") + " Category?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         var $form = $(el).closest(".frm-delete-category");
@@ -138,7 +138,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             });

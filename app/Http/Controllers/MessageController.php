@@ -22,7 +22,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
         if (!auth()->user()->isStaff()) {
-            $subscription = $user->validSubscription();
+            $subscription = $user->subscription;
             $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
         }
         if ($raw == 0) {
@@ -35,7 +35,7 @@ class MessageController extends Controller
     public function updateSubscription($raw = 0)
     {
         $user = auth()->user();
-        $subscription = $user->validSubscription();
+        $subscription = $user->subscription;
         $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
         if ($raw == 0) {
             return view('msg.subscription.welcome')->with(compact(['apiSubscription']));
@@ -63,7 +63,7 @@ class MessageController extends Controller
 
     public function notifyCreditCardExpiringSoon($raw = 0)
     {
-        $apiSubscriptionId = auth()->user()->validSubscription()->api_subscription_id;
+        $apiSubscriptionId = auth()->user()->subscription->api_subscription_id;
         $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($apiSubscriptionId);
 
         if ($raw == 0) {

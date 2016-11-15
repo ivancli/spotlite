@@ -13,7 +13,7 @@
                     <h3 class="box-title">Permission List</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="{{route('um.permission.create')}}" class="btn btn-default btn-sm">Create Permission</a>
+                        <a href="{{route('um.permission.create')}}" class="btn btn-default btn-sm btn-flat">Create Permission</a>
                     </div>
                 </div>
                 <div class="box-body">

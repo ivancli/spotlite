@@ -4,8 +4,8 @@
 {!! Form::model($group, array('route' => array('group.update', $group->getKey()), 'method'=>'put', 'id'=>'frm-group-update', 'onsubmit'=>'return false;')) !!}
 @include('user.group.forms.group')
 <div class="text-right">
-    {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm", "href"=>"#", "onclick"=>"groupUpdateOnClick()"]) !!}
-    <a href="{{route('group.index')}}" class="btn btn-default btn-sm">Cancel</a>
+    {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm btn-flat", "href"=>"#", "onclick"=>"groupUpdateOnClick()"]) !!}
+    <a href="{{route('group.index')}}" class="btn btn-default btn-sm btn-flat">Cancel</a>
 </div>
 {!! Form::close() !!}
 

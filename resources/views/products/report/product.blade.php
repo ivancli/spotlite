@@ -106,11 +106,11 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-update-product-report">OK</button>
+                <button class="btn btn-primary btn-flat" id="btn-update-product-report">OK</button>
                 @if(!is_null($product->reportTask))
-                    <button class="btn btn-danger" id="btn-delete-product-report">Delete</button>
+                    <button class="btn btn-danger btn-flat" id="btn-delete-product-report">Delete</button>
                 @endif
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>
@@ -175,7 +175,7 @@
                 confirmP("Delete Report Schedule", "Are your sure you want to delete the {{$product->product_name}} Product Report?", {
                     "affirmative": {
                         "text": "Delete",
-                        "class": "btn-danger",
+                        "class": "btn-danger btn-flat",
                         "dismiss": true,
                         "callback": function () {
                             submitDeleteProductReportTask(function (response) {
@@ -202,7 +202,7 @@
                     },
                     "negative": {
                         "text": "Cancel",
-                        "class": "btn-default",
+                        "class": "btn-default btn-flat",
                         "dismiss": true
                     }
                 });

@@ -20,7 +20,7 @@
     {!! Form::email('email', null, array('class' => 'form-control', 'disabled' => 'disabled')) !!}
 </div>
 <div class="text-right">
-    {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm"]) !!}
-    <a href="{{route('um.user.index')}}" class="btn btn-default btn-sm">Cancel</a>
+    {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm btn-flat"]) !!}
+    <a href="{{route('um.user.index')}}" class="btn btn-default btn-sm btn-flat">Cancel</a>
 </div>
 {!! Form::close() !!}

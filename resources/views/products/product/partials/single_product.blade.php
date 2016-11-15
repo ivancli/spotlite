@@ -29,7 +29,7 @@
             </div>
             {!! Form::close() !!}
             &nbsp;
-            <button class="btn btn-primary btn-xs btn-add-site" onclick="showAddSiteForm(this); return false;">
+            <button class="btn btn-primary btn-xs btn-add-site btn-flat" onclick="showAddSiteForm(this); return false;">
                 <i class="fa fa-plus"></i> Add Site
             </button>
         </th>
@@ -99,7 +99,7 @@
             confirmP("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?", {
                 "affirmative": {
                     "text": "Delete",
-                    "class": "btn-danger",
+                    "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
                         var $form = $(el).closest(".frm-delete-product");
@@ -128,7 +128,7 @@
                 },
                 "negative": {
                     "text": "Cancel",
-                    "class": "btn-default",
+                    "class": "btn-default btn-flat",
                     "dismiss": true
                 }
             });

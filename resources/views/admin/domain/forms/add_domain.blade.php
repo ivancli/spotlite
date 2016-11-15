@@ -34,8 +34,8 @@
 
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary" id="btn-add-domain">OK</button>
-                <button data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button class="btn btn-primary btn-flat" id="btn-add-domain">OK</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
     </div>

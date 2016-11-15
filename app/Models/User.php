@@ -34,7 +34,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'preferences'
+        'preferences', 'apiSubscription', 'apiOnboardingSubscription'
     ];
 
     public function subscription()
@@ -102,6 +102,36 @@ class User extends Authenticatable
         return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'user_id', 'product_id', 'user_id');
     }
 
+
+    /**
+     * attributes
+     */
+
+    public function getApiSubscriptionAttribute()
+    {
+        if ($this->subscription->isValid()) {
+            return Chargify::subscription()->get($this->subscription->api_subscription_id);
+        } else {
+            return null;
+        }
+    }
+
+    public function getApiOnboardingSubscriptionAttribute()
+    {
+        if (!is_null($this->subscription->api_onboarding_subscription_id)) {
+            return Chargify::subscription()->get($this->subscription->api_onboarding_subscription_id);
+        } else {
+            return null;
+        }
+    }
+
+    public function getPreferencesAttribute()
+    {
+        $prefObjects = $this->preferences()->get();
+        $preferences = $prefObjects->pluck('value', 'element')->all();
+        return $preferences;
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     public function preference($key)
@@ -114,31 +144,10 @@ class User extends Authenticatable
         }
     }
 
-    public function cachedSubscription()
-    {
-        $userPrimaryKey = $this->primaryKey;
-        return Cache::remember("user.{$this->getKey()}.subscription", config()->get('cache.ttl'), function () {
-            return $this->subscription;
-        });
-    }
-
-    public function cachedAPISubscription()
-    {
-        $userPrimaryKey = $this->primaryKey;
-        return Cache::remember("user.{$this->getKey()}.subscription.api", config()->get('cache.ttl'), function () {
-            if ($this->hasValidSubscription()) {
-                $subscription = Chargify::subscription()->get($this->cachedSubscription()->api_subscription_id);
-            } else {
-                $subscription = false;
-            }
-            return $subscription;
-        });
-    }
-
     public function subscriptionCriteria()
     {
         return Cache::remember("user.{$this->getKey()}.subscription.api.criteria", config()->get('cache.ttl'), function () {
-            $product = Chargify::product()->get($this->cachedAPISubscription()->product_id);
+            $product = Chargify::product()->get($this->apiSubscription->product_id);
             if (!is_null($product->description)) {
                 $criteria = json_decode($product->description);
                 return $criteria;
@@ -191,41 +200,13 @@ class User extends Authenticatable
 
     public function clearCache()
     {
-        Cache::forget("user.{$this->getKey()}.subscription");
-        Cache::forget("user.{$this->getKey()}.subscription.api");
         Cache::forget("user.{$this->getKey()}.subscription.api.criteria");
         Cache::forget("user.{$this->getKey()}.subscription.transaction");
-    }
-
-    public function needSubscription()
-    {
-        return !$this->isStaff() && !$this->hasValidSubscription();
-    }
-
-    public function hasValidSubscription()
-    {
-        return !is_null($this->cachedSubscription()) && $this->cachedSubscription()->isValid();
     }
 
     public function isStaff()
     {
         return $this->hasRole(['super_admin', 'tier_1', 'tier_2']);
-    }
-
-    public function validSubscription()
-    {
-        if (!is_null($this->cachedSubscription())) {
-            return $this->cachedSubscription()->isValid() ? $this->cachedSubscription() : null;
-        } else {
-            return null;
-        }
-    }
-
-    public function getPreferencesAttribute()
-    {
-        $prefObjects = $this->preferences()->get();
-        $preferences = $prefObjects->pluck('value', 'element')->all();
-        return $preferences;
     }
 }
 

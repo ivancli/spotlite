@@ -13,7 +13,7 @@
                     <h3 class="box-title">User List</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="{{route('um.user.create')}}" class="btn btn-default btn-sm">Create User</a>
+                        <a href="{{route('um.user.create')}}" class="btn btn-default btn-sm btn-flat">Create User</a>
                     </div>
                 </div>
                 <div class="box-body">
