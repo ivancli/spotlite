@@ -15175,22 +15175,30 @@ td.shrink, th.shrink {
     left: 50%;
     top: 50%;
     z-index: 99999;
-    width: 62px;   /* Viewport Width */
-    height: 62px;   /* Viewport Height (~ 199.42px) */
-    background: transparent url('http://app.spotlite.dev/images/spinner_sprite_62x62.png') 0 0 no-repeat;   /* Our sprite as viewport background */
+    width: 62px; /* Viewport Width */
+    height: 62px; /* Viewport Height (~ 199.42px) */
+    background: transparent url('http://app.spotlite.dev/images/spinner_sprite_62x62.png') 0 0 no-repeat; /* Our sprite as viewport background */
     animation: spinner 1s steps(19) infinite; /* The Animation */
     -moz-animation: spinner 1s steps(19) infinite;
     -webkit-animation: spinner 1s steps(19) infinite;
 }
 
 @keyframes spinner {
-    100% { background-position: 0 -1178px; }
+    100% {
+        background-position: 0 -1178px;
+    }
 }
+
 @-moz-keyframes spinner {
-    100% { background-position: 0 -1178px; }
+    100% {
+        background-position: 0 -1178px;
+    }
 }
+
 @-webkit-keyframes spinner {
-    100% { background-position: 0 -1178px; }
+    100% {
+        background-position: 0 -1178px;
+    }
 }
 
 .sl-control-label {
@@ -15410,6 +15418,16 @@ h3.box-title {
     font-size: 12px;
 }
 
+.widget-container .box-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: nowrap;
+    width: 100%;
+    height: 20px;
+}
+
 .tour-backdrop {
     opacity: 0.6 !important;
 }
@@ -15452,7 +15470,8 @@ h3.box-title {
     .skin-black-light .main-header > .logo {
         background-color: #fff;
     }
-    .skin-black-light .main-header > .logo:hover{
+
+    .skin-black-light .main-header > .logo:hover {
         background-color: #fff;
     }
 }
