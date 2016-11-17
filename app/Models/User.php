@@ -109,7 +109,7 @@ class User extends Authenticatable
 
     public function getApiSubscriptionAttribute()
     {
-        if (!$this->isStaff() && $this->subscription->isValid()) {
+        if (!$this->isStaff() && !is_null($this->subscription) && $this->subscription->isValid()) {
             return Chargify::subscription()->get($this->subscription->api_subscription_id);
         } else {
             return null;
@@ -118,7 +118,7 @@ class User extends Authenticatable
 
     public function getApiOnboardingSubscriptionAttribute()
     {
-        if (!$this->isStaff() && !is_null($this->subscription->api_onboarding_subscription_id)) {
+        if (!$this->isStaff() && !is_null($this->subscription) && !is_null($this->subscription->api_onboarding_subscription_id)) {
             return Chargify::subscription()->get($this->subscription->api_onboarding_subscription_id);
         } else {
             return null;

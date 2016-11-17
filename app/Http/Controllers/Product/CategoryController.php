@@ -29,6 +29,13 @@ class CategoryController extends Controller
 
     public function __construct(CategoryContract $categoryContract)
     {
+        $this->middleware('permission:create_category', ['only' => ['create', 'store']]);
+        $this->middleware('permission:read_category', ['only' => ['show']]);
+        $this->middleware('permission:reorder_category', ['only' => ['updateOrder']]);
+        $this->middleware('permission:update_category', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_category', ['only' => ['delete']]);
+
+
         $this->categoryRepo = $categoryContract;
     }
 

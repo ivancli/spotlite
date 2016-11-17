@@ -446,3 +446,17 @@ function camelize(str) {
         return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(/\s+/g, '');
 }
+
+function describeServerRespondedError(errorCode) {
+    switch (errorCode) {
+        case 403:
+            alertP("Permission denied", "You have no permission to perform this action.");
+            break;
+        case 404:
+            alertP("Content not found", "The content could not be found.");
+            break;
+        case 500:
+            alertP("Server error", "There was a server error which has been reported to our support team. Please try again later. Sorry for the inconvenience.");
+            break;
+    }
+}

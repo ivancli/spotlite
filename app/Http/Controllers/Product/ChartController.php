@@ -23,6 +23,11 @@ class ChartController extends Controller
 
     public function __construct(CategoryContract $categoryContract, ProductContract $productContract, SiteContract $siteContract)
     {
+        $this->middleware('permission:read_category_chart', ['only' => ['categoryIndex']]);
+        $this->middleware('permission:read_product_chart', ['only' => ['productIndex']]);
+        $this->middleware('permission:read_site_chart', ['only' => ['siteIndex']]);
+
+
         $this->categoryRepo = $categoryContract;
         $this->productRepo = $productContract;
         $this->siteRepo = $siteContract;

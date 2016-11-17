@@ -163,6 +163,10 @@
                         hideLoading();
                         $div.prepend(html);
                         $div.find(".product-wrapper.create .product-name").focus();
+                    },
+                    "error": function(xhr, status, error){
+                        hideLoading();
+                        describeServerRespondedError(xhr.status);
                     }
                 });
             } else {

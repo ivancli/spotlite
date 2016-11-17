@@ -38,6 +38,12 @@ class ProductController extends Controller
 
     public function __construct(ProductContract $productContract, CategoryContract $categoryContract, QueryFilter $filter)
     {
+        $this->middleware('permission:create_product', ['only' => ['create', 'store']]);
+        $this->middleware('permission:read_product', ['only' => ['show']]);
+        $this->middleware('permission:reorder_product', ['only' => ['updateOrder']]);
+        $this->middleware('permission:update_product', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_product', ['only' => ['delete']]);
+
         $this->productRepo = $productContract;
         $this->categoryRepo = $categoryContract;
         $this->filter = $filter;

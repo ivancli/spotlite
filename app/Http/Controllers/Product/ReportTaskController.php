@@ -38,13 +38,15 @@ class ReportTaskController extends Controller
     protected $updateProductReportValidator;
     protected $queryFilter;
 
-    public function __construct(CategoryContract $categoryContract,
-                                ProductContract $productContract,
-                                ReportTaskContract $reportTaskContract,
-                                UpdateCategoryReportValidator $updateCategoryReportValidator,
-                                UpdateProductReportValidator $updateProductReportValidator,
-                                QueryFilter $queryFilter)
+    public function __construct(CategoryContract $categoryContract, ProductContract $productContract, ReportTaskContract $reportTaskContract, UpdateCategoryReportValidator $updateCategoryReportValidator, UpdateProductReportValidator $updateProductReportValidator, QueryFilter $queryFilter)
     {
+        $this->middleware('permission:read_category_report_task', ['only' => ['index']]);
+        $this->middleware('permission:update_category_report_task', ['only' => ['editCategoryReport', 'updateCategoryReport']]);
+        $this->middleware('permission:delete_category_report_task', ['only' => ['deleteCategoryReport']]);
+        $this->middleware('permission:read_product_report_task', ['only' => ['index']]);
+        $this->middleware('permission:update_product_report_task', ['only' => ['editProductReport', 'updateProductReport']]);
+        $this->middleware('permission:delete_product_report_task', ['only' => ['deleteProductReport']]);
+
         $this->categoryRepo = $categoryContract;
         $this->productRepo = $productContract;
         $this->reportTaskRepo = $reportTaskContract;

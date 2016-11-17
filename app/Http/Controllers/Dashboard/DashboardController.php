@@ -28,9 +28,19 @@ class DashboardController extends Controller
     protected $queryFilter;
     protected $request;
 
-    public function __construct(QueryFilter $queryFilter, Request $request,
-                                DashboardContract $dashboardContract, DashboardTemplateContract $dashboardTemplateContract)
+    public function __construct(QueryFilter $queryFilter, Request $request, DashboardContract $dashboardContract, DashboardTemplateContract $dashboardTemplateContract)
     {
+        /*middleware filter*/
+        $this->middleware('permission:read_dashboard', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create_dashboard', ['only' => ['create', 'store']]);
+        $this->middleware('permission:update_dashboard', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_dashboard', ['only' => ['destroy']]);
+
+        $this->middleware('permission:update_dashboard_preference', ['only' => ['editFilter', 'updateFitler']]);
+        $this->middleware('permission:delete_dashboard_preference', ['only' => ['deleteFilter']]);
+
+
+
         $this->dashboardRepo = $dashboardContract;
         $this->dashboardTemplateRepo = $dashboardTemplateContract;
 

@@ -27,9 +27,14 @@ class DashboardWidgetController extends Controller
     protected $dashboardWidgetTypeRepo;
 
 
-    public function __construct(Request $request,
-                                DashboardContract $dashboardContract, DashboardWidgetContract $dashboardWidgetContract, DashboardWidgetTypeContract $dashboardWidgetTypeContract)
+    public function __construct(Request $request, DashboardContract $dashboardContract, DashboardWidgetContract $dashboardWidgetContract, DashboardWidgetTypeContract $dashboardWidgetTypeContract)
     {
+        $this->middleware('permission:create_dashboard_widget', ['only' => ['create', 'store']]);
+        $this->middleware('permission:read_dashboard_widget', ['only' => ['show']]);
+        $this->middleware('permission:update_dashboard_widget', ['only' => ['edit', 'update', 'updateOrder']]);
+        $this->middleware('permission:delete_dashboard_widget', ['only' => ['delete']]);
+
+
         $this->request = $request;
         $this->dashboardRepo = $dashboardContract;
         $this->dashboardWidgetRepo = $dashboardWidgetContract;

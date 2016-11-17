@@ -46,6 +46,15 @@ class SiteController extends Controller
 
     public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract, AlertContract $alertContract)
     {
+        $this->middleware('permission:create_site', ['only' => ['create', 'store']]);
+        $this->middleware('permission:read_site', ['only' => ['show']]);
+        $this->middleware('permission:reorder_site', ['only' => ['updateOrder']]);
+        $this->middleware('permission:update_site', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_site', ['only' => ['delete']]);
+        $this->middleware('permission:get_site_price', ['only' => ['getPrices']]);
+        $this->middleware('permission:set_my_price', ['only' => ['setMyPrice']]);
+
+
         $this->siteRepo = $siteContract;
         $this->domainRepo = $domainContract;
         $this->productRepo = $productContract;

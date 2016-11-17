@@ -9,11 +9,26 @@
 namespace App\Validators\UM\Role;
 
 
+use App\Exceptions\ValidationException;
 use App\Validators\ValidatorAbstract;
 
 class UpdateValidator extends ValidatorAbstract
 {
 
+    public function validate(array $data, $throw = true)
+    {
+        $rules = $this->getRules(isset($data['role_id']) ? $data['role_id'] : null);
+        $messages = $this->getMessages();
+        $validation = $this->validator->make($data, $rules, $messages);
+        if ($validation->fails()) {
+            if ($throw) {
+                throw new ValidationException($validation->messages());
+            } else {
+                return $validation->messages();
+            }
+        }
+        return true;
+    }
     /**
      * Get pre-set validation rules
      *

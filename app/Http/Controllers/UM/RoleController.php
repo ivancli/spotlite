@@ -162,7 +162,7 @@ class RoleController extends UMRoleController
     {
         try {
             $input = $request->all();
-            $input['id'] = $id;
+            $input['role_id'] = $id;
             $this->updateValidator->validate($input);
         } catch (ValidationException $e) {
             $status = false;
