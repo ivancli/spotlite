@@ -26,7 +26,8 @@ elixir(function (mix) {
         'public/js',
         'public/fonts',
         'public/images',
-        'public/videos'
+        'public/videos',
+        'public/build'
     ]);
     mix.styles([
         "node_modules/bootstrap/dist/css/bootstrap.css",
@@ -114,4 +115,16 @@ elixir(function (mix) {
     mix.copy("node_modules/bootstrap/dist/fonts", "public/fonts/");
     mix.copy("node_modules/font-awesome/fonts", "public/fonts/");
     mix.copy('vendor/driftyco/ionicons/fonts', 'public/fonts/');
+
+
+
+    /* versioning */
+    mix.version([
+        'public/css/main.css', 'public/css/product-tour.css', 'public/css/email.css', 'public/css/email_import.css', 'public/css/email_brand.css',
+        'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/product-tour.js'
+    ]);
+    mix.copy('public/fonts', 'public/build/fonts');
+    mix.copy('public/images', 'public/build/images');
+    mix.copy('public/videos', 'public/build/videos');
+    mix.copy('public/others', 'public/build/others');
 });

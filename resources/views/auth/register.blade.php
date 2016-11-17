@@ -39,7 +39,7 @@
     <div class="register-box">
         <div class="register-logo">
             <a href="{{route('dashboard.index')}}">
-                <img src="{{asset('images/logo.png')}}" alt="" width="250">
+                <img src="{{asset('build/images/logo.png')}}" alt="" width="250">
             </a>
         </div>
         <div class="row">

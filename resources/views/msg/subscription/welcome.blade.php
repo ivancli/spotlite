@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm-12">
             <h3 class="text-center">
-                <img src="{{asset('images/logo-fixed-2.png')}}" style="width: 30%;">
+                <img src="{{asset('build/images/logo-fixed-2.png')}}" style="width: 30%;">
             </h3>
             <h2 class="text-center">
                 Hi {{auth()->user()->first_name}}, Welcome to SpotLite
@@ -18,7 +18,7 @@
             </p>
             <div class="m-b-10 tutorial-video" style="display: none;">
                 <video width="100%" controls preload="auto">
-                    <source src="{{asset('videos/sample_video.mp4')}}" type="video/mp4">
+                    <source src="{{asset('build/videos/sample_video.mp4')}}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -42,7 +42,7 @@
                             <td width="25%" style="vertical-align: bottom;" align="center">
                                 <div class="hidden-xs">Download our step-by-step guide</div>
                                 <div>
-                                    <a href="{{asset('videos/sample_video.mp4')}}" class="text-muted">
+                                    <a href="{{asset('build/videos/sample_video.mp4')}}" class="text-muted">
                                         <div style="font-size: 50px; color: #000056;">
                                             <i class=" fa fa-download"></i>
                                         </div>
@@ -64,7 +64,7 @@
                                 <div>
                                     <a href="{{route('dashboard.index')}}" class="text-muted">
                                         <div style="font-size: 50px;">
-                                            <img src="{{asset('images/favicon.png')}}" alt="" width="50">
+                                            <img src="{{asset('build/images/favicon.png')}}" alt="" width="50">
                                         </div>
                                     </a>
                                 </div>

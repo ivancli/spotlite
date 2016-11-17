@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm-12">
             <p class="text-center">
-                <img src="{{asset('images/logo-fixed-2.png')}}" style="width: 40%; padding-bottom: 20px">
+                <img src="{{asset('build/images/logo-fixed-2.png')}}" style="width: 40%; padding-bottom: 20px">
             </p>
 
             <h3 class="text-center">

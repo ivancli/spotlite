@@ -20,6 +20,7 @@
     "highcharts": "^4.2.6",
     "jquery": "^3.1.1",
     "jquery-contextmenu": "git+https://github.com/swisnl/jQuery-contextMenu.git",
+    "jquery-validation": "git+https://github.com/jzaefferer/jquery-validation.git",
     "select2": "git+https://github.com/select2/select2.git"
   }
 }

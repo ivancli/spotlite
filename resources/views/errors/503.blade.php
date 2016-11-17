@@ -1,7 +1,7 @@
 <!doctype html>
 <title>SpotLite Maintenance</title>
 <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-<link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
+<link rel="shortcut icon" type="image/x-icon" href="{{asset('build/images/favicon.ico')}}"/>
 {{--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">--}}
 <style>
     body, h1, h2, h3, a, .main-header .header-label, div {
@@ -47,7 +47,7 @@
 
 <article>
     <div class="logo">
-        <img src="{{asset("images/logo.png")}}" alt="" width="400">
+        <img src="{{asset("build/images/logo.png")}}" alt="" width="400">
     </div>
     <h1>We&rsquo;ll be back soon!</h1>
     <div>

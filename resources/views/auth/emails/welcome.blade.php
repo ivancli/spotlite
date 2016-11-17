@@ -12,11 +12,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to SpotLite</title>
-    <link rel="stylesheet" href="{{asset('css/email.css')}}">
+    <link rel="stylesheet" href="{{elixir('css/email.css')}}">
     <!--[if !mso]><!-- -->
-    <link rel="stylesheet" href="{{asset('css/dynamic_import.css')}}">
+    <link rel="stylesheet" href="{{elixir('css/dynamic_import.css')}}">
     <!--<![endif]-->
-    <link rel="stylesheet" href="{{asset('css/dynamic_brand.css')}}">
+    <link rel="stylesheet" href="{{elixir('css/dynamic_brand.css')}}">
     <!--[if gte mso 12]>
     <style type="text/css">
         .custom_font {

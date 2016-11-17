@@ -7,9 +7,9 @@
     <title>@yield('title') - SpotLite</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}"/>
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset('build/images/favicon.ico')}}"/>
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/main.css')}}">
+    <link rel="stylesheet" href="{{elixir('css/main.css')}}">
     <style>
         body, h1, h2, h3, a, .main-header .header-label, div {
             font-family: 'Lato', sans-serif;
@@ -24,8 +24,8 @@
         ga('create', '{{config('google_analytics.ua_code')}}', 'auto');
         ga('send', 'pageview');
     </script>
-    <script type="text/javascript" src="{{asset('js/zendesk.js')}}"></script>
-    <script type="text/javascript" src="{{asset('js/auth.js')}}"></script>
+    <script type="text/javascript" src="{{elixir('js/zendesk.js')}}"></script>
+    <script type="text/javascript" src="{{elixir('js/auth.js')}}"></script>
 
 @yield('links')
 

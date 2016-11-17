@@ -16,7 +16,7 @@
 
 
 @section('links')
-    <link rel="stylesheet" href="{{asset('css/product-tour.css')}}">
+    <link rel="stylesheet" href="{{elixir('css/product-tour.css')}}">
 @stop
 
 
@@ -231,7 +231,7 @@
     </script>
 
     {{--TOUR--}}
-    <script type="text/javascript" src="{{asset('js/product-tour.js')}}"></script>
+    <script type="text/javascript" src="{{elixir('js/product-tour.js')}}"></script>
     <script type="text/javascript">
         var tour = new Tour({
             steps: [

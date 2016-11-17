@@ -7,7 +7,7 @@
  */
 ?>
 
-<a href="{{asset("others/atlassianAPIs.pptx")}}" download="atlassianAPIs.pptx">ppt</a>
+<a href="{{asset("build/others/atlassianAPIs.pptx")}}" download="atlassianAPIs.pptx">ppt</a>
 <br>
 <br>
 <br>
