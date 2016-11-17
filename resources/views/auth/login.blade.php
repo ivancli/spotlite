@@ -17,7 +17,7 @@
                     @endforeach
                 </ul>
             @endif
-            {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "onsubmit" => "gaLogin();")) !!}
+            {!! Form::open(array('route' => 'login.post', 'method' => 'post', "id" => "frm-login", "onsubmit" => "gaLogin();showLoading();")) !!}
             @include('auth.forms.login_form')
             {!! Form::close() !!}
             <div style="margin-bottom: 10px;"></div>

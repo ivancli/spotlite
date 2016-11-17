@@ -32,6 +32,50 @@
         {!! Form::email('email', null, array('class' => 'form-control', 'disabled' => 'disabled')) !!}
     </div>
 </div>
+<div class="form-group required">
+    {!! Form::label('industry', 'Industry', array('class' => 'control-label col-md-3')) !!}
+    <div class="col-md-9">
+        {!! Form::select('industry', array(
+        "Aerospace" => "Aerospace",
+        "Agriculture" => "Agriculture",
+        "Chemical" => "Chemical",
+        "Computer" => "Computer",
+        "Construction" => "Construction",
+        "Defense" => "Defense",
+        "Education" => "Education",
+        "Energy" => "Energy",
+        "Entertainment" => "Entertainment",
+        "Financial services" => "Financial services",
+        "Food" => "Food",
+        "Health care" => "Health care",
+        "Hospitality" => "Hospitality",
+        "Information" => "Information",
+        "Manufacturing" => "Manufacturing",
+        "Mass media" => "Mass media",
+        "Telecommunications" => "Telecommunications",
+        "Transport" => "Transport",
+        "Water" => "Water",
+        ), null, ['class'=>'form-control', 'placeholder' => "Industry"]) !!}
+    </div>
+</div>
+<div class="form-group required">
+    {!! Form::label('company_type', 'Company type', array('class' => 'control-label col-md-3')) !!}
+    <div class="col-md-9">
+        {!! Form::select('company_type', array(
+        "Retailer" => "Retailer",
+        "Brand" => "Brand",
+        "Other" => "Other"
+        ), null, ['class'=>'form-control', 'placeholder' => "Company type"]) !!}
+    </div>
+</div>
+<div class="form-group required">
+    {!! Form::label('company_name', 'Company name', array('class' => 'control-label col-md-3')) !!}
+    <div class="col-md-9">
+        {!! Form::text('company_name', null, array('class' => 'form-control', 'placeholder' => 'Company name')) !!}
+    </div>
+</div>
+
+
 <div class="text-right">
     {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm btn-flat", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
 </div>

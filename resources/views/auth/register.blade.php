@@ -18,6 +18,23 @@
         .register-box-body ul.text-danger {
             padding-left: 20px;
         }
+
+        .form-group{
+            position: relative;
+        }
+
+        .form-group.required::before {
+            content: "*";
+            color: red;
+            font-weight: bold;
+            position: absolute;
+            left: 5px;
+            top: 10px;
+        }
+
+        input.form-control{
+            padding-left: 15px;
+        }
     </style>
     <div class="register-box">
         <div class="register-logo">

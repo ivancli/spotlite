@@ -22,6 +22,9 @@ class UpdateValidator extends ValidatorAbstract
         return array(
             "first_name" => "required|max:255",
             "last_name" => "required|max:255",
+            "industry" => "required",
+            "company_type" => "required",
+            "company_name" => "required|max:255",
         );
     }
 
@@ -32,6 +35,10 @@ class UpdateValidator extends ValidatorAbstract
             "first_name.max" => "First name accepts maximum 255 characters.",
             "last_name.required" => "Last name is required.",
             "last_name.max" => "Last name accepts maximum 255 characters.",
+            "industry.required" => "Industry is required.",
+            "company_type.required" => "Company type is required.",
+            "company_name.required" => "Company name is required.",
+            "company_name.max" => "Company name accepts maximum 255 characters.",
         );
     }
 }
