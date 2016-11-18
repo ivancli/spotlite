@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Contracts\Repository\Dashboard\DashboardContract;
 use App\Contracts\Repository\Dashboard\DashboardWidgetContract;
 use App\Contracts\Repository\Dashboard\DashboardWidgetTypeContract;
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Validators\Dashboard\DashboardWidget\StoreValidator;
@@ -25,20 +26,21 @@ class DashboardWidgetController extends Controller
     protected $dashboardRepo;
     protected $dashboardWidgetRepo;
     protected $dashboardWidgetTypeRepo;
+    protected $mailingAgentRepo;
 
 
-    public function __construct(Request $request, DashboardContract $dashboardContract, DashboardWidgetContract $dashboardWidgetContract, DashboardWidgetTypeContract $dashboardWidgetTypeContract)
+    public function __construct(Request $request, DashboardContract $dashboardContract, DashboardWidgetContract $dashboardWidgetContract, DashboardWidgetTypeContract $dashboardWidgetTypeContract, MailingAgentContract $mailingAgentContract)
     {
         $this->middleware('permission:create_dashboard_widget', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_dashboard_widget', ['only' => ['show']]);
         $this->middleware('permission:update_dashboard_widget', ['only' => ['edit', 'update', 'updateOrder']]);
         $this->middleware('permission:delete_dashboard_widget', ['only' => ['destroy']]);
 
-
         $this->request = $request;
         $this->dashboardRepo = $dashboardContract;
         $this->dashboardWidgetRepo = $dashboardWidgetContract;
         $this->dashboardWidgetTypeRepo = $dashboardWidgetTypeContract;
+        $this->mailingAgentRepo = $mailingAgentContract;
     }
 
     public function create()
@@ -79,7 +81,7 @@ class DashboardWidgetController extends Controller
                 return redirect()->back()->withInput()->withErrors($errors);
             }
         }
-        if($this->request->get('timespan') == 'custom'){
+        if ($this->request->get('timespan') == 'custom') {
             $status = false;
             $errors = array("Cannot add content with custom timespan, please choose different timespan to add to dashboard.");
             if ($this->request->ajax()) {
@@ -111,6 +113,7 @@ class DashboardWidgetController extends Controller
             $dashboardWidget->setPreference("timespan", $this->request->get('timespan'));
             $dashboardWidget->setPreference("resolution", $this->request->get('resolution'));
         }
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
         $status = true;
         if ($this->request->ajax()) {
             if ($this->request->wantsJson()) {
@@ -201,6 +204,9 @@ class DashboardWidgetController extends Controller
             $dashboardWidget->setPreference("timespan", $this->request->get('timespan'));
             $dashboardWidget->setPreference("resolution", $this->request->get('resolution'));
         }
+
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
+
         $status = true;
         if ($this->request->ajax()) {
             if ($this->request->wantsJson()) {
@@ -224,6 +230,9 @@ class DashboardWidgetController extends Controller
                 $widget->save();
             }
         }
+
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
+
         $status = true;
         if ($this->request->ajax()) {
             if ($this->request->wantsJson()) {
@@ -244,6 +253,9 @@ class DashboardWidgetController extends Controller
             return false;
         }
         $this->dashboardWidgetRepo->deleteWidget($id);
+
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
+
         $status = true;
         if ($this->request->ajax()) {
             if ($this->request->wantsJson()) {

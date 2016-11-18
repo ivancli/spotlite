@@ -24,11 +24,12 @@ class DashboardController extends Controller
 {
     protected $dashboardRepo;
     protected $dashboardTemplateRepo;
+    protected $mailingAgentRepo;
 
     protected $queryFilter;
     protected $request;
 
-    public function __construct(QueryFilter $queryFilter, Request $request, DashboardContract $dashboardContract, DashboardTemplateContract $dashboardTemplateContract)
+    public function __construct(QueryFilter $queryFilter, Request $request, DashboardContract $dashboardContract, DashboardTemplateContract $dashboardTemplateContract, MailingAgentContract $mailingAgentContract)
     {
         /*middleware filter*/
         $this->middleware('permission:read_dashboard', ['only' => ['index', 'show']]);
@@ -43,6 +44,7 @@ class DashboardController extends Controller
 
         $this->dashboardRepo = $dashboardContract;
         $this->dashboardTemplateRepo = $dashboardTemplateContract;
+        $this->mailingAgentRepo = $mailingAgentContract;
 
         $this->queryFilter = $queryFilter;
         $this->request = $request;
@@ -103,6 +105,8 @@ class DashboardController extends Controller
             $dashboard->setPreference('resolution', $this->request->get('resolution'));
         }
 
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
+
         $status = true;
 
         if ($this->request->ajax()) {
@@ -126,6 +130,9 @@ class DashboardController extends Controller
 
         $dashboard->deletePreference('timespan');
         $dashboard->deletePreference('resolution');
+
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
+
         $status = true;
 
         if ($this->request->ajax()) {
@@ -208,6 +215,8 @@ class DashboardController extends Controller
             $tempDashboard->dashboard_order = $ordering + 1;
             $tempDashboard->save();
         }
+
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
 
         $status = true;
         if ($this->request->ajax()) {
@@ -304,6 +313,7 @@ class DashboardController extends Controller
             $tempDashboard->save();
         }
 
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
 
         $status = true;
         if ($this->request->ajax()) {
@@ -325,6 +335,9 @@ class DashboardController extends Controller
             return false;
         }
         $this->dashboardRepo->deleteDashboard($id);
+
+        $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
+
         $status = true;
 
         if ($this->request->ajax()) {

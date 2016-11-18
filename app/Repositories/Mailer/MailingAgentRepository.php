@@ -349,4 +349,25 @@ class MailingAgentRepository implements MailingAgentContract
             $this->syncUserSubscription($user);
         }
     }
+
+    public function updateLastConfiguredDashboardDate()
+    {
+        $user = auth()->user();
+        if ($user->isStaff()) {
+            return true;
+        }
+        $result = $this->editSubscriber($user->email, array(
+            "CustomFields" => array(
+                array(
+                    "Key" => "LastConfiguredDashboardDate",
+                    "Value" => date("Y/m/d")
+                )
+            )
+        ));
+        if ($result->http_status_code == 200) {
+            return $result;
+        } else {
+            return $result->response;
+        }
+    }
 }

@@ -41,6 +41,8 @@ interface MailingAgentContract
 
     public function updateLastSetupReportDate();
 
+    public function updateLastConfiguredDashboardDate();
+
     public function syncUserSubscription(User $user);
 
     public function syncAllUsersSubscriptions();
