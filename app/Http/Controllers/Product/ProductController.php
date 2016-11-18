@@ -42,7 +42,7 @@ class ProductController extends Controller
         $this->middleware('permission:read_product', ['only' => ['show']]);
         $this->middleware('permission:reorder_product', ['only' => ['updateOrder']]);
         $this->middleware('permission:update_product', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete_product', ['only' => ['delete']]);
+        $this->middleware('permission:delete_product', ['only' => ['destroy']]);
 
         $this->productRepo = $productContract;
         $this->categoryRepo = $categoryContract;

@@ -71,9 +71,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    if ($.isFunction(failCallback)) {
-                        failCallback(xhr, status, error);
-                    }
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

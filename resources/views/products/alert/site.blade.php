@@ -150,7 +150,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to update site alert, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -169,7 +169,7 @@
                 },
                 "error": function () {
                     hideLoading();
-                    alertP("Error", "Unable to delete site alert, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

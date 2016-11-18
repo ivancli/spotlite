@@ -80,13 +80,26 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to add category, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
 
         function loadSingleCategory(url, callback) {
-            $.get(url, callback);
+            $.ajax({
+                "url": url,
+                "method": "get",
+                "success": function(response){
+                    hideLoading();
+                    if($.isFunction(callback)){
+                        callback(response);
+                    }
+                },
+                "error": function(xhr, status, error){
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
         }
     </script>
 </div>

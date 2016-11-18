@@ -243,10 +243,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    if ($.isFunction(errorCallback)) {
-                        errorCallback(response);
-                    }
-                    alertP("Error", "unable to update xpath, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -273,10 +270,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    if ($.isFunction(errorCallback)) {
-                        errorCallback(response);
-                    }
-                    alertP("Error", "unable to update xpath, please try again later.");
+                    describeServerRespondedError(xhr.status)
                 }
             })
         }
@@ -303,34 +297,38 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    if ($.isFunction(errorCallback)) {
-                        errorCallback(response);
-                    }
-                    alertP("Error", "unable to update xpath, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
 
         function showEditxPathForm(el) {
             showLoading();
-            $.get($(el).attr("data-url"), function (html) {
-                hideLoading();
-                var $modal = $(html);
-                $modal.modal();
-                $modal.on("shown.bs.modal", function () {
-                    if ($.isFunction(modalReady)) {
-                        modalReady({
-                            "callback": function (response) {
-                                tblDomain.ajax.reload();
-                            }
-                        })
-                    }
-                });
-                $modal.on("hidden.bs.modal", function () {
-                    $(this).remove();
-                });
-
-            })
+            $.ajax({
+                "url": $(el).attr("data-url"),
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    tblDomain.ajax.reload();
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status)
+                }
+            });
         }
 
         function btnDeleteDomainOnClick(el) {
@@ -357,7 +355,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete domain, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }
@@ -372,23 +370,31 @@
 
         function showAddDomainForm() {
             showLoading();
-            $.get("{{route("admin.domain.create")}}", function (html) {
-                hideLoading();
-                var $modal = $(html);
-                $modal.modal();
-                $modal.on("shown.bs.modal", function () {
-                    if ($.isFunction(modalReady)) {
-                        modalReady({
-                            "callback": function (response) {
-                                tblDomain.ajax.reload();
-                            }
-                        })
-                    }
-                });
-                $modal.on("hidden.bs.modal", function () {
-                    $(this).remove();
-                });
-            })
+            $.ajax({
+                "url": "{{route("admin.domain.create")}}",
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    tblDomain.ajax.reload();
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
         }
     </script>
 @stop

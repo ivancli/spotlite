@@ -159,10 +159,12 @@
         }
 
         function showTerms() {
+            showLoading();
             $.ajax({
                 'url': '{{route('term_and_condition.show', 0)}}',
                 'method': 'get',
                 'success': function (html) {
+                    hideLoading();
                     var $modal = $(html);
                     $modal.modal();
                     $modal.on("shown.bs.modal", function () {
@@ -179,7 +181,8 @@
                     });
                 },
                 'error': function (error, status, xhr) {
-
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }

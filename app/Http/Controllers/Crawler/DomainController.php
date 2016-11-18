@@ -16,6 +16,11 @@ class DomainController extends Controller
 
     public function __construct(DomainContract $domainContract, QueryFilter $queryFilter)
     {
+        $this->middleware('permission:read_admin_domain', ['only' => ['index']]);
+        $this->middleware('permission:create_admin_domain', ['only' => ['create', 'store']]);
+        $this->middleware('permission:delete_admin_domain', ['only' => ['destroy']]);
+        $this->middleware('permission:update_admin_domain_preference', ['only' => ['editxPath', 'updatexPath', 'updateClasses']]);
+
         $this->domainRepo = $domainContract;
         $this->queryFilter = $queryFilter;
     }
@@ -104,7 +109,7 @@ class DomainController extends Controller
 
     /**
      * @param Request $request
-     * @param $site_id
+     * @param $domain_id
      * @return SiteController|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function editxPath(Request $request, $domain_id)

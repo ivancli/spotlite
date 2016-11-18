@@ -236,7 +236,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to add chart to dashboard, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -343,7 +343,7 @@
                     }
                 },
                 "error": function (xhr, status, error) {
-
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

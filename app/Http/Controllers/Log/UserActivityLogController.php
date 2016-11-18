@@ -17,6 +17,8 @@ class UserActivityLogController extends Controller
 
     public function __construct(UserActivityLoggerContract $userActivityLoggerContract, QueryFilter $filter)
     {
+        $this->middleware('permission:read_user_activity_log', ['only' => ['index', 'show']]);
+
         $this->userActivityLoggerRepo = $userActivityLoggerContract;
         $this->filter = $filter;
     }

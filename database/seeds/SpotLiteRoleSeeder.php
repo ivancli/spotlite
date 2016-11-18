@@ -138,6 +138,8 @@ class SpotLiteRoleSeeder extends Seeder
 
         //attach permissions
         $superAdmin->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
+        $tier_1->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
+        $tier_2->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
 
 
         /**
@@ -526,8 +528,102 @@ class SpotLiteRoleSeeder extends Seeder
         $tier_2->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
 
 
+        //ADMIN
+        $manageAppPreference = new \Invigor\UM\UMPermission();
+        $manageAppPreference->name = "manage_app_preference";
+        $manageAppPreference->display_name = "Manage App Preference";
+        $manageAppPreference->save();
 
-        /*subscription permissions*/
+        $manageCrawler = new \Invigor\UM\UMPermission();
+        $manageCrawler->name = "manage_crawler";
+        $manageCrawler->display_name = "Manage Crawler";
+        $manageCrawler->save();
 
+        $manageAdminSite = new \Invigor\UM\UMPermission();
+        $manageAdminSite->name = "manage_admin_site";
+        $manageAdminSite->display_name = "Manage Admin Site";
+        $manageAdminSite->parent_id = $manageCrawler->getKey();
+        $manageAdminSite->save();
+
+        $readAdminSite = new \Invigor\UM\UMPermission();
+        $readAdminSite->name = "read_admin_site";
+        $readAdminSite->display_name = "Read Admin Site";
+        $readAdminSite->parent_id = $manageAdminSite->getKey();
+        $readAdminSite->save();
+
+        $createAdminSite = new \Invigor\UM\UMPermission();
+        $createAdminSite->name = "create_admin_site";
+        $createAdminSite->display_name = "Create Admin Site";
+        $createAdminSite->parent_id = $manageAdminSite->getKey();
+        $createAdminSite->save();
+
+        $deleteAdminSite = new \Invigor\UM\UMPermission();
+        $deleteAdminSite->name = "delete_admin_site";
+        $deleteAdminSite->display_name = "Delete Admin Site";
+        $deleteAdminSite->parent_id = $manageAdminSite->getKey();
+        $deleteAdminSite->save();
+
+        $updateAdminSiteStatus = new \Invigor\UM\UMPermission();
+        $updateAdminSiteStatus->name = "update_admin_site_status";
+        $updateAdminSiteStatus->display_name = "Update Admin Site Status";
+        $updateAdminSiteStatus->parent_id = $manageAdminSite->getKey();
+        $updateAdminSiteStatus->save();
+
+        $updateAdminSitePreference = new \Invigor\UM\UMPermission();
+        $updateAdminSitePreference->name = "update_admin_site_preference";
+        $updateAdminSitePreference->display_name = "Update Admin Site Preference";
+        $updateAdminSitePreference->parent_id = $manageAdminSite->getKey();
+        $updateAdminSitePreference->save();
+
+        $testAdminSite = new \Invigor\UM\UMPermission();
+        $testAdminSite->name = "test_admin_site";
+        $testAdminSite->display_name = "Test Admin Site";
+        $testAdminSite->parent_id = $manageAdminSite->getKey();
+        $testAdminSite->save();
+
+        //Domain
+        $manageAdminDomain = new \Invigor\UM\UMPermission();
+        $manageAdminDomain->name = "manage_admin_domain";
+        $manageAdminDomain->display_name = "Manage Admin Domain";
+        $manageAdminDomain->save();
+
+        $readAdminDomain = new \Invigor\UM\UMPermission();
+        $readAdminDomain->name = "read_admin_domain";
+        $readAdminDomain->display_name = "Read Admin Domain";
+        $readAdminDomain->parent_id = $manageAdminDomain->getKey();
+        $readAdminDomain->save();
+
+        $createAdminDomain = new \Invigor\UM\UMPermission();
+        $createAdminDomain->name = "create_admin_domain";
+        $createAdminDomain->display_name = "Create Admin Domain";
+        $createAdminDomain->parent_id = $manageAdminDomain->getKey();
+        $createAdminDomain->save();
+
+        $updateAdminDomainPreference = new \Invigor\UM\UMPermission();
+        $updateAdminDomainPreference->name = "update_admin_domain_preference";
+        $updateAdminDomainPreference->display_name = "Update Admin Domain Preference";
+        $updateAdminDomainPreference->parent_id = $manageAdminDomain->getKey();
+        $updateAdminDomainPreference->save();
+
+        $deleteAdminDomain = new \Invigor\UM\UMPermission();
+        $deleteAdminDomain->name = "delete_admin_domain";
+        $deleteAdminDomain->display_name = "Delete Admin Domain";
+        $deleteAdminDomain->parent_id = $manageAdminDomain->getKey();
+        $deleteAdminDomain->save();
+
+
+        $readCrawlerLog = new \Invigor\UM\UMPermission();
+        $readCrawlerLog->name = "read_crawler_log";
+        $readCrawlerLog->display_name = "Read Crawler Log";
+        $readCrawlerLog->save();
+
+        $readUserActivityLog = new \Invigor\UM\UMPermission();
+        $readUserActivityLog->name = "read_user_activity_log";
+        $readUserActivityLog->display_name = "Read User Activity Log";
+        $readUserActivityLog->save();
+
+        $superAdmin->attachPermissions(array($manageAppPreference, $manageCrawler, $manageAdminSite, $manageAdminDomain, $readCrawlerLog, $readUserActivityLog));
+        $tier_1->attachPermissions(array($manageCrawler, $manageAdminSite, $manageAdminDomain, $readCrawlerLog, $readUserActivityLog));
+        $tier_2->attachPermissions(array($updateAdminSiteStatus, $updateAdminSitePreference, $readCrawlerLog, $readUserActivityLog));
     }
 }

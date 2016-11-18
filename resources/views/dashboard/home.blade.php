@@ -32,6 +32,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -61,8 +62,6 @@
                                             $newWidget.slideDown();
                                         });
                                     }
-
-                                    console.info('response', response);
                                     /* TODO append new widget */
                                 }
                             })
@@ -73,7 +72,8 @@
                     });
                 },
                 "error": function (xhr, status, error) {
-                    alertP("Error", "Unable to add content, please try again later.");
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -92,7 +92,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to load dashboard content, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -130,7 +130,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to edit widget, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -159,7 +159,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete content, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }

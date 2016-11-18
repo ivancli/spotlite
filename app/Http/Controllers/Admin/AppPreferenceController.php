@@ -15,7 +15,7 @@ class AppPreferenceController extends Controller
 {
     public function __construct()
     {
-
+        $this->middleware('permission:manage_app_preference', ['only' => ['index', 'update']]);
     }
 
     public function index()

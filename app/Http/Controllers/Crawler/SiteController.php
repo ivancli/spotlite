@@ -36,10 +36,16 @@ class SiteController extends Controller
     protected $storeValidator;
     protected $updateValidator;
 
-    public function __construct(SiteContract $siteContract, DomainContract $domainContract, CrawlerContract $crawlerContract,
-                                QueryFilter $queryFilter,
-                                StoreValidator $storeValidator, UpdateValidator $updateValidator)
+    public function __construct(SiteContract $siteContract, DomainContract $domainContract, CrawlerContract $crawlerContract, QueryFilter $queryFilter, StoreValidator $storeValidator, UpdateValidator $updateValidator)
     {
+        $this->middleware('permission:read_admin_site', ['only' => ['index']]);
+        $this->middleware('permission:create_admin_site', ['only' => ['create', 'store']]);
+        $this->middleware('permission:delete_admin_site', ['only' => ['destroy']]);
+        $this->middleware('permission:update_admin_site_status', ['only' => ['setStatus']]);
+        $this->middleware('permission:update_admin_site_preference', ['only' => ['editxPath', 'updatexPath']]);
+        $this->middleware('permission:test_admin_site', ['only' => ['sendTest']]);
+
+
         $this->siteRepo = $siteContract;
         $this->domainRepo = $domainContract;
         $this->crawlerRepo = $crawlerContract;
@@ -188,8 +194,8 @@ class SiteController extends Controller
             $site->save();
         }
         $status = true;
-        if($request->ajax()) {
-            if($request->wantsJson()) {
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);

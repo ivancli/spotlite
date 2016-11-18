@@ -33,7 +33,7 @@ class CategoryController extends Controller
         $this->middleware('permission:read_category', ['only' => ['show']]);
         $this->middleware('permission:reorder_category', ['only' => ['updateOrder']]);
         $this->middleware('permission:update_category', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete_category', ['only' => ['delete']]);
+        $this->middleware('permission:delete_category', ['only' => ['destroy']]);
 
 
         $this->categoryRepo = $categoryContract;

@@ -146,7 +146,7 @@
                     }
                 },
                 "error": function (xhr, status, error) {
-                    alertP("Error", "Unable to update product order, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -177,7 +177,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete product, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }
@@ -231,7 +231,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to update product, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -257,9 +257,17 @@
                                     if (response.status == true) {
                                         showLoading();
                                         if (typeof response.site != 'undefined') {
-                                            $.get(response.site.urls.show, function (html) {
-                                                hideLoading();
-                                                $(el).closest(".product-wrapper").find(".tbl-site tbody").append(html);
+                                            $.ajax({
+                                                "url": response.site.urls.show,
+                                                "method": "get",
+                                                "success": function(html){
+                                                    hideLoading();
+                                                    $(el).closest(".product-wrapper").find(".tbl-site tbody").append(html);
+                                                },
+                                                "error": function(xhr, status, error){
+                                                    hideLoading();
+                                                    describeServerRespondedError(xhr.status);
+                                                }
                                             });
                                         }
                                     } else {
@@ -275,7 +283,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to show add site form, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -316,25 +324,33 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to show add site form, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
 
         function showProductChart(url) {
             showLoading();
-            $.get(url, function (html) {
-                hideLoading();
-                var $modal = $(html);
-                $modal.modal();
-                $modal.on("shown.bs.modal", function () {
-                    if ($.isFunction(modalReady)) {
-                        modalReady()
-                    }
-                });
-                $modal.on("hidden.bs.modal", function () {
-                    $(this).remove();
-                });
+            $.ajax({
+                "url": url,
+                "method": "get",
+                "success": function(html){
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady()
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                "error": function(xhr, status, error){
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
             });
         }
 
@@ -369,7 +385,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to show edit report form, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }

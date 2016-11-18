@@ -138,8 +138,9 @@
                         }
                         tblGroups.ajax.reload(null, false);
                     },
-                    "error": function () {
+                    "error": function (xhr, status, error) {
                         alert("Unable to delete group, please try again later.");
+                        describeServerRespondedError(xhr.status);
                     }
                 })
             }

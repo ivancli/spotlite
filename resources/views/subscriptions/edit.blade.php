@@ -66,6 +66,7 @@
                             }
                         }, function (xhr, status, error) {
                             hideLoading();
+                            describeServerRespondedError(xhr.status);
                         })
                     },
                     "dismiss": true

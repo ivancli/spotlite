@@ -60,7 +60,7 @@
                 }
             },
             "error": function (xhr, status, error) {
-                alertP("Error", "Unable to update widget order, please try again later.");
+                describeServerRespondedError(xhr.status);
             }
         })
     }

@@ -93,7 +93,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to purchase {{$onboardingProduct->name}}, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }

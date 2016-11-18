@@ -403,10 +403,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    if ($.isFunction(errorCallback)) {
-                        errorCallback(response);
-                    }
-                    alertP("Error", "unable to update xpath, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -431,73 +428,96 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to test the crawler, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
 
         function showAddSiteForm() {
             showLoading();
-            $.get("{{route("admin.site.create")}}", function (html) {
-                hideLoading();
-                var $modal = $(html);
-                $modal.modal();
-                $modal.on("shown.bs.modal", function () {
-                    if ($.isFunction(modalReady)) {
-                        modalReady({
-                            "callback": function (response) {
-                                reloadSiteTable()
-                            }
-                        })
-                    }
-                });
-                $modal.on("hidden.bs.modal", function () {
-                    $(this).remove();
-                });
-            })
+            $.ajax({
+                "url": "{{route("admin.site.create")}}",
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    reloadSiteTable()
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status)
+                }
+            });
         }
 
         function showEditCrawlerForm(el) {
             showLoading();
-            $.get($(el).attr("data-url"), function (html) {
-                hideLoading();
-                var $modal = $(html);
-                $modal.modal();
-                $modal.on("shown.bs.modal", function () {
-                    if ($.isFunction(modalReady)) {
-                        modalReady({
-                            "callback": function (response) {
-                                reloadSiteTable()
-                            }
-                        })
-                    }
-                });
-                $modal.on("hidden.bs.modal", function () {
-                    $(this).remove();
-                });
-            })
+            $.ajax({
+                "url": $(el).attr("data-url"),
+                "method": "get",
+                "success": function(html){
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    reloadSiteTable()
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                "error": function(xhr, status, error){
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
         }
 
         function showEditxPathForm(el) {
             showLoading();
-            $.get($(el).attr("data-url"), function (html) {
-                hideLoading();
-                var $modal = $(html);
-                $modal.modal();
-                $modal.on("shown.bs.modal", function () {
-                    if ($.isFunction(modalReady)) {
-                        modalReady({
-                            "callback": function (response) {
-                                reloadSiteTable()
-                            }
-                        })
-                    }
-                });
-                $modal.on("hidden.bs.modal", function () {
-                    $(this).remove();
-                });
-
-            })
+            $.ajax({
+                "url": $(el).attr("data-url"),
+                "method": "get",
+                "success": function(html){
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    reloadSiteTable()
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                "error": function(xhr, status, error){
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
         }
 
         function btnDeleteSiteOnClick(el) {
@@ -523,7 +543,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete site, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }
@@ -541,6 +561,7 @@
         }
 
         function setSiteStatus(el, status) {
+            showLoading();
             $.ajax({
                 "url": $(el).attr("data-url"),
                 "method": "put",
@@ -549,11 +570,12 @@
                 },
                 "dataType": "json",
                 "success": function (response) {
-                    console.info("response", response);
+                    hideLoading();
                     reloadSiteTable();
                 },
                 "error": function (xhr, status, error) {
-
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

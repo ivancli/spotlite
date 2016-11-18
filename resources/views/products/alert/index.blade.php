@@ -368,7 +368,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to show edit alert form, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -399,7 +399,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete alert, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }

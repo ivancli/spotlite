@@ -74,13 +74,20 @@
             },
             "error": function (xhr, status, error) {
                 hideLoading();
-                alertP("Error", "Unable to add product, please try again later.");
+                describeServerRespondedError(xhr.status);
             }
         })
     }
 
     function loadSingleProduct(url, callback) {
-        $.get(url, callback);
+        $.ajax({
+            "url": url,
+            "method": "get",
+            "success": callback,
+            "error": function(xhr, status, error){
+                hideLoading();
+                describeServerRespondedError(xhr.status);
+            }
+        });
     }
 </script>
-</div>

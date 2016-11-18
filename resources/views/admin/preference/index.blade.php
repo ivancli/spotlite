@@ -34,12 +34,14 @@
 @section('scripts')
     <script type="text/javascript">
         function submitUpdateAdminPreferences(el) {
+            showLoading();
             $.ajax({
                 "url": $(el).attr("action"),
                 "method": "put",
                 "data": $(el).serialize(),
                 "dataType": "json",
                 "success": function (response) {
+                    hideLoading();
                     if (response.status == true) {
                         alertP("Update Preferences", "App preferences are updated.");
                     } else {
@@ -47,7 +49,8 @@
                     }
                 },
                 "error": function (xhr, status, error) {
-                    alertP("Error", "Unable to update app preferences, please try again later.");
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

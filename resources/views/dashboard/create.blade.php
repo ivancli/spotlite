@@ -57,10 +57,10 @@
                             alertP("Error", "Unable to create dashboard, please try again later.");
                         }
                     }
-                    console.info(response);
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

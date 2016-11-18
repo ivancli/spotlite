@@ -50,10 +50,9 @@ class SiteController extends Controller
         $this->middleware('permission:read_site', ['only' => ['show']]);
         $this->middleware('permission:reorder_site', ['only' => ['updateOrder']]);
         $this->middleware('permission:update_site', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete_site', ['only' => ['delete']]);
+        $this->middleware('permission:delete_site', ['only' => ['destroy']]);
         $this->middleware('permission:get_site_price', ['only' => ['getPrices']]);
         $this->middleware('permission:set_my_price', ['only' => ['setMyPrice']]);
-
 
         $this->siteRepo = $siteContract;
         $this->domainRepo = $domainContract;

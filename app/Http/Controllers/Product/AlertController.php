@@ -32,11 +32,11 @@ class AlertController extends Controller
     public function __construct(ProductContract $productContract, AlertContract $alertContract, SiteContract $siteContract)
     {
         $this->middleware('permission:read_product_alert', ['only' => ['index']]);
-        $this->middleware('permission:update_product_alert', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete_product_alert', ['only' => ['delete']]);
+        $this->middleware('permission:update_product_alert', ['only' => ['editProductAlert', 'updateProductAlert']]);
+        $this->middleware('permission:delete_product_alert', ['only' => ['deleteProductAlert']]);
         $this->middleware('permission:read_site_alert', ['only' => ['index']]);
-        $this->middleware('permission:update_site_alert', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete_site_alert', ['only' => ['delete']]);
+        $this->middleware('permission:update_site_alert', ['only' => ['editSiteAlert', 'updateSiteAlert']]);
+        $this->middleware('permission:delete_site_alert', ['only' => ['deleteSiteAlert']]);
 
         $this->alertRepo = $alertContract;
         $this->productRepo = $productContract;

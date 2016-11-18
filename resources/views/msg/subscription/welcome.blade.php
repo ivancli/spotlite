@@ -127,7 +127,7 @@
                     }
                 },
                 "error": function () {
-                    alertP("Error", "Unable to update preference, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

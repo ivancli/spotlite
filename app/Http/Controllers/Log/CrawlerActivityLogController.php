@@ -21,6 +21,8 @@ class CrawlerActivityLogController extends Controller
 
     public function __construct(CrawlerActivityLoggerContract $crawlerActivityLoggerContract, QueryFilter $filter)
     {
+        $this->middleware('permission:read_crawler_log', ['only' => ['index']]);
+
         $this->crawlerActivityLoggerRepo = $crawlerActivityLoggerContract;
         $this->filter = $filter;
     }

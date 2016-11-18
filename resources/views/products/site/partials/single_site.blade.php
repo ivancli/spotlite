@@ -140,7 +140,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete site, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }
@@ -172,9 +172,17 @@
                                     if (response.status == true) {
                                         showLoading();
                                         if (typeof response.site != 'undefined') {
-                                            $.get(response.site.urls.show, function (html) {
-                                                hideLoading();
-                                                $(el).closest(".site-wrapper").replaceWith(html);
+                                            $.ajax({
+                                                "url": response.site.urls.show,
+                                                "method": "get",
+                                                "success": function(html){
+                                                    hideLoading();
+                                                    $(el).closest(".site-wrapper").replaceWith(html);
+                                                },
+                                                "error": function(xhr, status, error){
+                                                    hideLoading();
+                                                    describeServerRespondedError(xhr.status);
+                                                }
                                             });
                                         }
                                     } else {
@@ -190,7 +198,7 @@
                 },
                 "error": function () {
                     hideLoading();
-                    alertP("Error", "Unable to edit this site, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -226,7 +234,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to show edit alert form, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -269,9 +277,17 @@
                     if (response.status == true) {
                         gaSetMyPrice();
                         showLoading();
-                        $.get('{{$site->product->urls['show']}}', function (html) {
-                            hideLoading();
-                            $(el).closest(".product-wrapper").replaceWith(html);
+                        $.ajax({
+                            "url": '{{$site->product->urls['show']}}',
+                            "method": "get",
+                            "success": function(html){
+                                hideLoading();
+                                $(el).closest(".product-wrapper").replaceWith(html);
+                            },
+                            "error": function(xhr, status, error){
+                                hideLoading();
+                                describeServerRespondedError(xhr.status);
+                            }
                         });
                     } else {
                         alertP("Error", "unable to set my price, please try again later.");
@@ -279,25 +295,33 @@
                 },
                 "error": function () {
                     hideLoading();
-                    alertP("Error", "unable to set my price, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
 
         function showSiteChart(url) {
             showLoading();
-            $.get(url, function (html) {
-                hideLoading();
-                var $modal = $(html);
-                $modal.modal();
-                $modal.on("shown.bs.modal", function () {
-                    if ($.isFunction(modalReady)) {
-                        modalReady()
-                    }
-                });
-                $modal.on("hidden.bs.modal", function () {
-                    $(this).remove();
-                });
+            $.ajax({
+                "url": url,
+                "method": "get",
+                "success": function(html){
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady()
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+                },
+                "error": function(xhr, status, error){
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
             });
         }
 

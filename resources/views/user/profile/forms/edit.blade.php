@@ -105,7 +105,7 @@
             }
         }, function () {
             hideLoading();
-            alertP("Error", "Unable to update profile, please try again later.");
+            describeServerRespondedError(xhr.status);
         })
     }
 

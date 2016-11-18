@@ -120,8 +120,8 @@
                         }
                         tblUsers.ajax.reload(null, false);
                     },
-                    "error": function () {
-                        alert("Unable to delete user, please try again later.");
+                    "error": function (xhr, status, error) {
+                        describeServerRespondedError(xhr.status);
                     }
                 })
             }

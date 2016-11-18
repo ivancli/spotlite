@@ -331,6 +331,7 @@
                     },
                     "error": function (xhr, status, error) {
                         hideReportListLoading();
+                        describeServerRespondedError(xhr.status);
                     }
                 })
             } else {
@@ -388,6 +389,7 @@
                     },
                     "error": function (xhr, status, error) {
                         hideReportListLoading();
+                        describeServerRespondedError(xhr.status);
                     }
                 })
             } else {
@@ -413,6 +415,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideReportListLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -458,7 +461,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to show edit report form, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -489,7 +492,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete report schedule, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }
@@ -527,7 +530,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete report, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }

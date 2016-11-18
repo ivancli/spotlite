@@ -227,7 +227,7 @@
                 },
                 "error": function () {
                     hideLoading();
-                    alertP("Error", "Unable to delete category report schedule, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -265,7 +265,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to update product alert, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

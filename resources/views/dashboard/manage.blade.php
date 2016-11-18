@@ -134,7 +134,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP('Error', 'unable to open create dashboard popup, please try again later.');
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -164,7 +164,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP('Error', 'unable to open edit dashboard popup, please try again later.');
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -192,7 +192,7 @@
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete dashboard, please try again later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     }

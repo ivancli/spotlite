@@ -91,7 +91,7 @@
                             },
                             "error": function (xhr, status, errors) {
                                 hideLoading();
-                                alertP("Error", "Unable to delete group, please try agian later.");
+                                describeServerRespondedError(xhr.status);
                             }
                         })
                     },

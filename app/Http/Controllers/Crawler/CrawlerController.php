@@ -19,6 +19,9 @@ class CrawlerController extends Controller
 
     public function __construct(CrawlerContract $crawler)
     {
+        $this->middleware('permission:update_admin_site_preference', ['only' => ['edit', 'update']]);
+
+
         $this->crawler = $crawler;
     }
 

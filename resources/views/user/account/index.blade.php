@@ -120,15 +120,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    var $errorContainer = $(".errors-container");
-                    $errorContainer.empty();
-                    $.each(xhr.responseJSON, function (index, entity) {
-                        $.each(entity, function (eIndex, error) {
-                            $errorContainer.append(
-                                    $("<li>").text(error)
-                            );
-                        });
-                    });
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -157,15 +149,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    var $errorContainer = $("#display-settings .errors-container");
-                    $errorContainer.empty();
-                    $.each(xhr.responseJSON, function (index, entity) {
-                        $.each(entity, function (eIndex, error) {
-                            $errorContainer.append(
-                                    $("<li>").text(error)
-                            );
-                        });
-                    });
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

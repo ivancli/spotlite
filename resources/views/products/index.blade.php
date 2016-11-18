@@ -108,10 +108,19 @@
             showLoading();
             var $list = $(".list-container")
             if ($list.find(".category-wrapper.create").length == 0) {
-                $.get("{{route('category.create')}}", function (html) {
-                    hideLoading();
-                    $list.prepend(html);
-                    $list.find(".category-wrapper.create .category-name").focus();
+                $.ajax({
+                    "url": "{{route('category.create')}}",
+                    "method": "get",
+                    "success": function(html){
+                        hideLoading();
+                        hideLoading();
+                        $list.prepend(html);
+                        $list.find(".category-wrapper.create .category-name").focus();
+                    },
+                    "error": function(xhr, status, error){
+                        hideLoading();
+                        describeServerRespondedError(xhr.status);
+                    }
                 });
             } else {
                 hideLoading();
@@ -143,10 +152,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "unable to load categories, please try again later.");
-                    if ($.isFunction(failCallback)) {
-                        failCallback(xhr, status, error);
-                    }
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -209,7 +215,7 @@
                     }
                 },
                 "error": function (xhr, status, error) {
-                    alertP("Error", "Unable to update category order, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -217,7 +223,7 @@
         function hideProductBannerMessage(el) {
             $(el).closest(".callout").slideUp(function () {
                 $(this).remove();
-            })
+            });
             $.ajax({
                 "url": "{{route("preference.update", ["element" => "HIDE_PRODUCT_BANNER_MESSAGE", "value" => "1"])}}",
                 "method": "put",

@@ -34,7 +34,7 @@
 
         }, function (xhr, status, error) {
             hideLoading();
-            alertP("Error", "Unable to create group, please try again later.");
+            describeServerRespondedError(xhr.status);
         });
     }
 

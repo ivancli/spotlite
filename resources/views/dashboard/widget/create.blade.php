@@ -78,6 +78,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }

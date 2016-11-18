@@ -19,7 +19,7 @@ class ReportController extends Controller
     public function __construct(ReportContract $reportContract, ReportTaskContract $reportTaskContract, CategoryContract $categoryContract, ProductContract $productContract)
     {
         $this->middleware('permission:read_report', ['only' => ['index', 'show']]);
-        $this->middleware('permission:delete_report', ['only' => ['delete']]);
+        $this->middleware('permission:delete_report', ['only' => ['destroy']]);
 
         $this->reportRepo = $reportContract;
         $this->reportTaskRepo = $reportTaskContract;

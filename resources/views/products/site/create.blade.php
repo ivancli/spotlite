@@ -95,7 +95,7 @@
                     }
                 }, function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to add site, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 });
             });
             $("#btn-check-price").on("click", function () {
@@ -220,7 +220,7 @@
                 },
                 "error": function () {
                     hideLoading();
-                    alertP("Error", "Unable to get price, please try again later");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

@@ -32,7 +32,7 @@ class DashboardWidgetController extends Controller
         $this->middleware('permission:create_dashboard_widget', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_dashboard_widget', ['only' => ['show']]);
         $this->middleware('permission:update_dashboard_widget', ['only' => ['edit', 'update', 'updateOrder']]);
-        $this->middleware('permission:delete_dashboard_widget', ['only' => ['delete']]);
+        $this->middleware('permission:delete_dashboard_widget', ['only' => ['destroy']]);
 
 
         $this->request = $request;

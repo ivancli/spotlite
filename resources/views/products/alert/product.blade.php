@@ -158,7 +158,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    alertP("Error", "Unable to update product alert, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }
@@ -177,7 +177,7 @@
                 },
                 "error": function () {
                     hideLoading();
-                    alertP("Error", "Unable to delete product alert, please try again later.");
+                    describeServerRespondedError(xhr.status);
                 }
             })
         }

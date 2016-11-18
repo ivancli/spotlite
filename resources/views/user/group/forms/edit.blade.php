@@ -32,7 +32,7 @@
 
         }, function (xhr, status, error) {
             hideLoading();
-            alertP("Error", "Unable to update group, please try again later.");
+            describeServerRespondedError(xhr.status);
         });
     }
 

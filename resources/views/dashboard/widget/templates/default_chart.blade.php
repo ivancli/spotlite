@@ -147,7 +147,7 @@
                     }
                 },
                 "error": function (xhr, status, error) {
-
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -227,7 +227,7 @@
                     }
                 },
                 "error": function (xhr, status, error) {
-
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }
@@ -324,7 +324,7 @@
                     }
                 },
                 "error": function (xhr, status, error) {
-
+                    describeServerRespondedError(xhr.status);
                 }
             });
         }

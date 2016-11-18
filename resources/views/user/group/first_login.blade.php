@@ -51,7 +51,7 @@
                 }
             }, function (xhr, status, error) {
                 hideLoading();
-                alertP("Error", "Unable to set group, please try again later.");
+                describeServerRespondedError(xhr.status);
             });
         }
 
