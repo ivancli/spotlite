@@ -41,7 +41,7 @@ $(function () {
                 if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
                     startTour();
                     setTourVisited();
-                } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+                } else if (cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
                     /*or if the credit card will be expire soon, show notification*/
                     localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
                     showCreditCardExpiry();
