@@ -35686,10 +35686,10 @@ this.noDataLabel.destroy()};c.hasData=function(){for(var a=this.series,c=a.lengt
                 self._closeOverlay();
                 self._closeFlds();
             });
-            this.overlay.addEventListener('touchstart', function (ev) {
-                self._closeOverlay();
-                self._closeFlds();
-            });
+            // this.overlay.addEventListener('touchstart', function (ev) {
+            //     self._closeOverlay();
+            //     self._closeFlds();
+            // });
         },
         _closeFlds: function () {
             if (this.fldOpen !== -1) {
@@ -36713,7 +36713,7 @@ $(function () {
                 if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
                     startTour();
                     setTourVisited();
-                } else if (cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+                } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
                     /*or if the credit card will be expire soon, show notification*/
                     localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
                     showCreditCardExpiry();

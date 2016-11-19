@@ -52,10 +52,10 @@
                 self._closeOverlay();
                 self._closeFlds();
             });
-            this.overlay.addEventListener('touchstart', function (ev) {
-                self._closeOverlay();
-                self._closeFlds();
-            });
+            // this.overlay.addEventListener('touchstart', function (ev) {
+            //     self._closeOverlay();
+            //     self._closeFlds();
+            // });
         },
         _closeFlds: function () {
             if (this.fldOpen !== -1) {
