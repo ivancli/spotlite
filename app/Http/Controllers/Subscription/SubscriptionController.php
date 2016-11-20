@@ -539,9 +539,9 @@ class SubscriptionController extends Controller
             $trialEndedTimeStamp = strtotime($apiSubscription->trial_ended_at);
             $nowTimestamp = time();
             if ($trialEndedTimeStamp >= $nowTimestamp) {
-                $trialKey = "CancelledBeforeEndOfTrial";
+                $trialKey = "CancelledBeforeEndofTrial";
             } else {
-                $trialKey = "CancelledAfterEndOfTrial";
+                $trialKey = "CancelledAfterEndofTrial";
             }
         }
         if (!isset($apiSubscription->errors)) {
