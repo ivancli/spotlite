@@ -534,6 +534,16 @@ class SubscriptionController extends Controller
 
         event(new SubscriptionCancelling($subscription));
         $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
+        $trialKey = "";
+        if (!is_null($apiSubscription->trial_ended_at)) {
+            $trialEndedTimeStamp = strtotime($apiSubscription->trial_ended_at);
+            $nowTimestamp = time();
+            if ($trialEndedTimeStamp >= $nowTimestamp) {
+                $trialKey = "CancelledBeforeEndOfTrial";
+            } else {
+                $trialKey = "CancelledAfterEndOfTrial";
+            }
+        }
         if (!isset($apiSubscription->errors)) {
             if (!$request->has('keep_profile') || $request->get('keep_profile') != '1') {
                 Chargify::subscription()->deletePaymentProfile($apiSubscription->id, $apiSubscription->credit_card_id);
@@ -545,6 +555,8 @@ class SubscriptionController extends Controller
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($updatedSubscription->canceled_at));
                 $subscription->save();
                 event(new SubscriptionCancelled($subscription));
+
+
 
                 /* update cancel field in campaign monitor*/
                 $this->mailingAgentRepo->editSubscriber(auth()->user()->email, array(
@@ -561,6 +573,10 @@ class SubscriptionController extends Controller
                             "Key" => "MaximumNumberofSites",
                             "Value" => null
                         ),
+                        array(
+                            "Key" => $trialKey,
+                            "Value" => "true"
+                        )
                     )
                 ));
                 auth()->user()->clearCache();
