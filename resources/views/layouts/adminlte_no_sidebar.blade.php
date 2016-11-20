@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url={{route('errors.javascript_disabled')}}" />
+    </noscript>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
