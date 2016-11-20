@@ -209,3 +209,14 @@ Route::resource('term_and_condition', 'Legal\TermAndConditionController', ['only
 
 Route::match(['get', 'post', 'put', 'delete'], 'subscription/webhook', 'Subscription\SubscriptionController@webhookUpdate')->name('subscription.webhook_update');
 Route::get('subscription/product_families', 'Subscription\SubscriptionController@productFamilies')->name('subscription.product_families');
+
+/**
+ * Error messages
+ */
+Route::get('cookie_disabled', function(){
+    return view('errors.cookie_disabled');
+})->name('errors.cookie_disabled');
+
+Route::get('javascript_disabled', function(){
+    return view('errors.javascript_disabled');
+})->name('errors.javascript_disabled');
