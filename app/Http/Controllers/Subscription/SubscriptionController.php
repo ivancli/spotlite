@@ -122,6 +122,7 @@ class SubscriptionController extends Controller
                                 "coupon_code" => $couponCode,
                             ));
                             $user->clearCache();
+                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
                             if (!isset($newSubscription->errors)) {
                                 $previousSubscription->api_product_id = $newSubscription->product_id;
                                 $previousSubscription->api_subscription_id = $newSubscription->id;
@@ -215,9 +216,9 @@ class SubscriptionController extends Controller
                             'Resubscribe' => true
                         ));
 
-
                         event(new SubscriptionCompleted($sub));
                         $user->clearCache();
+                        $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
                         return redirect()->route('subscription.index');
                     } catch (Exception $e) {
                         /*TODO need to handle exception properly*/
@@ -279,6 +280,7 @@ class SubscriptionController extends Controller
 
                             event(new SubscriptionUpdated($sub));
                             $user->clearCache();
+                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
                             return redirect()->route('subscription.index');
 //                            }
                         } else {
@@ -341,6 +343,7 @@ class SubscriptionController extends Controller
                             ));
                             event(new SubscriptionCompleted($sub));
                             $user->clearCache();
+                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
                             return redirect()->route('dashboard.index');
                         }
                     } else {
@@ -371,6 +374,7 @@ class SubscriptionController extends Controller
         }
         $this->subscriptionRepo->syncUserSubscription(auth()->user());
         auth()->user()->clearCache();
+        $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
         return redirect()->route('subscription.index');
     }
 
@@ -503,6 +507,7 @@ class SubscriptionController extends Controller
                         ),
                     )
                 ));
+                $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
                 event(new SubscriptionUpdated($subscription));
                 if ($request->ajax()) {
                     $status = true;
@@ -580,6 +585,7 @@ class SubscriptionController extends Controller
                     )
                 ));
                 auth()->user()->clearCache();
+                $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
             } else {
                 abort(500);

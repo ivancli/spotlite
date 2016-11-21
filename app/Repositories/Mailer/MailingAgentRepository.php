@@ -10,7 +10,9 @@ namespace App\Repositories\Mailer;
 
 
 use App\Contracts\Repository\Mailer\MailingAgentContract;
+use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Models\User;
+use Invigor\Chargify\Chargify;
 
 class MailingAgentRepository implements MailingAgentContract
 {
@@ -369,5 +371,102 @@ class MailingAgentRepository implements MailingAgentContract
         } else {
             return $result->response;
         }
+    }
+
+    public function updateNextLevelSubscriptionPlan(User $user)
+    {
+        if (!$user->isStaff() && !is_null($user->subscription)) {
+            $subscription = $user->apiSubscription;
+
+            /*somehow unable to use dependency injection in this repo*/
+            /*fetch product list manually*/
+            $products = Chargify::product()->all();
+            $products = collect($products);
+            $products = $products->filter(function ($product, $key) {
+                return strpos(strtolower($product->name), 'onboarding') === false;
+            });
+            $products = $products->sortBy("price_in_cents");
+            $nextProduct = null;
+            $criteria = null;
+            $items = "";
+            foreach ($products as $key => $product) {
+                if ($product->id == $subscription->product_id) {
+                    if (isset($products[$key + 1])) {
+                        $nextProduct = $products[$key + 1];
+                        $criteria = json_decode($nextProduct->description);
+                        if (isset($criteria->product)) {
+                            if ($criteria->product != 0) {
+                                $items .= "Up to " . $criteria->product . " Products. ";
+                            } else {
+                                $items .= "Unlimited Products. ";
+                            }
+                        }
+                        if (isset($criteria->site)) {
+                            if ($criteria->site != 0) {
+                                $items .= "Up to " . $criteria->site . " " . str_plural("Competitor", $criteria->site) . ". ";
+                            } else {
+                                $items .= "Unlimited Competitor Tracking. ";
+                            }
+                        }
+                        $items .= "Customisable Dashboard. ";
+                        if (isset($criteria->alert_report)) {
+                            if ($criteria->alert_report != 'basic') {
+                                $items .= "Basic Alerts and Reports. ";
+                            } else {
+                                $items .= "Unlimited Alerts and Reports. ";
+                            }
+                        }
+                        if (isset($criteria->frequency)) {
+                            if ($criteria->frequency == 24) {
+                                $items .= "Updates Event Day. ";
+                            } else {
+                                $items .= "Every " . $criteria->frequency . " " . str_plural('Hour', $criteria->frequency) . ". ";
+                            }
+                        }
+                        if (isset($criteria->historic_pricing)) {
+                            if ($criteria->historic_pricing == 0) {
+                                $items .= "Lifetime Historic Pricing. ";
+                            } else {
+                                $items .= $criteria->historic_pricing . " " . str_plural('Month', $criteria->historic_pricing) . " Historic Pricing. ";
+                            }
+                        }
+                        if (isset($criteria->my_price) && $criteria->my_price == true) {
+                            $items .= "'My Price' Nomination. ";
+                        }
+                    }
+                    break;
+                }
+            }
+
+            $subscriber = $this->getSubscriber($user->email);
+            if (is_null($subscriber)) {
+                $this->addSubscriber(array(
+                    'EmailAddress' => $user->email,
+                    'Name' => $user->first_name . " " . $user->last_name,
+                ));
+            }
+
+            $this->editSubscriber($user->email, array(
+                "CustomFields" => array(
+                    array(
+                        "Key" => "NextLevelSubscriptionPlan",
+                        "Value" => is_null($nextProduct) ? null : $nextProduct->name,
+                    ),
+                    array(
+                        "Key" => "NextLevelMaximumNumberofSites",
+                        "Value" => (is_null($criteria) || $criteria->site == 0) ? null : $criteria->site,
+                    ),
+                    array(
+                        "Key" => "NextLevelMaximumNumberofProducts",
+                        "Value" => (is_null($criteria) || $criteria->product == 0) ? null : $criteria->product,
+                    ),
+                    array(
+                        "Key" => "NextLevelSubscriptionPlanDescription",
+                        "Value" => $items,
+                    ),
+                )
+            ));
+        }
+
     }
 }
