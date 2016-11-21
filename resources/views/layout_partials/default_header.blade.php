@@ -34,7 +34,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <ul class="spotlite-menu">
-                                    @if(auth()->user()->isStaff() || auth()->user()->subscription->isValid())
+                                    @if(auth()->user()->isStaff() || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())))
                                         <li>
                                             <a href="{{route('account.index')}}">
                                                 <h3>
@@ -59,7 +59,7 @@
                                             </h3>
                                         </a>
                                     </li>
-                                    @if(!auth()->user()->isStaff() && auth()->user()->subscription->isValid())
+                                    @if(!auth()->user()->isStaff() && !is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())
                                         <li>
                                             <div style="padding: 2px;">
 
