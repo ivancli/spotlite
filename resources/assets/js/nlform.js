@@ -148,11 +148,11 @@
                 ev.stopPropagation();
                 self._open();
             });
-            this.toggle.addEventListener('touchstart', function (ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                self._open();
-            });
+            // this.toggle.addEventListener('touchstart', function (ev) {
+            //     ev.preventDefault();
+            //     ev.stopPropagation();
+            //     self._open();
+            // });
 
             if (this.type === 'dropdown') {
                 var opts = Array.prototype.slice.call(this.optionsList.querySelectorAll('li'));
@@ -165,10 +165,10 @@
                         ev.preventDefault();
                         self.close(el, opts.indexOf(el), true);
                     });
-                    el.addEventListener('touchstart', function (ev) {
-                        ev.preventDefault();
-                        self.close(el, opts.indexOf(el));
-                    });
+                    // el.addEventListener('touchstart', function (ev) {
+                    //     ev.preventDefault();
+                    //     self.close(el, opts.indexOf(el));
+                    // });
                 });
             }
             else if (this.type === 'input') {

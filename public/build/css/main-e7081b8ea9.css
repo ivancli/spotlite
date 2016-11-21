@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-5cafed9ed2.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-e7081b8ea9.css */
 @media print {
   *,
   *:before,
@@ -14979,13 +14979,13 @@ input:focus::-ms-input-placeholder {
 
 @media screen and (max-width: 45em) {
     .nl-form {
-        font-size: 3em;
+        font-size: 20px;
     }
 }
 
 @media screen and (max-width: 25em) {
     .nl-form {
-        font-size: 2em;
+        font-size: 20px;
     }
 }
 .required label::after {
