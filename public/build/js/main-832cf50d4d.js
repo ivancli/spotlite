@@ -36766,7 +36766,7 @@ $(function () {
         $("body").addClass("sidebar-collapse");
     }
 
-    if (typeof user != 'undefined') {
+    if (typeof user != 'undefined' && user.isStaff == true || user.subscription != null) {
         /* clean up unused cookie/localStorage */
         if (localStorageAvailable()) {
             $.each(localStorage, function (key, value) {
@@ -36881,4 +36881,5 @@ function saveSidebarStatus() {
         setLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id, 1);
     }
 }
+
 //# sourceMappingURL=main.js.map

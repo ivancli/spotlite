@@ -21,7 +21,7 @@ $(function () {
         $("body").addClass("sidebar-collapse");
     }
 
-    if (typeof user != 'undefined') {
+    if (typeof user != 'undefined' && user.isStaff == true || user.subscription != null) {
         /* clean up unused cookie/localStorage */
         if (localStorageAvailable()) {
             $.each(localStorage, function (key, value) {

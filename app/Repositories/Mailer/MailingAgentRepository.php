@@ -91,7 +91,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfSites()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -112,7 +112,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfProducts()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -133,7 +133,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfCategories()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -154,7 +154,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddCategoryDate()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -175,7 +175,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddProductDate()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -196,7 +196,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddSiteDate()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -217,7 +217,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastNominatedMyPriceDate()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -238,7 +238,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastSetupAlertDate()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -259,7 +259,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastSetupReportDate()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -279,7 +279,7 @@ class MailingAgentRepository implements MailingAgentContract
 
     public function syncUserSubscription(User $user)
     {
-        if (!$user->isStaff() && !is_null($user->subscription)) {
+        if (!$user->isStaff && !is_null($user->subscription)) {
             $subscription = $user->apiSubscription;
             if ($subscription != false) {
                 $criteria = $user->subscriptionCriteria();
@@ -355,7 +355,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastConfiguredDashboardDate()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -375,7 +375,7 @@ class MailingAgentRepository implements MailingAgentContract
 
     public function updateNextLevelSubscriptionPlan(User $user)
     {
-        if (!$user->isStaff() && !is_null($user->subscription)) {
+        if (!$user->isStaff && !is_null($user->subscription)) {
             $subscription = $user->apiSubscription;
 
             /*somehow unable to use dependency injection in this repo*/

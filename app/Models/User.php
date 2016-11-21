@@ -34,7 +34,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'preferences', 'apiSubscription', 'apiOnboardingSubscription'
+        'preferences', 'apiSubscription', 'apiOnboardingSubscription', 'isStaff'
     ];
 
     public function subscription()
@@ -109,7 +109,7 @@ class User extends Authenticatable
 
     public function getApiSubscriptionAttribute()
     {
-        if (!$this->isStaff() && !is_null($this->subscription) && $this->subscription->isValid()) {
+        if (!$this->isStaff && !is_null($this->subscription) && $this->subscription->isValid()) {
             return Chargify::subscription()->get($this->subscription->api_subscription_id);
         } else {
             return null;
@@ -118,7 +118,7 @@ class User extends Authenticatable
 
     public function getApiOnboardingSubscriptionAttribute()
     {
-        if (!$this->isStaff() && !is_null($this->subscription) && !is_null($this->subscription->api_onboarding_subscription_id)) {
+        if (!$this->isStaff && !is_null($this->subscription) && !is_null($this->subscription->api_onboarding_subscription_id)) {
             return Chargify::subscription()->get($this->subscription->api_onboarding_subscription_id);
         } else {
             return null;
@@ -130,6 +130,11 @@ class User extends Authenticatable
         $prefObjects = $this->preferences()->get();
         $preferences = $prefObjects->pluck('value', 'element')->all();
         return $preferences;
+    }
+
+    public function getIsStaffAttribute()
+    {
+        return $this->hasRole(['super_admin', 'tier_1', 'tier_2']);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -163,7 +168,7 @@ class User extends Authenticatable
      */
     public function canAddProduct()
     {
-        if ($this->isStaff()) {
+        if ($this->isStaff) {
             return true;
         }
         $criteria = $this->subscriptionCriteria();
@@ -184,7 +189,7 @@ class User extends Authenticatable
      */
     public function canAddSite()
     {
-        if ($this->isStaff()) {
+        if ($this->isStaff) {
             return true;
         }
         $criteria = $this->subscriptionCriteria();
@@ -202,11 +207,6 @@ class User extends Authenticatable
     {
         Cache::forget("user.{$this->getKey()}.subscription.api.criteria");
         Cache::forget("user.{$this->getKey()}.subscription.transaction");
-    }
-
-    public function isStaff()
-    {
-        return $this->hasRole(['super_admin', 'tier_1', 'tier_2']);
     }
 }
 

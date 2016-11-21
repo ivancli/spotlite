@@ -41,7 +41,7 @@ class OnboardingController extends Controller
     public function store()
     {
         $user = auth()->user();
-        if ($user->isStaff()) {
+        if ($user->isStaff) {
             $status = false;
             $errors = array("Staff does not need to subscribe.");
             if ($this->request->ajax()) {

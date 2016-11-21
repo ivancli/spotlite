@@ -3,7 +3,7 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            @if(auth()->check() && (auth()->user()->isStaff() || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())))
+            @if(auth()->check() && (auth()->user()->isStaff || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())))
                 <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
@@ -46,7 +46,7 @@
                     </a>
                 </li>
             @endif
-            @if(auth()->check() && auth()->user()->isStaff())
+            @if(auth()->check() && auth()->user()->isStaff)
                 <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
                     <a href="{{route("admin.app_preference.index")}}">
                         <i class="fa fa-gears"></i>

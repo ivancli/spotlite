@@ -70,7 +70,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @if(!auth()->user()->isStaff())
+                        @if(!auth()->user()->isStaff)
                             <tr>
                                 <td colspan="4" align="center">
                                     <div>Would you like us to set up your products and competitors for you?</div>
