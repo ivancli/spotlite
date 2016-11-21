@@ -1,5 +1,11 @@
 <!doctype html>
-<title>SpotLite Maintenance</title>
+{{--redirect if cookie is available--}}
+<script type="text/javascript">
+    if (navigator.cookieEnabled == true) {
+        window.location = "{{route('dashboard.index')}}";
+    }
+</script>
+<title>Cookie Disabled</title>
 <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 <link rel="shortcut icon" type="image/x-icon" href="{{asset('build/images/favicon.ico')}}"/>
 {{--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">--}}
@@ -15,7 +21,7 @@
     }
 
     h1 {
-        font-size: 50px;
+        font-size: 35px;
     }
 
     body {
@@ -47,14 +53,17 @@
 
 <article>
     <div class="logo">
-        <img src="{{asset("build/images/logo.png")}}" alt="" width="400">
+        <a href="{{route('dashboard.index')}}">
+            <img src="{{asset("build/images/logo.png")}}" alt="" width="400">
+        </a>
     </div>
-    <h1>We&rsquo;ll be back soon!</h1>
+    <h1>Cookie Disabled</h1>
     <div>
         <p>
-            Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. If you need to you
-            can always <a href="mailto:admin@spotlite.com.au">contact us</a>, otherwise we&rsquo;ll be back online
-            shortly!
+            Oops! It appears that Cookie is disabled in your browser.
+        </p>
+        <p>
+            Please enable Cookie in order to take advantage of full functionality of SpotLite application.
         </p>
         <p>&mdash; SpotLite Admin</p>
     </div>

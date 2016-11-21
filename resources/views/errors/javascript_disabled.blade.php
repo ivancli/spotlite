@@ -1,4 +1,7 @@
 <!doctype html>
+<script type="text/javascript">
+    window.location = "{{route('dashboard.index')}}";
+</script>
 <title>SpotLite Maintenance</title>
 <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 <link rel="shortcut icon" type="image/x-icon" href="{{asset('build/images/favicon.ico')}}"/>
@@ -15,7 +18,7 @@
     }
 
     h1 {
-        font-size: 50px;
+        font-size: 35px;
     }
 
     body {

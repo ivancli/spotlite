@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {{--redirect if js not available--}}
     <noscript>
-        <meta http-equiv="refresh" content="0; url={{route('errors.javascript_disabled')}}" />
+        <meta http-equiv="refresh" content="0; url={{route('errors.javascript_disabled')}}"/>
     </noscript>
+    {{--redirect if cookie not available, unable to store login session anyway without cookie--}}
+    <script type="text/javascript">
+        if (navigator.cookieEnabled == false) {
+            window.location = "{{route('errors.cookie_disabled')}}";
+        }
+    </script>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
