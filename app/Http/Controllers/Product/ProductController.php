@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers\Product;
 
-use App\Contracts\Repository\Mailer\MailerContract;
 use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Events\Products\Product\ProductCreateViewed;
@@ -17,11 +16,9 @@ use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 
-use App\Jobs\SendMail;
 use App\Validators\Product\Product\StoreValidator;
 use App\Validators\Product\Product\UpdateValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * Created by PhpStorm.
