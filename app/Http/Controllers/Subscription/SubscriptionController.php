@@ -44,13 +44,14 @@ class SubscriptionController extends Controller
      */
     public function viewProducts()
     {
-        $subscription = auth()->user()->subscription;
-        if (!is_null($subscription)) {
-            $chosenAPIProductID = $subscription->api_product_id;
+        $user = auth()->user();
+        if ($user->isStaff || (!is_null($user->subscription) && $user->subscription->isValid())) {
+            return redirect()->route('dashboard.index');
         }
+
         $productFamilies = $this->subscriptionRepo->getProductList();
         event(new SubscriptionViewed());
-        return view('subscriptions.subscription_plans')->with(compact(['productFamilies', 'chosenAPIProductID']));
+        return view('subscriptions.subscription_plans')->with(compact(['productFamilies']));
     }
 
     /**
@@ -112,7 +113,7 @@ class SubscriptionController extends Controller
                 if (!is_null(auth()->user()->subscription)) {
                     $previousSubscription = auth()->user()->subscription;
                     $previousAPISubscription = Chargify::subscription()->get($previousSubscription->api_subscription_id);
-                    if(!is_null($previousAPISubscription)){
+                    if (!is_null($previousAPISubscription)) {
                         $paymentProfile = $previousAPISubscription->paymentProfile();
                         if (!isset($paymentProfile->errors) && !is_null($paymentProfile)) {
                             if ($paymentProfile->expiration_year > date("Y") || ($paymentProfile->expiration_year == date("Y") && $paymentProfile->expiration_month >= date('n'))) {
@@ -562,7 +563,6 @@ class SubscriptionController extends Controller
                 $subscription->cancelled_at = date('Y-m-d H:i:s', strtotime($updatedSubscription->canceled_at));
                 $subscription->save();
                 event(new SubscriptionCancelled($subscription));
-
 
 
                 /* update cancel field in campaign monitor*/
