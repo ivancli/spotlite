@@ -460,3 +460,76 @@ function describeServerRespondedError(errorCode) {
             break;
     }
 }
+
+function localStorageAvailable() {
+    var test = 'test';
+    try {
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function setCookie(name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        //noinspection JSDuplicatedDeclaration
+        var expires = "; expires=" + date.toGMTString();
+    }
+    else { //noinspection JSDuplicatedDeclaration
+        var expires = "";
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function removeCookie(name) {
+    setCookie(name, "", -1);
+}
+
+function setLocalStorageOrCookie(key, value) {
+    if (localStorageAvailable()) {
+        localStorage.setItem(key, value);
+    } else {
+        setCookie(key, value, 365);
+    }
+}
+
+function getLocalStorageOrCookie(key) {
+    if (localStorageAvailable()) {
+        return localStorage.getItem(key);
+    } else {
+        return getCookie(key);
+    }
+}
+
+function removeLocalStorageOrCookie(key) {
+    if (localStorageAvailable()) {
+        localStorage.removeItem(key);
+    } else {
+        removeCookie(key);
+    }
+}
+
+function getCookies() {
+    var pairs = document.cookie.split(";");
+    var cookies = {};
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split("=");
+        cookies[pair[0]] = unescape(pair[1]);
+    }
+    return cookies;
+}

@@ -36359,6 +36359,79 @@ function describeServerRespondedError(errorCode) {
             break;
     }
 }
+
+function localStorageAvailable() {
+    var test = 'test';
+    try {
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function setCookie(name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        //noinspection JSDuplicatedDeclaration
+        var expires = "; expires=" + date.toGMTString();
+    }
+    else { //noinspection JSDuplicatedDeclaration
+        var expires = "";
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function removeCookie(name) {
+    setCookie(name, "", -1);
+}
+
+function setLocalStorageOrCookie(key, value) {
+    if (localStorageAvailable()) {
+        localStorage.setItem(key, value);
+    } else {
+        setCookie(key, value, 365);
+    }
+}
+
+function getLocalStorageOrCookie(key) {
+    if (localStorageAvailable()) {
+        return localStorage.getItem(key);
+    } else {
+        return getCookie(key);
+    }
+}
+
+function removeLocalStorageOrCookie(key) {
+    if (localStorageAvailable()) {
+        localStorage.removeItem(key);
+    } else {
+        removeCookie(key);
+    }
+}
+
+function getCookies() {
+    var pairs = document.cookie.split(";");
+    var cookies = {};
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split("=");
+        cookies[pair[0]] = unescape(pair[1]);
+    }
+    return cookies;
+}
 function gaSendEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
     eventCategory = typeof eventCategory != "undefined" ? eventCategory : null;
     eventAction = typeof eventAction != "undefined" ? eventAction : null;
@@ -36685,26 +36758,45 @@ $(function () {
         }
     });
 
-    if (localStorage.getItem("sidebar-is-collapsed-" + user.user_id) == 1) {
+    // if (localStorage.getItem("sidebar-is-collapsed-" + user.user_id) == 1) {
+    //     $("body").addClass("sidebar-collapse");
+    // }
+
+    if (getLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id) == 1) {
         $("body").addClass("sidebar-collapse");
     }
 
     if (typeof user != 'undefined') {
-        /* clean up unused localStorage */
-        $.each(localStorage, function (key, value) {
-            /*show login welcome message once per day*/
-            /*removing previous welcome message local storage*/
-            if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.startsWith("met-first-login-welcome-msg-")) {
-                localStorage.removeItem(key);
-            }
-            /*show credit card expiry notification once per day*/
-            /*removing previous credit card expiry message local storage*/
-            if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.startsWith("met-cc-expiry-msg-")) {
-                localStorage.removeItem(key);
-            }
-        });
+        /* clean up unused cookie/localStorage */
+        if (localStorageAvailable()) {
+            $.each(localStorage, function (key, value) {
+                /*show login welcome message once per day*/
+                /*removing previous welcome message local storage*/
+                if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.startsWith("met-first-login-welcome-msg-")) {
+                    localStorage.removeItem(key);
+                }
+                /*show credit card expiry notification once per day*/
+                /*removing previous credit card expiry message local storage*/
+                if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.startsWith("met-cc-expiry-msg-")) {
+                    localStorage.removeItem(key);
+                }
+            });
+        } else {
+            $.each(getCookies(), function (key, value) {
+                /*show login welcome message once per day*/
+                /*removing previous welcome message local storage*/
+                if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.startsWith("met-first-login-welcome-msg-")) {
+                    removeCookie(key);
+                }
+                /*show credit card expiry notification once per day*/
+                /*removing previous credit card expiry message local storage*/
+                if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.startsWith("met-cc-expiry-msg-")) {
+                    removeCookie(key);
+                }
+            });
+        }
 
-        if ((typeof user.preferences == 'undefined' || user.preferences.DONT_SHOW_WELCOME != 1) && localStorage.getItem("met-first-login-welcome-msg-" + today + "-" + user.user_id) != 1) {
+        if ((typeof user.preferences == 'undefined' || user.preferences.DONT_SHOW_WELCOME != 1) && getLocalStorageOrCookie("met-first-login-welcome-msg-" + today + "-" + user.user_id) != 1) {
             showLoading();
             showWelcomePopup(function () {
                 $("video").get(0).pause();
@@ -36713,9 +36805,9 @@ $(function () {
                 if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
                     startTour();
                     setTourVisited();
-                } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+                } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
                     /*or if the credit card will be expire soon, show notification*/
-                    localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
+                    setLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
                     showCreditCardExpiry();
                 }
             });
@@ -36723,8 +36815,8 @@ $(function () {
             if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
                 startTour();
                 setTourVisited();
-            } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
-                localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
+            } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+                setLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
                 showCreditCardExpiry();
             }
         }
@@ -36732,8 +36824,8 @@ $(function () {
         if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
             startTour();
             setTourVisited();
-        } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && localStorage.getItem("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
-            localStorage.setItem("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
+        } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+            setLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
             showCreditCardExpiry();
         }
     }
@@ -36741,7 +36833,7 @@ $(function () {
 
 function showWelcomePopup(callback) {
     $.get('/msg/subscription/welcome/0', function (html) {
-        localStorage.setItem("met-first-login-welcome-msg-" + today + "-" + user.user_id, 1);
+        setLocalStorageOrCookie("met-first-login-welcome-msg-" + today + "-" + user.user_id, 1);
         hideLoading();
         var $modal = popupFrame(html);
         $modal.find(".modal-dialog").addClass("modal-lg");
@@ -36784,9 +36876,9 @@ function showCreditCardExpiry() {
 
 function saveSidebarStatus() {
     if ($("body").hasClass("sidebar-collapse")) {
-        localStorage.removeItem("sidebar-is-collapsed-" + user.user_id);
+        removeLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id);
     } else {
-        localStorage.setItem("sidebar-is-collapsed-" + user.user_id, 1);
+        setLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id, 1);
     }
 }
 //# sourceMappingURL=main.js.map

@@ -15,7 +15,7 @@
     }
 
     h1 {
-        font-size: 50px;
+        font-size: 35px;
     }
 
     body {
@@ -47,7 +47,9 @@
 
 <article>
     <div class="logo">
-        <img src="{{asset("build/images/logo.png")}}" alt="" width="400">
+        <a href="{{route('dashboard.index')}}">
+            <img src="{{asset("build/images/logo.png")}}" alt="" width="400">
+        </a>
     </div>
     <h1>We&rsquo;ll be back soon!</h1>
     <div>
