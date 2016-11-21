@@ -112,24 +112,26 @@ class SubscriptionController extends Controller
                 if (!is_null(auth()->user()->subscription)) {
                     $previousSubscription = auth()->user()->subscription;
                     $previousAPISubscription = Chargify::subscription()->get($previousSubscription->api_subscription_id);
-                    $paymentProfile = $previousAPISubscription->paymentProfile();
-                    if (!isset($paymentProfile->errors) && !is_null($paymentProfile)) {
-                        if ($paymentProfile->expiration_year > date("Y") || ($paymentProfile->expiration_year == date("Y") && $paymentProfile->expiration_month >= date('n'))) {
-                            $newSubscription = Chargify::subscription()->create(array(
-                                "product_id" => $product->id,
-                                "customer_id" => $previousSubscription->api_customer_id,
-                                "payment_profile_id" => $paymentProfile->id,
-                                "coupon_code" => $couponCode,
-                            ));
-                            $user->clearCache();
-                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
-                            if (!isset($newSubscription->errors)) {
-                                $previousSubscription->api_product_id = $newSubscription->product_id;
-                                $previousSubscription->api_subscription_id = $newSubscription->id;
-                                $previousSubscription->api_customer_id = $newSubscription->customer_id;
-                                $previousSubscription->cancelled_at = null;
-                                $previousSubscription->save();
-                                return redirect()->route('subscription.index');
+                    if(!is_null($previousAPISubscription)){
+                        $paymentProfile = $previousAPISubscription->paymentProfile();
+                        if (!isset($paymentProfile->errors) && !is_null($paymentProfile)) {
+                            if ($paymentProfile->expiration_year > date("Y") || ($paymentProfile->expiration_year == date("Y") && $paymentProfile->expiration_month >= date('n'))) {
+                                $newSubscription = Chargify::subscription()->create(array(
+                                    "product_id" => $product->id,
+                                    "customer_id" => $previousSubscription->api_customer_id,
+                                    "payment_profile_id" => $paymentProfile->id,
+                                    "coupon_code" => $couponCode,
+                                ));
+                                $user->clearCache();
+                                $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
+                                if (!isset($newSubscription->errors)) {
+                                    $previousSubscription->api_product_id = $newSubscription->product_id;
+                                    $previousSubscription->api_subscription_id = $newSubscription->id;
+                                    $previousSubscription->api_customer_id = $newSubscription->customer_id;
+                                    $previousSubscription->cancelled_at = null;
+                                    $previousSubscription->save();
+                                    return redirect()->route('subscription.index');
+                                }
                             }
                         }
                     }
