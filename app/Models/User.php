@@ -110,7 +110,9 @@ class User extends Authenticatable
     public function getApiSubscriptionAttribute()
     {
         if (!$this->isStaff && !is_null($this->subscription) && $this->subscription->isValid()) {
-            return Chargify::subscription()->get($this->subscription->api_subscription_id);
+            return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_subscription', config('cache.ttl'), function () {
+                return Chargify::subscription()->get($this->subscription->api_subscription_id);
+            });
         } else {
             return null;
         }
@@ -119,7 +121,9 @@ class User extends Authenticatable
     public function getApiOnboardingSubscriptionAttribute()
     {
         if (!$this->isStaff && !is_null($this->subscription) && !is_null($this->subscription->api_onboarding_subscription_id)) {
-            return Chargify::subscription()->get($this->subscription->api_onboarding_subscription_id);
+            return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_onboarding_subscription', config('cache.ttl'), function () {
+                return Chargify::subscription()->get($this->subscription->api_onboarding_subscription_id);
+            });
         } else {
             return null;
         }
@@ -151,14 +155,12 @@ class User extends Authenticatable
 
     public function subscriptionCriteria()
     {
-        return Cache::remember("user.{$this->getKey()}.subscription.api.criteria", config()->get('cache.ttl'), function () {
-            $product = Chargify::product()->get($this->apiSubscription->product_id);
-            if (!is_null($product->description)) {
-                $criteria = json_decode($product->description);
-                return $criteria;
-            }
-            return null;
-        });
+        $product = Chargify::product()->get($this->apiSubscription->product_id);
+        if (!is_null($product->description)) {
+            $criteria = json_decode($product->description);
+            return $criteria;
+        }
+        return null;
     }
 
     /**
@@ -205,8 +207,7 @@ class User extends Authenticatable
 
     public function clearCache()
     {
-        Cache::forget("user.{$this->getKey()}.subscription.api.criteria");
-        Cache::forget("user.{$this->getKey()}.subscription.transaction");
+        Cache::tags(["user_{$this->getKey()}"])->flush();
     }
 }
 

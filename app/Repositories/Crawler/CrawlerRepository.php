@@ -96,7 +96,7 @@ class CrawlerRepository implements CrawlerContract
         event(new CrawlerLoadingHTML($crawler));
 
         /*check cache*/
-        $content = Cache::remember("crawler.{$site->site_url}.content", 60, function () use ($site, $crawlerClass) {
+        $content = Cache::tags(['crawlers'])->remember("{$site->site_url}.content", 60, function () use ($site, $crawlerClass) {
             $options = array(
                 "url" => $site->site_url,
             );

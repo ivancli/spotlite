@@ -15,6 +15,8 @@ use App\Events\Subscription\SubscriptionUpdated;
 use App\Events\Subscription\SubscriptionUpdating;
 use App\Events\Subscription\SubscriptionViewed;
 use App\Http\Controllers\Controller;
+use App\Jobs\SyncUser;
+use App\Models\AppPreference;
 use App\Models\Subscription;
 use App\Models\User;
 use Exception;
@@ -63,12 +65,11 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $sub = $user->subscription;
         if (!is_null($sub)) {
-            $current_sub_id = $sub->api_subscription_id;
-            $subscription = Chargify::subscription()->get($current_sub_id);
+            $subscription = $user->apiSubscription;
             $onboardingSubscription = $user->apiOnboardingSubscription;
             if ($subscription != false) {
                 $portalLink = Chargify::customer()->getLink($subscription->customer_id);
-                $subscriptionTransactions = Chargify::transaction()->allBySubscription($current_sub_id);
+                $subscriptionTransactions = Chargify::transaction()->allBySubscription($subscription->id);
                 if (!is_null($onboardingSubscription)) {
                     $onboardingTransactions = Chargify::transaction()->allBySubscription($onboardingSubscription->id);
                     $transactions = array_merge($subscriptionTransactions, $onboardingTransactions);
@@ -80,7 +81,7 @@ class SubscriptionController extends Controller
                 $transactions = $transactions->sortBy('created_at');
 
 
-                $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($current_sub_id);
+                $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($subscription->id);
 
                 $onboardingProduct = $this->onboardingRepo->getByProductFamily($subscription->product()->product_family_id);
 
@@ -602,7 +603,22 @@ class SubscriptionController extends Controller
 
     public function webhookUpdate(Request $request)
     {
+        Chargify::subscription()->flushAll();
 
+        /*reserve the task*/
+        AppPreference::setSyncReserved();
+        AppPreference::setSyncLastReservedAt();
+
+        $userSyncTime = AppPreference::getSyncTimes();
+        $currentHour = intval(date("H"));
+        if (in_array($currentHour, $userSyncTime)) {
+            $users = User::all();
+            foreach ($users as $user) {
+                $user->clearCache();
+                dispatch((new SyncUser($user))->onQueue("syncing"));
+            }
+        }
+        AppPreference::setSyncReserved('n');
     }
 
     public function productFamilies(Request $request)

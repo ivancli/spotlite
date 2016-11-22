@@ -3,6 +3,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AppPreference;
+use App\Models\User;
+use App\Repositories\Subscription\ChargifySubscriptionRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -18,8 +20,12 @@ class AppPreferenceController extends Controller
         $this->middleware('permission:manage_app_preference', ['only' => ['index', 'update']]);
     }
 
-    public function index()
+    public function index(ChargifySubscriptionRepository $chargifySubscriptionRepository)
     {
+        $user = User::findOrFail(3);
+        $chargifySubscriptionRepository->syncUserSubscription($user);
+
+
         $appPreferences = AppPreference::all();
 
         return view('admin.preference.index')->with(compact(['appPreferences']));

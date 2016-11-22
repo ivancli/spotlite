@@ -19,6 +19,7 @@ use App\Http\Controllers\Controller;
 use App\Validators\Product\Product\StoreValidator;
 use App\Validators\Product\Product\UpdateValidator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Created by PhpStorm.

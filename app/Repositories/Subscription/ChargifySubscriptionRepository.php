@@ -53,7 +53,9 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
             $this->updateCreditCardDetails($subscription);
 
-            $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
+            $user->clearCache();
+
+            $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id, true);
             if (!is_null($apiSubscription) && $apiSubscription !== false) {
                 if (!is_null($apiSubscription->canceled_at)) {
                     $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
@@ -67,7 +69,6 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                 }
                 $subscription->api_product_id = $apiSubscription->product_id;
                 $subscription->save();
-
 
                 $this->mailingAgentRepo->editSubscriber($user->email, array(
                     "CustomFields" => array(
