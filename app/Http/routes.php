@@ -24,7 +24,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('dashboard/widget', 'Dashboard\DashboardWidgetController');
 
 
-
         Route::get('msg/subscription/welcome/{raw?}', 'MessageController@welcomeSubscription')->name("msg.subscription.welcome");
         Route::get('msg/subscription/update/{raw?}', 'MessageController@updateSubscription')->name("msg.subscription.update");
         Route::get('msg/subscription/cc_expiring/{raw?}', 'MessageController@notifyCreditCardExpiringSoon')->name('msg.subscription.cc_expiring');
@@ -213,10 +212,12 @@ Route::get('subscription/product_families', 'Subscription\SubscriptionController
 /**
  * Error messages
  */
-Route::get('cookie_disabled', function(){
+Route::get('cookie_disabled', function () {
     return view('errors.cookie_disabled');
 })->name('errors.cookie_disabled');
 
-Route::get('javascript_disabled', function(){
+Route::get('javascript_disabled', function () {
     return view('errors.javascript_disabled');
 })->name('errors.javascript_disabled');
+
+Route::post('error/notify_error', 'ErrorController@notifyError')->name('errors.notify');

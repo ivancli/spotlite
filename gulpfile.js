@@ -59,6 +59,7 @@ elixir(function (mix) {
         'resources/assets/css/email_brand.css'
     ], "public/css/email_brand.css", "./");
     mix.scripts([
+        'resources/assets/js/error.js',
         'vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js',
         "node_modules/bootstrap/dist/js/bootstrap.js",
         "node_modules/datatables.net/js/jquery.dataTables.js",
