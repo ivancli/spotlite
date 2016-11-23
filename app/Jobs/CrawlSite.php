@@ -45,6 +45,7 @@ class CrawlSite extends Job implements ShouldQueue
 
         if (isset($this->crawler->site) && isset($this->crawler->site->product) && isset($this->crawler->site->product->user)) {
             $user = $this->crawler->site->product->user;
+            /*check user subscription status*/
             if (!$user->isStaff && (is_null($this->crawler->site->product->user->subscription) || !$this->crawler->site->product->user->subscription->isValid())) {
                 return false;
             }

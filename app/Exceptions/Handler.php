@@ -43,7 +43,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Exception $e
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function render($request, Exception $e)
     {
@@ -51,8 +51,18 @@ class Handler extends ExceptionHandler
             abort(403);
         }
 
-        if ($e instanceof TokenMismatchException){
-            abort(403);
+        if ($e instanceof TokenMismatchException) {
+            $status = false;
+            $errors = array("Session timeout, please refresh and try again.");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withErrors($errors);
+            }
         }
 
         return parent::render($request, $e);
