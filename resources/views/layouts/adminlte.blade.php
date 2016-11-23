@@ -86,11 +86,6 @@
 @yield('scripts')
 
 @include('scripts.notification')
-<script>
-    $(function(){
-        asldfkjddsfklasjdfkljasdfl;
-    })
-</script>
 </body>
 </html>
 
