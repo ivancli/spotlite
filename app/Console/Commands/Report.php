@@ -49,7 +49,8 @@ class Report extends Command
                         /*if last sent date is at least 1 day ahead current date*/
                         if (is_null($reportTask->last_sent_at) || (intval((strtotime($currentRoundedDate) - strtotime($lastSentAt)) / 3600) > 0)) {
                             $lastSentRoundedDay = date("N", strtotime($reportTask->last_sent_at));
-                            if (($lastSentRoundedDay == 6 || $lastSentRoundedDay == 7) && $reportTask->weekday_only == 'y') {
+                            $currentRoundedDay = date("N");
+                            if (($currentRoundedDay == 6 || $currentRoundedDay == 7) && $reportTask->weekday_only == 'y') {
                                 continue;
                             }
                             /*
