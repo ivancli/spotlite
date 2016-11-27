@@ -87,9 +87,9 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
             'signup_link' => 'required',
             'api_product_id' => 'required',
-            'industry' => 'required',
-            'company_type' => 'required',
-            'company_name' => 'required',
+//            'industry' => 'required',
+//            'company_type' => 'required',
+//            'company_name' => 'required',
             'agree_terms' => 'required',
         ]);
     }
