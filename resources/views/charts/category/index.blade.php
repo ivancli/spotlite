@@ -165,7 +165,9 @@
             });
 
             new NLForm($("#frm-category-chart-characteristics").get(0));
+            @if(auth()->user()->dashboards->count() > 0)
             new NLForm($("#frm-dashboard-widget-store").get(0));
+            @endif
 
             categoryChart = new Highcharts.Chart({
                 credits: {

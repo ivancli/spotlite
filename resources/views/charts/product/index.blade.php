@@ -1,6 +1,11 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="modal-product-chart">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{$product->product_name}}</h4>
+            </div>
             <div class="modal-body" style="background-color: #f5f5f5;">
                 <div class="row">
                     <div class="col-lg-5 col-md-6 col-sm-12">
@@ -158,7 +163,9 @@
                 $("#txt-product-chart-end-date").val(picker.endDate.format('X'));
             });
             new NLForm($("#frm-product-chart-characteristics").get(0));
+            @if(auth()->user()->dashboards->count() > 0)
             new NLForm($("#frm-dashboard-widget-store").get(0));
+            @endif
 
             productChart = new Highcharts.Chart({
                 credits: {
