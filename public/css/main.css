@@ -14988,6 +14988,124 @@ input:focus::-ms-input-placeholder {
         font-size: 20px;
     }
 }
+.steps-container {
+    margin-bottom: 40px;
+}
+
+.steps {
+    list-style: none;
+    display: table;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.steps > li {
+    display: table-cell;
+    text-align: center;
+    width: 1%;
+}
+
+.steps > li .step {
+    border: 5px solid #CED1D6;
+    /*color: #546474;*/
+    color: #ffffff;
+    font-size: 15px;
+    border-radius: 100%;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+}
+
+.steps > li .step, .steps > li.complete .step:before {
+    line-height: 30px;
+    text-align: center;
+}
+
+.steps > li.active .step, .steps > li.complete .step:before {
+    background-color: #5293C4;
+}
+
+.steps > li .step, .steps > li.complete .step:before {
+    background-color: #ced1d6;
+}
+
+.steps > li.active .step, .steps > li.active:before, .steps > li.complete .step, .steps > li.complete:before {
+    border-color: #5293C4;
+}
+
+.steps > li .title {
+    display: block;
+    margin-top: 4px;
+    max-width: 100%;
+    color: #949EA7;
+    font-size: 14px;
+    z-index: 104;
+    text-align: center;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.steps > li.active .title, .steps > li.complete .title {
+    color: #2B3D53;
+    font-weight: bold;
+}
+
+.steps > li.active .step, .steps > li.active:before, .steps > li.complete .step, .steps > li.complete:before {
+    border-color: #5293C4;
+}
+
+.steps > li:first-child:before {
+    max-width: 51%;
+    left: 50%;
+}
+
+.steps > li:before {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    font-size: 0;
+    overflow: hidden;
+    border-top: 4px solid #CED1D6;
+    position: relative;
+    top: 21px;
+    z-index: 1;
+}
+
+.steps > li:last-child:before {
+    max-width: 50%;
+    width: 50%;
+}
+
+.welcome-form-container p.welcome-form-heading {
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.welcome-form-container .form-group {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+@media (min-width: 600px) {
+    ul.steps div.title div.description {
+        width: 175px;
+        margin: 0 auto;
+    }
+
+    .welcome-form-container {
+        padding: 20px 125px;
+    }
+
+    .welcome-form-container .form-group {
+        margin-bottom: 25px
+    }
+}
 .required label::after {
     content: " *";
     color: #ff0000;

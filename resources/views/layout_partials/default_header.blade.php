@@ -24,11 +24,14 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 @if(Auth::check())
+                    <li>
+                        <a href="https://spotlitehelp.zendesk.com/hc/en-us" target="_blank">Need Help?</a>
+                    </li>
                     <li class="dropdown spotlite-user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user"></i>&nbsp;
+                            <i class="fa fa-wrench"></i>&nbsp;
                             <span class="hidden-xs">
-                                {{Auth::user()->first_name}} {{Auth::user()->last_name}}
+                                Account Settings
                             </span>
                         </a>
                         <ul class="dropdown-menu">
@@ -52,19 +55,13 @@
                                             </li>
                                         @endif
                                     @endif
-                                    <li>
-                                        <a href="{{route('logout')}}" onclick="gaLogout();">
-                                            <h3>
-                                                Logout
-                                            </h3>
-                                        </a>
-                                    </li>
                                     @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())
                                         <li>
                                             <div style="padding: 2px;">
 
-                                                <a class="btn btn-success btn-block btn-flat" href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}">
-                                                        UPGRADE
+                                                <a class="btn btn-success btn-block btn-flat"
+                                                   href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}">
+                                                    UPGRADE
                                                 </a>
                                             </div>
                                         </li>
@@ -72,6 +69,12 @@
                                 </ul>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a href="{{route('logout')}}" onclick="gaLogout();">
+                            <i class="fa fa-sign-in"></i>&nbsp;
+                            Sign Out
+                        </a>
                     </li>
                 @endif
             </ul>

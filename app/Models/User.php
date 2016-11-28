@@ -19,7 +19,7 @@ class User extends Authenticatable
     protected $primaryKey = "user_id";
     protected $fillable = [
         'title', 'first_name', 'last_name', 'email', 'password', 'verification_code', 'last_login', 'first_login',
-        'industry', 'company_type', 'company_name', 'agree_terms'
+        'industry', 'company_type', 'company_name', 'company_url', 'agree_terms'
     ];
 
     public $timestamps = false;

@@ -44,6 +44,7 @@ elixir(function (mix) {
         'vendor/almasaeed2010/adminlte/plugins/icheck/square/blue.css',
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
         'resources/assets/css/nlform.css',
+        'resources/assets/css/welcome_popup.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.scripts([

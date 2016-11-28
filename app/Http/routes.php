@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
          * User Profile Related Routes
          */
         Route::get('profile/edit', 'User\ProfileController@edit')->name('profile.edit');
+        Route::put('profile/init_update', 'User\ProfileController@initialUpdate')->name('profile.init_update');
         Route::resource('profile', 'User\ProfileController', ['except' => [
             'create', 'store', 'destroy', 'edit'
         ]]);

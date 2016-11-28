@@ -10,6 +10,7 @@ use App\Events\User\Profile\ProfileViewed;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Validators\User\Profile\InitUpdateValidator;
 use App\Validators\User\Profile\UpdateValidator;
 use Illuminate\Http\Request;
 
@@ -101,6 +102,45 @@ class ProfileController extends Controller
         } else {
             return redirect()->route("profile.index");
         }
+    }
 
+    public function initialUpdate(InitUpdateValidator $initUpdateValidator, Request $request)
+    {
+        try {
+            $initUpdateValidator->validate($request->all());
+        } catch (ValidationException $e) {
+            $status = false;
+            $errors = $e->getErrors();
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+        }
+
+        $user = auth()->user();
+        event(new ProfileUpdating($user));
+        $input = array_except($request->all(), ['email']);
+        $user->update($input);
+        event(new ProfileUpdated($user));
+
+        $this->mailingAgentRepo->editSubscriber($user->email, array(
+            'Name' => $user->first_name . " " . $user->last_name,
+        ));
+
+        if ($request->ajax()) {
+            $status = true;
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status', 'user']));
+            } else {
+                return compact(['status', 'user']);
+            }
+        } else {
+            return redirect()->route("profile.index");
+        }
     }
 }

@@ -51,7 +51,8 @@ $(function () {
             });
         }
 
-        if ((typeof user.preferences == 'undefined' || user.preferences.DONT_SHOW_WELCOME != 1) && getLocalStorageOrCookie("met-first-login-welcome-msg-" + today + "-" + user.user_id) != 1) {
+        // if ((typeof user.preferences == 'undefined' || user.preferences.DONT_SHOW_WELCOME != 1) && getLocalStorageOrCookie("met-first-login-welcome-msg-" + today + "-" + user.user_id) != 1) {
+        if (user.industry == null) {
             showLoading();
             showWelcomePopup(function () {
                 $("video").get(0).pause();
