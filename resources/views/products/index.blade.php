@@ -21,7 +21,7 @@
 
 
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('product_index') !!}
+
 @stop
 
 @section('content')

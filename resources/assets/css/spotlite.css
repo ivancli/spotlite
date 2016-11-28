@@ -486,11 +486,27 @@ h3.box-title {
     padding-top: 100px;
 }
 
-.sidebar-menu li.active>a>.fa-angle-down, .sidebar-menu li.active>a>.pull-right-container>.fa-angle-down{
+.sidebar-menu li.active > a > .fa-angle-down, .sidebar-menu li.active > a > .pull-right-container > .fa-angle-down {
     -webkit-transform: rotate(-180deg);
     -ms-transform: rotate(-180deg);
     -o-transform: rotate(-180deg);
     transform: rotate(-180deg);
+}
+
+section.content {
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+}
+
+section.content-header {
+    padding-top: 50px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.content-header h2 {
+    margin: 0px;
 }
 
 @media (min-width: 768px) {
