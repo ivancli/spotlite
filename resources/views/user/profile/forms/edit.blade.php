@@ -69,15 +69,15 @@
     </div>
 </div>
 <div class="form-group required">
-    {!! Form::label('company_name', 'Company name', array('class' => 'control-label col-md-3')) !!}
+    {!! Form::label('company_url', 'Company URL', array('class' => 'control-label col-md-3')) !!}
     <div class="col-md-9">
-        {!! Form::text('company_name', null, array('class' => 'form-control', 'placeholder' => 'Company name')) !!}
+        {!! Form::text('company_url', null, array('class' => 'form-control', 'placeholder' => 'e.g. http://www.example.com')) !!}
     </div>
 </div>
 
 
 <div class="text-right">
-    {!! Form::submit('Save', ["class"=>"btn btn-primary btn-sm btn-flat", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
+    {!! Form::submit('Update Profile', ["class"=>"btn btn-primary btn-flat", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
 </div>
 {!! Form::close() !!}
 

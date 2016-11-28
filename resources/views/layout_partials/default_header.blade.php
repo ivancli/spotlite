@@ -5,7 +5,8 @@
         <span class="logo-mini"><img src="{{asset('build/images/favicon.png')}}" alt="SpotLite" height="30"></span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg">
-            <img src="{{asset('build/images/logo-fixed-custom.png')}}" alt="SpotLite" height="40">
+{{--            <img src="{{asset('build/images/logo-fixed-custom.png')}}" alt="SpotLite" height="40">--}}
+            <img src="{{asset('build/images/SpotLite_Logo_with_tagline2.png')}}" alt="SpotLite" height="100">
         </span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
@@ -13,12 +14,6 @@
         <!-- Sidebar toggle button-->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" onclick="saveSidebarStatus()">
             <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </a>
-        <a href="#" class="header-label" onclick="return false;" style="color: black;">
-            Focus on what matters
         </a>
 
         <div class="navbar-custom-menu">
@@ -27,48 +22,48 @@
                     <li>
                         <a href="https://spotlitehelp.zendesk.com/hc/en-us" target="_blank">Need Help?</a>
                     </li>
-                    <li class="dropdown spotlite-user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <li class="spotlite-user-menu">
+                        <a href="{{route('account.index')}}">
                             <i class="fa fa-wrench"></i>&nbsp;
                             <span class="hidden-xs">
                                 Account Settings
-                            </span>
+                            </span>&nbsp;
                         </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <ul class="spotlite-menu">
-                                    @if(auth()->user()->isStaff || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid()))
-                                        <li>
-                                            <a href="{{route('account.index')}}">
-                                                <h3>
-                                                    Settings
-                                                </h3>
-                                            </a>
-                                        </li>
-                                        @if(!auth()->user()->isStaff)
-                                            <li>
-                                                <a href="{{route('subscription.index')}}">
-                                                    <h3>
-                                                        Manage My Subscription
-                                                    </h3>
-                                                </a>
-                                            </li>
-                                        @endif
-                                    @endif
-                                    @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())
-                                        <li>
-                                            <div style="padding: 2px;">
+                        {{--<ul class="dropdown-menu">--}}
+                            {{--<li>--}}
+                                {{--<ul class="spotlite-menu">--}}
+                                    {{--@if(auth()->user()->isStaff || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid()))--}}
+                                        {{--<li>--}}
+                                            {{--<a href="{{route('account.index')}}">--}}
+                                                {{--<h3>--}}
+                                                    {{--Settings--}}
+                                                {{--</h3>--}}
+                                            {{--</a>--}}
+                                        {{--</li>--}}
+                                        {{--@if(!auth()->user()->isStaff)--}}
+                                            {{--<li>--}}
+                                                {{--<a href="{{route('subscription.index')}}">--}}
+                                                    {{--<h3>--}}
+                                                        {{--Manage My Subscription--}}
+                                                    {{--</h3>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                        {{--@endif--}}
+                                    {{--@endif--}}
+                                    {{--@if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())--}}
+                                        {{--<li>--}}
+                                            {{--<div style="padding: 2px;">--}}
 
-                                                <a class="btn btn-success btn-block btn-flat"
-                                                   href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}">
-                                                    UPGRADE
-                                                </a>
-                                            </div>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </li>
-                        </ul>
+                                                {{--<a class="btn btn-success btn-block btn-flat"--}}
+                                                   {{--href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}">--}}
+                                                    {{--UPGRADE--}}
+                                                {{--</a>--}}
+                                            {{--</div>--}}
+                                        {{--</li>--}}
+                                    {{--@endif--}}
+                                {{--</ul>--}}
+                            {{--</li>--}}
+                        {{--</ul>--}}
                     </li>
                     <li>
                         <a href="{{route('logout')}}" onclick="gaLogout();">

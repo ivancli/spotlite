@@ -11,6 +11,10 @@
     margin-bottom: 10px;
 }
 
+.m-b-20 {
+    margin-bottom: 20px;
+}
+
 .p-10 {
     padding: 10px;
 }
@@ -440,6 +444,60 @@ h3.box-title {
 
 .tour-backdrop {
     opacity: 0.6 !important;
+}
+
+.main-header .sidebar-toggle:before {
+    content: "\f100";
+}
+
+.sidebar-collapse .main-header .sidebar-toggle:before {
+    content: "\f101" !important;
+}
+
+.main-header .logo {
+    height: 100px;
+}
+
+.logo-mini {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.navbar > .sidebar-toggle {
+    height: 100px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.navbar-custom-menu {
+    padding-top: 35px;
+    padding-bottom: 35px;
+}
+
+.navbar-custom-menu > .navbar-nav li:first-child a {
+    border-left: none !important;
+}
+
+.skin-black-light .main-header .navbar > .sidebar-toggle {
+    border-right: none;
+}
+
+.main-sidebar, .left-side {
+    padding-top: 100px;
+}
+
+.sidebar-menu li.active>a>.fa-angle-down, .sidebar-menu li.active>a>.pull-right-container>.fa-angle-down{
+    -webkit-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+}
+
+@media (min-width: 768px) {
+    .navbar-nav > li > a {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
 }
 
 @media (min-width: 992px) {

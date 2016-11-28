@@ -7,15 +7,52 @@
     <div class="nav-tabs-custom">
         <!-- Tabs within a box -->
         <ul class="nav nav-tabs ui-sortable-handle">
-            <li class="active"><a href="#display-settings" data-toggle="tab" aria-expanded="true">Display Settings</a>
-            </li>
-            <li class=""><a href="#user-settings" data-toggle="tab" aria-expanded="false">Account Settings</a></li>
+            <li class="active"><a href="#user-settings" data-toggle="tab" aria-expanded="false">Edit Profile</a></li>
+            <li><a href="#user-password" data-toggle="tab" aria-expanded="false">Reset Password</a></li>
+            <li><a href="#display-settings" data-toggle="tab" aria-expanded="true">Display Settings</a></li>
+            <li><a href="#manage-subscription" data-toggle="tab" aria-expanded="true">Manage My Subscription</a></li>
+            {{--<li style="float:right;">--}}
+                {{--<button class="btn btn-primary btn-flat"--}}
+                        {{--onclick="window.location.href='http://app.spotlite.dev/subscription/1/edit';">Upgrade--}}
+                {{--</button>--}}
+            {{--</li>--}}
         </ul>
         <div class="tab-content">
-            <!-- Morris chart - Sales -->
-            <div class="chart tab-pane active" id="display-settings">
+            <div class="tab-pane active" id="user-settings">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-offset-2 col-md-8">
+                        <div class="p-10">
+                            @include('user.profile.forms.edit')
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="user-password">
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8">
+                        <div class="p-10">
+                            <h4 class="lead">Reset Password</h4>
+                            <hr>
+                            <p>By clicking the reset password button, an email with update password link will be
+                                sent
+                                to <a href="mailto:{{$user->email}}">{{$user->email}}</a>.</p>
+                            {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
+
+                            <input type="hidden" name="email" value="{{$user->email}}">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {!! Form::submit('Reset Password', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
+                                </div>
+                            </div>
+                            {!! Form::close() !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="display-settings">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-6">
                         <div class="p-10">
                             <h4 class="lead">Date Time</h4>
                             <hr>
@@ -24,7 +61,7 @@
                                 <label for="" class="col-md-3 control-label">Date format</label>
                                 <div class="col-md-9">
                                     <select name="preferences[DATE_FORMAT]" id="sel-date-format"
-                                            class="form-control sl-form-control">
+                                            class="form-control">
                                         <option value="Y-m-d" {{auth()->user()->preference('DATE_FORMAT') == 'Y-m-d' ? 'selected': ''}}>{{date('Y-m-d')}}</option>
                                         <option value="d F" {{auth()->user()->preference('DATE_FORMAT') == 'd F' ? 'selected': ''}}>{{date('d F')}}</option>
                                         <option value="l j M Y" {{auth()->user()->preference('DATE_FORMAT') == 'l j M Y' ? 'selected': ''}}>{{date('l j M Y')}}</option>
@@ -42,7 +79,7 @@
                                 <label for="" class="col-md-3 control-label">Time format</label>
                                 <div class="col-md-9">
                                     <select name="preferences[TIME_FORMAT]" id="sel-time-format"
-                                            class="form-control sl-form-control">
+                                            class="form-control">
                                         <option value="g:i a" {{auth()->user()->preference('TIME_FORMAT') == 'g:i a' ? 'selected' : ''}}>{{date('g:i a')}}</option>
                                         <option value="h:i a" {{auth()->user()->preference('TIME_FORMAT') == 'h:i a' ? 'selected' : ''}}>{{date('h:i a')}}</option>
                                         <option value="g:i A" {{auth()->user()->preference('TIME_FORMAT') == 'g:i A' ? 'selected' : ''}}>{{date('g:i A')}}</option>
@@ -51,40 +88,21 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group text-center">
-                                {!! Form::submit('Save', ["class"=>"btn btn-default btn-flat", "href"=>"#"]) !!}
+                            <div class="form-group text-right">
+                                <div class="col-sm-12">
+                                    {!! Form::submit('Update Settings', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
+                                </div>
                             </div>
                             {!! Form::close() !!}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="chart tab-pane" id="user-settings">
+            <div class="tab-pane" id="manage-subscription">
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="p-10">
-                            <h4 class="lead">User Profile</h4>
-                            <hr>
-                            @include('user.profile.forms.edit')
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-10">
-                            <h4 class="lead">Reset Password</h4>
-                            <hr>
-                            <p>By clicking the update password button, an email with update password link will be
-                                sent
-                                to <a href="mailto:{{$user->email}}">{{$user->email}}</a>.</p>
-                            {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
+                    <div class="col-md-offset-2 col-md-8">
+                        <div class="p-10 manage-subscription-container">
 
-                            <input type="hidden" name="email" value="{{$user->email}}">
-
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    {!! Form::submit('Update Password', ["class"=>"btn btn-default btn-sm btn-flat", "href"=>"#"]) !!}
-                                </div>
-                            </div>
-                            {!! Form::close() !!}
                         </div>
                     </div>
                 </div>
@@ -94,6 +112,24 @@
 @stop
 @section('scripts')
     <script type="text/javascript">
+        $(function () {
+            $('a[data-toggle="tab"][href="#manage-subscription"]').on('shown.bs.tab', function (e) {
+                showLoading();
+                $.ajax({
+                    "url": "{{route('subscription.index')}}",
+                    "method": "get",
+                    "success": function (html) {
+                        hideLoading();
+                        $(".manage-subscription-container").html(html);
+                    },
+                    "error": function (xhr, status, error) {
+                        hideLoading();
+                        describeServerRespondedError(xhr.status);
+                    }
+                });
+            })
+        })
+
         function submitForgotPassword() {
             showLoading();
             $.ajax({
