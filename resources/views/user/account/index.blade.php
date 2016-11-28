@@ -10,12 +10,10 @@
             <li class="active"><a href="#user-settings" data-toggle="tab" aria-expanded="false">Edit Profile</a></li>
             <li><a href="#user-password" data-toggle="tab" aria-expanded="false">Reset Password</a></li>
             <li><a href="#display-settings" data-toggle="tab" aria-expanded="true">Display Settings</a></li>
-            <li><a href="#manage-subscription" data-toggle="tab" aria-expanded="true">Manage My Subscription</a></li>
-            {{--<li style="float:right;">--}}
-                {{--<button class="btn btn-primary btn-flat"--}}
-                        {{--onclick="window.location.href='http://app.spotlite.dev/subscription/1/edit';">Upgrade--}}
-                {{--</button>--}}
-            {{--</li>--}}
+            @if(!auth()->user()->isStaff)
+                <li><a href="#manage-subscription" data-toggle="tab" aria-expanded="true">Manage My Subscription</a>
+                </li>
+            @endif
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="user-settings">
