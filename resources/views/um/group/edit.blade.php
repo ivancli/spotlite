@@ -2,7 +2,7 @@
 @section('title', 'Edit Group')
 @section('header_title', 'Edit Group')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('edit_group', $group) !!}
+{{--    {!! Breadcrumbs::render('edit_group', $group) !!}--}}
 @stop
 @section('content')
     <div class="row">

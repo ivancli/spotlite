@@ -2,7 +2,7 @@
 @section('title', 'Group List')
 @section('header_title', 'Group List')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('group') !!}
+{{--    {!! Breadcrumbs::render('group') !!}--}}
 @stop
 @section('content')
     @include('um.partials.banner_stats')

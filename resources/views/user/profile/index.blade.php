@@ -2,7 +2,7 @@
 @section('title', 'My Profile')
 @section('header_title', 'My Profile')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('profile_index', $user) !!}
+{{--    {!! Breadcrumbs::render('profile_index', $user) !!}--}}
 @stop
 @section('content')
     <div class="row">

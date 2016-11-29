@@ -279,20 +279,41 @@ table td.table-container {
 }
 
 .collapsible-category-div table.product-wrapper {
-    background-color: #e6e6e6;
+    background-color: #fff;
     margin-bottom: 10px;
+    -webkit-box-shadow: -5px 4px 10px -5px rgba(219, 219, 219, 1);
+    -moz-box-shadow: -5px 4px 10px -5px rgba(219, 219, 219, 1);
+    box-shadow: -5px 4px 10px -5px rgba(219, 219, 219, 1);
+}
+
+.collapsible-category-div table.product-wrapper > thead > tr > th:first-child,
+.collapsible-category-div table.product-wrapper > tbody > tr > td:first-child {
+    padding-left: 30px !important;
+}
+
+.collapsible-category-div table.product-wrapper > thead > tr > th:last-child,
+.collapsible-category-div table.product-wrapper > tbody > tr > td:last-child {
+    padding-right: 30px !important;
+}
+
+.collapsible-category-div table.product-wrapper thead tr:first-child th {
+    padding-top: 20px;
+}
+
+.collapsible-category-div table.product-wrapper tbody tr:last-child td {
+    padding-bottom: 20px;
 }
 
 .product-wrapper table.tbl-site {
-    background-color: #f5f5f5;
+    /*background-color: #f5f5f5;*/
 }
 
 table.tbl-site.table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #e8e8e8;
+    background-color: #f5f5f5;
 }
 
 table.tbl-site.table-striped > tbody > tr:nth-of-type(even) {
-    background-color: #f5f5f5;
+    background-color: #ffffff;
 }
 
 .tbl-category th, .tbl-category td {
@@ -397,7 +418,7 @@ th.ellipsis {
 
 .site-wrapper td.site-url .tooltip-inner,
 .site-wrapper td.site-url .popover-content,
-.popover-content{
+.popover-content {
     word-break: break-all;
     word-wrap: break-word;
 }
@@ -559,6 +580,11 @@ h3.box-title {
     border-radius: 25px;
 }
 
+.box-body.product-list-page-content {
+    padding: 40px;
+    background-color: #FAFAFA;
+}
+
 @media (min-width: 768px) {
     .navbar-custom-menu {
         padding-top: 25px;
@@ -612,6 +638,47 @@ section.content-header {
 
 .content-header h2 {
     margin: 5px 0px;
+}
+
+tr.empty-message-row td {
+    font-weight: bold;
+    padding: 20px !important;
+    font-size: 16px;
+    color: #777;
+}
+
+@media (min-width: 991px) {
+    .tbl-site th, .tbl-site td {
+        font-size: 15px;
+    }
+
+    .tbl-site th, .tbl-site tr.site-wrapper td, .tbl-site tr.add-site-row td {
+        padding: 15px !important;
+    }
+}
+
+.tbl-site tr.add-site-row td {
+    background-color: #f5f5f5;
+}
+
+tr.site-wrapper td.site-url {
+    position: relative;
+    padding-right: 50px !important;
+}
+
+td.site-url a {
+    line-height: 34px;
+}
+
+.btn-edit.btn-edit-site {
+    position: absolute;
+    right: 0;
+    top: 24px;
+    margin: 0 !important;
+}
+
+tr.site-wrapper > td {
+    vertical-align: middle !important;
 }
 
 @media (min-width: 768px) {

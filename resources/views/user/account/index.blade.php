@@ -1,7 +1,7 @@
 @extends('layouts.adminlte')
 @section('title', 'Account Settings')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('account_index') !!}
+{{--    {!! Breadcrumbs::render('account_index') !!}--}}
 @stop
 @section('content')
     <div class="nav-tabs-custom">

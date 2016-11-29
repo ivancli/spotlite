@@ -1,6 +1,9 @@
 @section('header_title')
     {{$dashboard->dashboard_name}}
-    <div class="pull-right">
+@stop
+
+@section('breadcrumbs')
+    <div class="text-right">
         <button class="btn {{!is_null($dashboard->getPreference('timespan')) ? 'btn-success' : 'btn-primary'}} btn-sm btn-flat"
                 onclick="applyFilters();">
             @if(!is_null($dashboard->getPreference('timespan')))
@@ -55,7 +58,7 @@
             },
             "dataType": 'json',
             "success": function (response) {
-                if(response.status != true){
+                if (response.status != true) {
                     alertP("Error", "Unable to update widget order, please try again later.");
                 }
             },

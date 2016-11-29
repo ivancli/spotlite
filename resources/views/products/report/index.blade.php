@@ -1,9 +1,10 @@
 @extends('layouts.adminlte')
 @section('title', 'Reports')
+
 @section('header_title', "Reports")
 
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('report_index') !!}
+{{--    {!! Breadcrumbs::render('report_index') !!}--}}
 @stop
 
 @section('content')

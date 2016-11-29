@@ -2,7 +2,7 @@
 @section('title', 'Crawler - Domain Management')
 @section('header_title', 'Crawler - Domain Management')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('admin_domain') !!}
+{{--    {!! Breadcrumbs::render('admin_domain') !!}--}}
 @stop
 @section('content')
     <div class="row">

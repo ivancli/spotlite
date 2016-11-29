@@ -2,7 +2,7 @@
 @section('title', 'Edit Profile')
 @section('header_title', 'Edit Profile')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('profile_edit') !!}
+{{--    {!! Breadcrumbs::render('profile_edit') !!}--}}
 @stop
 @section('content')
     <div class="row">

@@ -2,7 +2,7 @@
 @section('title', 'Alerts')
 
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('alert_index') !!}
+{{--    {!! Breadcrumbs::render('alert_index') !!}--}}
 @stop
 
 @section('content')

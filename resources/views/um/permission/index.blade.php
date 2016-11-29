@@ -2,7 +2,7 @@
 @section('title', 'Permission List')
 @section('header_title', 'Permission List')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('permission') !!}
+{{--    {!! Breadcrumbs::render('permission') !!}--}}
 @stop
 @section('content')
     @include('um.partials.banner_stats')

@@ -2,7 +2,7 @@
 @section('title', 'User Activity Logs')
 @section('header_title', isset($user) ? "{$user->first_name} {$user->last_name} - Activity Logs" : 'User Activity Logs')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('user_activity_log') !!}
+{{--    {!! Breadcrumbs::render('user_activity_log') !!}--}}
 @stop
 @section('content')
     <div class="row">

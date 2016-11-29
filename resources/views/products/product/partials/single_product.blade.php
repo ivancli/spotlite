@@ -279,6 +279,7 @@
                                                     addSite({
                                                         "site_url": $txtSiteURL.val(),
                                                         "domain_id": addSiteData.domain_id,
+                                                        "site_id": addSiteData.site_id,
                                                         "product_id": productID
                                                     }, function (add_site_response) {
                                                         if (add_site_response.status == true) {
@@ -411,6 +412,7 @@
             } else {
                 $tbl.find(".product-name-link").hide();
                 $tbl.find(".frm-edit-product").show();
+                $tbl.find(".frm-edit-product .product-name").focus();
                 $(el).addClass("editing");
             }
         }

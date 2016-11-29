@@ -30,7 +30,8 @@
                     </div>
                     {!! Form::close() !!}
 
-                    <span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></span>
+                    <span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i
+                                class="fa fa-pencil-square-o"></i></span>
                 </th>
 
                 <th class="text-right action-cell category-th">
@@ -252,6 +253,7 @@
             } else {
                 $tbl.find(".category-name-link").hide();
                 $tbl.find(".frm-edit-category").show();
+                $tbl.find(".frm-edit-category .category-name").focus();
                 $(el).addClass("editing");
             }
         }

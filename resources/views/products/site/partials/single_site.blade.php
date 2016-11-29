@@ -1,52 +1,10 @@
-<style>
-
-    tr.empty-message-row td {
-        font-weight: bold;
-        padding: 20px !important;
-        font-size: 16px;
-        color: #777;
-    }
-
-    @media (min-width: 991px) {
-        .tbl-site th, .tbl-site td {
-            font-size: 15px;
-        }
-
-        .tbl-site th, .tbl-site tr.site-wrapper td, .tbl-site tr.add-site-row td {
-            padding: 15px !important;
-        }
-    }
-
-    .tbl-site tr.add-site-row td {
-        background-color: #f5f5f5;
-    }
-
-    tr.site-wrapper td.site-url {
-        position: relative;
-        padding-right: 50px !important;
-    }
-
-    td.site-url a {
-        line-height: 34px;
-    }
-
-    .btn-edit.btn-edit-site {
-        position: absolute;
-        right: 0;
-        top: 24px;
-        margin: 0 !important;
-    }
-
-    tr.site-wrapper > td {
-        vertical-align: middle !important;
-    }
-</style>
 <tr class="site-wrapper" data-site-id="{{$site->getKey()}}"
     data-site-edit-url="{{$site->urls['edit']}}"
     data-site-alert-url="{{$site->urls['alert']}}"
     data-site-update-url="{{$site->urls['update']}}">
     <td class="site-url">
-        <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-toggle="popover" data-container="body"
+        <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-toggle="popover"
+           data-container="body"
            data-trigger="hover"
            data-content="{{$site->site_url}}">
             {{parse_url($site->site_url)['host']}}
@@ -57,7 +15,8 @@
                    class="form-control sl-form-control txt-site-url"
                    value="{{$site->site_url}}">
             <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default btn-flat" onclick="getPricesEdit(this); return false;">
+                    <button type="submit" class="btn btn-default btn-flat" data-url="{{$site->urls['update']}}"
+                            onclick="getPricesEdit(this); return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
                 </span>
@@ -156,13 +115,6 @@
            data-toggle="tooltip" title="alert">
             <i class="fa {{!is_null($site->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
         </a>
-        {{--<a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;"--}}
-        {{--data-toggle="tooltip" title="edit">--}}
-        {{--<i class="fa fa-pencil-square-o"></i>--}}
-        {{--</a>--}}
-
-        {{--TODO not yet finished--}}
-        {{--change the submitting parameters and update the site controller destroy function--}}
         {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
         <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
            onclick="btnDeleteSiteOnClick(this); return false;"
@@ -221,60 +173,10 @@
             } else {
                 $tr.find(".site-url-link").hide();
                 $tr.find(".frm-edit-site-url").show();
+                $tr.find(".frm-edit-site-url .txt-site-url").focus();
                 $(el).addClass("editing");
             }
         }
-
-        function btnEditSiteOnClick(el) {
-            showLoading();
-            $.ajax({
-                "url": $(el).closest(".site-wrapper").attr("data-site-edit-url"),
-                "method": "get",
-                "data": {
-                    "site_id": $(el).closest(".site-wrapper").attr("data-site-id")
-                },
-                "success": function (html) {
-                    hideLoading();
-                    var $modal = $(html);
-                    $modal.modal();
-                    $modal.on("shown.bs.modal", function () {
-                        if ($.isFunction(modalReady)) {
-                            modalReady({
-                                "callback": function (response) {
-                                    if (response.status == true) {
-                                        showLoading();
-                                        if (typeof response.site != 'undefined') {
-                                            $.ajax({
-                                                "url": response.site.urls.show,
-                                                "method": "get",
-                                                "success": function (html) {
-                                                    hideLoading();
-                                                    $(el).closest(".site-wrapper").replaceWith(html);
-                                                },
-                                                "error": function (xhr, status, error) {
-                                                    hideLoading();
-                                                    describeServerRespondedError(xhr.status);
-                                                }
-                                            });
-                                        }
-                                    } else {
-                                        alertP("Unable to edit this site, please try again later.");
-                                    }
-                                }
-                            })
-                        }
-                    });
-                    $modal.on("hidden.bs.modal", function () {
-                        $("#modal-site-update").remove();
-                    });
-                },
-                "error": function () {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            })
-        }
-
 
         function getPricesEdit(el) {
             var $formEditSiteURL = $(el).closest(".frm-edit-site-url");
@@ -286,74 +188,55 @@
                 "url": "{{route("site.prices")}}",
                 "method": "get",
                 "data": {
-                    "site_url": $txtSiteURL.val()
+                    "site_url": $txtSiteURL.val(),
+                    "site_id": siteID
                 },
                 "dataType": "json",
                 "success": function (response) {
                     if (typeof response.errors == 'undefined') {
+                        //PRICE NOT FOUND
                         if ((typeof response.sites == 'undefined' || response.sites.length == 0) && typeof response.targetDomain == 'undefined') {
-                            addSite({
+                            editSite({
                                 "site_url": $txtSiteURL.val(),
-                                "product_id": productID
-                            }, function (add_site_response) {
-                                if (add_site_response.status == true) {
-                                    loadSingleSite(add_site_response.site.urls.show, function (html) {
-                                        $(el).closest(".tbl-site").find("tbody").prepend(html);
-                                        cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
+                                "url": $(el).attr("data-url")
+                            }, function (edit_site_response) {
+                                if (edit_site_response.status == true) {
+                                    loadSingleSite(edit_site_response.site.urls.show, function (html) {
+                                        toggleEditSiteURL($(el).closest(".site-wrapper").find("btn-edit-site").get(0));
+                                        $(el).closest(".site-wrapper").replaceWith(html);
                                         updateProductEmptyMessage();
                                     });
                                 } else {
                                     alertP("Error", "Unable to add site, please try again later.");
                                 }
                             })
-                        } else {
+                        }
+                        //PRICE FOUND
+                        else {
                             showLoading();
-                            $.ajax({
-                                "url": "{{route("site.prices")}}",
-                                "method": "get",
-                                "data": {
-                                    "site_url": $txtSiteURL.val()
-                                },
-                                "success": function (html) {
-                                    hideLoading();
-                                    var $modal = $(html);
-                                    $modal.modal();
-                                    $modal.on("shown.bs.modal", function () {
-                                        if ($.isFunction(modalReady)) {
-                                            modalReady({
-                                                "callback": function (addSiteData) {
-                                                    addSite({
-                                                        "site_url": $txtSiteURL.val(),
-                                                        "domain_id": addSiteData.domain_id,
-                                                        "product_id": productID
-                                                    }, function (add_site_response) {
-                                                        if (add_site_response.status == true) {
-                                                            loadSingleSite(add_site_response.site.urls.show, function (html) {
-                                                                $(el).closest(".tbl-site").find("tbody").prepend(html);
-                                                                cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
-                                                                updateProductEmptyMessage();
-                                                            });
-                                                        } else {
-                                                            alertP("Error", "Unable to add site, please try again later.");
-                                                        }
-                                                        /*TODO big pb*/
-                                                    });
-                                                }
-                                            })
-                                        }
-                                    });
-                                    $modal.on("hidden.bs.modal", function () {
-                                        $("#modal-site-prices").remove();
-                                    });
-                                },
-                                "error": function (xhr, status, error) {
-                                    hideLoading();
-                                    describeServerRespondedError(xhr.status);
-                                }
+                            showSelectPricePopup({
+                                "site_url": $txtSiteURL.val()
+                            }, function (editSiteData) {
+                                editSite({
+                                    "site_url": $txtSiteURL.val(),
+                                    "domain_id": editSiteData.domain_id,
+                                    "site_id": editSiteData.site_id,
+                                    "url": $(el).attr("data-url")
+                                }, function (edit_site_response) {
+                                    if (edit_site_response.status == true) {
+                                        loadSingleSite(edit_site_response.site.urls.show, function (html) {
+                                            toggleEditSiteURL($(el).closest(".site-wrapper").find("btn-edit-site").get(0));
+                                            $(el).closest(".site-wrapper").replaceWith(html);
+                                            updateProductEmptyMessage();
+                                        });
+                                    } else {
+                                        alertP("Error", "Unable to add site, please try again later.");
+                                    }
+                                });
                             });
                         }
                     } else {
-                        var errorMsg = "Unable to add site. ";
+                        var errorMsg = "Unable to edit site. ";
                         if (response.errors != null) {
                             $.each(response.errors, function (index, error) {
                                 errorMsg += error + " ";
@@ -367,6 +250,58 @@
                     describeServerRespondedError(xhr.status);
                 }
             })
+        }
+
+        function editSite(data, callback) {
+            showLoading();
+            $.ajax({
+                "url": data.url,
+                "method": "put",
+                "data": data,
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if ($.isFunction(callback)) {
+                        callback(response);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
+
+        function showSelectPricePopup(data, callback) {
+            showLoading();
+            $.ajax({
+                "url": "{{route("site.prices")}}",
+                "method": "get",
+                "data": data,
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    if ($.isFunction(callback)) {
+                                        callback(response);
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-site-prices").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
         }
 
 

@@ -32,7 +32,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-solid">
-                <div class="box-body">
+                <div class="box-body product-list-page-content">
                     <div class="row m-b-10">
                         <div class="col-sm-12">
                             {{--<a href="#" class="btn btn-primary btn-xs btn-add-category btn-flat"--}}

@@ -2,7 +2,7 @@
 @section('title', 'Manage Dashboard')
 @section('header_title', 'Manage Dashboard')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('manage_dashboard') !!}
+{{--    {!! Breadcrumbs::render('manage_dashboard') !!}--}}
 @stop
 @section('content')
     <div class="row">

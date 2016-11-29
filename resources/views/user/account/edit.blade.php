@@ -2,7 +2,7 @@
 @section('title', 'Account Settings')
 @section('header_title', 'Account Settings')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('account_index') !!}
+{{--    {!! Breadcrumbs::render('account_index') !!}--}}
 @stop
 @section('content')
     <div class="row">

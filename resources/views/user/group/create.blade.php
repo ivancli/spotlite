@@ -2,7 +2,7 @@
 @section('title', 'Create Group')
 @section('header_title', 'Create Group')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('group_create') !!}
+{{--    {!! Breadcrumbs::render('group_create') !!}--}}
 @stop
 @section('content')
     <div class="row">

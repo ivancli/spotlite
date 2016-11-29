@@ -2,7 +2,7 @@
 @section('title', 'Role Details')
 @section('header_title', 'Role Details')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('show_role', $role) !!}
+{{--    {!! Breadcrumbs::render('show_role', $role) !!}--}}
 @stop
 @section('content')
     <div class="row">

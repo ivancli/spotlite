@@ -2,7 +2,7 @@
 @section('title', 'Crawler Activity Logs')
 @section('header_title', "Crawler Activity Logs")
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('crawler_activity_log') !!}
+{{--    {!! Breadcrumbs::render('crawler_activity_log') !!}--}}
 @stop
 @section('content')
     <div class="row">

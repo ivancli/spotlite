@@ -2,7 +2,7 @@
 @section('title', 'Onboarding Service')
 @section('header_title', $onboardingProduct->name)
 @section('breadcrumbs')
-    {!! Breadcrumbs::render("onboarding_index") !!}
+{{--    {!! Breadcrumbs::render("onboarding_index") !!}--}}
 @stop
 @section('content')
     <div class="row">

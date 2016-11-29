@@ -2,7 +2,7 @@
 @section('title', 'Role List')
 @section('header_title', 'Roles')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('role') !!}
+{{--    {!! Breadcrumbs::render('role') !!}--}}
 @stop
 @section('content')
     @include('um.partials.banner_stats')

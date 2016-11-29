@@ -2,7 +2,7 @@
 @section('title', 'App Preferences')
 @section('header_title', 'App Preferences')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('admin_preference') !!}
+    {{--{!! Breadcrumbs::render('admin_preference') !!}--}}
 @stop
 @section('content')
     <div class="row">

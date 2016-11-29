@@ -2,7 +2,7 @@
 @section('title', 'Edit Permission')
 @section('header_title', 'Edit Permission')
 @section('breadcrumbs')
-    {!! Breadcrumbs::render('edit_permission', $permission) !!}
+{{--    {!! Breadcrumbs::render('edit_permission', $permission) !!}--}}
 @stop
 @section('content')
     <div class="row">
