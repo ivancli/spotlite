@@ -21,7 +21,10 @@
 
 
 @section('breadcrumbs')
-
+    <input type="text" class="form-control general-search-input" placeholder="Search">
+    <button class="btn btn-default general-search-button">
+        <i class="fa fa-search"></i>
+    </button>
 @stop
 
 @section('content')
@@ -32,10 +35,40 @@
                 <div class="box-body">
                     <div class="row m-b-10">
                         <div class="col-sm-12">
-                            <a href="#" class="btn btn-primary btn-xs btn-add-category btn-flat"
-                               onclick="appendCreateCategoryBlock();">
-                                <i class="fa fa-plus"></i> Add Category
-                            </a>
+                            {{--<a href="#" class="btn btn-primary btn-xs btn-add-category btn-flat"--}}
+                               {{--onclick="appendCreateCategoryBlock();">--}}
+                                {{--<i class="fa fa-plus"></i> Add Category--}}
+                            {{--</a>--}}
+                            <div class="add-item-block add-category-container"
+                                 onclick="appendCreateCategoryBlock(this); event.stopPropagation(); return false;">
+                                <div class="add-item-label">
+                                    <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
+                                    <span class="add-item-text">ADD CATEGORY</span>
+                                </div>
+                                <div class="add-item-controls">
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                            <form action="{{route('category.store')}}" method="post"
+                                                  class="frm-store-category"
+                                                  onsubmit="btnAddCategoryOnClick(this); return false;">
+                                                <input type="text" placeholder="Category Name" id="txt-category-name"
+                                                       class="form-control txt-item" name="category_name">
+                                            </form>
+                                        </div>
+                                        <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
+                                            <button class="btn btn-primary"
+                                                    onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                                ADD CATEGORY
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <button class="btn btn-default" id="btn-cancel-add-category"
+                                                    onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
+                                                CANCEL
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -104,28 +137,16 @@
             });
         });
 
-        function appendCreateCategoryBlock() {
-            showLoading();
-            var $list = $(".list-container")
-            if ($list.find(".category-wrapper.create").length == 0) {
-                $.ajax({
-                    "url": "{{route('category.create')}}",
-                    "method": "get",
-                    "success": function(html){
-                        hideLoading();
-                        hideLoading();
-                        $list.prepend(html);
-                        $list.find(".category-wrapper.create .category-name").focus();
-                    },
-                    "error": function(xhr, status, error){
-                        hideLoading();
-                        describeServerRespondedError(xhr.status);
-                    }
-                });
-            } else {
-                hideLoading();
-                $list.find(".category-wrapper.create .category-name").focus();
-            }
+        function appendCreateCategoryBlock(el) {
+            $(el).find(".add-item-label").slideUp();
+            $(el).find(".add-item-controls").slideDown();
+            $("#txt-category-name").focus();
+        }
+
+        function cancelAddCategory(el) {
+            $(el).closest(".add-item-block").find(".add-item-label").slideDown();
+            $(el).closest(".add-item-block").find(".add-item-controls").slideUp();
+            $(el).closest(".add-item-block").find(".add-item-controls input").val("");
         }
 
         function loadCategories(tStart, tLength, successCallback, failCallback) {
@@ -156,6 +177,68 @@
                 }
             })
         }
+
+
+        function btnAddCategoryOnClick() {
+            showLoading();
+            $.ajax({
+                "url": "{{route('category.store')}}",
+                "method": "post",
+                "data": {
+                    "category_name": $("#txt-category-name").val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        cancelAddCategory($("#btn-cancel-add-category").get());
+                        gaAddCategory();
+                        if (response.category != null) {
+                            showLoading();
+                            loadSingleCategory(response.category.urls.show, function (html) {
+                                hideLoading();
+                                $(".list-container").prepend(html);
+                                updateCategoryOrder();
+                            });
+                        } else {
+                            alertP("Create Category", "Category has been created. But encountered error while page being lodaed.", function () {
+                                window.location.reload();
+                            });
+                        }
+                    } else {
+                        var errorMsg = "";
+                        if (response.errors != null) {
+                            $.each(response.errors, function (index, error) {
+                                errorMsg += error + " ";
+                            })
+                        }
+                        alertP("Error", errorMsg);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
+
+        function loadSingleCategory(url, callback) {
+            $.ajax({
+                "url": url,
+                "method": "get",
+                "success": function (response) {
+                    hideLoading();
+                    if ($.isFunction(callback)) {
+                        callback(response);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
+        }
+
 
         function resetFilters() {
             start = 0;

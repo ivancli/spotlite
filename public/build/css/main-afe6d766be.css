@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-50894910c7.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-afe6d766be.css */
 @media print {
   *,
   *:before,
@@ -15362,7 +15362,7 @@ table td.table-container {
 }
 
 .tbl-category {
-    background-color: #f2f2f2;
+    background-color: #f0f0f0;
 }
 
 .collapsible-category-div table.product-wrapper {
@@ -15562,6 +15562,64 @@ h3.box-title {
     content: "\f101" !important;
 }
 
+.add-item-block {
+    border: 2px dashed lightgrey;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #777;
+    font-weight: bold;
+    height: 65px;
+    cursor: pointer;
+}
+
+.add-item-block .add-item-label {
+    padding: 19px 19px 19px 50px;
+}
+
+.add-item-block .add-item-controls {
+    background-color: #fff;
+    padding: 13px;
+}
+
+@media (min-width: 765px) {
+    .add-item-block .add-item-controls {
+        padding-left: 50px;
+    }
+}
+
+.add-item-block span.add-item-text {
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.add-item-block i.fa-plus {
+    font-size: 25px;
+    vertical-align: middle;
+}
+
+.add-item-block .txt-item {
+    border: none;
+}
+
+.add-item-block .add-item-controls input {
+    font-size: 18px;
+}
+
+.add-item-block .add-item-controls {
+    display: none;
+}
+
+.add-item-label.add-site-label {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.site-label-text-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .main-header .logo {
     height: 100px;
 }
@@ -15571,15 +15629,40 @@ h3.box-title {
     padding-bottom: 25px;
 }
 
-.navbar > .sidebar-toggle {
-    height: 100px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+.general-search-input {
+    border-radius: 20px;
+    height: 45px;
+    padding-left: 35px;
+    padding-right: 35px;
 }
 
-.navbar-custom-menu {
-    padding-top: 35px;
-    padding-bottom: 35px;
+.general-search-button {
+    position: absolute;
+    right: 13px;
+    top: 0;
+    height: 45px;
+    width: 70px;
+    border-radius: 25px;
+}
+
+@media (min-width: 768px) {
+    .navbar-custom-menu {
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+}
+
+@media (min-width: 991px) {
+    .navbar > .sidebar-toggle {
+        height: 100px;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .navbar-custom-menu {
+        padding-top: 35px;
+        padding-bottom: 35px;
+    }
 }
 
 .navbar-custom-menu > .navbar-nav li:first-child a {
@@ -15614,7 +15697,7 @@ section.content-header {
 }
 
 .content-header h2 {
-    margin: 0px;
+    margin: 5px 0px;
 }
 
 @media (min-width: 768px) {

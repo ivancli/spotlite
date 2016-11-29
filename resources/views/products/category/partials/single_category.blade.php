@@ -27,10 +27,6 @@
                         </span>
                     </div>
                     {!! Form::close() !!}
-                    &nbsp;
-                    <button class="btn btn-primary btn-xs btn-flat btn-add-product" onclick="appendCreateProductBlock(this)">
-                        <i class="fa fa-plus"></i> Add Product
-                    </button>
                 </th>
 
                 <th class="text-right action-cell category-th">
@@ -46,7 +42,8 @@
                        title="report">
                         <i class="fa {{!is_null($category->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
                     </a>
-                    <a href="#" class="btn-action btn-edit-category" onclick="toggleEditCategoryName(this); return false;"
+                    <a href="#" class="btn-action btn-edit-category"
+                       onclick="toggleEditCategoryName(this); return false;"
                        data-toggle="tooltip"
                        title="edit">
                         <i class="fa fa-pencil-square-o"></i>
@@ -58,6 +55,42 @@
                         <i class="glyphicon glyphicon-trash text-danger"></i>
                     </a>
                     {!! Form::close() !!}
+                </th>
+            </tr>
+            <tr>
+                <th></th>
+                <th colspan="2" class="category-th action-cell">
+                    <div class="add-item-block add-product-container"
+                         onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
+                        <div class="add-item-label">
+                            <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
+                            <span class="add-item-text">ADD PRODUCT</span>
+                        </div>
+                        <div class="add-item-controls">
+                            <div class="row">
+                                <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                    <form action="{{route('product.store')}}" method="post"
+                                          class="frm-store-product"
+                                          onsubmit="btnAddProductOnClick(this); return false;">
+                                        <input type="text" placeholder="Product Name" name="product_name"
+                                               id="txt-product-name-{{$category->getKey()}}"
+                                               class="form-control txt-item">
+                                    </form>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
+                                    <button class="btn btn-primary"
+                                            onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                        ADD PRODUCT
+                                    </button>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-default" id="btn-cancel-add-product-{{$category->getKey()}}"
+                                            onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
+                                        CANCEL
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </th>
             </tr>
             </thead>
@@ -145,35 +178,74 @@
         }
 
         function appendCreateProductBlock(el) {
-            showLoading();
-            var $categoryCollapsible = $(el).closest(".category-wrapper").find(".collapsible-category-div");
-            if ($categoryCollapsible.attr("aria-expanded") == "false") {
-                $categoryCollapsible.addClass("in").attr("aria-expanded", true).css("height", "");
-            }
-            var $div = $(el).closest(".tbl-category").find("tbody .collapsible-category-div");
-            var categoryID = $(el).closest(".category-wrapper").attr("data-category-id");
-            if ($div.find(".product-wrapper.create").length == 0) {
-                $.ajax({
-                    "url": "{{route('product.create')}}",
-                    "method": "get",
-                    "data": {
-                        "category_id": categoryID
-                    },
-                    "success": function (html) {
-                        hideLoading();
-                        $div.prepend(html);
-                        $div.find(".product-wrapper.create .product-name").focus();
-                    },
-                    "error": function(xhr, status, error){
-                        hideLoading();
-                        describeServerRespondedError(xhr.status);
-                    }
-                });
-            } else {
-                hideLoading();
-                $div.find(".product-wrapper.create .product-name").focus();
-            }
+            $(el).find(".add-item-label").slideUp();
+            $(el).find(".add-item-controls").slideDown();
+            $("#txt-product-name-{{$category->getKey()}}").focus();
         }
+
+        function cancelAddProduct(el) {
+            $(el).closest(".add-item-block").find(".add-item-label").slideDown();
+            $(el).closest(".add-item-block").find(".add-item-controls").slideUp();
+            $(el).closest(".add-item-block").find(".add-item-controls input").val("");
+        }
+
+
+        function btnAddProductOnClick(el) {
+            showLoading();
+            $.ajax({
+                "url": "{{route('product.store')}}",
+                "method": "post",
+                "data": {
+                    "category_id": "{{$category->getKey()}}",
+                    "product_name": $("#txt-product-name-{{$category->getKey()}}").val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        cancelAddProduct($("#btn-cancel-add-product-{{$category->getKey()}}").get());
+                        gaAddProduct();
+                        if (response.product != null) {
+                            showLoading();
+                            loadSingleProduct(response.product.urls.show, function (html) {
+                                hideLoading();
+                                $(el).closest(".tbl-category").find(".collapsible-category-div").prepend(html);
+                                updateProductOrder("{{$category->getKey()}}");
+                            });
+                        } else {
+                            alertP("Create product", "product has been created. But encountered error while page being loaded.", function () {
+                                window.location.reload();
+                            });
+                        }
+                    } else {
+                        var errorMsg = "Unable to add product. ";
+                        if (response.errors != null) {
+                            $.each(response.errors, function (index, error) {
+                                errorMsg += error + " ";
+                            })
+                        }
+                        alertP("Error", errorMsg);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
+
+        function loadSingleProduct(url, callback) {
+            $.ajax({
+                "url": url,
+                "method": "get",
+                "success": callback,
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
+        }
+
 
         function toggleEditCategoryName(el) {
             var $tbl = $(el).closest(".tbl-category");
@@ -270,7 +342,7 @@
             $.ajax({
                 "url": url,
                 "method": "get",
-                "success": function(html){
+                "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -283,7 +355,7 @@
                         $(this).remove();
                     });
                 },
-                "error": function(xhr, status, error){
+                "error": function (xhr, status, error) {
                     hideLoading();
                     describeServerRespondedError(xhr.status);
                 }

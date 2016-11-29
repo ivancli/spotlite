@@ -28,10 +28,6 @@
                 </span>
             </div>
             {!! Form::close() !!}
-            &nbsp;
-            <button class="btn btn-primary btn-xs btn-add-site btn-flat" onclick="showAddSiteForm(this); return false;">
-                <i class="fa fa-plus"></i> Add Site
-            </button>
         </th>
         <th class="text-right action-cell product-th">
             <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
@@ -57,7 +53,6 @@
                 <i class="glyphicon glyphicon-trash text-danger"></i>
             </a>
             {!! Form::close() !!}
-
         </th>
     </tr>
     </thead>
@@ -87,6 +82,47 @@
                         @endforeach
                     @endif
                     {{--sites here--}}
+                    <tr class="add-site-row">
+                        <td colspan="8">
+
+                            <div class="add-item-block add-site-container"
+                                 onclick="appendCreateSiteBlock(this); event.stopPropagation(); return false;">
+                                <div class="add-item-label add-site-label">
+                                    <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
+                                    <div class="site-label-text-container">
+                                        <div>Add the product page URL of the price you want to watch.</div>
+                                        <div>For example http://www.company.com.au/productpage/price</div>
+                                    </div>
+                                </div>
+                                <div class="add-item-controls">
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                            <form action="{{route('site.store')}}" method="post"
+                                                  class="frm-store-site"
+                                                  onsubmit="getPrices(this); return false;">
+                                                <input type="text"
+                                                       placeholder="e.g. http://www.company.com.au/productpage/price"
+                                                       name="site_url"
+                                                       class="txt-site-url form-control txt-item">
+                                            </form>
+                                        </div>
+                                        <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
+                                            <button class="btn btn-primary"
+                                                    onclick="getPrices(this); event.stopPropagation(); event.preventDefault();">
+                                                ADD SITE
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <button class="btn btn-default btn-cancel-add-site"
+                                                    id="btn-cancel-add-site-{{$product->getKey()}}"
+                                                    onclick="cancelAddSite(this); event.stopPropagation(); event.preventDefault();">
+                                                CANCEL
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -96,16 +132,24 @@
     <script type="text/javascript">
         var siteDrake{{$product->getKey()}} = null;
 
-        $(function(){
+        $(function () {
+
+            /**
+             * drag and drop
+             */
             siteDrake{{$product->getKey()}} = dragula([$("#product-{{$product->getKey()}} > table > tbody").get(0)], {
-//                moves: function (el, container, handle) {
-//                    return $(handle).hasClass("btn-product-dragger") || $(handle).closest(".btn-product-dragger").length > 0;
-//                }
+                moves: function (el, container, handle) {
+                    return !$(handle).hasClass("add-site-row") && $(handle).closest(".add-site-row").length == 0;
+                }
             }).on('drop', function (el, target, source, sibling) {
                 updateSiteOrder({{$product->getKey()}});
             });
         });
 
+        /**
+         * set order number to element
+         * @param product_id
+         */
         function assignSiteOrderNumber(product_id) {
             $(".product-wrapper").filter(function () {
                 return $(this).attr("data-product-id") == product_id;
@@ -114,6 +158,10 @@
             });
         }
 
+        /**
+         * Send order number to server
+         * @param product_id
+         */
         function updateSiteOrder(product_id) {
             assignSiteOrderNumber(product_id);
             var orderList = [];
@@ -150,6 +198,157 @@
                 }
             })
         }
+
+        /**
+         * enable add site
+         * @param el
+         */
+        function appendCreateSiteBlock(el) {
+            $(el).find(".add-item-label").slideUp();
+            $(el).find(".add-item-controls").slideDown();
+            $(el).find(".txt-site-url").focus();
+        }
+
+        /**
+         * disable add site
+         * @param el
+         */
+        function cancelAddSite(el) {
+            $(el).closest(".add-item-block").find(".add-item-label").slideDown();
+            $(el).closest(".add-item-block").find(".add-item-controls").slideUp();
+            $(el).closest(".add-item-block").find(".add-item-controls input").val("");
+        }
+
+
+        function getPrices(el) {
+            var $addItemControls = $(el).closest(".add-item-controls");
+            var $txtSiteURL = $addItemControls.find(".txt-site-url");
+            var productID = $(el).closest(".product-wrapper").attr("data-product-id");
+            showLoading();
+            $.ajax({
+                "url": "{{route("site.prices")}}",
+                "method": "get",
+                "data": {
+                    "site_url": $txtSiteURL.val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    if (typeof response.errors == 'undefined') {
+                        if ((typeof response.sites == 'undefined' || response.sites.length == 0) && typeof response.targetDomain == 'undefined') {
+                            addSite({
+                                "site_url": $txtSiteURL.val(),
+                                "product_id": productID
+                            }, function (add_site_response) {
+                                if (add_site_response.status == true) {
+                                    loadSingleSite(add_site_response.site.urls.show, function (html) {
+                                        $(el).closest(".tbl-site").find("tbody").prepend(html);
+                                        cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
+                                    });
+                                } else {
+                                    alertP("Error", "Unable to add site, please try again later.");
+                                }
+                            })
+                        } else {
+                            showLoading();
+                            $.ajax({
+                                "url": "{{route("site.prices")}}",
+                                "method": "get",
+                                "data": {
+                                    "site_url": $txtSiteURL.val()
+                                },
+                                "success": function (html) {
+                                    hideLoading();
+                                    var $modal = $(html);
+                                    $modal.modal();
+                                    $modal.on("shown.bs.modal", function () {
+                                        if ($.isFunction(modalReady)) {
+                                            modalReady({
+                                                "callback": function (addSiteData) {
+                                                    addSite({
+                                                        "site_url": $txtSiteURL.val(),
+                                                        "domain_id": addSiteData.domain_id,
+                                                        "product_id": productID
+                                                    }, function (add_site_response) {
+                                                        if (add_site_response.status == true) {
+                                                            loadSingleSite(add_site_response.site.urls.show, function (html) {
+                                                                $(el).closest(".tbl-site").find("tbody").prepend(html);
+                                                                cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
+                                                            });
+                                                        } else {
+                                                            alertP("Error", "Unable to add site, please try again later.");
+                                                        }
+                                                        /*TODO big pb*/
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    });
+                                    $modal.on("hidden.bs.modal", function () {
+                                        $("#modal-site-prices").remove();
+                                    });
+                                },
+                                "error": function (xhr, status, error) {
+                                    hideLoading();
+                                    describeServerRespondedError(xhr.status);
+                                }
+                            });
+                        }
+                    } else {
+                        var errorMsg = "Unable to add site. ";
+                        if (response.errors != null) {
+                            $.each(response.errors, function (index, error) {
+                                errorMsg += error + " ";
+                            })
+                        }
+                        alertP("Error", errorMsg);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
+
+        function addSite(data, callback) {
+            showLoading();
+            $.ajax({
+                "url": "{{route('site.store')}}",
+                "method": "post",
+                "data": data,
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if ($.isFunction(callback)) {
+                        callback(response);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
+
+        function loadSingleSite(url, callback) {
+            showLoading();
+            $.ajax({
+                "url": url,
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+
+                    if ($.isFunction(callback)) {
+                        callback(html);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
+        }
+
 
         function btnDeleteProductOnClick(el) {
             confirmP("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?", {
@@ -220,7 +419,7 @@
                         $(el).hide();
                         $(el).closest(".product-wrapper").find(".btn-action.editing").removeClass("editing");
                     } else {
-                        var errorMsg = "Unable to add product. ";
+                        var errorMsg = "Unable to update product. ";
                         if (response.errors != null) {
                             $.each(response.errors, function (index, error) {
                                 errorMsg += error + " ";
@@ -260,11 +459,11 @@
                                             $.ajax({
                                                 "url": response.site.urls.show,
                                                 "method": "get",
-                                                "success": function(html){
+                                                "success": function (html) {
                                                     hideLoading();
                                                     $(el).closest(".product-wrapper").find(".tbl-site tbody").append(html);
                                                 },
-                                                "error": function(xhr, status, error){
+                                                "error": function (xhr, status, error) {
                                                     hideLoading();
                                                     describeServerRespondedError(xhr.status);
                                                 }
@@ -334,7 +533,7 @@
             $.ajax({
                 "url": url,
                 "method": "get",
-                "success": function(html){
+                "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -347,7 +546,7 @@
                         $(this).remove();
                     });
                 },
-                "error": function(xhr, status, error){
+                "error": function (xhr, status, error) {
                     hideLoading();
                     describeServerRespondedError(xhr.status);
                 }

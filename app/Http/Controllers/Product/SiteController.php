@@ -408,14 +408,14 @@ class SiteController extends Controller
                 unset($sites[$key]);
             }
         }
-
+        $siteURL = $request->get('site_url');
         $status = true;
         event(new SitePricesViewed());
         if ($request->ajax()) {
             if ($request->wantsJson()) {
-                return response()->json(compact(['status', 'sites', 'targetDomain']));
+                return response()->json(compact(['status', 'sites', 'targetDomain', 'siteURL']));
             } else {
-                return compact(['status', 'sites', 'targetDomain']);
+                return view('products.site.choose_price')->with(compact(['status', 'sites', 'targetDomain', 'siteURL']));
             }
         } else {
             //TODO implement if needed

@@ -26,7 +26,7 @@ class ErrorController extends Controller
         $input = $this->request->all();
         dispatch((new SendMail('errors.email.front_end', compact(['input']), array(
             "email" => config('error_notifier.email'),
-            "subject" => 'Error on ' . parse_url($input['url'])['host'],
+            "subject" => 'Error on ' . isset($input['url']) ? parse_url($input['url'])['host'] : 'unknown page',
         )))->onQueue("mailing"));
     }
 }
