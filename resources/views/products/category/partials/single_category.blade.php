@@ -8,25 +8,29 @@
                     <a class="btn-collapse btn-category-dragger" href="#category-{{$category->getKey()}}" role="button"
                        data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
                        aria-controls="category-{{$category->getKey()}}">
-                        <i class="glyphicon glyphicon-menu-hamburger"></i>
+                        <i class="fa fa-bookmark "></i>
                     </a>
                 </th>
                 <th class="category-th">
                     <a class="text-muted category-name-link" href="#category-{{$category->getKey()}}" role="button"
                        data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
                        aria-controls="category-{{$category->getKey()}}">{{$category->category_name}}</a>
-                    {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style'=>'display: none;')) !!}
+
+
+                    {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style' => 'display: none;')) !!}
                     <div class="input-group sl-input-group">
                         <input type="text" name="category_name" placeholder="Category Name"
-                               class="form-control sl-form-control input-sm category-name"
+                               class="form-control sl-form-control input-lg category-name"
                                value="{{$category->category_name}}">
                         <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary btn-flat btn-sm">
+                            <button type="submit" class="btn btn-default btn-flat btn-lg">
                                 <i class="fa fa-pencil"></i>
                             </button>
                         </span>
                     </div>
                     {!! Form::close() !!}
+
+                    <span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i class="fa fa-pencil-square-o"></i></span>
                 </th>
 
                 <th class="text-right action-cell category-th">
@@ -34,25 +38,16 @@
                        onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
                         <i class="fa fa-line-chart"></i>
                     </a>
-                    {{--<a href="#" class="btn-action" data-toggle="tooltip" title="alert">--}}
-                    {{--<i class="fa fa-bell-o"></i>--}}
-                    {{--</a>--}}
                     <a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"
                        data-toggle="tooltip"
                        title="report">
                         <i class="fa {{!is_null($category->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
                     </a>
-                    <a href="#" class="btn-action btn-edit-category"
-                       onclick="toggleEditCategoryName(this); return false;"
-                       data-toggle="tooltip"
-                       title="edit">
-                        <i class="fa fa-pencil-square-o"></i>
-                    </a>
                     {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
                     <a href="#" data-name="{{$category->category_name}}" class="btn-action"
                        onclick="btnDeleteCategoryOnClick(this); return false;" data-toggle="tooltip"
                        title="delete">
-                        <i class="glyphicon glyphicon-trash text-danger"></i>
+                        <i class="glyphicon glyphicon-trash"></i>
                     </a>
                     {!! Form::close() !!}
                 </th>
@@ -211,6 +206,7 @@
                                 hideLoading();
                                 $(el).closest(".tbl-category").find(".collapsible-category-div").prepend(html);
                                 updateProductOrder("{{$category->getKey()}}");
+                                updateProductEmptyMessage();
                             });
                         } else {
                             alertP("Create product", "product has been created. But encountered error while page being loaded.", function () {

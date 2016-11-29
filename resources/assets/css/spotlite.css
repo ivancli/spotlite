@@ -242,7 +242,28 @@ table td.table-container {
     padding-left: 3px;
     padding-right: 3px;
     display: inline-block;
-    width: 20px;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.btn-category-dragger .fa-bookmark {
+    transform: rotate(-90deg);
+    font-size: 30px;
+    margin-left: -3px;
+}
+
+.btn-edit.btn-edit-category,
+.btn-edit.btn-edit-product,
+.btn-edit.btn-edit-site {
+    margin-left: 30px;
+    color: #aaa;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.category-name-link {
+    font-size: 18px;
+    line-height: 46px;
 }
 
 .list-container table {
@@ -375,7 +396,8 @@ th.ellipsis {
 /*}*/
 
 .site-wrapper td.site-url .tooltip-inner,
-.site-wrapper td.site-url .popover-content {
+.site-wrapper td.site-url .popover-content,
+.popover-content{
     word-break: break-all;
     word-wrap: break-word;
 }

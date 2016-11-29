@@ -58,7 +58,7 @@
                         <i class="fa fa-files-o"></i>
                         <span>Crawler Management</span>
                         <span class="pull-right-container">
-                          <i class="fa fa-angle-left pull-right"></i>
+                          <i class="fa fa-angle-down pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
@@ -79,7 +79,7 @@
                         <i class="fa fa-users"></i>
                         <span>User Management</span>
                         <span class="pull-right-container">
-                          <i class="fa fa-angle-left pull-right"></i>
+                          <i class="fa fa-angle-down pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">

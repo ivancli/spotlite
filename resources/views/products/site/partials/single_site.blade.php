@@ -1,13 +1,72 @@
+<style>
+
+    tr.empty-message-row td {
+        font-weight: bold;
+        padding: 20px !important;
+        font-size: 16px;
+        color: #777;
+    }
+
+    @media (min-width: 991px) {
+        .tbl-site th, .tbl-site td {
+            font-size: 15px;
+        }
+
+        .tbl-site th, .tbl-site tr.site-wrapper td, .tbl-site tr.add-site-row td {
+            padding: 15px !important;
+        }
+    }
+
+    .tbl-site tr.add-site-row td {
+        background-color: #f5f5f5;
+    }
+
+    tr.site-wrapper td.site-url {
+        position: relative;
+        padding-right: 50px !important;
+    }
+
+    td.site-url a {
+        line-height: 34px;
+    }
+
+    .btn-edit.btn-edit-site {
+        position: absolute;
+        right: 0;
+        top: 24px;
+        margin: 0 !important;
+    }
+
+    tr.site-wrapper > td {
+        vertical-align: middle !important;
+    }
+</style>
 <tr class="site-wrapper" data-site-id="{{$site->getKey()}}"
     data-site-edit-url="{{$site->urls['edit']}}"
     data-site-alert-url="{{$site->urls['alert']}}"
     data-site-update-url="{{$site->urls['update']}}">
     <td class="site-url">
-        <a href="{{$site->site_url}}" target="_blank" class="text-muted" data-toggle="popover"
+        <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-toggle="popover" data-container="body"
            data-trigger="hover"
            data-content="{{$site->site_url}}">
             {{parse_url($site->site_url)['host']}}
         </a>
+
+        <div class="frm-edit-site-url input-group sl-input-group" style="display: none;">
+            <input type="text" name="site_url" placeholder="Site URL"
+                   class="form-control sl-form-control txt-site-url"
+                   value="{{$site->site_url}}">
+            <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default btn-flat" onclick="getPricesEdit(this); return false;">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </span>
+        </div>
+
+        <span class="btn-edit btn-edit-site" onclick="toggleEditSiteURL(this)">
+            Edit &nbsp;
+            <i class="fa fa-pencil-square-o"></i>
+        </span>
     </td>
     <td>
         @if($site->status == 'invalid')
@@ -69,7 +128,6 @@
         @endif
     </td>
     <td align="center">
-
         <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;"
            data-product-alert-on-my-price="{{is_null($site->product->alertOnMyPrice()) ? "" : "y"}}"
            data-site-alerts-on-my-price="{{$site->product->siteAlertsOnMyPrice()->count()}}">
@@ -98,10 +156,10 @@
            data-toggle="tooltip" title="alert">
             <i class="fa {{!is_null($site->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
         </a>
-        <a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;"
-           data-toggle="tooltip" title="edit">
-            <i class="fa fa-pencil-square-o"></i>
-        </a>
+        {{--<a href="#" class="btn-action" onclick="btnEditSiteOnClick(this); return false;"--}}
+        {{--data-toggle="tooltip" title="edit">--}}
+        {{--<i class="fa fa-pencil-square-o"></i>--}}
+        {{--</a>--}}
 
         {{--TODO not yet finished--}}
         {{--change the submitting parameters and update the site controller destroy function--}}
@@ -109,7 +167,7 @@
         <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
            onclick="btnDeleteSiteOnClick(this); return false;"
            data-toggle="tooltip" title="delete">
-            <i class="glyphicon glyphicon-trash text-danger"></i>
+            <i class="glyphicon glyphicon-trash"></i>
         </a>
         {!! Form::close() !!}
     </td>
@@ -137,6 +195,7 @@
                                 } else {
                                     alertP("Error", "Unable to delete site, please try again later.");
                                 }
+                                updateProductEmptyMessage();
                             },
                             "error": function (xhr, status, error) {
                                 hideLoading();
@@ -151,6 +210,19 @@
                     "dismiss": true
                 }
             });
+        }
+
+        function toggleEditSiteURL(el) {
+            var $tr = $(el).closest(".site-wrapper");
+            if ($(el).hasClass("editing")) {
+                $(el).removeClass("editing");
+                $tr.find(".site-url-link").show();
+                $tr.find(".frm-edit-site-url").hide();
+            } else {
+                $tr.find(".site-url-link").hide();
+                $tr.find(".frm-edit-site-url").show();
+                $(el).addClass("editing");
+            }
         }
 
         function btnEditSiteOnClick(el) {
@@ -175,11 +247,11 @@
                                             $.ajax({
                                                 "url": response.site.urls.show,
                                                 "method": "get",
-                                                "success": function(html){
+                                                "success": function (html) {
                                                     hideLoading();
                                                     $(el).closest(".site-wrapper").replaceWith(html);
                                                 },
-                                                "error": function(xhr, status, error){
+                                                "error": function (xhr, status, error) {
                                                     hideLoading();
                                                     describeServerRespondedError(xhr.status);
                                                 }
@@ -202,6 +274,101 @@
                 }
             })
         }
+
+
+        function getPricesEdit(el) {
+            var $formEditSiteURL = $(el).closest(".frm-edit-site-url");
+            var $txtSiteURL = $formEditSiteURL.find(".txt-site-url");
+            var $siteWrapper = $(el).closest(".site-wrapper");
+            var siteID = $siteWrapper.attr("data-site-id");
+            showLoading();
+            $.ajax({
+                "url": "{{route("site.prices")}}",
+                "method": "get",
+                "data": {
+                    "site_url": $txtSiteURL.val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    if (typeof response.errors == 'undefined') {
+                        if ((typeof response.sites == 'undefined' || response.sites.length == 0) && typeof response.targetDomain == 'undefined') {
+                            addSite({
+                                "site_url": $txtSiteURL.val(),
+                                "product_id": productID
+                            }, function (add_site_response) {
+                                if (add_site_response.status == true) {
+                                    loadSingleSite(add_site_response.site.urls.show, function (html) {
+                                        $(el).closest(".tbl-site").find("tbody").prepend(html);
+                                        cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
+                                        updateProductEmptyMessage();
+                                    });
+                                } else {
+                                    alertP("Error", "Unable to add site, please try again later.");
+                                }
+                            })
+                        } else {
+                            showLoading();
+                            $.ajax({
+                                "url": "{{route("site.prices")}}",
+                                "method": "get",
+                                "data": {
+                                    "site_url": $txtSiteURL.val()
+                                },
+                                "success": function (html) {
+                                    hideLoading();
+                                    var $modal = $(html);
+                                    $modal.modal();
+                                    $modal.on("shown.bs.modal", function () {
+                                        if ($.isFunction(modalReady)) {
+                                            modalReady({
+                                                "callback": function (addSiteData) {
+                                                    addSite({
+                                                        "site_url": $txtSiteURL.val(),
+                                                        "domain_id": addSiteData.domain_id,
+                                                        "product_id": productID
+                                                    }, function (add_site_response) {
+                                                        if (add_site_response.status == true) {
+                                                            loadSingleSite(add_site_response.site.urls.show, function (html) {
+                                                                $(el).closest(".tbl-site").find("tbody").prepend(html);
+                                                                cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
+                                                                updateProductEmptyMessage();
+                                                            });
+                                                        } else {
+                                                            alertP("Error", "Unable to add site, please try again later.");
+                                                        }
+                                                        /*TODO big pb*/
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    });
+                                    $modal.on("hidden.bs.modal", function () {
+                                        $("#modal-site-prices").remove();
+                                    });
+                                },
+                                "error": function (xhr, status, error) {
+                                    hideLoading();
+                                    describeServerRespondedError(xhr.status);
+                                }
+                            });
+                        }
+                    } else {
+                        var errorMsg = "Unable to add site. ";
+                        if (response.errors != null) {
+                            $.each(response.errors, function (index, error) {
+                                errorMsg += error + " ";
+                            })
+                        }
+                        alertP("Error", errorMsg);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
+
 
         function showSiteAlertForm(el) {
             showLoading();
@@ -280,11 +447,11 @@
                         $.ajax({
                             "url": '{{$site->product->urls['show']}}',
                             "method": "get",
-                            "success": function(html){
+                            "success": function (html) {
                                 hideLoading();
                                 $(el).closest(".product-wrapper").replaceWith(html);
                             },
-                            "error": function(xhr, status, error){
+                            "error": function (xhr, status, error) {
                                 hideLoading();
                                 describeServerRespondedError(xhr.status);
                             }
@@ -305,7 +472,7 @@
             $.ajax({
                 "url": url,
                 "method": "get",
-                "success": function(html){
+                "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -318,7 +485,7 @@
                         $(this).remove();
                     });
                 },
-                "error": function(xhr, status, error){
+                "error": function (xhr, status, error) {
                     hideLoading();
                     describeServerRespondedError(xhr.status);
                 }

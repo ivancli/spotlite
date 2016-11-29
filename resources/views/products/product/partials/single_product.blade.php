@@ -1,3 +1,13 @@
+<style>
+    .btn-product-dragger i {
+        font-size: 20px;
+    }
+
+    .product-name-link {
+        font-size: 18px;
+        line-height: 46px;
+    }
+</style>
 <table class="table table-condensed product-wrapper" data-product-id="{{$product->getKey()}}"
        data-alert-link="{{$product->urls['alert']}}"
        data-report-task-link="{{$product->urls['report_task']}}">
@@ -19,15 +29,18 @@
             {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'onsubmit' => 'submitEditProductName(this); return false;', 'style'=>'display: none;')) !!}
             <div class="input-group sl-input-group">
                 <input type="text" name="product_name" placeholder="Product Name"
-                       class="form-control sl-form-control input-sm product-name"
+                       class="form-control sl-form-control input-lg product-name"
                        value="{{$product->product_name}}">
                 <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-flat btn-sm">
+                    <button type="submit" class="btn btn-default btn-flat btn-lg">
                         <i class="fa fa-pencil"></i>
                     </button>
                 </span>
             </div>
             {!! Form::close() !!}
+
+            <span class="btn-edit btn-edit-product" onclick="toggleEditProductName(this)">Edit &nbsp; <i
+                        class="fa fa-pencil-square-o"></i></span>
         </th>
         <th class="text-right action-cell product-th">
             <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
@@ -42,15 +55,11 @@
                data-toggle="tooltip" title="report">
                 <i class="fa {{!is_null($product->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
             </a>
-            <a href="#" class="btn-action" onclick="toggleEditProductName(this); return false;"
-               data-toggle="tooltip" title="edit">
-                <i class="fa fa-pencil-square-o"></i>
-            </a>
             {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
             <a href="#" class="btn-action" data-name="{{$product->product_name}}"
                onclick="btnDeleteProductOnClick(this); return false;"
                data-toggle="tooltip" title="delete">
-                <i class="glyphicon glyphicon-trash text-danger"></i>
+                <i class="glyphicon glyphicon-trash"></i>
             </a>
             {!! Form::close() !!}
         </th>
@@ -71,7 +80,7 @@
                         <th width="10%" class="hidden-xs" style="padding-left: 20px;">Changed</th>
                         <th class="text-center" width="10%">My Price</th>
                         <th width="15%">Updated</th>
-                        <th width="20%"></th>
+                        <th width="15%"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -99,7 +108,7 @@
                                         <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
                                             <form action="{{route('site.store')}}" method="post"
                                                   class="frm-store-site"
-                                                  onsubmit="getPrices(this); return false;">
+                                                  onsubmit="getPricesCreate(this); return false;">
                                                 <input type="text"
                                                        placeholder="e.g. http://www.company.com.au/productpage/price"
                                                        name="site_url"
@@ -108,7 +117,7 @@
                                         </div>
                                         <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
                                             <button class="btn btn-primary"
-                                                    onclick="getPrices(this); event.stopPropagation(); event.preventDefault();">
+                                                    onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
                                                 ADD SITE
                                             </button>
                                             &nbsp;&nbsp;
@@ -144,6 +153,8 @@
             }).on('drop', function (el, target, source, sibling) {
                 updateSiteOrder({{$product->getKey()}});
             });
+
+            updateProductEmptyMessage();
         });
 
         /**
@@ -220,7 +231,7 @@
         }
 
 
-        function getPrices(el) {
+        function getPricesCreate(el) {
             var $addItemControls = $(el).closest(".add-item-controls");
             var $txtSiteURL = $addItemControls.find(".txt-site-url");
             var productID = $(el).closest(".product-wrapper").attr("data-product-id");
@@ -243,6 +254,7 @@
                                     loadSingleSite(add_site_response.site.urls.show, function (html) {
                                         $(el).closest(".tbl-site").find("tbody").prepend(html);
                                         cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
+                                        updateProductEmptyMessage();
                                     });
                                 } else {
                                     alertP("Error", "Unable to add site, please try again later.");
@@ -273,6 +285,7 @@
                                                             loadSingleSite(add_site_response.site.urls.show, function (html) {
                                                                 $(el).closest(".tbl-site").find("tbody").prepend(html);
                                                                 cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
+                                                                updateProductEmptyMessage();
                                                             });
                                                         } else {
                                                             alertP("Error", "Unable to add site, please try again later.");
@@ -435,58 +448,6 @@
             });
         }
 
-
-        function showAddSiteForm(el) {
-            showLoading();
-            var productID = $(el).closest(".product-wrapper").attr("data-product-id");
-            $.ajax({
-                "url": "{{route('site.create')}}",
-                "method": "get",
-                "data": {
-                    "product_id": productID
-                },
-                "success": function (html) {
-                    hideLoading();
-                    var $modal = $(html);
-                    $modal.modal();
-                    $modal.on("shown.bs.modal", function () {
-                        if ($.isFunction(modalReady)) {
-                            modalReady({
-                                "callback": function (response) {
-                                    if (response.status == true) {
-                                        showLoading();
-                                        if (typeof response.site != 'undefined') {
-                                            $.ajax({
-                                                "url": response.site.urls.show,
-                                                "method": "get",
-                                                "success": function (html) {
-                                                    hideLoading();
-                                                    $(el).closest(".product-wrapper").find(".tbl-site tbody").append(html);
-                                                },
-                                                "error": function (xhr, status, error) {
-                                                    hideLoading();
-                                                    describeServerRespondedError(xhr.status);
-                                                }
-                                            });
-                                        }
-                                    } else {
-                                        alertP("Unable to add site, please try again later.");
-                                    }
-                                }
-                            })
-                        }
-                    });
-                    $modal.on("hidden.bs.modal", function () {
-                        $("#modal-site-store").remove();
-                    });
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            });
-        }
-
         function showProductAlertForm(el) {
             showLoading();
             var productID = $(el).closest(".product-wrapper").attr("data-product-id");
@@ -587,6 +548,42 @@
                     describeServerRespondedError(xhr.status);
                 }
             });
+        }
+
+        function updateProductEmptyMessage(el) {
+            function updateSingleProductEmptyMessage(el) {
+                var $tblSite = null;
+                if ($(el).hasClass("tbl-site")) {
+                    $tblSite = $(el);
+                } else {
+                    $tblSite = $(el).find(".tbl-site");
+                }
+
+                var $bodyRow = $tblSite.find("tbody > tr").filter(function () {
+                    return !$(this).hasClass("empty-message-row") && !$(this).hasClass("add-site-row")
+                });
+                console.info('$bodyRow', $bodyRow);
+                if ($bodyRow.length == 0) {
+                    $tblSite.find(".empty-message-row").remove();
+                    $tblSite.find("tbody").prepend(
+                            $("<tr>").addClass("empty-message-row").append(
+                                    $("<td>").attr({
+                                        "colspan": 8
+                                    }).addClass("text-center").text("To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.")
+                            )
+                    )
+                } else {
+                    $tblSite.find(".empty-message-row").remove();
+                }
+            }
+
+            if (typeof el != 'undefined') {
+                updateSingleProductEmptyMessage(el);
+            } else {
+                $(".tbl-site").each(function () {
+                    updateSingleProductEmptyMessage(this);
+                })
+            }
         }
     </script>
 </table>
