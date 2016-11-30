@@ -1,5 +1,7 @@
 <?php
 namespace App\Contracts\Repository\Product\Report;
+use App\Filters\QueryFilter;
+
 /**
  * Created by PhpStorm.
  * User: Ivan
@@ -8,6 +10,8 @@ namespace App\Contracts\Repository\Product\Report;
  */
 interface ReportContract
 {
+    public function getReports(QueryFilter $queryFilter);
+
     public function getReport($report_id, $fail = true);
 
     public function storeReport($options);

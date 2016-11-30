@@ -9,6 +9,7 @@
 namespace App\Models;
 
 
+use App\Filters\QueryFilter;
 use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
@@ -31,6 +32,11 @@ class Report extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'user_id');
+    }
+
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
     }
 
     public function getUrlsAttribute()

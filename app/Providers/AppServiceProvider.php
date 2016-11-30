@@ -248,6 +248,14 @@ class AppServiceProvider extends ServiceProvider
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\ReportTaskFilters');
 
+        /* Report Query Filters */
+        $this->app->when('App\Http\Controllers\Product\ReportController')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\ReportFilters');
+        $this->app->when('App\Models\Report')
+            ->needs('App\Filters\QueryFilter')
+            ->give('App\Filters\ReportFilters');
+
         /* Dashboard Query Filters */
         $this->app->when('App\Http\Controllers\Dashboard\DashboardController')
             ->needs('App\Filters\QueryFilter')

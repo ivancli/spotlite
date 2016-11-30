@@ -62,11 +62,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Product', 'user_id', 'user_id');
     }
 
-    public function reports()
-    {
-        return $this->hasMany('App\Models\Report', 'user_id', 'user_id');
-    }
-
     public function dashboards()
     {
         return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->orderBy("dashboard_order", "asc");
@@ -90,6 +85,16 @@ class User extends Authenticatable
     public function productReportTasks()
     {
         return $this->hasManyThrough('App\Models\ReportTask', 'App\Models\Product', 'user_id', 'report_task_owner_id', 'user_id')->where('report_task_owner_type', 'product');
+    }
+
+    public function categoryReports()
+    {
+        return $this->hasManyThrough('App\Models\Report', 'App\Models\Category', 'user_id', 'report_owner_id', 'user_id')->where('report_owner_type', 'category');
+    }
+
+    public function productReports()
+    {
+        return $this->hasManyThrough('App\Models\Report', 'App\Models\Product', 'user_id', 'report_owner_id', 'user_id')->where('report_owner_type', 'product');
     }
 
     public function productAlerts()

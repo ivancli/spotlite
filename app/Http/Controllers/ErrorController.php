@@ -24,9 +24,13 @@ class ErrorController extends Controller
     public function notifyError()
     {
         $input = $this->request->all();
+        $host = "unknown page";
+        if (isset($input['url']) && !empty($input['url']) && parse_url($input['url']) !== false && isset(parse_url($input['url'])['host'])) {
+            $host = parse_url($input['url'])['host'];
+        }
         dispatch((new SendMail('errors.email.front_end', compact(['input']), array(
             "email" => config('error_notifier.email'),
-            "subject" => 'Error on ' . isset($input['url']) ? parse_url($input['url'])['host'] : 'unknown page',
+            "subject" => 'Error on ' . $host,
         )))->onQueue("mailing"));
     }
 }

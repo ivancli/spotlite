@@ -6,6 +6,7 @@ use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Report\ReportContract;
 use App\Contracts\Repository\Product\Report\ReportTaskContract;
+use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,9 @@ class ReportController extends Controller
     protected $reportRepo;
     protected $productRepo;
     protected $categoryRepo;
+    protected $queryFilter;
 
-    public function __construct(ReportContract $reportContract, ReportTaskContract $reportTaskContract, CategoryContract $categoryContract, ProductContract $productContract)
+    public function __construct(ReportContract $reportContract, ReportTaskContract $reportTaskContract, CategoryContract $categoryContract, ProductContract $productContract, QueryFilter $queryFilter)
     {
         $this->middleware('permission:read_report', ['only' => ['index', 'show']]);
         $this->middleware('permission:delete_report', ['only' => ['destroy']]);
@@ -25,6 +27,8 @@ class ReportController extends Controller
         $this->reportTaskRepo = $reportTaskContract;
         $this->categoryRepo = $categoryContract;
         $this->productRepo = $productContract;
+
+        $this->queryFilter = $queryFilter;
     }
 
     /**
@@ -35,54 +39,10 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
-
         if ($request->ajax()) {
-
-            if ($request->has('category_id')) {
-                $category = $this->categoryRepo->getCategory($request->get('category_id'));
-                $reports = $category->reports;
-                $reports->each(function ($item, $key) {
-                    unset($item->content);
-                });
-                $reports = $reports->sortByDesc('created_at')->values();
-                $status = true;
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['reports', 'status']));
-                } else {
-                    return compact(['reports', 'status']);
-                }
-            } elseif ($request->has('product_id')) {
-                $product = $this->productRepo->getProduct($request->get('product_id'));
-                $reports = $product->reports;
-                $reports->each(function ($item, $key) {
-                    unset($item->content);
-                });
-                $reports = $reports->sortByDesc('created_at')->values();
-                $status = true;
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['reports', 'status']));
-                } else {
-                    return compact(['reports', 'status']);
-                }
-            } else {
-
-                /*
-                 * problematic one
-                 * should look for the auth user products and categories
-                 * */
-                $products = auth()->user()->products()->has("reports")->get();
-//                $products = Product::has("reports")->get();
-                $categories = auth()->user()->categories()->has("reports")->get();
-//                $categories = Category::has("reports")->get();
-                $status = true;
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['products', 'categories', 'status']));
-                } else {
-                    return compact(['products', 'categories', 'status']);
-                }
-            }
+            $reports = $this->reportRepo->getReports($this->queryFilter);
+            return response()->json($reports);
         } else {
-
             return view('products.report.index');
         }
     }

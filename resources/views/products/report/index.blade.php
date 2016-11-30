@@ -4,50 +4,53 @@
 @section('header_title', "Reports")
 
 @section('breadcrumbs')
-{{--    {!! Breadcrumbs::render('report_index') !!}--}}
+    {{--    {!! Breadcrumbs::render('report_index') !!}--}}
 @stop
 
 @section('content')
+
     <div class="row">
-        <div class="col-md-8">
-            <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Report Schedule</h3>
-                </div>
-                <div class="box-body">
-                    {{--TODO put real content here--}}
-                    <table class=" table table-striped table-condensed table-bordered" id="tbl-report-task">
-                        <thead>
-                        <tr>
-                            <th class="text-muted">Report source</th>
-                            <th class="text-muted">Schedule</th>
-                            <th class="text-muted">File type</th>
-                            <th class="text-muted">Last report</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="box box-solid">
-                <div class="overlay report-list-loading">
-                    <i class="fa fa-refresh fa-spin"></i>
-                </div>
-                <div class="box-header with-border">
-                    <h3 class="box-title">Historical Reports</h3>
-                </div>
-                <div class="box-body">
-                    <div class="row m-b-10">
-                        <div class="col-sm-12">
-                            <div class="report-list-container">
-                                <ul class="file-tree">
-                                </ul>
-                            </div>
-                        </div>
+        <div class="col-sm-12">
+
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs ui-sortable-handle">
+                    <li class="active">
+                        <a href="#report-schedule" data-toggle="tab" aria-expanded="true">Report Schedule</a>
+                    </li>
+                    <li class="">
+                        <a href="#report-history" data-toggle="tab" aria-expanded="false">Report History</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="chart tab-pane active" id="report-schedule">
+                        <table class=" table table-striped table-condensed table-bordered" id="tbl-report-task">
+                            <thead>
+                            <tr>
+                                <th class="text-muted">Report source</th>
+                                <th class="text-muted">Schedule</th>
+                                <th class="text-muted">File type</th>
+                                <th class="text-muted">Last report</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="chart tab-pane" id="report-history">
+                        <table class=" table table-striped table-condensed table-bordered" id="tbl-report">
+                            <thead>
+                            <tr>
+                                <th class="text-muted">Name</th>
+                                <th class="text-muted">Type</th>
+                                <th class="text-muted">Created at</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -58,29 +61,30 @@
 @section('scripts')
     <script type="text/javascript">
         var tblReportTask = null;
+        var tblReport = null;
         $(function () {
-            $.contextMenu({
-                "selector": '.report-list-container .file-anchor',
-                "items": {
-                    "download": {
-                        "name": "Download",
-                        "callback": function (key, opt) {
-                            var el = opt.$trigger.context;
-                            el.click();
-                        }
-                    },
-                    "delete": {
-                        "name": "Delete",
-                        "callback": function (key, opt) {
-                            var el = opt.$trigger.context;
-                            deleteReport(el, function (response) {
-                                $(el).closest("li").remove();
-                            });
-
-                        }
-                    }
-                }
-            });
+//            $.contextMenu({
+//                "selector": '.report-list-container .file-anchor',
+//                "items": {
+//                    "download": {
+//                        "name": "Download",
+//                        "callback": function (key, opt) {
+//                            var el = opt.$trigger.context;
+//                            el.click();
+//                        }
+//                    },
+//                    "delete": {
+//                        "name": "Delete",
+//                        "callback": function (key, opt) {
+//                            var el = opt.$trigger.context;
+//                            deleteReport(el, function (response) {
+//                                $(el).closest("li").remove();
+//                            });
+//
+//                        }
+//                    }
+//                }
+//            });
 
 
             jQuery.fn.dataTable.Api.register('processing()', function (show) {
@@ -245,189 +249,278 @@
             });
 
 
-            loadCategoriesAndProductsWithReports(function (response) {
-                if (typeof response.categories != "undefined") {
-                    $.each(response.categories, function (index, category) {
-                        $(".report-list-container .file-tree").append(
-                                $("<li>").addClass("directory collapsed").append(
-                                        $("<a>").attr({
-                                            "data-category-id": category.category_id,
-                                            "href": "#",
-                                            "onclick": "toggleCategoryFolder(this); return false;"
-                                        }).text("Category reports: " + category.category_name)
-                                )
-                        )
-                    });
-                }
-                if (typeof response.products != "undefined") {
-                    $.each(response.products, function (index, product) {
-                        $(".report-list-container .file-tree").append(
-                                $("<li>").addClass("directory collapsed").append(
-                                        $("<a>").attr({
-                                            "data-product-id": product.product_id,
-                                            "href": "#",
-                                            "onclick": "toggleProductFolder(this); return false;"
-                                        }).text("Product reports: " + product.product_name)
-                                )
-                        )
-                    });
-                }
+//            loadCategoriesAndProductsWithReports(function (response) {
+//                console.info(response);
+//                if (typeof response.categories != "undefined") {
+//                    $.each(response.categories, function (index, category) {
+//                        $(".report-list-container .file-tree").append(
+//                                $("<li>").addClass("directory collapsed").append(
+//                                        $("<a>").attr({
+//                                            "data-category-id": category.category_id,
+//                                            "href": "#",
+//                                            "onclick": "toggleCategoryFolder(this); return false;"
+//                                        }).text("Category reports: " + category.category_name)
+//                                )
+//                        )
+//                    });
+//                }
+//                if (typeof response.products != "undefined") {
+//                    $.each(response.products, function (index, product) {
+//                        $(".report-list-container .file-tree").append(
+//                                $("<li>").addClass("directory collapsed").append(
+//                                        $("<a>").attr({
+//                                            "data-product-id": product.product_id,
+//                                            "href": "#",
+//                                            "onclick": "toggleProductFolder(this); return false;"
+//                                        }).text("Product reports: " + product.product_name)
+//                                )
+//                        )
+//                    });
+//                }
+//
+//                if (response.categories.length == 0 && response.products.length == 0) {
+//                    $(".report-list-container .file-tree").append(
+//                            $("<li>").text("No reports in the list.")
+//                    )
+//                }
+//            });
 
-                if (response.categories.length == 0 && response.products.length == 0) {
-                    $(".report-list-container .file-tree").append(
-                            $("<li>").text("No reports in the list.")
-                    )
+
+            $("a[data-toggle=tab][href='#report-history']").on("shown.bs.tab", function (e) {
+                if (tblReport == null) {
+                    initTblReport();
                 }
             });
 
+
         });
+
+        function initTblReport() {
+            tblReport = $("#tbl-report").DataTable({
+                "pagingType": "full_numbers",
+                "processing": true,
+                "serverSide": true,
+                "pageLength": 25,
+                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'<\"toolbar-bottom-left\">><'col-sm-7'p>>",
+                "language": {
+                    "emptyTable": "No reports in the list",
+                    "zeroRecords": "No reports in the list"
+                },
+                "ajax": {
+                    "url": "{{route('report.index')}}",
+                    "data": function (d) {
+                        $.each(d.order, function (index, order) {
+                            if (typeof d.columns[d.order[index].column] != "undefined") {
+                                d.order[index].column = d.columns[d.order[index].column].name;
+                            }
+                        });
+                    }
+                },
+                "columns": [
+                    {
+                        "name": "file_name",
+                        "data": function (data) {
+                            var createdAt = timestampToDateTimeByFormat(moment(data.created_at).unix(), 'Ymd');
+                            return $("<div>").append(
+                                    $("<a>").attr({
+                                        "href": data.urls.show,
+                                        "download": "download"
+                                    }).text(createdAt + '_' + data.file_name + "." + data.file_type)
+                            ).html()
+                        }
+                    },
+                    {
+                        "name": "report_owner_type",
+                        "data": function (data) {
+                            var reportOwnerName = "";
+                            if (data.report_owner_type == "category") {
+                                reportOwnerName = data.report_owner.category_name;
+                            } else {
+                                reportOwnerName = data.report_owner.product_name;
+                            }
+                            return data.report_owner_type + ' - ' + reportOwnerName;
+                        }
+                    },
+                    {
+                        "name": "created_at",
+                        "data": function (data) {
+                            return timestampToDateTimeByFormat(moment(data.created_at).unix(), datefmt + " " + timefmt);
+                        }
+                    },
+                    {
+                        "sortable": false,
+                        "data": function (data) {
+                            return $("<div>").append(
+                                    $("<div>").addClass("text-center").append(
+                                            $("<a>").addClass("text-muted").attr({
+                                                "href": data.urls.show
+                                            }).append(
+                                                    $("<i>").addClass("glyphicon glyphicon-download-alt")
+                                            ),
+                                            "&nbsp;&nbsp;",
+                                            $("<a>").addClass("text-muted").attr({
+                                                "href": "#"
+                                            }).append(
+                                                    $("<i>").addClass("glyphicon glyphicon-trash text-danger")
+                                            )
+                                    )
+                            ).html();
+                        }
+                    }
+                ],
+                "drawCallback": function (settings) {
+                    initialisePopover();
+                }
+            });
+        }
+
         function initialisePopover() {
             $("[data-toggle=popover]").popover();
         }
 
-        function toggleCategoryFolder(el) {
-            var $li = $(el).closest("li");
-            if ($li.hasClass("collapsed")) {
-                showReportListLoading();
-                $li.removeClass("collapsed").addClass("expanded");
-                var categoryId = $(el).attr("data-category-id");
-                $.ajax({
-                    "url": "{{route('report.index')}}",
-                    "method": "get",
-                    "dataType": "json",
-                    "data": {
-                        "category_id": categoryId
-                    },
-                    "success": function (response) {
-                        hideReportListLoading();
-                        if (response.status == true) {
-                            var $ul = $("<ul>").addClass("file-tree").hide();
+        {{--function toggleCategoryFolder(el) {--}}
+        {{--var $li = $(el).closest("li");--}}
+        {{--if ($li.hasClass("collapsed")) {--}}
+        {{--showReportListLoading();--}}
+        {{--$li.removeClass("collapsed").addClass("expanded");--}}
+        {{--var categoryId = $(el).attr("data-category-id");--}}
+        {{--$.ajax({--}}
+        {{--"url": "{{route('report.index')}}",--}}
+        {{--"method": "get",--}}
+        {{--"dataType": "json",--}}
+        {{--"data": {--}}
+        {{--"category_id": categoryId--}}
+        {{--},--}}
+        {{--"success": function (response) {--}}
+        {{--hideReportListLoading();--}}
+        {{--if (response.status == true) {--}}
+        {{--var $ul = $("<ul>").addClass("file-tree").hide();--}}
 
-                            $.each(response.reports, function (index, report) {
-                                var ext = "xlsx";
-                                switch (report.file_type) {
-                                    case "pdf":
-                                        ext = "pdf";
-                                        break;
-                                    case "xls":
-                                    case "xlsx":
-                                    default:
-                                        ext = "xls";
-                                }
-                                $ul.append(
-                                        $("<li>").addClass("file ext_" + ext).append(
-                                                $("<a>").addClass("file-anchor").attr({
-                                                    "data-delete-url": report.urls["delete"],
-                                                    "data-report-id": report.report_id,
-                                                    "href": report.urls['show'],
-                                                    "download": "download",
-                                                    "title": moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type
-                                                }).text(moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type)
-                                        )
-                                )
-                            });
-                            $(el).after($ul);
-                            $ul.slideDown();
-                        }
-                    },
-                    "error": function (xhr, status, error) {
-                        hideReportListLoading();
-                        describeServerRespondedError(xhr.status);
-                    }
-                })
-            } else {
-                $li.addClass("collapsed").removeClass("expanded");
-                $li.find("ul").slideUp(function () {
-                    $(this).remove();
-                });
-            }
-        }
+        {{--$.each(response.reports, function (index, report) {--}}
+        {{--var ext = "xlsx";--}}
+        {{--switch (report.file_type) {--}}
+        {{--case "pdf":--}}
+        {{--ext = "pdf";--}}
+        {{--break;--}}
+        {{--case "xls":--}}
+        {{--case "xlsx":--}}
+        {{--default:--}}
+        {{--ext = "xls";--}}
+        {{--}--}}
+        {{--$ul.append(--}}
+        {{--$("<li>").addClass("file ext_" + ext).append(--}}
+        {{--$("<a>").addClass("file-anchor").attr({--}}
+        {{--"data-delete-url": report.urls["delete"],--}}
+        {{--"data-report-id": report.report_id,--}}
+        {{--"href": report.urls['show'],--}}
+        {{--"download": "download",--}}
+        {{--"title": moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type--}}
+        {{--}).text(moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type)--}}
+        {{--)--}}
+        {{--)--}}
+        {{--});--}}
+        {{--$(el).after($ul);--}}
+        {{--$ul.slideDown();--}}
+        {{--}--}}
+        {{--},--}}
+        {{--"error": function (xhr, status, error) {--}}
+        {{--hideReportListLoading();--}}
+        {{--describeServerRespondedError(xhr.status);--}}
+        {{--}--}}
+        {{--})--}}
+        {{--} else {--}}
+        {{--$li.addClass("collapsed").removeClass("expanded");--}}
+        {{--$li.find("ul").slideUp(function () {--}}
+        {{--$(this).remove();--}}
+        {{--});--}}
+        {{--}--}}
+        {{--}--}}
 
-        function toggleProductFolder(el) {
-            var $li = $(el).closest("li");
-            if ($li.hasClass("collapsed")) {
-                showReportListLoading();
-                $li.removeClass("collapsed").addClass("expanded");
-                var productId = $(el).attr("data-product-id");
-                $.ajax({
-                    "url": "{{route('report.index')}}",
-                    "method": "get",
-                    "dataType": "json",
-                    "data": {
-                        "product_id": productId
-                    },
-                    "success": function (response) {
-                        hideReportListLoading();
-                        if (response.status == true) {
-                            var $ul = $("<ul>").addClass("file-tree").hide();
+        {{--function toggleProductFolder(el) {--}}
+        {{--var $li = $(el).closest("li");--}}
+        {{--if ($li.hasClass("collapsed")) {--}}
+        {{--showReportListLoading();--}}
+        {{--$li.removeClass("collapsed").addClass("expanded");--}}
+        {{--var productId = $(el).attr("data-product-id");--}}
+        {{--$.ajax({--}}
+        {{--"url": "{{route('report.index')}}",--}}
+        {{--"method": "get",--}}
+        {{--"dataType": "json",--}}
+        {{--"data": {--}}
+        {{--"product_id": productId--}}
+        {{--},--}}
+        {{--"success": function (response) {--}}
+        {{--hideReportListLoading();--}}
+        {{--if (response.status == true) {--}}
+        {{--var $ul = $("<ul>").addClass("file-tree").hide();--}}
 
-                            $.each(response.reports, function (index, report) {
-                                var ext = "xlsx";
-                                switch (report.file_type) {
-                                    case "pdf":
-                                        ext = "pdf";
-                                        break;
-                                    case "xls":
-                                    case "xlsx":
-                                    default:
-                                        ext = "xls";
-                                }
-                                $ul.append(
-                                        $("<li>").addClass("file ext_" + ext).append(
-                                                $("<a>").addClass("file-anchor").attr({
-                                                    "data-delete-url": report.urls["delete"],
-                                                    "data-report-id": report.report_id,
-                                                    "href": report.urls['show'],
-                                                    "download": "download",
-                                                    "title": moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type
-                                                }).text(moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type)
-                                        )
-                                )
-                            });
-                            $(el).after($ul);
-                            $ul.slideDown();
-                        }
-                    },
-                    "error": function (xhr, status, error) {
-                        hideReportListLoading();
-                        describeServerRespondedError(xhr.status);
-                    }
-                })
-            } else {
-                $li.addClass("collapsed").removeClass("expanded");
-                $li.find("ul").slideUp(function () {
-                    $(this).remove();
-                });
-            }
-        }
+        {{--$.each(response.reports, function (index, report) {--}}
+        {{--var ext = "xlsx";--}}
+        {{--switch (report.file_type) {--}}
+        {{--case "pdf":--}}
+        {{--ext = "pdf";--}}
+        {{--break;--}}
+        {{--case "xls":--}}
+        {{--case "xlsx":--}}
+        {{--default:--}}
+        {{--ext = "xls";--}}
+        {{--}--}}
+        {{--$ul.append(--}}
+        {{--$("<li>").addClass("file ext_" + ext).append(--}}
+        {{--$("<a>").addClass("file-anchor").attr({--}}
+        {{--"data-delete-url": report.urls["delete"],--}}
+        {{--"data-report-id": report.report_id,--}}
+        {{--"href": report.urls['show'],--}}
+        {{--"download": "download",--}}
+        {{--"title": moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type--}}
+        {{--}).text(moment(report.created_at).format("YYYYMMDD") + "_" + report.file_name + "." + report.file_type)--}}
+        {{--)--}}
+        {{--)--}}
+        {{--});--}}
+        {{--$(el).after($ul);--}}
+        {{--$ul.slideDown();--}}
+        {{--}--}}
+        {{--},--}}
+        {{--"error": function (xhr, status, error) {--}}
+        {{--hideReportListLoading();--}}
+        {{--describeServerRespondedError(xhr.status);--}}
+        {{--}--}}
+        {{--})--}}
+        {{--} else {--}}
+        {{--$li.addClass("collapsed").removeClass("expanded");--}}
+        {{--$li.find("ul").slideUp(function () {--}}
+        {{--$(this).remove();--}}
+        {{--});--}}
+        {{--}--}}
+        {{--}--}}
 
 
-        function loadCategoriesAndProductsWithReports(callback) {
-            showReportListLoading();
-            $.ajax({
-                "url": "{{route('report.index')}}",
-                "method": "get",
-                "dataType": "json",
-                "success": function (response) {
-                    hideReportListLoading();
-                    if ($.isFunction(callback)) {
-                        callback(response);
-                    }
-                },
-                "error": function (xhr, status, error) {
-                    hideReportListLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            })
-        }
+        {{--function loadCategoriesAndProductsWithReports(callback) {--}}
+        {{--showReportListLoading();--}}
+        {{--$.ajax({--}}
+        {{--"url": "{{route('report.index')}}",--}}
+        {{--"method": "get",--}}
+        {{--"dataType": "json",--}}
+        {{--"success": function (response) {--}}
+        {{--hideReportListLoading();--}}
+        {{--if ($.isFunction(callback)) {--}}
+        {{--callback(response);--}}
+        {{--}--}}
+        {{--},--}}
+        {{--"error": function (xhr, status, error) {--}}
+        {{--hideReportListLoading();--}}
+        {{--describeServerRespondedError(xhr.status);--}}
+        {{--}--}}
+        {{--})--}}
+        {{--}--}}
 
-        function showReportListLoading() {
-            $(".report-list-loading").fadeIn();
-        }
+        {{--function showReportListLoading() {--}}
+        {{--$(".report-list-loading").fadeIn();--}}
+        {{--}--}}
 
-        function hideReportListLoading() {
-            $(".report-list-loading").fadeOut();
-        }
+        {{--function hideReportListLoading() {--}}
+        {{--$(".report-list-loading").fadeOut();--}}
+        {{--}--}}
 
 
         function showReportTaskForm(el) {
