@@ -1,11 +1,18 @@
 <style>
     .btn-product-dragger i {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .product-name-link {
-        font-size: 18px;
+        font-size: 15px;
         line-height: 46px;
+    }
+
+    .product-wrapper .btn-action{
+        font-size: 14px;
+    }
+    .product-th:first-child{
+        font-size: 19px;
     }
 </style>
 <table class="table table-condensed product-wrapper" data-product-id="{{$product->getKey()}}"
@@ -79,8 +86,8 @@
                         <th width="10%" class="hidden-xs text-right">Change</th>
                         <th width="10%" class="hidden-xs" style="padding-left: 20px;">Changed</th>
                         <th class="text-center" width="10%">My Price</th>
-                        <th width="15%">Updated</th>
-                        <th width="15%"></th>
+                        <th>Updated</th>
+                        <th width="100px"></th>
                     </tr>
                     </thead>
                     <tbody>
