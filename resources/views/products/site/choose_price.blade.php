@@ -13,7 +13,7 @@
                     <p>Below are the prices detected for the provided URL. Please select a correct price: </p>
                     @if(isset($targetDomain))
                         <div class="radio">
-                            <label for="">
+                            <label>
                                 <input type="radio" class="rad-site-id" value="{{$targetDomain['domain_id']}}"
                                        name="domain_id"
                                        onclick="$('.rad-site-id[name=site_id]').prop('checked', false);">
@@ -24,7 +24,7 @@
                     @endif
                     @foreach($sites as $site)
                         <div class="radio">
-                            <label for="">
+                            <label>
                                 <input type="radio" value="{{$site->getKey()}}" name="site_id"
                                        onclick="$('.rad-site-id[name=domain_id]').prop('checked', false);"
                                        class="rad-site-id">
