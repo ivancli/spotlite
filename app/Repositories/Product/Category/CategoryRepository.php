@@ -7,6 +7,7 @@ use App\Filters\QueryFilter;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Created by PhpStorm.
@@ -79,7 +80,18 @@ class CategoryRepository implements CategoryContract
 
     public function lazyLoadCategories(QueryFilter $queryFilter)
     {
-        $categoryBuilder = auth()->user()->categories()->filter($queryFilter);
+        $categoriesBuilder = auth()->user()->categories();
+        if ($this->request->has('keyword') && !empty($this->request->get('keyword'))) {
+            $keyWord = $this->request->get('keyword');
+            $categoriesBuilder = $categoriesBuilder->where(function ($query) use ($keyWord) {
+                $query->where('category_name', 'LIKE', "%{$keyWord}%")->orWhereHas('products', function ($query) use ($keyWord) {
+                    $query->where('product_name', 'LIKE', "%{$keyWord}%")->orWhereHas('sites', function ($query) use ($keyWord) {
+                        $query->where('site_url', 'LIKE', "%{$keyWord}%");
+                    });
+                });
+            });
+        }
+        $categoryBuilder = $categoriesBuilder->filter($queryFilter);
         if (!$this->request->has('order')) {
             $categoryBuilder->orderBy('category_order', 'asc')->orderBy('category_id');
         }

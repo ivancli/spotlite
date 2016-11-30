@@ -32,6 +32,26 @@ class Category extends Model
         return $this->hasMany('App\Models\Product', 'category_id', 'category_id');
     }
 
+    /*filtered products*/
+    public function filteredProducts()
+    {
+        if (request()->has('keyword') && !empty(request()->get('keyword'))) {
+            $keyword = request()->get('keyword');
+            $queryBuilder = $this->hasMany('App\Models\Product', 'category_id', 'category_id');
+            $filteredQueryBuilder = $queryBuilder->where('product_name', 'LIKE', "%{$keyword}%")->orWhereHas('sites', function ($query) use ($keyword) {
+                $query->where('site_url', 'LIKE', "%{$keyword}%");
+            });;
+            $filteredProductCount = $filteredQueryBuilder->count();
+            if ($filteredProductCount > 0) {
+                return $filteredQueryBuilder;
+            } else {
+                return $queryBuilder;
+            }
+        } else {
+            return $this->hasMany('App\Models\Product', 'category_id', 'category_id');
+        }
+    }
+
     public function sites()
     {
         return $this->hasManyThrough('App\Models\Site', 'App\Models\Product', 'category_id', 'product_id', 'category_id');

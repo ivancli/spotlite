@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-9424e81f96.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-816741f3af.css */
 @media print {
   *,
   *:before,
@@ -15765,10 +15765,6 @@ tr.empty-message-row td {
     }
 }
 
-.tbl-site tr.add-site-row td {
-    background-color: #f5f5f5;
-}
-
 tr.site-wrapper td.site-url {
     position: relative;
     padding-right: 50px !important;
@@ -15789,7 +15785,7 @@ tr.site-wrapper > td {
     vertical-align: middle !important;
 }
 
-tr.site-wrapper .btn-action{
+tr.site-wrapper .btn-action {
     font-size: 13px;
 }
 

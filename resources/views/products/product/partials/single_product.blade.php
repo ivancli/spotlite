@@ -8,10 +8,11 @@
         line-height: 46px;
     }
 
-    .product-wrapper .btn-action{
+    .product-wrapper .btn-action {
         font-size: 14px;
     }
-    .product-th:first-child{
+
+    .product-th:first-child {
         font-size: 19px;
     }
 </style>
@@ -93,9 +94,17 @@
                     <tbody>
                     {{--sites here--}}
                     @if(!is_null($product->sites))
-                        @foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)
-                            @include('products.site.partials.single_site')
-                        @endforeach
+                        @if(request()->has('keyword') && !empty(request()->get('keyword'))
+                         && (strpos(strtolower($category->category_name), strtolower(request()->get('keyword'))) === FALSE
+                         && strpos(strtolower($product->product_name), strtolower(request()->get('keyword'))) === FALSE))
+                            @foreach($product->filteredSites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)
+                                @include('products.site.partials.single_site')
+                            @endforeach
+                        @else
+                            @foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)
+                                @include('products.site.partials.single_site')
+                            @endforeach
+                        @endif
                     @endif
                     {{--sites here--}}
                     <tr class="add-site-row">

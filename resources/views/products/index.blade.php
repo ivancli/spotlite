@@ -36,8 +36,8 @@
                     <div class="row m-b-10">
                         <div class="col-sm-12">
                             {{--<a href="#" class="btn btn-primary btn-xs btn-add-category btn-flat"--}}
-                               {{--onclick="appendCreateCategoryBlock();">--}}
-                                {{--<i class="fa fa-plus"></i> Add Category--}}
+                            {{--onclick="appendCreateCategoryBlock();">--}}
+                            {{--<i class="fa fa-plus"></i> Add Category--}}
                             {{--</a>--}}
                             <div class="add-item-block add-category-container"
                                  onclick="appendCreateCategoryBlock(this); event.stopPropagation(); return false;">
@@ -94,6 +94,8 @@
         var draggedType = null;
         var categoryDrake = null;
 
+        var generalSearchPromise = null;
+
         $(function () {
 
             /**
@@ -101,6 +103,9 @@
              */
             categoryDrake = dragula([$(".list-container").get(0)], {
                 moves: function (el, container, handle) {
+                    if ($(".general-search-input").val() != "") {
+                        return false;
+                    }
                     return $(handle).hasClass("btn-category-dragger") || $(handle).closest(".btn-category-dragger").length > 0;
                 }
             }).on('drop', function (el, target, source, sibling) {
@@ -118,6 +123,27 @@
                 }
             });
 
+            $(".general-search-input").on("input", function () {
+                if (generalSearchPromise != null) {
+                    clearTimeout(generalSearchPromise);
+                }
+                generalSearchPromise = setTimeout(function () {
+                    $(".general-search-input").blur();
+                    showLoading();
+                    resetFilters();
+                    loadCategories(start, initLength, function (response) {
+                        $(".list-container").fadeOut(function () {
+                            $(".list-container").html(response.categoriesHTML);
+                            $(".list-container").fadeIn();
+                        });
+                        hideLoading();
+                        generalSearchPromise = null;
+                    }, function (xhr, status, error) {
+                        hideLoading();
+                        generalSearchPromise = null;
+                    });
+                }, 500);
+            });
 
             loadCategories(start, initLength, function (response) {
                 $(".list-container").append(response.categoriesHTML);
@@ -156,7 +182,8 @@
                 "method": "get",
                 "data": {
                     "start": tStart,
-                    "length": tLength
+                    "length": tLength,
+                    "keyword": $(".general-search-input").val()
                 },
                 "dataType": "json",
                 "success": function (response) {

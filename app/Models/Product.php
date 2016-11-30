@@ -38,6 +38,23 @@ class Product extends Model
         return $this->hasMany('App\Models\Site', 'product_id', 'product_id');
     }
 
+    public function filteredSites()
+    {
+        if (request()->has('keyword') && !empty(request()->get('keyword'))) {
+            $keyword = request()->get('keyword');
+            $queryBuilder = $this->hasMany('App\Models\Site', 'product_id', 'product_id');
+            $filteredQueryBuilder = $queryBuilder->where('site_url', 'LIKE', "%{$keyword}%");
+            $filteredSiteCount = $filteredQueryBuilder->count();
+            if ($filteredSiteCount > 0) {
+                return $filteredQueryBuilder;
+            } else {
+                return $queryBuilder;
+            }
+        } else {
+            return $this->hasMany('App\Models\Site', 'product_id', 'product_id');
+        }
+    }
+
     public function alert()
     {
         return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'product_id');

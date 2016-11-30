@@ -97,9 +97,15 @@
                     <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
                          aria-expanded="true">
                         @if($category->products->count() > 0)
-                            @foreach($category->products()->orderBy('product_order')->orderBy('product_id')->get() as $product)
-                                @include('products.product.partials.single_product')
-                            @endforeach
+                            @if(request()->has('keyword') && !empty(request()->get('keyword')) && strpos(strtolower($category->category_name), strtolower(request()->get('keyword'))) === FALSE)
+                                @foreach($category->filteredProducts()->orderBy('product_order')->orderBy('product_id')->get() as $product)
+                                    @include('products.product.partials.single_product')
+                                @endforeach
+                            @else
+                                @foreach($category->products()->orderBy('product_order')->orderBy('product_id')->get() as $product)
+                                    @include('products.product.partials.single_product')
+                                @endforeach
+                            @endif
                         @endif
                     </div>
                 </td>
