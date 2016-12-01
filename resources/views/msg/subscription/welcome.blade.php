@@ -72,25 +72,11 @@
                     <div class="form-group">
                         <select class="form-control" name="industry">
                             <option value="">What industry are you wanting to track?</option>
-                            <option value="Aerospace">Aerospace</option>
-                            <option value="Agriculture">Agriculture</option>
-                            <option value="Chemical">Chemical</option>
-                            <option value="Computer">Computer</option>
-                            <option value="Construction">Construction</option>
-                            <option value="Defense">Defense</option>
-                            <option value="Education">Education</option>
-                            <option value="Energy">Energy</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Financial services">Financial services</option>
-                            <option value="Food">Food</option>
-                            <option value="Health care">Health care</option>
-                            <option value="Hospitality">Hospitality</option>
-                            <option value="Information">Information</option>
-                            <option value="Manufacturing">Manufacturing</option>
-                            <option value="Mass media">Mass media</option>
-                            <option value="Telecommunications">Telecommunications</option>
-                            <option value="Transport">Transport</option>
-                            <option value="Water">Water</option>
+                            @if(isset($industries))
+                                @foreach($industries as $industry)
+                                    <option value="{{$industry}}">{{$industry}}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="form-group">
@@ -102,7 +88,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="text" name="company_url" class="form-control" placeholder="Company URL? e.g. http://www.example.com">
+                        <input type="text" name="company_url" class="form-control"
+                               placeholder="Company URL? e.g. http://www.example.com">
                     </div>
                     <div class="form-group text-center">
                         <button class="btn btn-primary btn-flat" type="submit">Create Dashboard</button>

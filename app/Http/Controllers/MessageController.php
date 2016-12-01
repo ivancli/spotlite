@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repository\Subscription\SubscriptionContract;
+use App\Contracts\Repository\User\User\UserContract;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 
@@ -12,10 +13,12 @@ use Invigor\Chargify\Chargify;
 class MessageController extends Controller
 {
     protected $subscriptionRepo;
+    protected $userRepo;
 
-    public function __construct(SubscriptionContract $subscriptionContract)
+    public function __construct(SubscriptionContract $subscriptionContract, UserContract $userContract)
     {
         $this->subscriptionRepo = $subscriptionContract;
+        $this->userRepo = $userContract;
     }
 
     public function welcomeSubscription($raw = 0)
@@ -25,10 +28,14 @@ class MessageController extends Controller
             $subscription = $user->subscription;
             $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
         }
+        $sampleUser = $this->userRepo->sampleUser();
+
+        $industries = $sampleUser->categories->pluck(['category_name'])->all();
+
         if ($raw == 0) {
-            return view('msg.subscription.welcome')->with(compact(['apiSubscription']));
+            return view('msg.subscription.welcome')->with(compact(['apiSubscription', 'industries']));
         } else {
-            return view('msg.subscription.raw.welcome')->with(compact(['apiSubscription']));
+            return view('msg.subscription.raw.welcome')->with(compact(['apiSubscription', 'industries']));
         }
     }
 
