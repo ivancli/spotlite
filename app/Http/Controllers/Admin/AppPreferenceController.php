@@ -22,12 +22,7 @@ class AppPreferenceController extends Controller
 
     public function index(ChargifySubscriptionRepository $chargifySubscriptionRepository)
     {
-        $user = User::findOrFail(3);
-        $chargifySubscriptionRepository->syncUserSubscription($user);
-
-
         $appPreferences = AppPreference::all();
-
         return view('admin.preference.index')->with(compact(['appPreferences']));
     }
 

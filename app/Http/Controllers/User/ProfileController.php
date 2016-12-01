@@ -132,7 +132,7 @@ class ProfileController extends Controller
         event(new ProfileUpdated($user));
 
         $sampleUser = $this->userRepo->sampleUser();
-        if(auth()->user()->getKey() != $sampleUser->getKey()){
+        if (auth()->user()->getKey() != $sampleUser->getKey()) {
             $industry = $input['industry'];
             $category = $sampleUser->categories()->where('category_name', $industry)->first();
             $clonedCategory = $category->replicate();
@@ -149,15 +149,19 @@ class ProfileController extends Controller
                     $clonedSite = $site->replicate();
                     $clonedSite->product_id = $clonedProduct->getKey();
                     $clonedSite->save();
-
-                    $clonedCrawler = $site->crawler->replicate();
-                    $clonedCrawler->site_id = $clonedSite->getKey();
-                    $clonedCrawler->save();
+                    $clonedSite = $clonedSite->fresh(['crawler']);
+                    $clonedCrawlerData = $site->crawler->toArray();
+                    $clonedCrawlerData['site_id'] = $clonedSite->getKey();
+                    $clonedSite->crawler->update($clonedCrawlerData);
+                    $clonedSite->crawler->save();
 
                     foreach ($site->historicalPrices as $historicalPrice) {
                         $clonedHistoricalPrice = $historicalPrice->replicate();
                         $clonedHistoricalPrice->site_id = $clonedSite->getKey();
-                        $clonedHistoricalPrice->crawler_id = $clonedCrawler->getKey();
+                        $clonedHistoricalPrice->crawler_id = $clonedSite->crawler->getKey();
+                        $clonedHistoricalPrice->save();
+                        $clonedHistoricalPrice->created_at = $historicalPrice->created_at;
+                        $clonedHistoricalPrice->save();
                     }
                 }
             }
