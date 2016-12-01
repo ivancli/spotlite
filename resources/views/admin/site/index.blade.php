@@ -103,7 +103,6 @@
                         }
                     },
                     {
-                        "class": "site-url",
                         "name": "site_url",
                         "data": function (data) {
                             var url = stripDomainFromURL(data.site_url);

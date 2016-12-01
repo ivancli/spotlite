@@ -13,35 +13,19 @@ class InitialSeeder extends Seeder
             'password' => bcrypt('secret'),
         ]);
 
-        $customerId = DB::table('users')->insertGetId([
-            'email' => 'ivan.invigor@gmail.com',
-            'password' => bcrypt('helloworld'),
-        ]);
-
         $superAdminRole = \Invigor\UM\UMRole::where('name', 'super_admin')->first();
-        $customerRole = \Invigor\UM\UMRole::where('name', 'client')->first();
 
         DB::table('role_user')->insert([
             'user_id' => $userId,
             'role_id' => $superAdminRole->role_id,
         ]);
-        DB::table('role_user')->insert([
-            'user_id' => $customerId,
-            'role_id' => $customerRole->role_id,
-        ]);
 
 
 
         $user = \App\Models\User::findOrFail($userId);
-        $customer = \App\Models\User::findOrFail($customerId);
 
         \App\Models\UserPreference::setPreference($user, 'DATE_FORMAT', 'Y-m-d');
         \App\Models\UserPreference::setPreference($user, 'TIME_FORMAT', 'g:i a');
-
-        \App\Models\UserPreference::setPreference($customer, 'DATE_FORMAT', 'Y-m-d');
-        \App\Models\UserPreference::setPreference($customer, 'TIME_FORMAT', 'g:i a');
-
-
 
         /* CRAWLING CHECKPOINT */
         DB::table("app_preferences")->insert([

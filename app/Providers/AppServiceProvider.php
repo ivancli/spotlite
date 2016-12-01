@@ -198,6 +198,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind('App\Contracts\Repository\Mailer\MailerContract', 'App\Repositories\Mailer\MailerRepository');
         $this->app->bind('App\Contracts\Repository\User\Group\GroupContract', 'App\Repositories\User\Group\GroupRepository');
+        $this->app->bind('App\Contracts\Repository\User\User\UserContract', 'App\Repositories\User\User\UserRepository');
         $this->app->bind('App\Contracts\Repository\Crawler\CrawlerContract', 'App\Repositories\Crawler\CrawlerRepository');
         $this->app->bind('App\Contracts\Repository\Subscription\SubscriptionContract', 'App\Repositories\Subscription\ChargifySubscriptionRepository');
         $this->app->bind('App\Contracts\Repository\Subscription\OnboardingContract', 'App\Repositories\Subscription\ChargifyOnboardingRepository');

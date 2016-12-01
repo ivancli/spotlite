@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SpotLiteRoleSeeder::class);
         $this->call(InitialSeeder::class);
         $this->call(DashboardSeeder::class);
+        $this->call(SampleUserSeeder::class);
     }
 }

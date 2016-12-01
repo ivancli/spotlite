@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Contracts\Repository\Mailer\MailingAgentContract;
+use App\Contracts\Repository\User\User\UserContract;
 use App\Events\User\Profile\ProfileEditViewed;
 use App\Events\User\Profile\ProfileUpdated;
 use App\Events\User\Profile\ProfileUpdating;
@@ -20,11 +21,13 @@ use Illuminate\Support\Facades\Validator;
 class ProfileController extends Controller
 {
     protected $mailingAgentRepo;
+    protected $userRepo;
 
-    public function __construct(MailingAgentContract $mailingAgentContract)
+    public function __construct(MailingAgentContract $mailingAgentContract, UserContract $userContract)
     {
         $this->middleware('permission:read_user', ['only' => ['show']]);
         $this->mailingAgentRepo = $mailingAgentContract;
+        $this->userRepo = $userContract;
     }
 
     /**
@@ -127,6 +130,39 @@ class ProfileController extends Controller
         $input = array_except($request->all(), ['email']);
         $user->update($input);
         event(new ProfileUpdated($user));
+
+        $sampleUser = $this->userRepo->sampleUser();
+        if(auth()->user()->getKey() != $sampleUser->getKey()){
+            $industry = $input['industry'];
+            $category = $sampleUser->categories()->where('category_name', $industry)->first();
+            $clonedCategory = $category->replicate();
+            $clonedCategory->user_id = auth()->user()->getKey();
+            $clonedCategory->save();
+
+            foreach ($category->products as $product) {
+                $clonedProduct = $product->replicate();
+                $clonedProduct->category_id = $clonedCategory->getKey();
+                $clonedProduct->user_id = auth()->user()->getKey();
+                $clonedProduct->save();
+
+                foreach ($product->sites as $site) {
+                    $clonedSite = $site->replicate();
+                    $clonedSite->product_id = $clonedProduct->getKey();
+                    $clonedSite->save();
+
+                    $clonedCrawler = $site->crawler->replicate();
+                    $clonedCrawler->site_id = $clonedSite->getKey();
+                    $clonedCrawler->save();
+
+                    foreach ($site->historicalPrices as $historicalPrice) {
+                        $clonedHistoricalPrice = $historicalPrice->replicate();
+                        $clonedHistoricalPrice->site_id = $clonedSite->getKey();
+                        $clonedHistoricalPrice->crawler_id = $clonedCrawler->getKey();
+                    }
+                }
+            }
+
+        }
 
         $this->mailingAgentRepo->editSubscriber($user->email, array(
             'Name' => $user->first_name . " " . $user->last_name,
