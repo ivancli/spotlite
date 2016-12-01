@@ -69,8 +69,7 @@
                                           class="frm-store-product"
                                           onsubmit="btnAddProductOnClick(this); return false;">
                                         <input type="text" placeholder="Product Name" name="product_name"
-                                               id="txt-product-name-{{$category->getKey()}}"
-                                               class="form-control txt-item">
+                                               class="form-control txt-item txt-product-name">
                                     </form>
                                 </div>
                                 <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
@@ -79,7 +78,7 @@
                                         ADD PRODUCT
                                     </button>
                                     &nbsp;&nbsp;
-                                    <button class="btn btn-default" id="btn-cancel-add-product-{{$category->getKey()}}"
+                                    <button class="btn btn-default btn-cancel-add-product"
                                             onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
                                         CANCEL
                                     </button>
@@ -182,7 +181,7 @@
         function appendCreateProductBlock(el) {
             $(el).find(".add-item-label").slideUp();
             $(el).find(".add-item-controls").slideDown();
-            $("#txt-product-name-{{$category->getKey()}}").focus();
+            $(el).find(".txt-product-name").focus();
         }
 
         function cancelAddProduct(el) {
@@ -198,21 +197,21 @@
                 "url": "{{route('product.store')}}",
                 "method": "post",
                 "data": {
-                    "category_id": "{{$category->getKey()}}",
-                    "product_name": $("#txt-product-name-{{$category->getKey()}}").val()
+                    "category_id": $(el).closest(".category-wrapper").attr('data-category-id'),
+                    "product_name": $(el).closest(".category-wrapper").find(".txt-product-name").val()
                 },
                 "dataType": "json",
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
-                        cancelAddProduct($("#btn-cancel-add-product-{{$category->getKey()}}").get());
+                        cancelAddProduct($(el).closest(".category-wrapper").find(".btn-cancel-add-product"));
                         gaAddProduct();
                         if (response.product != null) {
                             showLoading();
                             loadSingleProduct(response.product.urls.show, function (html) {
                                 hideLoading();
                                 $(el).closest(".tbl-category").find(".collapsible-category-div").prepend(html);
-                                updateProductOrder("{{$category->getKey()}}");
+                                updateProductOrder($(el).closest(".category-wrapper").attr('data-category-id'));
                                 updateProductEmptyMessage();
                             });
                         } else {
