@@ -18,7 +18,6 @@ class Dashboard extends Model
     protected $fillable = [
         "user_id", "dashboard_template_id", "dashboard_name", "dashboard_order", "is_hidden"
     ];
-    public $timestamps = false;
     protected $appends = ["urls"];
 
     public function user()

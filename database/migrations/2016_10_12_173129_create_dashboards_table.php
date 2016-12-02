@@ -19,6 +19,7 @@ class CreateDashboardsTable extends Migration
             $table->text('dashboard_name');
             $table->text('dashboard_order')->nullable();
             $table->char('is_hidden', 1)->default('n');
+            $table->timestamps();
         });
     }
 

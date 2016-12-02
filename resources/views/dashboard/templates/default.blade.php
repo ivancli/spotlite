@@ -1,20 +1,40 @@
 @section('header_title')
     {{$dashboard->dashboard_name}}
+    &nbsp;&nbsp;
+    <span style="font-size: 14px;"
+          class="text-muted">Created on the {{date(auth()->user()->preferences['DATE_FORMAT'], strtotime($dashboard->created_at))}}
+        <strong><i>by {{auth()->user()->first_name}} {{auth()->user()->last_name}}</i></strong>
+    &nbsp; &nbsp; &#124; &nbsp;
+    <a href="#" class="text-muted"><strong>Manage Dashboard <i class="fa fa-cog"></i></strong></a>
+    </span>
+
 @stop
 
 @section('breadcrumbs')
-    <div class="text-right">
-        <button class="btn {{!is_null($dashboard->getPreference('timespan')) ? 'btn-success' : 'btn-primary'}} btn-sm btn-flat"
-                onclick="applyFilters();">
-            @if(!is_null($dashboard->getPreference('timespan')))
-                Update Filters
-            @else
-                Apply Filters
-            @endif
-        </button>
-        <button class="btn btn-primary btn-sm btn-flat" onclick="addWidget();">Add Content</button>
-    </div>
+    {{--<div class="text-right">--}}
+    {{--<button class="btn {{!is_null($dashboard->getPreference('timespan')) ? 'btn-success' : 'btn-primary'}} btn-sm btn-flat"--}}
+    {{--onclick="applyFilters();">--}}
+    {{--@if(!is_null($dashboard->getPreference('timespan')))--}}
+    {{--Update Filters--}}
+    {{--@else--}}
+    {{--Apply Filters--}}
+    {{--@endif--}}
+    {{--</button>--}}
+    {{--<button class="btn btn-primary btn-sm btn-flat" onclick="addWidget();">Add Content</button>--}}
+    {{--</div>--}}
 @stop
+
+<div class="row">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+        <p style="font-size: 18px;" class="text-muted">
+            Welcome to your dashboard. Here you will see all the live feedback of the prices you are tracking. Add a
+            price you want to track by clicking on the "Add product price to track" link or go to the "Product Prices"
+            within the navigation.
+        </p>
+    </div>
+</div>
+
+<hr>
 
 <div class="row widgets-container">
     @if($dashboard->widgets->count() > 0)
