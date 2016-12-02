@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-816741f3af.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-48642ff3ff.css */
 @media print {
   *,
   *:before,
@@ -15770,14 +15770,14 @@ tr.site-wrapper td.site-url {
     padding-right: 50px !important;
 }
 
-td.site-url a {
-    line-height: 60px;
-}
+/*td.site-url a {*/
+    /*line-height: 60px;*/
+/*}*/
 
 .btn-edit.btn-edit-site {
     position: absolute;
     right: 0;
-    top: 36px;
+    top: 16px;
     margin: 0 !important;
 }
 
