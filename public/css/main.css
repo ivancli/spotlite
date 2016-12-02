@@ -15771,7 +15771,7 @@ tr.site-wrapper td.site-url {
 }
 
 /*td.site-url a {*/
-    /*line-height: 60px;*/
+/*line-height: 60px;*/
 /*}*/
 
 .btn-edit.btn-edit-site {
@@ -15787,6 +15787,14 @@ tr.site-wrapper > td {
 
 tr.site-wrapper .btn-action {
     font-size: 13px;
+}
+
+#frm-password .g-recaptcha > div {
+    margin: 0 auto;
+}
+
+#user-password #frm-password .g-recaptcha > div {
+    margin: 0;
 }
 
 @media (min-width: 768px) {

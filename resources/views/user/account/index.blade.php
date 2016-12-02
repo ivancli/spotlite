@@ -1,7 +1,12 @@
 @extends('layouts.adminlte')
 @section('title', 'Account Settings')
+
+@section('head_scripts')
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+@stop
+
 @section('breadcrumbs')
-{{--    {!! Breadcrumbs::render('account_index') !!}--}}
+    {{--    {!! Breadcrumbs::render('account_index') !!}--}}
 @stop
 @section('content')
     <div class="nav-tabs-custom">
@@ -29,14 +34,25 @@
                 <div class="row">
                     <div class="col-md-offset-2 col-md-8">
                         <div class="p-10">
+
                             <h4 class="lead">Reset Password</h4>
                             <hr>
-                            <p>By clicking the reset password button, an email with update password link will be
+                            <p class="m-b-20">By clicking the reset password button, an email with update password link
+                                will be
                                 sent
                                 to <a href="mailto:{{$user->email}}">{{$user->email}}</a>.</p>
                             {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
 
+                            <ul class="text-danger errors-container">
+                            </ul>
+
                             <input type="hidden" name="email" value="{{$user->email}}">
+
+                            <div class="row m-b-20">
+                                <div class="col-sm-12">
+                                    <div class="g-recaptcha" data-sitekey="{{config('google_captcha.site_key')}}"></div>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-sm-12">

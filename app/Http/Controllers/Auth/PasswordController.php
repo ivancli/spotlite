@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Http\Controllers\Controller;
+use App\Libraries\CommonFunctions;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class PasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
+    use ResetsPasswords, CommonFunctions;
 
     protected $redirectTo = '/';
     protected $mailingAgentRepo;
@@ -38,6 +39,28 @@ class PasswordController extends Controller
 
     public function postEmail(Request $request)
     {
+        $response = $this->sendCurl(config('google_captcha.verification_url'), array(
+            'method' => 'post',
+            'fields' => array(
+                'secret' => config('google_captcha.secret_key'),
+                'response' => $request->get('g-recaptcha-response')
+            ),
+        ));
+        $response = json_decode($response);
+        if ($response == false || !isset($response->success) || $response->success != true) {
+            $status = false;
+            $errors = array("Please verify that you are not a robot.");
+            if ($request->ajax()) {
+                if ($request->wantsJson()) {
+                    return response()->json(compact(['status', 'errors']));
+                } else {
+                    return compact(['status', 'errors']);
+                }
+            } else {
+                return false;
+            }
+        }
+
         $this->validateSendResetLinkEmail($request);
         $broker = $this->getBroker();
 
@@ -58,6 +81,7 @@ class PasswordController extends Controller
             }
         } else {
             /*TODO implement this if necessary*/
+            return false;
         }
 
     }

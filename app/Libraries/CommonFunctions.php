@@ -38,7 +38,7 @@ trait CommonFunctions
             }
         }
 
-        if (!is_null($options['userpass']) && is_string($options['userpass'])) {
+        if (isset($options['userpass']) && !is_null($options['userpass']) && is_string($options['userpass'])) {
             curl_setopt($ch, CURLOPT_USERPWD, $options['userpass']);
         }
 

@@ -55,6 +55,8 @@
     </script>
     <script type="text/javascript" src="{{elixir('js/zendesk.js')}}"></script>
     <script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
+
+    @yield('head_scripts')
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
 <div class="wrapper">

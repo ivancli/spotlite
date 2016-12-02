@@ -1,5 +1,10 @@
 @extends('layouts.adminlte_auth')
 @section('title', 'Account Login')
+
+@section('head_scripts')
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+@stop
+
 @section('content')
 
     <div class="login-box">
@@ -25,6 +30,11 @@
                 {!! Form::email('email', null, array('class' => 'form-control', 'placeholder' => 'Email')) !!}
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
+            <div class="row m-b-20">
+                <div class="col-sm-12">
+                    <div class="g-recaptcha" data-sitekey="{{config('google_captcha.site_key')}}"></div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-6 col-sm-push-6 text-right">
                     {!! Form::submit('Forgot', ["class"=>"btn btn-default btn-block btn-flat", "href"=>"#"]) !!}
@@ -41,6 +51,7 @@
 @stop
 
 @section('scripts')
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <script type="text/javascript">
         $(function () {
             $(".icheck").iCheck({
