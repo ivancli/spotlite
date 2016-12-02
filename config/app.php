@@ -167,7 +167,9 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
-        Invigor\Chargify\ChargifyServiceProvider::class
+        Invigor\Chargify\ChargifyServiceProvider::class,
+
+        App\Providers\PasswordResetServiceProvider::class,
     ],
 
     /*
@@ -227,7 +229,7 @@ return [
 
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
-        'Chargify' => Invigor\Chargify\ChargifyFacade::class
+        'Chargify' => Invigor\Chargify\ChargifyFacade::class,
     ],
 
 ];

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Http\Controllers\Controller;
 use App\Libraries\CommonFunctions;
-use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -62,13 +61,14 @@ class PasswordController extends Controller
         }
 
         $this->validateSendResetLinkEmail($request);
-        $broker = $this->getBroker();
 
         $mailingAgentRepo = $this->mailingAgentRepo;
 
+        $broker = $this->getBroker();
+
         $response = Password::broker($broker)->sendResetLink(
             $this->getSendResetLinkEmailCredentials($request),
-            function ($m, $user, $token) use ($mailingAgentRepo) {
+            function ($user, $token) use ($mailingAgentRepo) {
                 $mailingAgentRepo->sendResetPasswordEmail($user, $token);
             }
         );
