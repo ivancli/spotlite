@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 
 class PasswordController extends Controller
 {
@@ -22,14 +25,40 @@ class PasswordController extends Controller
     use ResetsPasswords;
 
     protected $redirectTo = '/';
+    protected $mailingAgentRepo;
 
     /**
      * Create a new password controller instance.
-     *
-     * @return void
+     * @param MailingAgentContract $mailingAgentContract
      */
-    public function __construct()
+    public function __construct(MailingAgentContract $mailingAgentContract)
     {
+        $this->mailingAgentRepo = $mailingAgentContract;
+    }
+
+    public function postEmail(Request $request)
+    {
+        $this->validateSendResetLinkEmail($request);
+        $broker = $this->getBroker();
+
+        $mailingAgentRepo = $this->mailingAgentRepo;
+
+        $response = Password::broker($broker)->sendResetLink(
+            $this->getSendResetLinkEmailCredentials($request),
+            function ($m, $user, $token) use ($mailingAgentRepo) {
+                $mailingAgentRepo->sendResetPasswordEmail($user, $token);
+            }
+        );
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
 
     }
 

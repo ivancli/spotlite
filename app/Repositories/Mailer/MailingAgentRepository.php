@@ -469,4 +469,23 @@ class MailingAgentRepository implements MailingAgentContract
         }
 
     }
+
+    public function sendResetPasswordEmail(User $user, $token)
+    {
+        $smart_email_id = config('campaign_monitor.reset_password_email_id');
+        $wrap = new \CS_REST_Transactional_SmartEmail($smart_email_id, $this->auth);
+        $message = array(
+            "To" => "{$user->first_name} <{$user->email}>",
+            "Data" => array(
+                'x-apple-data-detectors' => 'x-apple-data-detectorsTestValue',
+                'href^="tel"' => 'href^="tel"TestValue',
+                'href^="sms"' => 'href^="sms"TestValue',
+                'owa' => 'owaTestValue',
+                'firstname' => $user->first_name,
+                'token' => $token,
+                'email' => $user->email,
+            ),
+        );
+        $result = $wrap->send($message);
+    }
 }

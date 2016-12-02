@@ -74,7 +74,17 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var $errorContainer = $(".errors-container");
+                        $errorContainer.empty();
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $errorContainer.append(
+                                    $("<li>").text(error)
+                            );
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }

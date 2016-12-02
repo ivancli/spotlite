@@ -48,4 +48,6 @@ interface MailingAgentContract
     public function syncUserSubscription(User $user);
 
     public function syncAllUsersSubscriptions();
+
+    public function sendResetPasswordEmail(User $user, $token);
 }

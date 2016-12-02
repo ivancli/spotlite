@@ -113,9 +113,6 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
             'phone' => isset($data['phone']) ? $data['phone'] : null,
             'verification_code' => $verificationCode,
-            'industry' => $data['industry'],
-            'company_type' => $data['company_type'],
-            'company_name' => $data['company_name'],
             'agree_terms' => $data['agree_terms'],
         ]);
 
