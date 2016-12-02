@@ -13,7 +13,7 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        @foreach(auth()->user()->nonHiddenDashboard as $dashboard)
+                        @foreach(auth()->user()->nonHiddenDashboards as $dashboard)
                             <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
                                 <a href="{{route('dashboard.show', $dashboard->getKey())}}">
                                     <i class="fa fa-circle-o"></i> {{$dashboard->dashboard_name}}

@@ -1,7 +1,7 @@
 <tr class="site-wrapper" data-site-id="{{$site->getKey()}}"
     data-site-edit-url="{{$site->urls['edit']}}"
     data-site-alert-url="{{$site->urls['alert']}}"
-    data-site-update-url="{{$site->urls['update']}}">
+    data-site-update-my-price-url="{{$site->urls['update_my_price']}}">
     <td class="site-url">
         <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-toggle="popover"
            data-container="body"
@@ -193,6 +193,7 @@
                 },
                 "dataType": "json",
                 "success": function (response) {
+                    hideLoading();
                     if (typeof response.errors == 'undefined') {
                         //PRICE NOT FOUND
                         if ((typeof response.sites == 'undefined' || response.sites.length == 0) && typeof response.targetDomain == 'undefined') {
@@ -368,7 +369,7 @@
             showLoading();
 
             $.ajax({
-                "url": $(el).find("i").closest(".site-wrapper").attr("data-site-update-url"),
+                "url": $(el).find("i").closest(".site-wrapper").attr("data-site-update-my-price-url"),
                 "method": "put",
                 "data": {
                     "my_price": myPrice

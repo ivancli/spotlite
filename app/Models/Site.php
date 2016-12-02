@@ -71,7 +71,8 @@ class Site extends Model
             "show" => route("site.show", $this->getKey()),
 
             "edit" => route("site.edit", $this->getKey()),
-            "update" => route("site.my_price", $this->getKey()),
+            "update" => route("site.update", $this->getKey()),
+            "update_my_price" => route("site.my_price", $this->getKey()),
             "delete" => route("site.destroy", $this->getKey()),
 
             "alert" => route("alert.site.edit", $this->getKey()),
