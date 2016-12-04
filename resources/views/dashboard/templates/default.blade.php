@@ -3,7 +3,7 @@
     &nbsp;&nbsp;
     <span style="font-size: 14px;"
           class="text-muted">Created on the {{date(auth()->user()->preferences['DATE_FORMAT'], strtotime($dashboard->created_at))}}
-        <strong><i>by {{auth()->user()->first_name}} {{auth()->user()->last_name}}</i></strong>
+        <strong><i>by {{$dashboard->user->first_name}} {{$dashboard->user->last_name}}</i></strong>
     &nbsp; &nbsp; &#124; &nbsp;
     <a href="#" class="text-muted"><strong>Manage Dashboard <i class="fa fa-cog"></i></strong></a>
     </span>
@@ -26,7 +26,7 @@
 
 <div class="row">
     <div class="col-lg-8 col-md-10 col-sm-12">
-        <p style="font-size: 18px;" class="text-muted">
+        <p class="text-muted font-size-17">
             Welcome to your dashboard. Here you will see all the live feedback of the prices you are tracking. Add a
             price you want to track by clicking on the "Add product price to track" link or go to the "Product Prices"
             within the navigation.
@@ -34,7 +34,7 @@
     </div>
 </div>
 
-<hr>
+<hr class="content-divider-white">
 
 <div class="row widgets-container">
     @if($dashboard->widgets->count() > 0)

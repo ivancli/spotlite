@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-5859543f12.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-47ef47a7b8.css */
 @media print {
   *,
   *:before,
@@ -15795,6 +15795,14 @@ tr.site-wrapper .btn-action {
 
 #user-password #frm-password .g-recaptcha > div {
     margin: 0;
+}
+
+hr.content-divider-white {
+    border-top: 1px solid #fff;
+}
+
+.font-size-17 {
+    font-size: 17px;
 }
 
 @media (min-width: 768px) {
