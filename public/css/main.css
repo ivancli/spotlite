@@ -15844,6 +15844,10 @@ hr.content-divider-white {
     cursor: pointer;
 }
 
+.font-weight-bold {
+    font-weight: bold;
+}
+
 ul.treeview-menu li a {
     text-overflow: ellipsis;
     overflow: hidden;

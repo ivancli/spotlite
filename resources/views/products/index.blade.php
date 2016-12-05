@@ -47,6 +47,31 @@
         <div class="col-md-12">
             <div class="box box-solid">
                 <div class="box-body product-list-page-content">
+
+                    <div class="row m-b-10 text-muted font-weight-bold">
+                        <div class="col-sm-12">
+                            @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
+                                Credit: &nbsp;&nbsp;&nbsp;&nbsp;
+
+                                {{--TODO update color based on the ratio--}}
+                                <div class="progress vertical-align-middle"
+                                     style="width: 300px;display: inline-block;margin-bottom: 0;background-color:#dedede;border-radius: 10px; height:15px;">
+                                    <div class="progress-bar progress-bar-primary progress-bar-striped"
+                                         role="progressbar"
+                                         aria-valuenow="{{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}"
+                                         aria-valuemin="0" aria-valuemax="100"
+                                         style="width: {{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}%">
+                                    </div>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                {{auth()->user()->products()->count()}}&nbsp;/
+                                &nbsp;{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}
+                                &nbsp; products
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="row m-b-10">
                         <div class="col-sm-12">
                             {{--<a href="#" class="btn btn-primary btn-xs btn-add-category btn-flat"--}}

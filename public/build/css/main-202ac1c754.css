@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-ca81d4af28.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-202ac1c754.css */
 @media print {
   *,
   *:before,
@@ -15842,6 +15842,10 @@ hr.content-divider-white {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.font-weight-bold {
+    font-weight: bold;
 }
 
 ul.treeview-menu li a {
