@@ -41,7 +41,8 @@ class DashboardRepository implements DashboardContract
                 return $dashboard;
             }
         } else {
-            $dashboard = $this->dashboard->find($id);
+
+            $dashboard = Dashboard::find($id);
             if (!is_null($dashboard) && $dashboard->user->getKey() == auth()->user()->getKey()) {
                 return $dashboard;
             }

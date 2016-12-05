@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-8153becdd5.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-b8fff40683.css */
 @media print {
   *,
   *:before,
@@ -15725,7 +15725,7 @@ h3.box-title {
     padding-top: 100px;
 }
 
-.sidebar-menu li.active > a > .fa-angle-down, .sidebar-menu li.active > a > .pull-right-container > .fa-angle-down {
+.sidebar-menu li.active > a > .fa-caret-down, .sidebar-menu li.active > a > .pull-right-container > .fa-caret-down {
     -webkit-transform: rotate(-180deg);
     -ms-transform: rotate(-180deg);
     -o-transform: rotate(-180deg);

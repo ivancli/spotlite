@@ -328,6 +328,34 @@ class DashboardController extends Controller
         }
     }
 
+    public function updateOrder()
+    {
+        /*TODO validation here*/
+        $status = false;
+        if ($this->request->has('order')) {
+            $order = $this->request->get('order');
+            foreach ($order as $key => $ord) {
+                $dashboard = $this->dashboardRepo->getDashboard($ord['dashboard_id'], false);
+                if (!is_null($dashboard)) {
+                    $dashboard->dashboard_order = intval($ord['dashboard_order']);
+                    $dashboard->save();
+                }
+                unset($dashboard);
+            }
+            $status = true;
+        }
+
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if needed*/
+        }
+    }
+
     public function destroy($id)
     {
         $dashboard = $this->dashboardRepo->getDashboard($id);

@@ -617,7 +617,7 @@ h3.box-title {
     padding-top: 100px;
 }
 
-.sidebar-menu li.active > a > .fa-angle-down, .sidebar-menu li.active > a > .pull-right-container > .fa-angle-down {
+.sidebar-menu li.active > a > .fa-caret-down, .sidebar-menu li.active > a > .pull-right-container > .fa-caret-down {
     -webkit-transform: rotate(-180deg);
     -ms-transform: rotate(-180deg);
     -o-transform: rotate(-180deg);

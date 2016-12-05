@@ -9,23 +9,35 @@
                         <i class="fa fa-dashboard"></i>
                         <span>Dashboards</span>
                         <span class="pull-right-container">
-                          <i class="fa fa-angle-down pull-right"></i>
+                          <i class="fa fa-caret-down pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        @foreach(auth()->user()->nonHiddenDashboards as $dashboard)
+                        @foreach(auth()->user()->nonHiddenDashboards as $index=>$dashboard)
                             <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
                                 <a href="{{route('dashboard.show', $dashboard->getKey())}}">
-                                    <i class="fa fa-circle-o"></i> <span class="lnk-dashboard-{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</span>
+                                    <i class="fa fa-circle-o"></i>
+                                    <span class="lnk-dashboard-{{$dashboard->getKey()}}">
+                                        {{$dashboard->dashboard_name}}
+                                    </span>
+                                    @if($index==0)
+                                        <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                              data-dashboard-id="{{$dashboard->getKey()}}"
+                                              onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
+                                            <i class="fa fa-arrow-down"></i>
+                                        </span>
+                                    @else
+                                        <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                              data-dashboard-id="{{$dashboard->getKey()}}"
+                                              onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
+                                            <i class="fa fa-arrow-up"></i>
+                                        </span>
+                                    @endif
                                 </a>
                             </li>
                         @endforeach
-                        <li class="divider"></li>
-                        <li class="{{Style::set_active_and(array('dashboard', 'manage'))}}">
-                            <a href="{{route('dashboard.manage')}}">
-                                <i class="fa fa-gear"></i> Manage Dashboards
-                            </a>
-                        </li>
+                        <script type="text/javascript">
+                        </script>
                     </ul>
                 </li>
                 <li class="bg-fff">
@@ -64,7 +76,7 @@
                         <i class="fa fa-files-o"></i>
                         <span>Crawler Management</span>
                         <span class="pull-right-container">
-                          <i class="fa fa-angle-down pull-right"></i>
+                          <i class="fa fa-caret-down pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
@@ -85,7 +97,7 @@
                         <i class="fa fa-users"></i>
                         <span>User Management</span>
                         <span class="pull-right-container">
-                          <i class="fa fa-angle-down pull-right"></i>
+                          <i class="fa fa-caret-down pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">

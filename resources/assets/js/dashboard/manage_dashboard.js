@@ -98,3 +98,60 @@ function deleteDashboard(el) {
         }
     })
 }
+
+function updateDashboardDirectionIcon() {
+    $("span.btn-reorder-dashboard").each(function (index) {
+        if (index == 0) {
+            $(this).find("i").removeClass("fa-arrow-up").addClass("fa-arrow-down");
+        } else {
+            $(this).find("i").removeClass("fa-arrow-down").addClass("fa-arrow-up");
+        }
+    });
+}
+
+function swapDashboard(el) {
+    var $li = $(el).closest("li");
+    if ($(el).is(".btn-reorder-dashboard:first")) {
+        $li.next("li").after($li);
+    } else {
+        $li.prev("li").before($li);
+    }
+    updateDashboardDirectionIcon();
+    updateDashboardOrder();
+}
+
+/*TODO create front-end reordering function*/
+function assignDashboardOrderNumber() {
+    $(".btn-reorder-dashboard").each(function (index) {
+        $(this).attr("data-order", index);
+    });
+}
+
+function updateDashboardOrder() {
+    assignDashboardOrderNumber();
+    var orderList = [];
+    $(".btn-reorder-dashboard").each(function () {
+        if ($(this).attr("data-dashboard-id")) {
+            var dashboardId = $(this).attr("data-dashboard-id");
+            var dashboardOrder = parseInt($(this).attr("data-order"));
+            orderList.push({
+                "dashboard_id": dashboardId,
+                "dashboard_order": dashboardOrder
+            });
+        }
+    });
+    $.ajax({
+        "url": "/dashboard/order",
+        "method": "put",
+        "data": {
+            "order": orderList
+        },
+        "success": function () {
+            hideLoading();
+        },
+        "error": function (xhr, status, error) {
+            hideLoading();
+            describeServerRespondedError(xhr.status);
+        }
+    });
+}
