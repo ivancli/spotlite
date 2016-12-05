@@ -332,40 +332,45 @@
         }
 
         function btnDeleteDomainOnClick(el) {
-            confirmP("Delete domain", "Do you want to delete all preferences of this domain?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        showLoading();
-                        $.ajax({
-                            "url": $(el).attr("data-url"),
-                            "method": "delete",
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    alertP("Delete domain", "The domain has been deleted.");
-                                    $(el).closest(".site-wrapper").remove();
-                                    tblDomain.row($(el).closest("tr")).remove().draw();
-                                } else {
-                                    alertP("Error", "Unable to delete domain, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+            deletePopup("Delete Domain", "Do you want to delete all preferences of this domain?",
+                    "By deleting this domain, you will lose the following data:",
+                    [
+                        "All configuration related to the domain"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                $.ajax({
+                                    "url": $(el).attr("data-url"),
+                                    "method": "delete",
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            alertP("Delete domain", "The domain has been deleted.");
+                                            $(el).closest(".site-wrapper").remove();
+                                            tblDomain.row($(el).closest("tr")).remove().draw();
+                                        } else {
+                                            alertP("Error", "Unable to delete domain, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            })
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
 
         function showAddDomainForm() {

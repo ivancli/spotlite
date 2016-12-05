@@ -30,11 +30,11 @@
                         {!! Form::select('site_id[]', $sites, $excludedSites, array('id'=>'sel-site', 'placeholder' => 'select a site')) !!}
                         .
                         </span>
-                    <p>
-                        This alert should be sent
-                        &nbsp;
-                        {!! Form::select('one_off', array('n'=>'every time', 'y' => 'just once'), is_null($product->alert) ? null : $product->alert->one_off) !!}
-                    </p>
+                <p>
+                    This alert should be sent
+                    &nbsp;
+                    {!! Form::select('one_off', array('n'=>'every time', 'y' => 'just once'), is_null($product->alert) ? null : $product->alert->one_off) !!}
+                </p>
                 </p>
 
                 <div class="form-group required">
@@ -101,42 +101,46 @@
                 })
             });
             $("#btn-delete-product-alert").on("click", function () {
-
-                confirmP("Delete alert", "Are you sure you want to delete the {{$product->product_name}} Product Alert?", {
-                    "affirmative": {
-                        "text": "Delete",
-                        "class": "btn-danger btn-flat",
-                        "dismiss": true,
-                        "callback": function () {
-                            submitDeleteProductAlert(function (response) {
-                                if (response.status == true) {
-                                    alertP("Delete Alert", "Alert has been deleted.");
-                                    $("#modal-alert-product").modal("hide");
-                                    if ($.isFunction(options.deleteCallback)) {
-                                        options.deleteCallback(response);
-                                    }
-                                } else {
-                                    if (typeof response.errors != 'undefined') {
-                                        var $errorContainer = $("#modal-alert-product .errors-container");
-                                        $errorContainer.empty();
-                                        $.each(response.errors, function (index, error) {
-                                            $errorContainer.append(
-                                                    $("<li>").text(error)
-                                            );
-                                        });
-                                    } else {
-                                        alertP("Error", "Unable to delete alert, please try again later.");
-                                    }
+                deletePopup("Delete Alert", "Are you sure you want to delete the {{$product->product_name}} Product Alert?",
+                        "By deleting this alert, you will lose the following data:",
+                        [
+                            "Related scheduled alert"
+                        ],
+                        {
+                            "affirmative": {
+                                "text": "Delete",
+                                "class": "btn-danger btn-flat",
+                                "dismiss": true,
+                                "callback": function () {
+                                    submitDeleteProductAlert(function (response) {
+                                        if (response.status == true) {
+                                            alertP("Delete Alert", "Alert has been deleted.");
+                                            $("#modal-alert-product").modal("hide");
+                                            if ($.isFunction(options.deleteCallback)) {
+                                                options.deleteCallback(response);
+                                            }
+                                        } else {
+                                            if (typeof response.errors != 'undefined') {
+                                                var $errorContainer = $("#modal-alert-product .errors-container");
+                                                $errorContainer.empty();
+                                                $.each(response.errors, function (index, error) {
+                                                    $errorContainer.append(
+                                                            $("<li>").text(error)
+                                                    );
+                                                });
+                                            } else {
+                                                alertP("Error", "Unable to delete alert, please try again later.");
+                                            }
+                                        }
+                                    });
                                 }
-                            });
-                        }
-                    },
-                    "negative": {
-                        "text": "Cancel",
-                        "class": "btn-default btn-flat",
-                        "dismiss": true
-                    }
-                });
+                            },
+                            "negative": {
+                                "text": "Cancel",
+                                "class": "btn-default btn-flat",
+                                "dismiss": true
+                            }
+                        });
             })
         }
 

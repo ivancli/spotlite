@@ -533,3 +533,153 @@ function getCookies() {
     }
     return cookies;
 }
+
+/**
+ *
+ * @param title
+ * @param headingContent
+ * @param subHeadingContent
+ * @param listContent
+ * @param btnOpts
+ */
+function deletePopup(title, headingContent, subHeadingContent, listContent, btnOpts) {
+    var $footer = $("<div>").append(
+        $("<button>")
+            .prop("disabled", true)
+            .addClass("btn btn-confirm-delete")
+            .addClass(typeof btnOpts.affirmative.class == 'undefined' ? "" : btnOpts.affirmative.class)
+            .on("click", function () {
+                if (typeof btnOpts.affirmative.callback != 'undefined' && $.isFunction(btnOpts.affirmative.callback)) {
+                    btnOpts.affirmative.callback();
+                }
+            })
+            .attr("data-dismiss", function () {
+                return typeof btnOpts.affirmative.dismiss != 'undefined' && btnOpts.affirmative.dismiss == true ? "modal" : "";
+            })
+            .text(typeof btnOpts.affirmative.text != 'undefined' ? btnOpts.affirmative.text : 'OK'),
+        $("<button>")
+            .addClass("btn")
+            .addClass(typeof btnOpts.negative.class == 'undefined' ? "" : btnOpts.negative.class)
+            .on("click", function () {
+                if (typeof btnOpts.negative.callback != 'undefined' && $.isFunction(btnOpts.negative.callback)) {
+                    btnOpts.negative.callback();
+                }
+            })
+            .attr("data-dismiss", function () {
+                return typeof btnOpts.negative.dismiss != 'undefined' && btnOpts.negative.dismiss == true ? "modal" : "";
+            })
+            .text(typeof btnOpts.negative.text != 'undefined' ? btnOpts.negative.text : 'Cancel')
+    );
+    var $warningList = $("<div>").addClass("warning-list");
+    $.each(listContent, function (index, listItem) {
+        $warningList.append(
+            $("<div>").append(
+                $("<i>").addClass("fa fa-times text-danger"),
+                "&nbsp;&nbsp;&nbsp;&nbsp;",
+                listItem
+            )
+        );
+    });
+
+    var $bodyContent = $("<div>").append(
+        $("<button>").addClass("close").attr({
+            "type": "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+        }).append(
+            $("<span>").attr("aria-hidden", "true").html("&times;")
+        ),
+        $("<div>").addClass("delete-popup-content-container").append(
+            $("<h3>").text(headingContent).addClass("text-center delete-popup-heading m-b-20"),
+            $("<p>").text(subHeadingContent).addClass("delete-popup-subheading m-b-20"),
+            $("<div>").addClass("row delete-popup-list m-b-20").append(
+                $("<div>").addClass("col-sm-12").append(
+                    $warningList
+                )
+            ),
+            $("<div>").addClass("checkbox").append(
+                $("<label>").append(
+                    $("<input>").addClass("chk-confirm-delete").attr({
+                        "type": "checkbox",
+                        "onclick": "updateDeletePopupButtonStatus(this);"
+                    }),
+                    "&nbsp;&nbsp;I acknowledge I have read and understood."
+                )
+            )
+        )
+    ).html();
+
+    var $modal = popupHTMLNoHeader(title, $bodyContent, $footer);
+    $modal.modal();
+
+    $modal.on("hidden.bs.modal", function () {
+        $("body").css("padding-right", "");
+        $modal.remove();
+    })
+}
+
+function updateDeletePopupButtonStatus(el) {
+    var $modal = $(el).closest(".modal");
+    var $chk = $modal.find(".chk-confirm-delete");
+    var $button = $modal.find(".btn-confirm-delete");
+    $button.prop("disabled", !$chk.is(":checked"));
+}
+
+/**
+ *
+ * @param title
+ * @param $content
+ * @param $footer
+ * @param dialogSize
+ * @returns {*|jQuery}
+ */
+function popupHTMLNoHeader(title, $content, $footer, dialogSize) {
+    if (typeof $footer == 'undefined' || $footer == null) {
+        $footer = $("<button>").addClass("btn").attr({
+            "type": "button",
+            "data-dismiss": "modal"
+        }).text("OK");
+    }
+    if (typeof dialogSize == "undefined") {
+        dialogSize = "";
+    } else {
+        switch (dialogSize) {
+            case "lg":
+                dialogSize = "modal-lg";
+                break;
+            case "md":
+                dialogSize = "";
+                break;
+            case "sm":
+                dialogSize = "modal-sm";
+                break;
+            default:
+        }
+    }
+    var $modal = popupFrameNoHeader($content, $footer);
+    $modal.find(".modal-dialog").addClass(dialogSize);
+    return $modal;
+}
+
+/**
+ *
+ * @param $content
+ * @param $footer
+ * @returns {*|jQuery}
+ */
+function popupFrameNoHeader($content, $footer) {
+    return $("<div>").attr("id", randomString(10)).addClass("modal fade popup").append(
+        $("<div>").addClass("modal-dialog").append(
+            $("<div>").addClass("modal-content").append(
+                typeof $content != 'undefined' ?
+                    $("<div>").addClass("modal-body").append(
+                        $content
+                    ) : '',
+                typeof $footer != 'undefined' ?
+                    $("<div>").addClass("modal-footer").append(
+                        $footer
+                    ) : ''
+            )
+        )
+    );
+}

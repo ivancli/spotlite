@@ -624,6 +624,10 @@ h3.box-title {
     transform: rotate(-180deg);
 }
 
+.sidebar-menu li > a > .pull-right-container.btn-reorder-dashboard {
+    top: 12px;
+}
+
 section.content {
     padding-left: 50px;
     padding-right: 50px;
@@ -645,6 +649,17 @@ tr.empty-message-row td {
     padding: 20px !important;
     font-size: 16px;
     color: #777;
+}
+
+@media (min-width: 991px) {
+    .delete-popup-content-container {
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+}
+
+.delete-popup-subheading, .delete-popup-list {
+    font-size: 15px;
 }
 
 @media (min-width: 991px) {
@@ -705,7 +720,7 @@ hr.content-divider-white {
     vertical-align: text-top;
 }
 
-.vertical-align-middle{
+.vertical-align-middle {
     vertical-align: middle;
 }
 

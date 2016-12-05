@@ -171,41 +171,45 @@
             });
 
             $("#btn-delete-product-report").on("click", function () {
-
-                confirmP("Delete Report Schedule", "Are your sure you want to delete the {{$product->product_name}} Product Report?", {
-                    "affirmative": {
-                        "text": "Delete",
-                        "class": "btn-danger btn-flat",
-                        "dismiss": true,
-                        "callback": function () {
-                            submitDeleteProductReportTask(function (response) {
-                                if (response.status == true) {
-                                    $("#modal-report-task-product").modal("hide");
-                                    if ($.isFunction(options.deleteCallback)) {
-                                        options.deleteCallback(response);
-                                    }
-                                } else {
-                                    if (typeof response.errors != 'undefined') {
-                                        var $errorContainer = $("#modal-report-task-product .errors-container");
-                                        $errorContainer.empty();
-                                        $.each(response.errors, function (index, error) {
-                                            $errorContainer.append(
-                                                    $("<li>").text(error)
-                                            );
-                                        });
-                                    } else {
-                                        alertP("Error", "Unable to delete caetegory report schedule, please try again later.");
-                                    }
+                deletePopup("Delete Report Schedule", "Are your sure you want to delete the {{$product->product_name}} Product Report?",
+                        "By deleting this report schedule, you will lose the following data:",
+                        [
+                            "Future report"
+                        ],
+                        {
+                            "affirmative": {
+                                "text": "Delete",
+                                "class": "btn-danger btn-flat",
+                                "dismiss": true,
+                                "callback": function () {
+                                    submitDeleteProductReportTask(function (response) {
+                                        if (response.status == true) {
+                                            $("#modal-report-task-product").modal("hide");
+                                            if ($.isFunction(options.deleteCallback)) {
+                                                options.deleteCallback(response);
+                                            }
+                                        } else {
+                                            if (typeof response.errors != 'undefined') {
+                                                var $errorContainer = $("#modal-report-task-product .errors-container");
+                                                $errorContainer.empty();
+                                                $.each(response.errors, function (index, error) {
+                                                    $errorContainer.append(
+                                                            $("<li>").text(error)
+                                                    );
+                                                });
+                                            } else {
+                                                alertP("Error", "Unable to delete caetegory report schedule, please try again later.");
+                                            }
+                                        }
+                                    });
                                 }
-                            });
-                        }
-                    },
-                    "negative": {
-                        "text": "Cancel",
-                        "class": "btn-default btn-flat",
-                        "dismiss": true
-                    }
-                });
+                            },
+                            "negative": {
+                                "text": "Cancel",
+                                "class": "btn-default btn-flat",
+                                "dismiss": true
+                            }
+                        });
             })
         }
 

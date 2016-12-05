@@ -140,42 +140,50 @@
         });
 
         function btnDeleteCategoryOnClick(el) {
-            confirmP("Delete Category", "Are you sure you want to delete the " + $(el).attr("data-name") + " Category?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        var $form = $(el).closest(".frm-delete-category");
-                        showLoading();
-                        $.ajax({
-                            "url": $form.attr("action"),
-                            "method": "delete",
-                            "data": $form.serialize(),
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    gaDeleteCategory();
-                                    alertP("Delete Category", "Category has been deleted.");
-                                    $(el).closest(".category-wrapper").remove();
-                                } else {
-                                    alertP("Error", "Unable to delete category, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+            deletePopup("Delete Category", "Are you sure you want to delete the " + $(el).attr("data-name") + " Category?",
+                    "By deleting this category, you will lose the following data:",
+                    [
+                        "All data related to the category you are tracking",
+                        "All sites and products associated with this category",
+                        "The charts of the category",
+                        "The presentation of the data"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                var $form = $(el).closest(".frm-delete-category");
+                                showLoading();
+                                $.ajax({
+                                    "url": $form.attr("action"),
+                                    "method": "delete",
+                                    "data": $form.serialize(),
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            gaDeleteCategory();
+                                            alertP("Delete Category", "Category has been deleted.");
+                                            $(el).closest(".category-wrapper").remove();
+                                        } else {
+                                            alertP("Error", "Unable to delete category, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            });
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
 
         function appendCreateProductBlock(el) {

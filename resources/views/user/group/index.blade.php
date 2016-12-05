@@ -55,55 +55,61 @@
 @section('scripts')
     <script type="text/javascript">
         function deleteGroupOnClick(el) {
-            confirmP("Delete Group", "Do you want to delete this group?", {
-                "affirmative": {
-                    "callback": function () {
-                        showLoading();
-                        var $form = $(el).closest("form");
-                        $.ajax({
-                            "url": $form.attr("action"),
-                            "method": "delete",
-                            "data": $form.serialize(),
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    alertP("Delete Group", "The group has been deleted.");
-                                    $form.closest("tr").remove();
-                                    if ($("#tbl-groups tbody tr").length == 0) {
-                                        $("#tbl-groups").replaceWith(
-                                                $("<div>").append(
-                                                        $("<p>").addClass("text-center").append(
-                                                                "No groups available, ",
-                                                                $("<a>").attr({
-                                                                    "href": "{{route('group.create')}}"
-                                                                }).text("click here to add a group"),
-                                                                "."
-                                                        )
-                                                ).html()
-                                        )
+            deletePopup("Delete Group", "Do you want to delete this group?",
+                    "By deleting this group, you will lose the following data:",
+                    [
+                        "The group itself"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                var $form = $(el).closest("form");
+                                $.ajax({
+                                    "url": $form.attr("action"),
+                                    "method": "delete",
+                                    "data": $form.serialize(),
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            alertP("Delete Group", "The group has been deleted.");
+                                            $form.closest("tr").remove();
+                                            if ($("#tbl-groups tbody tr").length == 0) {
+                                                $("#tbl-groups").replaceWith(
+                                                        $("<div>").append(
+                                                                $("<p>").addClass("text-center").append(
+                                                                        "No groups available, ",
+                                                                        $("<a>").attr({
+                                                                            "href": "{{route('group.create')}}"
+                                                                        }).text("click here to add a group"),
+                                                                        "."
+                                                                )
+                                                        ).html()
+                                                )
+                                            }
+
+
+                                        } else {
+                                            alertP("Error", "Unable to delete group, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, errors) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
                                     }
-
-
-                                } else {
-                                    alertP("Error", "Unable to delete group, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, errors) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+                                })
                             }
-                        })
-                    },
-                    "dismiss": true,
-                    "class": "btn-danger btn-flat"
-                },
-                "negative": {
-                    "dismiss": true,
-                    "class": "btn-default btn-flat"
-                }
-            });
-
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
     </script>
 @stop

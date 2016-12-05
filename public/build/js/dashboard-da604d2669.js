@@ -64,39 +64,77 @@ function showEditDashboardForm(el) {
 }
 
 function deleteDashboard(el) {
-    confirmP("Delete dashboard", "Do you want to delete this dashboard?", {
-        "affirmative": {
-            "text": "Delete",
-            "class": "btn-danger btn-flat",
-            "dismiss": true,
-            "callback": function () {
-                showLoading();
-                $.ajax({
-                    "url": $(el).attr("data-url"),
-                    "method": "delete",
-                    "dataType": "json",
-                    "success": function (response) {
-                        hideLoading();
-                        if (response.status == true) {
+//     confirmP("Delete dashboard", "Do you want to delete this dashboard?", {
+//         "affirmative": {
+//             "text": "Delete",
+//             "class": "btn-danger btn-flat",
+//             "dismiss": true,
+//             "callback": function () {
+//                 showLoading();
+//                 $.ajax({
+//                     "url": $(el).attr("data-url"),
+//                     "method": "delete",
+//                     "dataType": "json",
+//                     "success": function (response) {
+//                         hideLoading();
+//                         if (response.status == true) {
+// //                                    tblDashboard.row($(el).closest("tr")).remove().draw();
+//                             window.location.href = "/";
+//                         } else {
+//                             alertP("Error", "Unable to delete dashboard, please try again later.");
+//                         }
+//                     },
+//                     "error": function (xhr, status, error) {
+//                         hideLoading();
+//                         describeServerRespondedError(xhr.status);
+//                     }
+//                 })
+//             }
+//         },
+//         "negative": {
+//             "text": "Cancel",
+//             "class": "btn-default btn-flat",
+//             "dismiss": true
+//         }
+//     });
+    deletePopup("Delete Dashboard", "Are you sure you want to delete this dashboard?",
+        "By deleting this dashboard, you will lose the following data:",
+        [
+            "All charts in this dashboard"
+        ],
+        {
+            "affirmative": {
+                "text": "Delete",
+                "class": "btn-danger btn-flat",
+                "dismiss": true,
+                "callback": function () {
+                    showLoading();
+                    $.ajax({
+                        "url": $(el).attr("data-url"),
+                        "method": "delete",
+                        "dataType": "json",
+                        "success": function (response) {
+                            hideLoading();
+                            if (response.status == true) {
 //                                    tblDashboard.row($(el).closest("tr")).remove().draw();
-                            window.location.href = "/";
-                        } else {
-                            alertP("Error", "Unable to delete dashboard, please try again later.");
+                                window.location.href = "/";
+                            } else {
+                                alertP("Error", "Unable to delete dashboard, please try again later.");
+                            }
+                        },
+                        "error": function (xhr, status, error) {
+                            hideLoading();
+                            describeServerRespondedError(xhr.status);
                         }
-                    },
-                    "error": function (xhr, status, error) {
-                        hideLoading();
-                        describeServerRespondedError(xhr.status);
-                    }
-                })
+                    })
+                }
+            },
+            "negative": {
+                "text": "Cancel",
+                "class": "btn-default btn-flat",
+                "dismiss": true
             }
-        },
-        "negative": {
-            "text": "Cancel",
-            "class": "btn-default btn-flat",
-            "dismiss": true
-        }
-    })
+        });
 }
 
 function updateDashboardDirectionIcon() {

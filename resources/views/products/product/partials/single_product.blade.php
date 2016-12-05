@@ -381,46 +381,54 @@
 
 
         function btnDeleteProductOnClick(el) {
-            confirmP("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        var $form = $(el).closest(".frm-delete-product");
-                        showLoading();
-                        $.ajax({
-                            "url": $form.attr("action"),
-                            "method": "delete",
-                            "data": $form.serialize(),
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    gaDeleteProduct();
-                                    alertP("Delete Product", "Product has been deleted.");
-                                    $(el).closest(".product-wrapper").remove();
-                                } else {
-                                    alertP("Error", "Unable to delete product, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+            deletePopup("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?",
+                    "By deleting this product, you will lose the following data:",
+                    [
+                        "All data related to the product you are tracking",
+                        "All site associated with this product",
+                        "The charts of the product",
+                        "The presentation of the data"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                var $form = $(el).closest(".frm-delete-product");
+                                showLoading();
+                                $.ajax({
+                                    "url": $form.attr("action"),
+                                    "method": "delete",
+                                    "data": $form.serialize(),
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            gaDeleteProduct();
+                                            alertP("Delete Product", "Product has been deleted.");
+                                            $(el).closest(".product-wrapper").remove();
+                                        } else {
+                                            alertP("Error", "Unable to delete product, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            });
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
 
         function toggleEditProductName(el) {
-            var $tbl = $(el).closest(".product-wrapper")
+            var $tbl = $(el).closest(".product-wrapper");
             if ($(el).hasClass("editing")) {
                 $(el).removeClass("editing");
                 $tbl.find(".product-name-link").show();

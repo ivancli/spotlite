@@ -2,7 +2,7 @@
 @section('title', 'Alerts')
 
 @section('breadcrumbs')
-{{--    {!! Breadcrumbs::render('alert_index') !!}--}}
+    {{--    {!! Breadcrumbs::render('alert_index') !!}--}}
 @stop
 
 @section('content')
@@ -374,42 +374,47 @@
         }
 
         function deleteAlert(el) {
-            confirmP("Delete Alert", "Are you sure you want to delete the " + $(el).attr("data-name") +" Alert?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        showLoading();
-                        $.ajax({
-                            "url": $(el).attr("data-url"),
-                            "method": "delete",
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    gaDeleteAlertFromAlertsPage({
-                                        "Type": $(el).attr("data-alert-type")
-                                    });
+            deletePopup("Delete Alert", "Are you sure you want to delete the " + $(el).attr("data-name") + " Alert?",
+                    "By deleting this alert, you will lose the following data:",
+                    [
+                        "Related scheduled alert"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                $.ajax({
+                                    "url": $(el).attr("data-url"),
+                                    "method": "delete",
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            gaDeleteAlertFromAlertsPage({
+                                                "Type": $(el).attr("data-alert-type")
+                                            });
 
-                                    tblAlert.row($(el).closest("tr")).remove().draw();
-                                } else {
-                                    alertP("Error", "Unable to delete alert, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+                                            tblAlert.row($(el).closest("tr")).remove().draw();
+                                        } else {
+                                            alertP("Error", "Unable to delete alert, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            })
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
     </script>
 @stop

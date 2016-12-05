@@ -93,42 +93,46 @@
                 })
             });
             $("#btn-delete-site-alert").on("click", function () {
-
-                confirmP("Delete alert", "Are you sure you want to delete the {{parse_url($site->site_url)['host']}} Site Alert?", {
-                    "affirmative": {
-                        "text": "Delete",
-                        "class": "btn-danger btn-flat",
-                        "dismiss": true,
-                        "callback": function () {
-                            submitDeleteSiteAlert(function (response) {
-                                if (response.status == true) {
-                                    alertP("Delete Alert", "Alert has been deleted.");
-                                    $("#modal-alert-site").modal("hide");
-                                    if ($.isFunction(options.deleteCallback)) {
-                                        options.deleteCallback(response);
-                                    }
-                                } else {
-                                    if (typeof response.errors != 'undefined') {
-                                        var $errorContainer = $("#modal-alert-site .errors-container");
-                                        $errorContainer.empty();
-                                        $.each(response.errors, function (index, error) {
-                                            $errorContainer.append(
-                                                    $("<li>").text(error)
-                                            );
-                                        });
-                                    } else {
-                                        alertP("Error", "Unable to delete alert, please try again later.");
-                                    }
+                deletePopup("Delete Alert", "Are you sure you want to delete the {{parse_url($site->site_url)['host']}} Site Alert?",
+                        "By deleting this alert, you will lose the following data:",
+                        [
+                            "Related scheduled alert"
+                        ],
+                        {
+                            "affirmative": {
+                                "text": "Delete",
+                                "class": "btn-danger btn-flat",
+                                "dismiss": true,
+                                "callback": function () {
+                                    submitDeleteSiteAlert(function (response) {
+                                        if (response.status == true) {
+                                            alertP("Delete Alert", "Alert has been deleted.");
+                                            $("#modal-alert-site").modal("hide");
+                                            if ($.isFunction(options.deleteCallback)) {
+                                                options.deleteCallback(response);
+                                            }
+                                        } else {
+                                            if (typeof response.errors != 'undefined') {
+                                                var $errorContainer = $("#modal-alert-site .errors-container");
+                                                $errorContainer.empty();
+                                                $.each(response.errors, function (index, error) {
+                                                    $errorContainer.append(
+                                                            $("<li>").text(error)
+                                                    );
+                                                });
+                                            } else {
+                                                alertP("Error", "Unable to delete alert, please try again later.");
+                                            }
+                                        }
+                                    });
                                 }
-                            });
-                        }
-                    },
-                    "negative": {
-                        "text": "Cancel",
-                        "class": "btn-default btn-flat",
-                        "dismiss": true
-                    }
-                });
+                            },
+                            "negative": {
+                                "text": "Cancel",
+                                "class": "btn-default btn-flat",
+                                "dismiss": true
+                            }
+                        });
             })
         }
 

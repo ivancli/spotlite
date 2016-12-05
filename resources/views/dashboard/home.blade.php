@@ -136,40 +136,45 @@
         }
 
         function deleteWidget(el) {
-            confirmP("Delete content", "Are you sure you want to delete the " + $(el).attr("data-name") + " Chart?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        showLoading();
-                        $.ajax({
-                            "url": $(el).attr("data-url"),
-                            "method": "delete",
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    $(el).closest(".widget-container").slideUp(function () {
-                                        $(this).remove();
-                                    })
-                                } else {
-                                    alertP("Error", "Unable to delete content, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+            deletePopup("Delete Chart", "Are you sure you want to delete the " + $(el).attr("data-name") + " Chart?",
+                    "By deleting this chart, you will lose the following data:",
+                    [
+                        "The presentation of the data"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                $.ajax({
+                                    "url": $(el).attr("data-url"),
+                                    "method": "delete",
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            $(el).closest(".widget-container").slideUp(function () {
+                                                $(this).remove();
+                                            })
+                                        } else {
+                                            alertP("Error", "Unable to delete content, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            })
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
 
         gaDisplayDashboard();

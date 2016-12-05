@@ -125,43 +125,50 @@
     </td>
     <script type="text/javascript">
         function btnDeleteSiteOnClick(el) {
-            confirmP("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + " Site?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        var $form = $(el).closest(".frm-delete-site");
-                        showLoading();
-                        $.ajax({
-                            "url": $form.attr("action"),
-                            "method": "delete",
-                            "data": $form.serialize(),
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    gaDeleteSite();
-                                    alertP("Delete Site", "The site has been deleted.");
-                                    $(el).closest(".site-wrapper").remove();
-                                } else {
-                                    alertP("Error", "Unable to delete site, please try again later.");
-                                }
-                                updateProductEmptyMessage();
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+            deletePopup("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + " Site?",
+                    "By deleting this site, you will lose the following data:",
+                    [
+                        "All data related to the site you are tracking",
+                        "The charts of the site",
+                        "The presentation of the data"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                var $form = $(el).closest(".frm-delete-site");
+                                showLoading();
+                                $.ajax({
+                                    "url": $form.attr("action"),
+                                    "method": "delete",
+                                    "data": $form.serialize(),
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            gaDeleteSite();
+                                            alertP("Delete Site", "The site has been deleted.");
+                                            $(el).closest(".site-wrapper").remove();
+                                        } else {
+                                            alertP("Error", "Unable to delete site, please try again later.");
+                                        }
+                                        updateProductEmptyMessage();
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            });
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
 
         function toggleEditSiteURL(el) {
@@ -344,21 +351,26 @@
 
         function toggleMyPrice(el) {
             if (($(el).attr("data-product-alert-on-my-price") == 'y' || $(el).attr("data-site-alerts-on-my-price") > 0) && $(el).find("i").hasClass("text-primary")) {
-                confirmP("My Price", "The alerts of product or other sites are subjected to 'My Price'. Disabling 'My Price' will remove the related alerts. Do you want to disable 'My Price'?", {
-                    "affirmative": {
-                        "text": "Yes",
-                        "class": "btn-primary btn-flat",
-                        "dismiss": true,
-                        "callback": function () {
-                            submitToggleMyPrice(el);
-                        }
-                    },
-                    "negative": {
-                        "text": "Cancel",
-                        "class": "btn-default btn-flat",
-                        "dismiss": true
-                    }
-                });
+                deletePopup("My Price", "Do you want to disable 'My Price'?",
+                        "By updating my price, you will lose the following data:",
+                        [
+                            "My Price related alerts"
+                        ],
+                        {
+                            "affirmative": {
+                                "text": "Delete",
+                                "class": "btn-danger btn-flat",
+                                "dismiss": true,
+                                "callback": function () {
+                                    submitToggleMyPrice(el);
+                                }
+                            },
+                            "negative": {
+                                "text": "Cancel",
+                                "class": "btn-default btn-flat",
+                                "dismiss": true
+                            }
+                        });
             } else {
                 submitToggleMyPrice(el);
             }

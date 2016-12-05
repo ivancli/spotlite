@@ -561,80 +561,89 @@
         }
 
         function deleteReportTask(el) {
-            confirmP("Delete Report Schedule", "Are you sure you want to delete the " + $(el).attr("data-name") + " " + capitalise($(el).attr("data-report-type")) + " Report?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        showLoading();
-                        $.ajax({
-                            "url": $(el).attr("data-url"),
-                            "method": "delete",
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    gaDeleteReportFromReportsPage({
-                                        "Type": $(el).attr("data-report-type")
-                                    });
+            deletePopup("Delete Report Schedule", "Are you sure you want to delete the " + $(el).attr("data-name") + " " + capitalise($(el).attr("data-report-type")) + " Report?",
+                    "By deleting this report schedule, you will lose the following data:",
+                    [
+                        "Future reports"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                $.ajax({
+                                    "url": $(el).attr("data-url"),
+                                    "method": "delete",
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            gaDeleteReportFromReportsPage({
+                                                "Type": $(el).attr("data-report-type")
+                                            });
 
-                                    tblReportTask.row($(el).closest("tr")).remove().draw();
-                                } else {
-                                    alertP("Error", "Unable to delete report schedule, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+                                            tblReportTask.row($(el).closest("tr")).remove().draw();
+                                        } else {
+                                            alertP("Error", "Unable to delete report schedule, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            })
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
 
         function deleteReport(el, callback) {
-            confirmP("Delete Report", "Are you sure you want to delete this report?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        console.info($(el).attr("data-delete-url"));
-                        showLoading();
-                        $.ajax({
-                            "url": $(el).attr("data-delete-url"),
-                            "method": "delete",
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    if ($.isFunction(callback)) {
-                                        callback(response);
+            deletePopup("Delete Report", "Are you sure you want to delete this report?",
+                    "By deleting this report, you will lose the following data:",
+                    [
+                        "Presentation of the related historical data"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                $.ajax({
+                                    "url": $(el).attr("data-delete-url"),
+                                    "method": "delete",
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            if ($.isFunction(callback)) {
+                                                callback(response);
+                                            }
+                                        } else {
+                                            alertP("Error", "Unable to delete report, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
                                     }
-                                } else {
-                                    alertP("Error", "Unable to delete report, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            })
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
     </script>
 @stop

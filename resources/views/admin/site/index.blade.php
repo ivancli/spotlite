@@ -520,39 +520,46 @@
         }
 
         function btnDeleteSiteOnClick(el) {
-            confirmP("Delete site", "Do you want to delete this site?", {
-                "affirmative": {
-                    "text": "Delete",
-                    "class": "btn-danger btn-flat",
-                    "dismiss": true,
-                    "callback": function () {
-                        showLoading();
-                        $.ajax({
-                            "url": $(el).attr("data-url"),
-                            "method": "delete",
-                            "dataType": "json",
-                            "success": function (response) {
-                                hideLoading();
-                                if (response.status == true) {
-                                    alertP("Delete domain", "The site has been deleted.");
-                                    tblSite.row($(el).closest("tr")).remove().draw();
-                                } else {
-                                    alertP("Error", "Unable to delete site, please try again later.");
-                                }
-                            },
-                            "error": function (xhr, status, error) {
-                                hideLoading();
-                                describeServerRespondedError(xhr.status);
+            deletePopup("Delete Site", "Do you want to delete this site?",
+                    "By deleting this site, you will lose the following data:",
+                    [
+                        "All data related to the site you are tracking",
+                        "The charts of the site",
+                        "The presentation of the data"
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "Delete",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                $.ajax({
+                                    "url": $(el).attr("data-url"),
+                                    "method": "delete",
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            alertP("Delete domain", "The site has been deleted.");
+                                            tblSite.row($(el).closest("tr")).remove().draw();
+                                        } else {
+                                            alertP("Error", "Unable to delete site, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
                             }
-                        })
-                    }
-                },
-                "negative": {
-                    "text": "Cancel",
-                    "class": "btn-default btn-flat",
-                    "dismiss": true
-                }
-            })
+                        },
+                        "negative": {
+                            "text": "Cancel",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
 
         function reloadSiteTable() {
