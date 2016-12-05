@@ -13,10 +13,12 @@ use App\Models\DeletedRecordModels\DeletedCategory;
 use App\Models\DeletedRecordModels\DeletedCrawler;
 use App\Models\DeletedRecordModels\DeletedDomain;
 use App\Models\DeletedRecordModels\DeletedGroup;
+use App\Models\DeletedRecordModels\DeletedHistoricalPrice;
 use App\Models\DeletedRecordModels\DeletedProduct;
 use App\Models\DeletedRecordModels\DeletedSite;
 use App\Models\Domain;
 use App\Models\Group;
+use App\Models\HistoricalPrice;
 use App\Models\Site;
 use App\Models\SitePreference;
 use App\Models\Subscription;
@@ -159,9 +161,22 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Site::deleting(function ($site) {
-            DeletedSite::create(array(
-                "content" => $site->toJson()
-            ));
+            $data = $site->toArray();
+            $deletedSiteKeyName = (new DeletedSite)->getKeyName();
+            $data[$deletedSiteKeyName] = $site->getKey();
+            DeletedSite::create($data);
+
+            foreach ($site->historicalPrices as $price) {
+                $price->delete();
+            }
+            return true;
+        });
+
+        HistoricalPrice::deleting(function ($price) {
+            $data = $price->toArray();
+            $deletedHistoricalPriceKeyName = (new DeletedHistoricalPrice)->getKeyName();
+            $data[$deletedHistoricalPriceKeyName] = $price->getKey();
+            DeletedHistoricalPrice::create($data);
             return true;
         });
 
