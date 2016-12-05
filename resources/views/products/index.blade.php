@@ -28,6 +28,20 @@
 @stop
 
 @section('content')
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="text-muted font-size-17">
+                In this area of SpotLite you can set-up all the prices that you want to track. Simply add a category,
+                then a product name. Once you have done this, simply copy and paste the product pages of the brands
+                prices you want to track. To do this go to each of the brand or competitors site, navigate to the
+                product details page or any place that holds the pricing information. Copy and paste the URL into the
+                Add URL box shown below.
+            </p>
+        </div>
+    </div>
+
+    <hr class="content-divider-white">
+
     {{--@include('products.partials.banner_stats')--}}
     <div class="row">
         <div class="col-md-12">
