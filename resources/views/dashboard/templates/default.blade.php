@@ -76,6 +76,9 @@
             </div>
         @endforeach
     @endif
+    <div class="col-lg-3 col-md-4 widget-container widget-placeholder-container">
+        @include('dashboard.widget.templates.default_placeholder')
+    </div>
 </div>
 
 

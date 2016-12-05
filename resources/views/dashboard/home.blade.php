@@ -56,7 +56,7 @@
 //                                    window.location.reload();
                                     if (response.status == true && typeof response.dashboardWidget != 'undefined') {
                                         getWidget(response.dashboardWidget.urls['show'], function ($newWidget) {
-                                            $(".widgets-container").append(
+                                            $(".widgets-container .widget-placeholder-container").before(
                                                     $newWidget
                                             );
                                             $newWidget.slideDown();
