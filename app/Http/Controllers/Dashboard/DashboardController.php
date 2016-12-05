@@ -99,10 +99,14 @@ class DashboardController extends Controller
         }
         if ($this->request->has('timespan')) {
             $dashboard->setPreference('timespan', $this->request->get('timespan'));
+        }else{
+            $dashboard->deletePreference('timespan');
         }
 
         if ($this->request->has('resolution')) {
             $dashboard->setPreference('resolution', $this->request->get('resolution'));
+        }else{
+            $dashboard->deletePreference('resolution');
         }
 
         $this->mailingAgentRepo->updateLastConfiguredDashboardDate();

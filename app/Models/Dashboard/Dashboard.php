@@ -79,7 +79,9 @@ class Dashboard extends Model
     public function deletePreference($dashboard_preference_element)
     {
         $preference = $this->preferences()->where('element', $dashboard_preference_element)->first();
-        $preference->delete();
+        if (!is_null($preference)) {
+            $preference->delete();
+        }
         return true;
     }
 
@@ -105,6 +107,7 @@ class Dashboard extends Model
         return array(
             "edit" => route("dashboard.edit", $this->getKey()),
             "update" => route('dashboard.update', $this->getKey()),
+            "filter_update" => route('dashboard.filter.update', $this->getKey()),
             "show" => route("dashboard.show", $this->getKey()),
             "delete" => route("dashboard.destroy", $this->getKey())
         );

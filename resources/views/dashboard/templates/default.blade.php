@@ -66,10 +66,71 @@
 
 <hr class="content-divider-white">
 
+<form class="text-muted dashboard-filter-container" id="frm-dashboard-filter-update"
+      action="{{$dashboard->urls['filter_update']}}">
+    <span style="font-size: 15px;">Filter by:</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="sel-timespan" name="timespan" class="form-control sl-form-control form-control-inline"
+            onchange="submitUpdateFilters(this);">
+        <option value="" {{is_null($dashboard->getPreference('timespan')) ? 'selected' : ''}}>Timespan</option>
+        <option value="this_week" {{$dashboard->getPreference('timespan') == 'this_week' ? 'selected' : ''}}>
+            This week
+        </option>
+        <option value="last_week" {{$dashboard->getPreference('timespan') == 'last_week' ? 'selected' : ''}}>
+            Last week
+        </option>
+        <option value="last_7_days" {{$dashboard->getPreference('timespan') == 'last_7_days' ? 'selected' : ''}}>
+            Last 7 days
+        </option>
+        <option value="this_month" {{$dashboard->getPreference('timespan') == 'this_month' ? 'selected' : ''}}>
+            This month
+        </option>
+        <option value="last_month" {{$dashboard->getPreference('timespan') == 'last_month' ? 'selected' : ''}}>
+            Last month
+        </option>
+        <option value="last_30_days" {{$dashboard->getPreference('timespan') == 'last_30_days' ? 'selected' : ''}}>
+            Last 30 days
+        </option>
+        <option value="this_quarter" {{$dashboard->getPreference('timespan') == 'this_quarter' ? 'selected' : ''}}>
+            This quarter
+        </option>
+        <option value="last_quarter" {{$dashboard->getPreference('timespan') == 'last_quarter' ? 'selected' : ''}}>
+            Last quarter
+        </option>
+        <option value="last_90_days" {{$dashboard->getPreference('timespan') == 'last_90_days' ? 'selected' : ''}}>
+            Last 90 days
+        </option>
+    </select>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="sel-period-resolution" name="resolution" class="form-control sl-form-control form-control-inline"
+            onchange="submitUpdateFilters(this);">
+        <option value="" {{is_null($dashboard->getPreference('resolution')) ? 'selected' : ''}}>Period Resolution
+        </option>
+        <option value="daily" {{$dashboard->getPreference('resolution') == 'daily' ? 'selected' : ''}}>
+            Daily
+        </option>
+        <option value="weekly" {{$dashboard->getPreference('resolution') == 'weekly' ? 'selected' : ''}}>
+            Weekly
+        </option>
+        <option value="monthly" {{$dashboard->getPreference('resolution') == 'monthly' ? 'selected' : ''}}>
+            Monthly
+        </option>
+    </select>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button class="btn btn-default btn-flat" id="btn-reset-dashboard-filter"
+            @if(is_null($dashboard->getPreference('timespan')) && is_null($dashboard->getPreference('resolution')))
+            style="display: none;"
+            @endif
+            onclick="submitResetFilters();return false;">Reset Filter
+    </button>
+</form>
+<hr class="content-divider-white">
+
 <div class="row widgets-container">
     @if($dashboard->widgets->count() > 0)
         @foreach($dashboard->widgets()->orderBy('dashboard_widget_order', 'asc')->get() as $widget)
-            <div class="col-lg-3 col-md-4 widget-container">
+            <div class="col-lg-3 col-md-4 widget-container" data-widget-url="{{$widget->urls['show']}}">
                 @if(!is_null($widget->widgetType) && !is_null($widget->widgetType->template))
                     @include('dashboard.widget.templates.'.$widget->widgetType->template->dashboard_widget_template_name)
                 @endif
@@ -86,6 +147,10 @@
 
     widgetDrake = dragula([$(".widgets-container").get(0)]).on('drop', function (el, target, source, sibling) {
         updateWidgetOrder();
+    });
+
+    $(function () {
+        $("[data-toggle=popover]").popover();
     });
 
     function updateWidgetOrder() {
@@ -142,7 +207,7 @@
             "success": function (response) {
                 hideLoading();
                 if (response.status == true) {
-                    $(".txt-dashboard-name").hide()
+                    $(".txt-dashboard-name").hide();
                     $(".lbl-dashboard-name").text(response.dashboard.dashboard_name).show();
                     $(".lnk-dashboard-" + response.dashboard.dashboard_id).text(response.dashboard.dashboard_name);
 
@@ -161,5 +226,81 @@
                 describeServerRespondedError(xhr.status);
             }
         })
+    }
+
+    function submitUpdateFilters(el) {
+        showLoading();
+        $.ajax({
+            "url": $("#frm-dashboard-filter-update").attr("action"),
+            "method": "put",
+            "data": $("#frm-dashboard-filter-update").serialize(),
+            "dataType": "json",
+            "success": function (response) {
+                hideLoading();
+                if (response.status == true) {
+                    reloadAllWidgets();
+                    updateFilterButtonStatus();
+                } else {
+                    alertP('Error', 'Unable to update filters, please try again later.');
+                }
+            },
+            "error": function (xhr, status, error) {
+                hideLoading();
+                describeServerRespondedError(xhr.status);
+            }
+        })
+    }
+
+    function submitResetFilters() {
+        showLoading();
+        $.ajax({
+            "url": "{{route('dashboard.filter.destroy', $dashboard->getKey())}}",
+            "method": "delete",
+            "dataType": "json",
+            "success": function (response) {
+                hideLoading();
+                if (response.status == true) {
+                    /*TODO enhance*/
+                    $("#sel-timespan").val("");
+                    $("#sel-period-resolution").val("");
+                    updateFilterButtonStatus();
+                    reloadAllWidgets();
+                } else {
+                    alertP('Error', 'Unable to update filters, please try again later.');
+                }
+            },
+            "error": function (xhr, status, error) {
+                hideLoading();
+                describeServerRespondedError(xhr.status);
+            }
+        })
+    }
+
+    function reloadAllWidgets() {
+        $(".widget-container").each(function () {
+            var $this = $(this);
+            $this.slideUp();
+            if (!$this.hasClass("widget-placeholder-container")) {
+                var url = $this.attr("data-widget-url");
+                getWidget(url, function (html) {
+                    var $newWidget = $(html).replaceAll($this);
+                    $newWidget.slideDown();
+                    $("[data-toggle=popover]").popover();
+                });
+            } else {
+                $this.slideDown();
+            }
+        });
+    }
+
+    function updateFilterButtonStatus() {
+        var period = $("#sel-period-resolution").val();
+        var timespan = $("#sel-timespan").val();
+
+        if (timespan == "" && period == "") {
+            $("#btn-reset-dashboard-filter").hide();
+        } else {
+            $("#btn-reset-dashboard-filter").show();
+        }
     }
 </script>

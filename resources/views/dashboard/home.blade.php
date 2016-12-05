@@ -60,6 +60,7 @@
                                                     $newWidget
                                             );
                                             $newWidget.slideDown();
+                                            $("[data-toggle=popover]").popover();
                                         });
                                     }
                                     /* TODO append new widget */
@@ -117,6 +118,7 @@
                                                 $(this).replaceWith($savedWidget)
                                                 $savedWidget.slideDown();
                                             });
+                                            $("[data-toggle=popover]").popover();
                                         });
                                         /*TODO update existing widget*/
                                     }
