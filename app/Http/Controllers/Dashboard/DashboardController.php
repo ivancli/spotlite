@@ -204,16 +204,17 @@ class DashboardController extends Controller
         }
 
         $dashboard = $this->dashboardRepo->storeDashboard($this->request->all());
-        $dashboards = $this->dashboardRepo->getDashboards();
-        $dashboards = $dashboards->reject(function ($tempDashboard, $index) use ($dashboard) {
-            return $tempDashboard->getKey() == $dashboard->getKey();
-        });
 
-        $dashboards->splice($dashboard->dashboard_order - 1, 0, [$dashboard]);
-
-        foreach ($dashboards as $ordering => $tempDashboard) {
-            $tempDashboard->dashboard_order = $ordering + 1;
-            $tempDashboard->save();
+        if($this->request->has('dashboard_order') && $this->request->get('dashboard_order') == 'y'){
+            $dashboards = $this->dashboardRepo->getDashboards();
+            $dashboards = $dashboards->reject(function ($tempDashboard, $index) use ($dashboard) {
+                return $tempDashboard->getKey() == $dashboard->getKey();
+            });
+            $dashboards->prepend($dashboard);
+            foreach ($dashboards as $ordering => $tempDashboard) {
+                $tempDashboard->dashboard_order = $ordering + 1;
+                $tempDashboard->save();
+            }
         }
 
         $this->mailingAgentRepo->updateLastConfiguredDashboardDate();

@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-47ef47a7b8.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-8153becdd5.css */
 @media print {
   *,
   *:before,
@@ -15803,6 +15803,41 @@ hr.content-divider-white {
 
 .font-size-17 {
     font-size: 17px;
+}
+
+.font-size-14 {
+    font-size: 14px;
+}
+
+.vertical-align-text-top {
+    vertical-align: text-top;
+}
+
+.vertical-align-middle{
+    vertical-align: middle;
+}
+
+.bg-fff {
+    background-color: #fff;
+}
+
+.display-inline-block {
+    display: inline-block;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+ul.treeview-menu li a {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.btn-group.open a.dropdown-toggle {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 @media (min-width: 768px) {

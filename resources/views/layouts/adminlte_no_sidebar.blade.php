@@ -45,6 +45,7 @@
     </script>
     <script type="text/javascript" src="{{elixir('js/zendesk.js')}}"></script>
     <script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
+    <script type="text/javascript" src="{{elixir('js/dashboard.js')}}"></script>
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
 <!-- Site wrapper -->

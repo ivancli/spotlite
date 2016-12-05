@@ -15805,6 +15805,41 @@ hr.content-divider-white {
     font-size: 17px;
 }
 
+.font-size-14 {
+    font-size: 14px;
+}
+
+.vertical-align-text-top {
+    vertical-align: text-top;
+}
+
+.vertical-align-middle{
+    vertical-align: middle;
+}
+
+.bg-fff {
+    background-color: #fff;
+}
+
+.display-inline-block {
+    display: inline-block;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+ul.treeview-menu li a {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.btn-group.open a.dropdown-toggle {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
 @media (min-width: 768px) {
     .navbar-nav > li > a {
         padding-top: 5px;

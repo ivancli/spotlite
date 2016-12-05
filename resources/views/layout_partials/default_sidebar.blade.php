@@ -16,7 +16,7 @@
                         @foreach(auth()->user()->nonHiddenDashboards as $dashboard)
                             <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
                                 <a href="{{route('dashboard.show', $dashboard->getKey())}}">
-                                    <i class="fa fa-circle-o"></i> {{$dashboard->dashboard_name}}
+                                    <i class="fa fa-circle-o"></i> <span class="lnk-dashboard-{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</span>
                                 </a>
                             </li>
                         @endforeach
@@ -27,6 +27,12 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li class="bg-fff">
+                    <a href="#" onclick="showAddDashboardForm(this); return false;">
+                        <i class="fa fa-plus"></i>
+                        <span>Add a New Dashboard</span>
+                    </a>
                 </li>
                 <li class="{{Style::set_active_starts_with('product')}}">
                     <a href="{{url('product')}}">

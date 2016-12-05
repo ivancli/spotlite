@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <ul class="text-danger errors-container">
                 </ul>
-                {!! Form::open(array('route' => array('dashboard.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "form-horizontal sl-form-horizontal", "id"=>"frm-dashboard-store")) !!}
+                {!! Form::open(array('route' => array('dashboard.store'), 'method'=>'post', "onsubmit"=>"return false", "id"=>"frm-dashboard-store")) !!}
                 @include('dashboard.forms.dashboard')
                 {!! Form::close() !!}
             </div>

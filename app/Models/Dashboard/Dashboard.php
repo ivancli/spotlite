@@ -48,7 +48,8 @@ class Dashboard extends Model
         return $this->hasMany('App\Models\Dashboard\DashboardPreference', 'dashboard_id', 'dashboard_id');
     }
 
-    public function preference($dashboard_preference_element){
+    public function preference($dashboard_preference_element)
+    {
         return $this->hasMany('App\Models\Dashboard\DashboardPreference', 'dashboard_id', 'dashboard_id')->where('element', $dashboard_preference_element)->first();
     }
 
@@ -103,6 +104,7 @@ class Dashboard extends Model
     {
         return array(
             "edit" => route("dashboard.edit", $this->getKey()),
+            "update" => route('dashboard.update', $this->getKey()),
             "show" => route("dashboard.show", $this->getKey()),
             "delete" => route("dashboard.destroy", $this->getKey())
         );
