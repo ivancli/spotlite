@@ -408,6 +408,7 @@
                                             gaDeleteProduct();
                                             alertP("Delete Product", "Product has been deleted.");
                                             $(el).closest(".product-wrapper").remove();
+                                            updateUserProductCredit();
                                         } else {
                                             alertP("Error", "Unable to delete product, please try again later.");
                                         }
@@ -588,7 +589,6 @@
                 var $bodyRow = $tblSite.find("tbody > tr").filter(function () {
                     return !$(this).hasClass("empty-message-row") && !$(this).hasClass("add-site-row")
                 });
-                console.info('$bodyRow', $bodyRow);
                 if ($bodyRow.length == 0) {
                     $tblSite.find(".empty-message-row").remove();
                     $tblSite.find("tbody").prepend(

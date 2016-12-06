@@ -260,4 +260,25 @@ class ProductController extends Controller
             return redirect()->route('product.index');
         }
     }
+
+    public function getUserProductCredit(Request $request)
+    {
+        $total = auth()->user()->subscriptionCriteria()->product;
+        $usage = auth()->user()->products()->count();
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['total', 'usage', 'status']));
+            } else {
+                return compact(['total', 'usage', 'status']);
+            }
+        } else {
+            /*TODO implement if necessary*/
+        }
+    }
+
+    public function getUserSiteCredit(Request $request, $product_id)
+    {
+        /*TODO implement this*/
+    }
 }

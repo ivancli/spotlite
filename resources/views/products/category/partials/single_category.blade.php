@@ -167,6 +167,7 @@
                                             gaDeleteCategory();
                                             alertP("Delete Category", "Category has been deleted.");
                                             $(el).closest(".category-wrapper").remove();
+                                            updateUserProductCredit();
                                         } else {
                                             alertP("Error", "Unable to delete category, please try again later.");
                                         }
@@ -221,6 +222,7 @@
                                 $(el).closest(".tbl-category").find(".collapsible-category-div").prepend(html);
                                 updateProductOrder($(el).closest(".category-wrapper").attr('data-category-id'));
                                 updateProductEmptyMessage();
+                                updateUserProductCredit();
                             });
                         } else {
                             alertP("Create product", "product has been created. But encountered error while page being loaded.", function () {

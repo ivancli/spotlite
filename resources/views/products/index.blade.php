@@ -57,6 +57,7 @@
                                 <div class="progress vertical-align-middle"
                                      style="width: 300px;display: inline-block;margin-bottom: 0;background-color:#dedede;border-radius: 10px; height:15px;">
                                     <div class="progress-bar progress-bar-primary progress-bar-striped"
+                                         id="prog-product-usage"
                                          role="progressbar"
                                          aria-valuenow="{{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}"
                                          aria-valuemin="0" aria-valuemax="100"
@@ -64,8 +65,9 @@
                                     </div>
                                 </div>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                {{auth()->user()->products()->count()}}&nbsp;/
-                                &nbsp;{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}
+                                <span id="lbl-product-usage">{{auth()->user()->products()->count()}}</span>&nbsp;/
+                                &nbsp;
+                                <span id="lbl-product-total">{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}</span>
                                 &nbsp; products
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                             @endif
@@ -265,6 +267,7 @@
                                 hideLoading();
                                 $(".list-container").prepend(html);
                                 updateCategoryOrder();
+                                updateUserProductCredit();
                             });
                         } else {
                             alertP("Create Category", "Category has been created. But encountered error while page being lodaed.", function () {
@@ -383,6 +386,30 @@
                 }
             })
         }
+
+        function updateUserProductCredit() {
+            $.ajax({
+                "url": "/product/product/usage",
+                "method": "get",
+                "dataType": "json",
+                "success": function (response) {
+                    if (response.status == true) {
+                        var total = response.total;
+                        var usage = response.usage;
+
+                        $("#prog-product-usage").attr({
+                            "aria-valuenow": usage / total * 100
+                        }).css("width", (usage / total * 100) + "%");
+
+                        $("#lbl-product-usage").text(usage);
+                        $("#lbl-product-total").text(total);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
     </script>
 
     {{--TOUR--}}
@@ -451,12 +478,4 @@
             return user.preferences.PRODUCT_TOUR_VISITED != 1
         }
     </script>
-    @if(auth()->user()->preference('PRODUCT_TOUR_VISITED') != 1)
-        <script type="text/javascript">
-            $(function () {
-//                startTour();
-//                setTourVisited();
-            });
-        </script>
-    @endif
 @stop

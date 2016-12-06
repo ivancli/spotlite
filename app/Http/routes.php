@@ -67,6 +67,8 @@ Route::group(['middleware' => ['auth']], function () {
          */
         //product routes
         Route::put('product/order', 'Product\ProductController@updateOrder')->name('product.order');
+        Route::get('product/product/usage', 'Product\ProductController@getUserProductCredit')->name('product.product.usage');
+        Route::get('product/site/usage/{product_id}', 'Product\ProductController@getUserSiteCredit')->name('product.site.usage');
         Route::resource('product', 'Product\ProductController', ['except' => [
             'edit'
         ]]);
