@@ -1,24 +1,7 @@
-<style>
-    .btn-product-dragger i {
-        font-size: 18px;
-    }
-
-    .product-name-link {
-        font-size: 15px;
-        line-height: 46px;
-    }
-
-    .product-wrapper .btn-action {
-        font-size: 14px;
-    }
-
-    .product-th:first-child {
-        font-size: 19px;
-    }
-</style>
 <table class="table table-condensed product-wrapper" data-product-id="{{$product->getKey()}}"
        data-alert-link="{{$product->urls['alert']}}"
-       data-report-task-link="{{$product->urls['report_task']}}">
+       data-report-task-link="{{$product->urls['report_task']}}"
+       data-get-site-usage-per-product-link="{{$product->urls['site_usage']}}">
     <thead>
     <tr>
         <th class="shrink product-th">
@@ -72,6 +55,22 @@
             {!! Form::close() !!}
         </th>
     </tr>
+    <tr>
+        <td></td>
+        <td colspan="2">
+            <div class="text-light">
+                <small>
+                    <strong class="text-muted">
+                        <span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>
+                        /
+                        <span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>
+                    </strong>
+                    &nbsp;
+                    Product URLs Tracked
+                </small>
+            </div>
+        </td>
+    </tr>
     </thead>
     <tbody>
     <tr>
@@ -111,7 +110,12 @@
                         <td colspan="8">
 
                             <div class="add-item-block add-site-container"
-                                 onclick="appendCreateSiteBlock(this); event.stopPropagation(); return false;">
+                                 @if($product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
+                                 onclick="appendUpgradeForCreateSiteBlock(this); event.stopPropagation(); return false;"
+                                 @else
+                                 onclick="appendCreateSiteBlock(this); event.stopPropagation(); return false;"
+                                    @endif
+                            >
                                 <div class="add-item-label add-site-label">
                                     <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
                                     <div class="site-label-text-container">
@@ -145,6 +149,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="upgrade-for-add-item-controls" style="display: none;">
+                                    <span class="add-item-text">
+                                        You have reached the product URL limit of {{auth()->user()->apiSubscription->product()->name}}
+                                        .
+                                        Please <a
+                                                href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                                onclick="event.stopPropagation();">upgrade your subscription</a> to add more products.
+                                    </span>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -156,9 +169,7 @@
     </tbody>
     <script type="text/javascript">
         var siteDrake{{$product->getKey()}} = null;
-
         $(function () {
-
             /**
              * drag and drop
              */
@@ -172,447 +183,5 @@
 
             updateProductEmptyMessage();
         });
-
-        /**
-         * set order number to element
-         * @param product_id
-         */
-        function assignSiteOrderNumber(product_id) {
-            $(".product-wrapper").filter(function () {
-                return $(this).attr("data-product-id") == product_id;
-            }).find(".site-wrapper").each(function (index) {
-                $(this).attr("data-order", index + 1);
-            });
-        }
-
-        /**
-         * Send order number to server
-         * @param product_id
-         */
-        function updateSiteOrder(product_id) {
-            assignSiteOrderNumber(product_id);
-            var orderList = [];
-            $(".product-wrapper").filter(function () {
-                return $(this).attr("data-product-id") == product_id;
-            }).find(".site-wrapper").filter(function () {
-                return !$(this).hasClass("gu-mirror");
-            }).each(function () {
-                if ($(this).attr("data-site-id")) {
-                    var siteId = $(this).attr("data-site-id");
-                    var siteOrder = parseInt($(this).attr("data-order"));
-                    orderList.push({
-                        "site_id": siteId,
-                        "site_order": siteOrder
-                    });
-                }
-            });
-            $.ajax({
-                "url": "{{route('site.order')}}",
-                "method": "put",
-                "data": {
-                    "order": orderList
-                },
-                "dataType": "json",
-                "success": function (response) {
-                    if (response.status == false) {
-                        alertP("Error", "Unable to update site order, please try again later.");
-                    } else {
-                        gaMoveSite();
-                    }
-                },
-                "error": function (xhr, status, error) {
-                    describeServerRespondedError(xhr.status);
-                }
-            })
-        }
-
-        /**
-         * enable add site
-         * @param el
-         */
-        function appendCreateSiteBlock(el) {
-            $(el).find(".add-item-label").slideUp();
-            $(el).find(".add-item-controls").slideDown();
-            $(el).find(".txt-site-url").focus();
-        }
-
-        /**
-         * disable add site
-         * @param el
-         */
-        function cancelAddSite(el) {
-            $(el).closest(".add-item-block").find(".add-item-label").slideDown();
-            $(el).closest(".add-item-block").find(".add-item-controls").slideUp();
-            $(el).closest(".add-item-block").find(".add-item-controls input").val("");
-        }
-
-
-        function getPricesCreate(el) {
-            var $addItemControls = $(el).closest(".add-item-controls");
-            var $txtSiteURL = $addItemControls.find(".txt-site-url");
-            var productID = $(el).closest(".product-wrapper").attr("data-product-id");
-            showLoading();
-            $.ajax({
-                "url": "{{route("site.prices")}}",
-                "method": "get",
-                "data": {
-                    "site_url": $txtSiteURL.val()
-                },
-                "dataType": "json",
-                "success": function (response) {
-                    if (typeof response.errors == 'undefined') {
-                        if ((typeof response.sites == 'undefined' || response.sites.length == 0) && typeof response.targetDomain == 'undefined') {
-                            addSite({
-                                "site_url": $txtSiteURL.val(),
-                                "product_id": productID
-                            }, function (add_site_response) {
-                                if (add_site_response.status == true) {
-                                    loadSingleSite(add_site_response.site.urls.show, function (html) {
-                                        $(el).closest(".tbl-site").find("tbody").prepend(html);
-                                        cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
-                                        updateProductEmptyMessage();
-                                        updateUserSiteUsage(el);
-                                    });
-                                } else {
-                                    alertP("Error", "Unable to add site, please try again later.");
-                                }
-                            })
-                        } else {
-                            showLoading();
-                            $.ajax({
-                                "url": "{{route("site.prices")}}",
-                                "method": "get",
-                                "data": {
-                                    "site_url": $txtSiteURL.val()
-                                },
-                                "success": function (html) {
-                                    hideLoading();
-                                    var $modal = $(html);
-                                    $modal.modal();
-                                    $modal.on("shown.bs.modal", function () {
-                                        if ($.isFunction(modalReady)) {
-                                            modalReady({
-                                                "callback": function (addSiteData) {
-                                                    addSite({
-                                                        "site_url": $txtSiteURL.val(),
-                                                        "domain_id": addSiteData.domain_id,
-                                                        "site_id": addSiteData.site_id,
-                                                        "product_id": productID
-                                                    }, function (add_site_response) {
-                                                        if (add_site_response.status == true) {
-                                                            loadSingleSite(add_site_response.site.urls.show, function (html) {
-                                                                $(el).closest(".tbl-site").find("tbody").prepend(html);
-                                                                cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
-                                                                updateProductEmptyMessage();
-                                                                updateUserSiteUsage(el);
-                                                            });
-                                                        } else {
-                                                            alertP("Error", "Unable to add site, please try again later.");
-                                                        }
-                                                        /*TODO big pb*/
-                                                    });
-                                                }
-                                            })
-                                        }
-                                    });
-                                    $modal.on("hidden.bs.modal", function () {
-                                        $("#modal-site-prices").remove();
-                                    });
-                                },
-                                "error": function (xhr, status, error) {
-                                    hideLoading();
-                                    describeServerRespondedError(xhr.status);
-                                }
-                            });
-                        }
-                    } else {
-                        var errorMsg = "Unable to add site. ";
-                        if (response.errors != null) {
-                            $.each(response.errors, function (index, error) {
-                                errorMsg += error + " ";
-                            })
-                        }
-                        alertP("Error", errorMsg);
-                    }
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            })
-        }
-
-        function addSite(data, callback) {
-            showLoading();
-            $.ajax({
-                "url": "{{route('site.store')}}",
-                "method": "post",
-                "data": data,
-                "dataType": "json",
-                "success": function (response) {
-                    hideLoading();
-                    if ($.isFunction(callback)) {
-                        callback(response);
-                    }
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            })
-        }
-
-        function loadSingleSite(url, callback) {
-            showLoading();
-            $.ajax({
-                "url": url,
-                "method": "get",
-                "success": function (html) {
-                    hideLoading();
-
-                    if ($.isFunction(callback)) {
-                        callback(html);
-                    }
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            });
-        }
-
-
-        function btnDeleteProductOnClick(el) {
-            deletePopup("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?",
-                    "By deleting this product, you will lose the following data:",
-                    [
-                        "All data related to the product you are tracking",
-                        "All site associated with this product",
-                        "The charts of the product",
-                        "The presentation of the data"
-                    ],
-                    {
-                        "affirmative": {
-                            "text": "Delete",
-                            "class": "btn-danger btn-flat",
-                            "dismiss": true,
-                            "callback": function () {
-                                var $form = $(el).closest(".frm-delete-product");
-                                showLoading();
-                                $.ajax({
-                                    "url": $form.attr("action"),
-                                    "method": "delete",
-                                    "data": $form.serialize(),
-                                    "dataType": "json",
-                                    "success": function (response) {
-                                        hideLoading();
-                                        if (response.status == true) {
-                                            gaDeleteProduct();
-                                            alertP("Delete Product", "Product has been deleted.");
-                                            updateUserSiteUsage(el);
-                                            $(el).closest(".product-wrapper").remove();
-                                            updateUserProductCredit();
-                                        } else {
-                                            alertP("Error", "Unable to delete product, please try again later.");
-                                        }
-                                    },
-                                    "error": function (xhr, status, error) {
-                                        hideLoading();
-                                        describeServerRespondedError(xhr.status);
-                                    }
-                                })
-                            }
-                        },
-                        "negative": {
-                            "text": "Cancel",
-                            "class": "btn-default btn-flat",
-                            "dismiss": true
-                        }
-                    });
-        }
-
-        function toggleEditProductName(el) {
-            var $tbl = $(el).closest(".product-wrapper");
-            if ($(el).hasClass("editing")) {
-                $(el).removeClass("editing");
-                $tbl.find(".product-name-link").show();
-                $tbl.find(".frm-edit-product").hide();
-            } else {
-                $tbl.find(".product-name-link").hide();
-                $tbl.find(".frm-edit-product").show();
-                $tbl.find(".frm-edit-product .product-name").focus();
-                $(el).addClass("editing");
-            }
-        }
-
-        function submitEditProductName(el) {
-            showLoading();
-            $.ajax({
-                "url": $(el).attr("action"),
-                "method": "put",
-                "data": $(el).serialize(),
-                "dataType": "json",
-                "success": function (response) {
-                    hideLoading();
-                    if (response.status == true) {
-                        gaEditProduct();
-
-                        alertP("Update Product", "Product name has been updated.");
-                        $(el).siblings(".product-name-link").text($(el).find(".product-name").val()).show();
-                        $(el).hide();
-                        $(el).closest(".product-wrapper").find(".btn-action.editing").removeClass("editing");
-                    } else {
-                        var errorMsg = "Unable to update product. ";
-                        if (response.errors != null) {
-                            $.each(response.errors, function (index, error) {
-                                errorMsg += error + " ";
-                            })
-                        }
-                        alertP("Error", errorMsg);
-                    }
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            });
-        }
-
-        function showProductAlertForm(el) {
-            showLoading();
-            var productID = $(el).closest(".product-wrapper").attr("data-product-id");
-
-            $.ajax({
-                "url": $(el).closest(".product-wrapper").attr("data-alert-link"),
-                "method": "get",
-                "data": {
-                    "product_id": productID
-                },
-                "success": function (html) {
-                    hideLoading();
-                    var $modal = $(html);
-                    $modal.modal();
-                    $modal.on("shown.bs.modal", function () {
-                        if ($.isFunction(modalReady)) {
-                            modalReady({
-                                "updateCallback": function (response) {
-                                    if (response.status == true) {
-                                        $(el).find("i").removeClass().addClass("fa fa-bell alert-enabled");
-                                    }
-                                },
-                                "deleteCallback": function (response) {
-                                    if (response.status == true) {
-                                        $(el).find("i").removeClass().addClass("fa fa-bell-o");
-                                    }
-                                }
-                            })
-                        }
-                    });
-                    $modal.on("hidden.bs.modal", function () {
-                        $("#modal-alert-product").remove();
-                    });
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            });
-        }
-
-        function showProductChart(url) {
-            showLoading();
-            $.ajax({
-                "url": url,
-                "method": "get",
-                "success": function (html) {
-                    hideLoading();
-                    var $modal = $(html);
-                    $modal.modal();
-                    $modal.on("shown.bs.modal", function () {
-                        if ($.isFunction(modalReady)) {
-                            modalReady()
-                        }
-                    });
-                    $modal.on("hidden.bs.modal", function () {
-                        $(this).remove();
-                    });
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            });
-        }
-
-        function showProductReportTaskForm(el) {
-            showLoading();
-            $.ajax({
-                "url": $(el).closest(".product-wrapper").attr("data-report-task-link"),
-                "method": "get",
-                "success": function (html) {
-                    hideLoading();
-                    var $modal = $(html);
-                    $modal.modal();
-                    $modal.on("shown.bs.modal", function () {
-                        if ($.isFunction(modalReady)) {
-                            modalReady({
-                                "updateCallback": function (response) {
-                                    if (response.status == true) {
-                                        $(el).find("i").removeClass().addClass("fa fa-envelope text-success");
-                                    }
-                                },
-                                "deleteCallback": function (response) {
-                                    if (response.status == true) {
-                                        $(el).find("i").removeClass().addClass("fa fa-envelope-o");
-                                    }
-                                }
-                            })
-                        }
-                    });
-                    $modal.on("hidden.bs.modal", function () {
-                        $("#modal-report-task-product").remove();
-                    });
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            });
-        }
-
-        function updateProductEmptyMessage(el) {
-            function updateSingleProductEmptyMessage(el) {
-                var $tblSite = null;
-                if ($(el).hasClass("tbl-site")) {
-                    $tblSite = $(el);
-                } else {
-                    $tblSite = $(el).find(".tbl-site");
-                }
-
-                var $bodyRow = $tblSite.find("tbody > tr").filter(function () {
-                    return !$(this).hasClass("empty-message-row") && !$(this).hasClass("add-site-row")
-                });
-                if ($bodyRow.length == 0) {
-                    $tblSite.find(".empty-message-row").remove();
-                    $tblSite.find("tbody").prepend(
-                            $("<tr>").addClass("empty-message-row").append(
-                                    $("<td>").attr({
-                                        "colspan": 8
-                                    }).addClass("text-center").text("To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.")
-                            )
-                    )
-                } else {
-                    $tblSite.find(".empty-message-row").remove();
-                }
-            }
-
-            if (typeof el != 'undefined') {
-                updateSingleProductEmptyMessage(el);
-            } else {
-                $(".tbl-site").each(function () {
-                    updateSingleProductEmptyMessage(this);
-                })
-            }
-        }
     </script>
 </table>

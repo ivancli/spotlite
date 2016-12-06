@@ -110,6 +110,7 @@ class Product extends Model
             "alert" => route("alert.product.edit", $this->getKey()),
             "chart" => route("chart.product.index", $this->getKey()),
             "report_task" => route("report_task.product.edit", $this->getKey()),
+            "site_usage" => route("product.site.usage", $this->getKey()),
         );
     }
 }

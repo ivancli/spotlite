@@ -194,7 +194,7 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public function canAddSite()
+    public function canAddSite($productId)
     {
         if ($this->isStaff) {
             return true;

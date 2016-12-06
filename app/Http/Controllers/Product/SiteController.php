@@ -109,17 +109,27 @@ class SiteController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
-        if (!auth()->user()->canAddSite()) {
-            $status = false;
-            $errors = array("Please upgrade your subscription plan to add more sites");
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
+
+        if (!auth()->user()->isStaff) {
+            $criteria = auth()->user()->subscriptionCriteria();
+            if (isset($criteria->site) && $criteria->site != 0) {
+                $productId = $request->get('product_id');
+                $product = $this->productRepo->getProduct($productId);
+                $currentSites = $product->sites()->count();
+                $maxSites = $criteria->site;
+                if ($currentSites >= $maxSites) {
+                    $status = false;
+                    $errors = array("Please upgrade your subscription plan to add more sites");
+                    if ($request->ajax()) {
+                        if ($request->wantsJson()) {
+                            return response()->json(compact(['status', 'errors']));
+                        } else {
+                            return compact(['status', 'errors']);
+                        }
+                    } else {
+                        return redirect()->back()->withInput()->withErrors($errors);
+                    }
                 }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
 

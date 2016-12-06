@@ -15620,7 +15620,7 @@ h3.box-title {
     cursor: pointer;
 }
 
-.add-item-block .add-item-label {
+.add-item-block .add-item-label, .add-item-block .upgrade-for-add-item-controls {
     padding: 19px 19px 19px 50px;
 }
 
@@ -15861,6 +15861,23 @@ ul.treeview-menu li a {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+}
+
+.btn-product-dragger i {
+    font-size: 18px;
+}
+
+.product-name-link {
+    font-size: 15px;
+    line-height: 46px;
+}
+
+.product-wrapper .btn-action {
+    font-size: 14px;
+}
+
+.product-th:first-child {
+    font-size: 19px;
 }
 
 @media (min-width: 768px) {

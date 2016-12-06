@@ -56,7 +56,7 @@
                                 {{--TODO update color based on the ratio--}}
                                 <div class="progress vertical-align-middle"
                                      style="width: 300px;display: inline-block;margin-bottom: 0;background-color:#dedede;border-radius: 10px; height:15px;">
-                                    <div class="progress-bar progress-bar-primary progress-bar-striped"
+                                    <div class="progress-bar progress-bar-success progress-bar-striped"
                                          id="prog-product-usage"
                                          role="progressbar"
                                          aria-valuenow="{{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}"
@@ -65,11 +65,11 @@
                                     </div>
                                 </div>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <span id="lbl-product-usage">{{auth()->user()->products()->count()}}</span>&nbsp;/
-                                &nbsp;
+                                <span id="lbl-product-usage">{{auth()->user()->products()->count()}}</span>
+                                &nbsp;/&nbsp;
                                 <span id="lbl-product-total">{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}</span>
-                                &nbsp; products
-                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;
+                                products
                             @endif
                         </div>
                     </div>
@@ -123,6 +123,8 @@
 @stop
 
 @section('scripts')
+    <script type="text/javascript" src="{{elixir('js/product.js')}}"></script>
+
     <script type="text/javascript">
         var start = 0;
         var length = 5;
@@ -403,12 +405,37 @@
 
                         $("#lbl-product-usage").text(usage);
                         $("#lbl-product-total").text(total);
+                        updateUserProductUsageBarColor();
+                        updateAddProductPanelStatus(usage, total);
                     }
                 },
                 "error": function (xhr, status, error) {
                     describeServerRespondedError(xhr.status);
                 }
             })
+        }
+
+        function updateUserProductUsageBarColor() {
+            var $progressBar = $("#prog-product-usage")
+            var currentValue = $progressBar.attr("aria-valuenow");
+            $progressBar.removeClass("progress-bar-warning progress-bar-success, progress-bar-danger");
+            if (currentValue < 80) {
+                $progressBar.addClass("progress-bar-success");
+            } else if (currentValue < 90) {
+                $progressBar.addClass("progress-bar-warning");
+            } else {
+                $progressBar.addClass("progress-bar-danger");
+            }
+        }
+
+        function updateAddProductPanelStatus(usage, total) {
+            if (usage >= total) {
+                /*TODO disable add product*/
+                $(".add-product-container").attr('onclick', 'appendUpgradeForCreateProductBlock(this); event.stopPropagation(); return false;');
+            } else {
+                /*TODO enable add product*/
+                $(".add-product-container").attr('onclick', 'appendCreateProductBlock(this); event.stopPropagation(); return false;');
+            }
         }
     </script>
 

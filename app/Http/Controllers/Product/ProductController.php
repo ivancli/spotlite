@@ -279,6 +279,18 @@ class ProductController extends Controller
 
     public function getUserSiteCredit(Request $request, $product_id)
     {
-        /*TODO implement this*/
+        $product = $this->productRepo->getProduct($product_id);
+        $total = auth()->user()->subscriptionCriteria()->site;
+        $usage = $product->sites()->count();
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['total', 'usage', 'status']));
+            } else {
+                return compact(['total', 'usage', 'status']);
+            }
+        } else {
+            /*TODO implement if necessary*/
+        }
     }
 }

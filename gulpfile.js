@@ -99,6 +99,12 @@ elixir(function (mix) {
     ], "public/js/auth.js", "./");
 
     mix.scripts([
+        'resources/assets/js/product/single_category.js',
+        'resources/assets/js/product/single_product.js',
+        'resources/assets/js/product/single_site.js'
+    ], "public/js/product.js", "./");
+
+    mix.scripts([
         'resources/assets/js/dashboard/manage_dashboard.js'
     ], "public/js/dashboard.js", "./");
 
@@ -122,12 +128,10 @@ elixir(function (mix) {
     mix.copy("node_modules/font-awesome/fonts", "public/fonts/");
     mix.copy('vendor/driftyco/ionicons/fonts', 'public/fonts/');
 
-
-
     /* versioning */
     mix.version([
         'public/css/main.css', 'public/css/product-tour.css', 'public/css/email.css', 'public/css/email_import.css', 'public/css/email_brand.css',
-        'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/product-tour.js', 'public/js/dashboard.js'
+        'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/product-tour.js', 'public/js/dashboard.js', 'public/js/product.js'
     ]);
     mix.copy('public/fonts', 'public/build/fonts');
     mix.copy('public/images', 'public/build/images');

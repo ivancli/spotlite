@@ -20,18 +20,20 @@
                                     <span class="lnk-dashboard-{{$dashboard->getKey()}}">
                                         {{$dashboard->dashboard_name}}
                                     </span>
-                                    @if($index==0)
-                                        <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
-                                              data-dashboard-id="{{$dashboard->getKey()}}"
-                                              onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
-                                            <i class="fa fa-arrow-down"></i>
-                                        </span>
-                                    @else
-                                        <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
-                                              data-dashboard-id="{{$dashboard->getKey()}}"
-                                              onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
-                                            <i class="fa fa-arrow-up"></i>
-                                        </span>
+                                    @if(auth()->user()->nonHiddenDashboards()->count() > 1)
+                                        @if($index==0)
+                                            <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                                  data-dashboard-id="{{$dashboard->getKey()}}"
+                                                  onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
+                                                <i class="fa fa-arrow-down"></i>
+                                            </span>
+                                        @else
+                                            <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                                  data-dashboard-id="{{$dashboard->getKey()}}"
+                                                  onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
+                                                <i class="fa fa-arrow-up"></i>
+                                            </span>
+                                        @endif
                                     @endif
                                 </a>
                             </li>
