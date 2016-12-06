@@ -103,13 +103,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="upgrade-for-add-item-controls" style="display: none;">
+                        @if(!auth()->user()->isStaff)
+                            <div class="upgrade-for-add-item-controls" style="display: none;">
                             <span class="add-item-text">
-                                You have reached the product limit of {{auth()->user()->apiSubscription->product()->name}}.
-                                Please <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
-                                          onclick="event.stopPropagation();">upgrade your subscription</a> to add more products.
+                                You have reached the product limit of
+                                {{auth()->user()->apiSubscription->product()->name}} plan.
+                                Please
+                                <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                   onclick="event.stopPropagation();">
+                                    upgrade your subscription
+                                </a> to add more products.
                             </span>
-                        </div>
+                            </div>
+                        @endif
                     </div>
                 </th>
             </tr>

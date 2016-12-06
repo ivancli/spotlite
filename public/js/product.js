@@ -295,7 +295,6 @@ function updateUserSiteUsage(el) {
         }
     })
 }
-
 /**
  * set order number to element
  * @param product_id
@@ -738,24 +737,26 @@ function updateProductEmptyMessage(el) {
 }
 
 function updateUserSiteUsagePerProduct(el) {
-    var $productWrapper = $(el).closest(".product-wrapper");
-    $.ajax({
-        "url": $productWrapper.attr("data-get-site-usage-per-product-link"),
-        "method": "get",
-        "dataType": "json",
-        "success": function (response) {
-            if (response.status == true) {
-                var total = response.total;
-                var usage = response.usage;
-                $productWrapper.find(".lbl-site-usage-per-product").text(usage);
-                $productWrapper.find(".lbl-site-total-per-product").text(total);
-                updateAddSitePanelStatus(usage, total, el);
+    if (!user.isStaff) {
+        var $productWrapper = $(el).closest(".product-wrapper");
+        $.ajax({
+            "url": $productWrapper.attr("data-get-site-usage-per-product-link"),
+            "method": "get",
+            "dataType": "json",
+            "success": function (response) {
+                if (response.status == true) {
+                    var total = response.total;
+                    var usage = response.usage;
+                    $productWrapper.find(".lbl-site-usage-per-product").text(usage);
+                    $productWrapper.find(".lbl-site-total-per-product").text(total);
+                    updateAddSitePanelStatus(usage, total, el);
+                }
+            },
+            "error": function (xhr, status, error) {
+                describeServerRespondedError(xhr.status);
             }
-        },
-        "error": function (xhr, status, error) {
-            describeServerRespondedError(xhr.status);
-        }
-    })
+        })
+    }
 }
 
 function updateAddSitePanelStatus(usage, total, el) {

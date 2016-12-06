@@ -65,17 +65,19 @@
                 @endif
                 <strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>
             </div>
-            <div class="text-light">
-                <small>
-                    <strong class="text-muted">
-                        <span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>
-                        /
-                        <span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>
-                    </strong>
-                    &nbsp;
-                    Product URLs Tracked
-                </small>
-            </div>
+            @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
+                <div class="text-light">
+                    <small>
+                        <strong class="text-muted">
+                            <span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>
+                            /
+                            <span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>
+                        </strong>
+                        &nbsp;
+                        Product URLs Tracked
+                    </small>
+                </div>
+            @endif
         </td>
     </tr>
     </thead>
@@ -88,13 +90,13 @@
                     <thead>
                     <tr>
                         <th width="15%">Site</th>
+                        @if(auth()->user()->isStaff || auth()->user()->subscriptionCriteria()->my_price == true)
+                            <th class="text-center" width="10%">My Price</th>
+                        @endif
                         <th width="10%" class="text-right">Current Price</th>
                         <th width="10%" class="text-right">Previous Price</th>
                         <th width="10%" class="hidden-xs text-right">Change</th>
                         <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
-                        @if(auth()->user()->subscriptionCriteria()->my_price == true)
-                            <th class="text-center" width="10%">My Price</th>
-                        @endif
                         <th>Updated</th>
                         <th width="100px"></th>
                     </tr>
@@ -119,7 +121,7 @@
                         <td colspan="8">
 
                             <div class="add-item-block add-site-container"
-                                 @if($product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
+                                 @if(!auth()->user()->isStaff && $product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
                                  onclick="appendUpgradeForCreateSiteBlock(this); event.stopPropagation(); return false;"
                                  @else
                                  onclick="appendCreateSiteBlock(this); event.stopPropagation(); return false;"
@@ -158,15 +160,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="upgrade-for-add-item-controls" style="display: none;">
+                                @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
+                                    <div class="upgrade-for-add-item-controls" style="display: none;">
                                     <span class="add-item-text">
-                                        You have reached the product URL limit of {{auth()->user()->apiSubscription->product()->name}}
-                                        .
-                                        Please <a
-                                                href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
-                                                onclick="event.stopPropagation();">upgrade your subscription</a> to add more products.
+                                        You have reached the product URL limit of
+                                        {{auth()->user()->apiSubscription->product()->name}} plan.
+                                        Please
+                                        <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                           onclick="event.stopPropagation();">upgrade your subscription</a>
+                                        to add more products.
                                     </span>
-                                </div>
+                                    </div>
+                                @endif
                             </div>
                         </td>
                     </tr>
