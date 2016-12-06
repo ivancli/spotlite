@@ -15,7 +15,7 @@
                     <ul class="treeview-menu">
                         @foreach(auth()->user()->nonHiddenDashboards as $index=>$dashboard)
                             <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
-                                <a href="{{route('dashboard.show', $dashboard->getKey())}}">
+                                <a href="{{route('dashboard.show', $dashboard->getKey())}}" class="lnk-dashboard">
                                     <i class="fa fa-circle-o"></i>
                                     <span class="lnk-dashboard-{{$dashboard->getKey()}}">
                                         {{$dashboard->dashboard_name}}

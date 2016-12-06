@@ -772,6 +772,10 @@ ul.treeview-menu li a {
     font-size: 19px;
 }
 
+.sidebar-menu .treeview-menu>li>a.lnk-dashboard {
+    padding-right: 30px;
+}
+
 @media (min-width: 768px) {
     .navbar-nav > li > a {
         padding-top: 5px;

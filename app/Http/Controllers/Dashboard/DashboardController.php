@@ -41,7 +41,6 @@ class DashboardController extends Controller
         $this->middleware('permission:delete_dashboard_preference', ['only' => ['deleteFilter']]);
 
 
-
         $this->dashboardRepo = $dashboardContract;
         $this->dashboardTemplateRepo = $dashboardTemplateContract;
         $this->mailingAgentRepo = $mailingAgentContract;
@@ -99,13 +98,13 @@ class DashboardController extends Controller
         }
         if ($this->request->has('timespan')) {
             $dashboard->setPreference('timespan', $this->request->get('timespan'));
-        }else{
+        } else {
             $dashboard->deletePreference('timespan');
         }
 
         if ($this->request->has('resolution')) {
             $dashboard->setPreference('resolution', $this->request->get('resolution'));
-        }else{
+        } else {
             $dashboard->deletePreference('resolution');
         }
 
@@ -209,7 +208,7 @@ class DashboardController extends Controller
 
         $dashboard = $this->dashboardRepo->storeDashboard($this->request->all());
 
-        if($this->request->has('dashboard_order') && $this->request->get('dashboard_order') == 'y'){
+        if ($this->request->has('dashboard_order') && $this->request->get('dashboard_order') == 'y') {
             $dashboards = $this->dashboardRepo->getDashboards();
             $dashboards = $dashboards->reject(function ($tempDashboard, $index) use ($dashboard) {
                 return $tempDashboard->getKey() == $dashboard->getKey();
@@ -219,7 +218,16 @@ class DashboardController extends Controller
                 $tempDashboard->dashboard_order = $ordering + 1;
                 $tempDashboard->save();
             }
+        } else {
+            if (auth()->user()->dashboards()->count() > 1) {
+                $dashboard->dashboard_order = auth()->user()->dashboards->max('dashboard_order') + 1;
+                $dashboard->save();
+            } elseif (auth()->user()->dashboards()->count() == 1) {
+                $dashboard->dashboard_order = 1;
+                $dashboard->save();
+            }
         }
+
 
         $this->mailingAgentRepo->updateLastConfiguredDashboardDate();
 

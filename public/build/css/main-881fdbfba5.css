@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-09836c8b08.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-881fdbfba5.css */
 @media print {
   *,
   *:before,
@@ -15878,6 +15878,10 @@ ul.treeview-menu li a {
 
 .product-th:first-child {
     font-size: 19px;
+}
+
+.sidebar-menu .treeview-menu>li>a.lnk-dashboard {
+    padding-right: 30px;
 }
 
 @media (min-width: 768px) {
