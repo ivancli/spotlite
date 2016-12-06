@@ -109,6 +109,12 @@
             </div>
         @endif
     </td>
+    <td>
+        <div title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->created_at))}}"
+              data-toggle="tooltip">
+            {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->created_at))}}
+        </div>
+    </td>
     <td class="text-right action-cell">
         <a href="#" class="btn-action" onclick="showSiteChart('{{$site->urls['chart']}}'); return false;"
            data-toggle="tooltip" title="chart">

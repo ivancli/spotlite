@@ -390,29 +390,31 @@
         }
 
         function updateUserProductCredit() {
-            $.ajax({
-                "url": "/product/product/usage",
-                "method": "get",
-                "dataType": "json",
-                "success": function (response) {
-                    if (response.status == true) {
-                        var total = response.total;
-                        var usage = response.usage;
+            if (!user.isStaff) {
+                $.ajax({
+                    "url": "/product/product/usage",
+                    "method": "get",
+                    "dataType": "json",
+                    "success": function (response) {
+                        if (response.status == true) {
+                            var total = response.total;
+                            var usage = response.usage;
 
-                        $("#prog-product-usage").attr({
-                            "aria-valuenow": usage / total * 100
-                        }).css("width", (usage / total * 100) + "%");
+                            $("#prog-product-usage").attr({
+                                "aria-valuenow": usage / total * 100
+                            }).css("width", (usage / total * 100) + "%");
 
-                        $("#lbl-product-usage").text(usage);
-                        $("#lbl-product-total").text(total);
-                        updateUserProductUsageBarColor();
-                        updateAddProductPanelStatus(usage, total);
+                            $("#lbl-product-usage").text(usage);
+                            $("#lbl-product-total").text(total);
+                            updateUserProductUsageBarColor();
+                            updateAddProductPanelStatus(usage, total);
+                        }
+                    },
+                    "error": function (xhr, status, error) {
+                        describeServerRespondedError(xhr.status);
                     }
-                },
-                "error": function (xhr, status, error) {
-                    describeServerRespondedError(xhr.status);
-                }
-            })
+                })
+            }
         }
 
         function updateUserProductUsageBarColor() {

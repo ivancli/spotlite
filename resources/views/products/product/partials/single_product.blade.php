@@ -98,6 +98,7 @@
                         <th width="10%" class="hidden-xs text-right">Change</th>
                         <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
                         <th>Updated</th>
+                        <th>Tracked Since</th>
                         <th width="100px"></th>
                     </tr>
                     </thead>
@@ -118,7 +119,7 @@
                     @endif
                     {{--sites here--}}
                     <tr class="add-site-row">
-                        <td colspan="8">
+                        <td colspan="9">
 
                             <div class="add-item-block add-site-container"
                                  @if(!auth()->user()->isStaff && $product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
