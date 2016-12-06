@@ -271,6 +271,7 @@
                                         $(el).closest(".tbl-site").find("tbody").prepend(html);
                                         cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
                                         updateProductEmptyMessage();
+                                        updateUserSiteUsage(el);
                                     });
                                 } else {
                                     alertP("Error", "Unable to add site, please try again later.");
@@ -303,6 +304,7 @@
                                                                 $(el).closest(".tbl-site").find("tbody").prepend(html);
                                                                 cancelAddSite($addItemControls.find(".btn-cancel-add-site").get(0));
                                                                 updateProductEmptyMessage();
+                                                                updateUserSiteUsage(el);
                                                             });
                                                         } else {
                                                             alertP("Error", "Unable to add site, please try again later.");
@@ -407,6 +409,7 @@
                                         if (response.status == true) {
                                             gaDeleteProduct();
                                             alertP("Delete Product", "Product has been deleted.");
+                                            updateUserSiteUsage(el);
                                             $(el).closest(".product-wrapper").remove();
                                             updateUserProductCredit();
                                         } else {

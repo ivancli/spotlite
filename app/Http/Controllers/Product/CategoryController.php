@@ -223,4 +223,20 @@ class CategoryController extends Controller
             return redirect()->route('product.index');
         }
     }
+
+    public function getUserSiteCredit(Request $request, $category_id)
+    {
+        $category = $this->categoryRepo->getCategory($category_id);
+        $usage = $category->sites()->count();
+        $status = true;
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['usage', 'status']));
+            } else {
+                return compact(['usage', 'status']);
+            }
+        } else {
+            /*TODO implement if necessary*/
+        }
+    }
 }

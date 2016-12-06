@@ -344,12 +344,16 @@ table.tbl-site.table-striped > tbody > tr:nth-of-type(even) {
 }
 
 .category-th.action-cell {
-    padding-right: 45px;
+    padding-right: 25px;
     width: 200px;
 }
 
 a.btn-action.editing i {
     color: #0eb17d;
+}
+
+.text-light {
+    color: #9c9c9c;
 }
 
 .frm-edit-category, .frm-edit-product,

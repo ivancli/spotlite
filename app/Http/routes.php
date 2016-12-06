@@ -68,12 +68,13 @@ Route::group(['middleware' => ['auth']], function () {
         //product routes
         Route::put('product/order', 'Product\ProductController@updateOrder')->name('product.order');
         Route::get('product/product/usage', 'Product\ProductController@getUserProductCredit')->name('product.product.usage');
-        Route::get('product/site/usage/{product_id}', 'Product\ProductController@getUserSiteCredit')->name('product.site.usage');
+        Route::get('product/{product_id}/site/usage/', 'Product\ProductController@getUserSiteCredit')->name('product.site.usage');
         Route::resource('product', 'Product\ProductController', ['except' => [
             'edit'
         ]]);
         //category routes
         Route::put('category/order', 'Product\CategoryController@updateOrder')->name('category.order');
+        Route::get('category/{category_id}/site/usage', 'Product\CategoryController@getUserSiteCredit')->name('category.site.usage');
         Route::resource('category', 'Product\CategoryController', ['except' => [
             'index', 'edit'
         ]]);

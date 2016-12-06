@@ -19,7 +19,6 @@ class Category extends Model
     protected $fillable = [
         "category_name", "user_id", "category_order", "report_task_id"
     ];
-    public $timestamps = false;
     protected $appends = ["urls", "productCount", "siteCount"];
 
     public function user()
@@ -94,6 +93,7 @@ class Category extends Model
             "delete" => route("category.destroy", $this->getKey()),
             "chart" => route("chart.category.index", $this->getKey()),
             "report_task" => route("report_task.category.edit", $this->getKey()),
+            "site_usage" => route('category.site.usage', $this->getKey()),
         );
     }
 }

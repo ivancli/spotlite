@@ -150,6 +150,7 @@
                                         if (response.status == true) {
                                             gaDeleteSite();
                                             alertP("Delete Site", "The site has been deleted.");
+                                            updateUserSiteUsage(el);
                                             $(el).closest(".site-wrapper").remove();
                                         } else {
                                             alertP("Error", "Unable to delete site, please try again later.");

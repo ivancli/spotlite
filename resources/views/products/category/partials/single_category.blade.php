@@ -1,5 +1,7 @@
 <div class="row category-wrapper" data-category-id="{{$category->getKey()}}" draggable="true"
-     data-report-task-link="{{$category->urls['report_task']}}">
+     data-report-task-link="{{$category->urls['report_task']}}"
+     data-get-site-usage-link="{{$category->urls['site_usage']}}"
+>
     <div class="col-sm-12">
         <table class="table table-condensed tbl-category">
             <thead>
@@ -52,6 +54,22 @@
                     </a>
                     {!! Form::close() !!}
                 </th>
+            </tr>
+            <tr>
+                <th></th>
+                <td colspan="2" class="category-th">
+                    <div class="text-light">
+                        Created
+                        @if(!is_null($category->created_at))
+                            on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($category->created_at))}}
+                        @endif
+                        <strong class="text-muted"><i>by {{$category->user->first_name}} {{$category->user->last_name}}</i></strong>
+                    </div>
+                    <div class="text-light">
+                        Product URLs Tracked:
+                        <strong><span class="lbl-site-usage text-muted">{{$category->sites()->count()}}</span></strong>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <th></th>
@@ -410,6 +428,25 @@
                     describeServerRespondedError(xhr.status);
                 }
             });
+        }
+
+
+        function updateUserSiteUsage(el) {
+            $.ajax({
+                "url": $(el).closest(".category-wrapper").attr("data-get-site-usage-link"),
+                "method": "get",
+                "dataType": "json",
+                "success": function (response) {
+                    if (response.status == true) {
+                        var usage = response.usage;
+                        var $categoryWrapper = $(el).closest(".category-wrapper")
+                        $categoryWrapper.find(".lbl-site-usage").text(usage);
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    describeServerRespondedError(xhr.status);
+                }
+            })
         }
     </script>
 </div>
