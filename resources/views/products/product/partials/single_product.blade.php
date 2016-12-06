@@ -92,7 +92,9 @@
                         <th width="10%" class="text-right">Previous Price</th>
                         <th width="10%" class="hidden-xs text-right">Change</th>
                         <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
-                        <th class="text-center" width="10%">My Price</th>
+                        @if(auth()->user()->subscriptionCriteria()->my_price == true)
+                            <th class="text-center" width="10%">My Price</th>
+                        @endif
                         <th>Updated</th>
                         <th width="100px"></th>
                     </tr>

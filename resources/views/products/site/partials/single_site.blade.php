@@ -87,13 +87,15 @@
             </div>
         @endif
     </td>
-    <td align="center">
-        <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;"
-           data-product-alert-on-my-price="{{is_null($site->product->alertOnMyPrice()) ? "" : "y"}}"
-           data-site-alerts-on-my-price="{{$site->product->siteAlertsOnMyPrice()->count()}}">
-            <i class="fa fa-check-circle-o {{$site->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
-        </a>
-    </td>
+    @if(auth()->user()->subscriptionCriteria()->my_price == true)
+        <td align="center">
+            <a href="#" class="btn-my-price" onclick="toggleMyPrice(this); return false;"
+               data-product-alert-on-my-price="{{is_null($site->product->alertOnMyPrice()) ? "" : "y"}}"
+               data-site-alerts-on-my-price="{{$site->product->siteAlertsOnMyPrice()->count()}}">
+                <i class="fa fa-check-circle-o {{$site->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>
+            </a>
+        </td>
+    @endif
     <td>
         @if(!is_null($site->last_crawled_at))
             <span title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}"

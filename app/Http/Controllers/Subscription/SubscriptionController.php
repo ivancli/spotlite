@@ -416,15 +416,20 @@ class SubscriptionController extends Controller
                 $siteLimit = $targetCriteria->site;
                 $status = true;
                 $errors = array();
-                if (!is_null($productLimit) && $productLimit < auth()->user()->products()->count()) {
+                if (!is_null($productLimit) && $productLimit != 0 && $productLimit < auth()->user()->products()->count()) {
                     $status = false;
                     $errors = array("Please reduce number of products to meet target subscription plans criteria.");
                 }
-                if (!is_null($siteLimit) && $siteLimit < auth()->user()->sites()->count()) {
-                    $status = false;
-                    $errors = array("Please reduce number of sites to meet target subscription plans criteria.");
+                if (!is_null($siteLimit) && $siteLimit != 0) {
+                    foreach (auth()->user()->products as $product) {
+                        if ($siteLimit < $product->sites()->count()) {
+                            $status = false;
+                            $errors = array("Please reduce number of product URLs to meet target subscription plans criteria.");
+                            break;
+                        }
+                    }
                 }
-                if ($status = false) {
+                if ($status == false) {
                     if ($request->ajax()) {
                         if ($request->wantsJson()) {
                             return response()->json(compact(['status', 'errors']));
@@ -435,7 +440,6 @@ class SubscriptionController extends Controller
                         return redirect()->back()->withErrors($errors);
                     }
                 }
-
             }
         }
 
@@ -483,6 +487,12 @@ class SubscriptionController extends Controller
                 $newSubscription = $result;
                 auth()->user()->clearCache();
                 $criteria = auth()->user()->subscriptionCriteria();
+                if ($criteria->my_price == false) {
+                    foreach (auth()->user()->sites as $site) {
+                        $site->my_price = 'n';
+                        $site->save();
+                    }
+                }
                 $this->mailingAgentRepo->editSubscriber(auth()->user()->email, array(
                     "CustomFields" => array(
                         array(
