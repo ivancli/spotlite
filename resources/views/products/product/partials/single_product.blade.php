@@ -59,6 +59,13 @@
         <td></td>
         <td colspan="2">
             <div class="text-light">
+                Created
+                @if(!is_null($product->created_at))
+                    on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}
+                @endif
+                <strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>
+            </div>
+            <div class="text-light">
                 <small>
                     <strong class="text-muted">
                         <span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>

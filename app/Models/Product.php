@@ -19,7 +19,6 @@ class Product extends Model
     protected $fillable = [
         "product_name", "category_id", "user_id", "group_id", "product_order", "report_task_id"
     ];
-    public $timestamps = false;
     protected $appends = ["urls", "siteCount"];
 
     public function user()
