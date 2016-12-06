@@ -46,11 +46,21 @@ class Crawl extends Command
                 $crawlers = $this->crawler->getCrawlers();
 
                 foreach ($crawlers as $crawler) {
-                    if (is_null($crawler->last_active_at) || intval((time() - strtotime($crawler->last_active_at)) / 3600) != 0) {
+                    /*check user subscription plan*/
+                    if (isset($crawler->site) && isset($crawler->site->product) && isset($crawler->site->product->user)) {
+                        $user = $crawler->site->product->user;
+                        if (!$user->isStaff && !is_null($crawler->last_active_at)) {
+                            $lastActiveAt = date('Y-m-d H:00:00', strtotime($crawler->last_active_at));
+                            $hoursDifference = intval((strtotime($currentRoundedHours) - strtotime($lastActiveAt)) / 3600);
+                            if ($user->subscriptionCriteria()->frequency > $hoursDifference) {
+                                //not the time to crawl yet
+                                continue;
+                            }
+                        }
                         dispatch((new CrawlSite($crawler))->onQueue("crawling"));
                         $crawler->queue();
-                    } else {
-
+                        $crawler->last_active_at = date("Y-m-d H:i:s");
+                        $crawler->save();
                     }
                 }
             }
