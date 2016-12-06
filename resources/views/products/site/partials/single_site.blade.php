@@ -112,10 +112,6 @@
            data-toggle="tooltip" title="chart">
             <i class="fa fa-line-chart"></i>
         </a>
-        <a href="#" class="btn-action" onclick="showSiteAlertForm(this); return false;"
-           data-toggle="tooltip" title="alert">
-            <i class="fa {{!is_null($site->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>
-        </a>
         {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
         <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
            onclick="btnDeleteSiteOnClick(this); return false;"

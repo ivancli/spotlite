@@ -91,7 +91,7 @@
                         <th width="10%" class="text-right">Current Price</th>
                         <th width="10%" class="text-right">Previous Price</th>
                         <th width="10%" class="hidden-xs text-right">Change</th>
-                        <th width="10%" class="hidden-xs" style="padding-left: 20px;">Changed</th>
+                        <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
                         <th class="text-center" width="10%">My Price</th>
                         <th>Updated</th>
                         <th width="100px"></th>
