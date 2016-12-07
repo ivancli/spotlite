@@ -214,4 +214,50 @@ class AuthController extends Controller
 
         return view('auth.register')->with(compact(['productFamilies']));
     }
+
+    protected function externalValidator(array $data)
+    {
+        return Validator::make($data, [
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'signup_link' => 'required',
+            'api_product_id' => 'required',
+            'agree_terms' => 'required',
+        ]);
+    }
+
+    protected function registerExternal()
+    {
+
+        $request = request();
+
+//        dd($request->all());
+        $validator = $this->externalValidator($request->all());
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($request->has('callback')) {
+                return response()->json(compact('errors'))->setCallback($request->get('callback'));
+            } else if ($request->wantsJson()) {
+                return response()->json(compact(['errors']));
+            } else {
+                return compact(['errors']);
+            }
+        }
+
+        Auth::guard($this->getGuard())->login($this->create($request->all()));
+
+
+        $redirectPath = $this->redirectPath();
+        $status = true;
+
+        if ($request->has('callback')) {
+            return response()->json(compact(['redirectPath', 'status']))->setCallback($request->get('callback'));
+        } else if ($request->wantsJson()) {
+            return response()->json(compact(['redirectPath', 'status']));
+        } else {
+            return compact(['redirectPath', 'status']);
+        }
+    }
 }

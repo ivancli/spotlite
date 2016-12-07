@@ -202,6 +202,8 @@ Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
 Route::post('register', 'Auth\AuthController@postRegister')->name('register.post');
 
+Route::get('register/external', 'Auth\AuthController@registerExternal')->name('register.post.external');
+
 Route::get('password', 'Auth\PasswordController@getEmail')->name('password.get');
 Route::post('password', 'Auth\PasswordController@postEmail')->name('password.post');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset')->name('password.reset.get');
@@ -226,3 +228,5 @@ Route::get('javascript_disabled', function () {
 })->name('errors.javascript_disabled');
 
 Route::post('error/notify_error', 'ErrorController@notifyError')->name('errors.notify');
+
+Route::get('token', 'TokenController@getToken')->name('token.index');
