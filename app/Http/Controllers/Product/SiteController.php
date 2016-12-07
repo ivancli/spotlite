@@ -109,7 +109,6 @@ class SiteController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
-
         if (!auth()->user()->isStaff) {
             $criteria = auth()->user()->subscriptionCriteria();
             if (isset($criteria->site) && $criteria->site != 0) {
@@ -176,6 +175,22 @@ class SiteController extends Controller
             $site->save();
         }
 
+        /*set my price*/
+        $companyURL = auth()->user()->company_url;
+        $siteDomain = parse_url($site->site_url)['host'];
+        $myCompanyDomain = parse_url($companyURL)['host'];
+        if ($siteDomain == $myCompanyDomain) {
+            $hasMyPrice = false;
+            foreach ($site->product->sites as $eachSite) {
+                if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {
+                    $hasMyPrice = true;
+                }
+            }
+            if ($hasMyPrice == false) {
+                $site->my_price = 'y';
+                $site->save();
+            }
+        }
 
         event(new SiteStored($site));
 
@@ -331,6 +346,25 @@ class SiteController extends Controller
             $site->save();
         }
         $site->statusWaiting();
+
+        /*set my price*/
+        $companyURL = auth()->user()->company_url;
+        $siteDomain = parse_url($site->site_url)['host'];
+        $myCompanyDomain = parse_url($companyURL)['host'];
+        if ($siteDomain == $myCompanyDomain) {
+            $hasMyPrice = false;
+            foreach ($site->product->sites as $eachSite) {
+                if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {
+                    $hasMyPrice = true;
+                }
+            }
+            if ($hasMyPrice == false) {
+                $site->my_price = 'y';
+                $site->save();
+            }
+        }
+
+
         event(new SiteUpdated($site));
         $status = true;
         if ($request->ajax()) {
