@@ -86,7 +86,7 @@
                 "method": "get",
                 "success": function (html) {
                     hideLoading();
-                    var $newWidget = $("<div>").addClass("col-md-3 widget-container").css("display", "none").html(html);
+                    var $newWidget = $("<div>").addClass("col-md-3 widget-container").css("display", "none").attr("data-widget-url", url).html(html);
                     if ($.isFunction(callback)) {
                         callback($newWidget);
                     }
