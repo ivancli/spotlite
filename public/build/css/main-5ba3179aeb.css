@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-b8b70534f4.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-5ba3179aeb.css */
 @media print {
   *,
   *:before,
@@ -15890,6 +15890,10 @@ hr.content-divider-white {
 
 .vertical-align-middle {
     vertical-align: middle;
+}
+
+th.vertical-align-middle {
+    vertical-align: middle !important;
 }
 
 .bg-fff {

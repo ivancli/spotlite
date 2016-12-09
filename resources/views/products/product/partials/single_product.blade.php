@@ -54,6 +54,12 @@
             </a>
             {!! Form::close() !!}
         </th>
+        <th class="text-center vertical-align-middle" style="background-color: #e8e8e8;padding: 0 !important;" width="70">
+            <a class="text-muted btn-collapse" style="font-size: 30px;" href="#product-{{$product->getKey()}}" role="button"
+               data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}">
+                <i class="fa fa-angle-up"></i>
+            </a>
+        </th>
     </tr>
     <tr>
         <td></td>

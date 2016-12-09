@@ -15892,6 +15892,10 @@ hr.content-divider-white {
     vertical-align: middle;
 }
 
+th.vertical-align-middle {
+    vertical-align: middle !important;
+}
+
 .bg-fff {
     background-color: #fff;
 }
