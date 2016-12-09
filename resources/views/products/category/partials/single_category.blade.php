@@ -7,16 +7,20 @@
             <thead>
             <tr>
                 <th class="shrink category-th">
-                    <a class="btn-collapse btn-category-dragger" href="#category-{{$category->getKey()}}" role="button"
+                    <a class="btn-collapse btn-category-dragger"
+                       href="#category-{{$category->getKey()}}" role="button"
                        data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
-                       aria-controls="category-{{$category->getKey()}}">
+                       aria-controls="category-{{$category->getKey()}}"
+                    >
                         <i class="fa fa-bookmark "></i>
                     </a>
                 </th>
                 <th class="category-th">
-                    <a class="text-muted category-name-link" href="#category-{{$category->getKey()}}" role="button"
-                       data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
-                       aria-controls="category-{{$category->getKey()}}">{{$category->category_name}}</a>
+                    <a class="text-muted category-name-link" href="#" onclick="return false;"
+                            {{--href="#category-{{$category->getKey()}}" role="button"--}}
+                            {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true"--}}
+                            {{--aria-controls="category-{{$category->getKey()}}"--}}
+                    >{{$category->category_name}}</a>
 
 
                     {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style' => 'display: none;')) !!}
@@ -55,7 +59,8 @@
                     {!! Form::close() !!}
                 </th>
                 <th class="text-center vertical-align-middle" style="background-color: #d3d3d3;" width="70">
-                    <a class="text-muted btn-collapse" style="font-size: 35px;" href="#category-{{$category->getKey()}}" role="button"
+                    <a class="text-muted btn-collapse" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
+                       role="button"
                        data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
                        aria-controls="category-{{$category->getKey()}}">
                         <i class="fa fa-angle-up"></i>

@@ -5,16 +5,20 @@
     <thead>
     <tr>
         <th class="shrink product-th">
-            <a class="btn-collapse btn-product-dragger" href="#product-{{$product->getKey()}}" role="button"
-               data-toggle="collapse"
-               data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}">
+            <a class="btn-collapse btn-product-dragger" href="#" onclick="return false;"
+                    {{--href="#product-{{$product->getKey()}}" role="button"--}}
+                    {{--data-toggle="collapse"--}}
+                    {{--data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}"--}}
+            >
                 <i class="glyphicon glyphicon-menu-hamburger"></i>
             </a>
         </th>
         <th class="product-th">
-            <a class="text-muted product-name-link" href="#product-{{$product->getKey()}}" role="button"
-               data-toggle="collapse"
-               data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}">
+            <a class="text-muted product-name-link" href="#" onclick="return false;"
+               {{--href="#product-{{$product->getKey()}}" role="button"--}}
+               {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true" --}}
+               {{--aria-controls="product-{{$product->getKey()}}"--}}
+            >
                 {{$product->product_name}}
             </a>
             {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'onsubmit' => 'submitEditProductName(this); return false;', 'style'=>'display: none;')) !!}
@@ -54,9 +58,12 @@
             </a>
             {!! Form::close() !!}
         </th>
-        <th class="text-center vertical-align-middle" style="background-color: #e8e8e8;padding: 0 !important;" width="70">
-            <a class="text-muted btn-collapse" style="font-size: 30px;" href="#product-{{$product->getKey()}}" role="button"
-               data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}">
+        <th class="text-center vertical-align-middle" style="background-color: #e8e8e8;padding: 0 !important;"
+            width="70">
+            <a class="text-muted btn-collapse" style="font-size: 30px;" href="#product-{{$product->getKey()}}"
+               role="button"
+               data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+               aria-controls="product-{{$product->getKey()}}">
                 <i class="fa fa-angle-up"></i>
             </a>
         </th>
