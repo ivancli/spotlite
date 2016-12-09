@@ -102,7 +102,7 @@
         ), null, ['class'=>'form-control', 'placeholder' => "Company type"]) !!}
     </div>
 </div>
-<div class="form-group required">
+<div class="form-group">
     {!! Form::label('company_url', 'Company URL', array('class' => 'control-label col-md-3')) !!}
     <div class="col-md-9">
         {!! Form::text('company_url', null, array('class' => 'form-control', 'placeholder' => 'e.g. http://www.example.com')) !!}
