@@ -30,12 +30,12 @@ class MessageController extends Controller
         }
         $sampleUser = $this->userRepo->sampleUser();
 
-        $industries = $sampleUser->categories->pluck(['category_name'])->all();
+        $sampleData = $sampleUser->categories->pluck(['category_name'])->all();
 
         if ($raw == 0) {
-            return view('msg.subscription.welcome')->with(compact(['apiSubscription', 'industries']));
+            return view('msg.subscription.welcome')->with(compact(['apiSubscription', 'sampleData']));
         } else {
-            return view('msg.subscription.raw.welcome')->with(compact(['apiSubscription', 'industries']));
+            return view('msg.subscription.raw.welcome')->with(compact(['apiSubscription', 'sampleData']));
         }
     }
 

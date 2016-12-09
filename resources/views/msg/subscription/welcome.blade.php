@@ -69,22 +69,82 @@
                 </ul>
                 <form action="{{route('profile.init_update')}}" id="init-update-form"
                       onsubmit="submitInitUpdate(); return false; ">
-                    <div class="form-group">
+                    <div class="form-group required">
                         <select class="form-control" name="industry">
-                            <option value="">What industry are you wanting to track?</option>
-                            @if(isset($industries))
-                                @foreach($industries as $industry)
-                                    <option value="{{$industry}}">{{$industry}}</option>
-                                @endforeach
-                            @endif
+                            <option value="">What is your industry?</option>
+                            <option value="Accommodations">Accommodations</option>
+                            <option value="Accounting">Accounting</option>
+                            <option value="Advertising">Advertising</option>
+                            <option value="Aerospace">Aerospace</option>
+                            <option value="Agriculture & Agribusiness">Agriculture & Agribusiness</option>
+                            <option value="Air Transportation">Air Transportation</option>
+                            <option value="Apparel & Accessories">Apparel & Accessories</option>
+                            <option value="Auto">Auto</option>
+                            <option value="Banking">Banking</option>
+                            <option value="Beauty & Cosmetics">Beauty & Cosmetics</option>
+                            <option value="Biotechnology">Biotechnology</option>
+                            <option value="Chemical">Chemical</option>
+                            <option value="Communications">Communications</option>
+                            <option value="Computer">Computer</option>
+                            <option value="Construction">Construction</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="Consumer Products">Consumer Products</option>
+                            <option value="Education">Education</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Employment">Employment</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Entertainment & Recreation">Entertainment & Recreation</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Financial Services">Financial Services</option>
+                            <option value="Fine Arts">Fine Arts</option>
+                            <option value="Food & Beverage">Food & Beverage</option>
+                            <option value="Health">Health</option>
+                            <option value="Information">Information</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Insurance">Insurance</option>
+                            <option value="Journalism & News">Journalism & News</option>
+                            <option value="Legal Services">Legal Services</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Media & Broadcasting">Media & Broadcasting</option>
+                            <option value="Medical Devices & Supplies">Medical Devices & Supplies</option>
+                            <option value="Motion Pictures & Video">Motion Pictures & Video</option>
+                            <option value="Music">Music</option>
+                            <option value="Pharmaceutical">Pharmaceutical</option>
+                            <option value="Public Administration">Public Administration</option>
+                            <option value="Public Relations">Public Relations</option>
+                            <option value="Publishing">Publishing</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Retail">Retail</option>
+                            <option value="Service">Service</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Telecommunications">Telecommunications</option>
+                            <option value="Tourism">Tourism</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Video Game">Video Game</option>
+                            <option value="Web Services">Web Services</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group required">
                         <select name="company_type" class="form-control">
                             <option value="">What Company Type?</option>
                             <option value="Retailer">Retailer</option>
                             <option value="Brand">Brand</option>
                             <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="category" id="" class="form-control">
+                            <option value="">
+                                Would you like us to set up some sample data for you?
+                            </option>
+                            @if(isset($sampleData))
+                                @foreach($sampleData as $item)
+                                    <option value="{{$item}}">{{$item}}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="form-group">

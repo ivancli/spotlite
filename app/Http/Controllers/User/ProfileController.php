@@ -137,62 +137,66 @@ class ProfileController extends Controller
         $sampleUser = $this->userRepo->sampleUser();
         if (auth()->user()->getKey() != $sampleUser->getKey()) {
             $industry = $input['industry'];
-            $category = $sampleUser->categories()->where('category_name', $industry)->first();
-            if (!is_null($category)) {
-                $clonedCategory = $category->replicate();
-                $clonedCategory->user_id = auth()->user()->getKey();
-                $clonedCategory->save();
+            if (isset($input['category']) && !empty($input['category'])) {
+                $selectedCategory = $input['category'];
+                $category = $sampleUser->categories()->where('category_name', $selectedCategory)->first();
+                if (!is_null($category)) {
+                    $clonedCategory = $category->replicate();
+                    $clonedCategory->user_id = auth()->user()->getKey();
+                    $clonedCategory->save();
 
-                foreach ($category->products as $product) {
-                    $clonedProduct = $product->replicate();
-                    $clonedProduct->category_id = $clonedCategory->getKey();
-                    $clonedProduct->user_id = auth()->user()->getKey();
-                    $clonedProduct->save();
+                    foreach ($category->products as $product) {
+                        $clonedProduct = $product->replicate();
+                        $clonedProduct->category_id = $clonedCategory->getKey();
+                        $clonedProduct->user_id = auth()->user()->getKey();
+                        $clonedProduct->save();
 
-                    foreach ($product->sites as $site) {
-                        $clonedSite = $site->replicate();
-                        $clonedSite->product_id = $clonedProduct->getKey();
-                        $clonedSite->save();
-                        $clonedSite = $clonedSite->fresh(['crawler']);
-                        $clonedCrawlerData = $site->crawler->toArray();
-                        $clonedCrawlerData['site_id'] = $clonedSite->getKey();
-                        $clonedSite->crawler->update($clonedCrawlerData);
-                        $clonedSite->crawler->save();
+                        foreach ($product->sites as $site) {
+                            $clonedSite = $site->replicate();
+                            $clonedSite->product_id = $clonedProduct->getKey();
+                            $clonedSite->save();
+                            $clonedSite = $clonedSite->fresh(['crawler']);
+                            $clonedCrawlerData = $site->crawler->toArray();
+                            $clonedCrawlerData['site_id'] = $clonedSite->getKey();
+                            $clonedSite->crawler->update($clonedCrawlerData);
+                            $clonedSite->crawler->save();
 
-                        foreach ($site->historicalPrices as $historicalPrice) {
-                            $clonedHistoricalPrice = $historicalPrice->replicate();
-                            $clonedHistoricalPrice->site_id = $clonedSite->getKey();
-                            $clonedHistoricalPrice->crawler_id = $clonedSite->crawler->getKey();
-                            $clonedHistoricalPrice->save();
-                            $clonedHistoricalPrice->created_at = $historicalPrice->created_at;
-                            $clonedHistoricalPrice->save();
-                        }
+                            foreach ($site->historicalPrices as $historicalPrice) {
+                                $clonedHistoricalPrice = $historicalPrice->replicate();
+                                $clonedHistoricalPrice->site_id = $clonedSite->getKey();
+                                $clonedHistoricalPrice->crawler_id = $clonedSite->crawler->getKey();
+                                $clonedHistoricalPrice->save();
+                                $clonedHistoricalPrice->created_at = $historicalPrice->created_at;
+                                $clonedHistoricalPrice->save();
+                            }
 
-                        /*generating SITE CHARTS*/
-                        $firstNonHiddenDashboard = auth()->user()->nonHiddenDashboards()->first();
-                        if (!is_null($firstNonHiddenDashboard)) {
-                            $dashboardWidget = $this->dashboardWidgetRepo->storeWidget(array(
-                                "dashboard_id" => $firstNonHiddenDashboard->getKey(),
-                                "dashboard_widget_name" => $clonedSite->domain,
-                                "timespan" => "this_week",
-                                "resolution" => "daily",
-                                "dashboard_widget_type_id" => 1,
-                                "category_id" => $clonedCategory->getKey(),
-                                "product_id" => $clonedProduct->getKey(),
-                                "site_id" => $clonedSite->getKey(),
-                                "chart_type" => "site",
-                            ));
+                            /*generating SITE CHARTS*/
+                            $firstNonHiddenDashboard = auth()->user()->nonHiddenDashboards()->first();
+                            if (!is_null($firstNonHiddenDashboard)) {
+                                $dashboardWidget = $this->dashboardWidgetRepo->storeWidget(array(
+                                    "dashboard_id" => $firstNonHiddenDashboard->getKey(),
+                                    "dashboard_widget_name" => $clonedSite->domain,
+                                    "timespan" => "this_week",
+                                    "resolution" => "daily",
+                                    "dashboard_widget_type_id" => 1,
+                                    "category_id" => $clonedCategory->getKey(),
+                                    "product_id" => $clonedProduct->getKey(),
+                                    "site_id" => $clonedSite->getKey(),
+                                    "chart_type" => "site",
+                                ));
 
-                            $dashboardWidget->setPreference("chart_type", "site");
-                            $dashboardWidget->setPreference("site_id", $clonedSite->getKey());
-                            $dashboardWidget->setPreference("product_id", $clonedProduct->getKey());
-                            $dashboardWidget->setPreference("category_id", $clonedCategory->getKey());
-                            $dashboardWidget->setPreference("timespan", "this_week");
-                            $dashboardWidget->setPreference("resolution", "daily");
+                                $dashboardWidget->setPreference("chart_type", "site");
+                                $dashboardWidget->setPreference("site_id", $clonedSite->getKey());
+                                $dashboardWidget->setPreference("product_id", $clonedProduct->getKey());
+                                $dashboardWidget->setPreference("category_id", $clonedCategory->getKey());
+                                $dashboardWidget->setPreference("timespan", "this_week");
+                                $dashboardWidget->setPreference("resolution", "daily");
+                            }
                         }
                     }
                 }
             }
+
         }
 
         $this->mailingAgentRepo->editSubscriber($user->email, array(

@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-352922d6a2.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-8bd404bfe6.css */
 @media print {
   *,
   *:before,
@@ -15815,6 +15815,19 @@ h3.box-title {
 
 .sidebar-menu li > a > .pull-right-container.btn-reorder-dashboard {
     top: 12px;
+}
+
+#init-update-form .form-group{
+    position: relative;
+}
+
+#init-update-form .form-group.required::before {
+    content: "*";
+    color: red;
+    font-weight: bold;
+    position: absolute;
+    left: -10px;
+    top: 10px;
 }
 
 section.content {

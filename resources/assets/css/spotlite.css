@@ -683,6 +683,19 @@ h3.box-title {
     top: 12px;
 }
 
+#init-update-form .form-group{
+    position: relative;
+}
+
+#init-update-form .form-group.required::before {
+    content: "*";
+    color: red;
+    font-weight: bold;
+    position: absolute;
+    left: -10px;
+    top: 10px;
+}
+
 section.content {
     padding-left: 50px;
     padding-right: 50px;
