@@ -15,9 +15,9 @@
         </th>
         <th class="product-th">
             <a class="text-muted product-name-link" href="#" onclick="return false;"
-               {{--href="#product-{{$product->getKey()}}" role="button"--}}
-               {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true" --}}
-               {{--aria-controls="product-{{$product->getKey()}}"--}}
+                    {{--href="#product-{{$product->getKey()}}" role="button"--}}
+                    {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true" --}}
+                    {{--aria-controls="product-{{$product->getKey()}}"--}}
             >
                 {{$product->product_name}}
             </a>
@@ -78,7 +78,7 @@
                 @endif
                 <strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>
             </div>
-            @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
+            @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
                 <div class="text-light">
                     <small>
                         <strong class="text-muted">
@@ -135,7 +135,7 @@
                         <td colspan="9">
 
                             <div class="add-item-block add-site-container"
-                                 @if(!auth()->user()->isStaff && $product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
+                                 @if(!auth()->user()->isStaff && auth()->user()->subscriptionCriteria()->site != 0 && $product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
                                  onclick="appendUpgradeForCreateSiteBlock(this); event.stopPropagation(); return false;"
                                  @else
                                  onclick="appendCreateSiteBlock(this); event.stopPropagation(); return false;"
@@ -174,7 +174,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
+                                @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
                                     <div class="upgrade-for-add-item-controls" style="display: none;">
                                     <span class="add-item-text">
                                         You have reached the product URL limit of
