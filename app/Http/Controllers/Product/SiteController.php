@@ -177,18 +177,20 @@ class SiteController extends Controller
 
         /*set my price*/
         $companyURL = auth()->user()->company_url;
-        $siteDomain = parse_url($site->site_url)['host'];
-        $myCompanyDomain = parse_url($companyURL)['host'];
-        if ($siteDomain == $myCompanyDomain) {
-            $hasMyPrice = false;
-            foreach ($site->product->sites as $eachSite) {
-                if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {
-                    $hasMyPrice = true;
+        if (!is_null($companyURL)) {
+            $siteDomain = parse_url($site->site_url)['host'];
+            $myCompanyDomain = parse_url($companyURL)['host'];
+            if ($siteDomain == $myCompanyDomain) {
+                $hasMyPrice = false;
+                foreach ($site->product->sites as $eachSite) {
+                    if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {
+                        $hasMyPrice = true;
+                    }
                 }
-            }
-            if ($hasMyPrice == false) {
-                $site->my_price = 'y';
-                $site->save();
+                if ($hasMyPrice == false) {
+                    $site->my_price = 'y';
+                    $site->save();
+                }
             }
         }
 
@@ -349,18 +351,20 @@ class SiteController extends Controller
 
         /*set my price*/
         $companyURL = auth()->user()->company_url;
-        $siteDomain = parse_url($site->site_url)['host'];
-        $myCompanyDomain = parse_url($companyURL)['host'];
-        if ($siteDomain == $myCompanyDomain) {
-            $hasMyPrice = false;
-            foreach ($site->product->sites as $eachSite) {
-                if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {
-                    $hasMyPrice = true;
+        if (!is_null($companyURL)) {
+            $siteDomain = parse_url($site->site_url)['host'];
+            $myCompanyDomain = parse_url($companyURL)['host'];
+            if ($siteDomain == $myCompanyDomain) {
+                $hasMyPrice = false;
+                foreach ($site->product->sites as $eachSite) {
+                    if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {
+                        $hasMyPrice = true;
+                    }
                 }
-            }
-            if ($hasMyPrice == false) {
-                $site->my_price = 'y';
-                $site->save();
+                if ($hasMyPrice == false) {
+                    $site->my_price = 'y';
+                    $site->save();
+                }
             }
         }
 
