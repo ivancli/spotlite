@@ -54,6 +54,13 @@
                     </a>
                     {!! Form::close() !!}
                 </th>
+                <th class="text-center vertical-align-middle" style="background-color: #d3d3d3;" width="70">
+                    <a class="text-muted btn-collapse" style="font-size: 35px;" href="#category-{{$category->getKey()}}" role="button"
+                       data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+                       aria-controls="category-{{$category->getKey()}}">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </th>
             </tr>
             <tr>
                 <th></th>

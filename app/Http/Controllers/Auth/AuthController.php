@@ -132,9 +132,9 @@ class AuthController extends Controller
         ));
 
         /*create sample products*/
-        $sampleCategory = $this->categoryRepo->createSampleCategory($user);
-        $sampleProduct = $this->productRepo->createSampleProduct($sampleCategory);
-        $sampleSites = $this->siteRepo->createSampleSite($sampleProduct);
+//        $sampleCategory = $this->categoryRepo->createSampleCategory($user);
+//        $sampleProduct = $this->productRepo->createSampleProduct($sampleCategory);
+//        $sampleSites = $this->siteRepo->createSampleSite($sampleProduct);
 
         if (request()->has('api_product_id')) {
             $product = Chargify::product()->get(request('api_product_id'));

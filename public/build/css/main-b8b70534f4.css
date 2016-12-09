@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-76f40089be.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-b8b70534f4.css */
 @media print {
   *,
   *:before,
@@ -15372,6 +15372,32 @@ table td.table-container {
     color: #8c8c8c;
 }
 
+.btn-collapse i.fa-angle-up {
+    transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+    transition: transform 550ms ease;
+    -moz-transition: -moz-transform 550ms ease;
+    -ms-transition: -ms-transform 550ms ease;
+    -o-transition: -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
+}
+
+.btn-collapse.collapsed i.fa-angle-up {
+    transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+    -webkit-transform: rotate(-180deg);
+    transition: transform 550ms ease;
+    -moz-transition: -moz-transform 550ms ease;
+    -ms-transition: -ms-transform 550ms ease;
+    -o-transition: -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
+}
+
 .btn-action {
     padding-left: 3px;
     padding-right: 3px;
@@ -15553,6 +15579,10 @@ th.ellipsis {
 /*.site-wrapper td:not(:last-child){*/
 /*border: 1px solid #e6e6e6 !important;*/
 /*}*/
+
+.site-wrapper {
+    cursor: move;
+}
 
 .site-wrapper td.site-url .tooltip-inner,
 .site-wrapper td.site-url .popover-content,
@@ -15906,7 +15936,7 @@ ul.treeview-menu li a {
     font-size: 19px;
 }
 
-.sidebar-menu .treeview-menu>li>a.lnk-dashboard {
+.sidebar-menu .treeview-menu > li > a.lnk-dashboard {
     padding-right: 30px;
 }
 
