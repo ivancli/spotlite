@@ -651,11 +651,32 @@ h3.box-title {
     padding-top: 100px;
 }
 
-.sidebar-menu li.active > a > .fa-caret-down, .sidebar-menu li.active > a > .pull-right-container > .fa-caret-down {
-    -webkit-transform: rotate(-180deg);
+.sidebar-menu li.treeview > a > .fa-caret-down,
+.sidebar-menu li.treeview > a > .pull-right-container > .fa-caret-down {
+    transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+    transition: transform 550ms ease;
+    -moz-transition: -moz-transform 550ms ease;
+    -ms-transition: -ms-transform 550ms ease;
+    -o-transition: -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
+}
+
+.sidebar-menu li.treeview.active > a > .fa-caret-down,
+.sidebar-menu li.treeview.active > a > .pull-right-container > .fa-caret-down {
+    transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
     -ms-transform: rotate(-180deg);
     -o-transform: rotate(-180deg);
-    transform: rotate(-180deg);
+    -webkit-transform: rotate(-180deg);
+    transition: transform 550ms ease;
+    -moz-transition: -moz-transform 550ms ease;
+    -ms-transition: -ms-transform 550ms ease;
+    -o-transition: -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
 }
 
 .sidebar-menu li > a > .pull-right-container.btn-reorder-dashboard {
