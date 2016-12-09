@@ -7,13 +7,16 @@ use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
+use App\Contracts\Repository\Security\TokenContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Jobs\SendMail;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\UserPreference;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Invigor\Chargify\Chargify;
 use Invigor\UM\UMRole;
 use Validator;
@@ -47,7 +50,7 @@ class AuthController extends Controller
     protected $subscriptionRepo;
     protected $mailerRepo;
     protected $mailingAgentRepo;
-    protected $categoryRepo, $productRepo, $siteRepo;
+    protected $categoryRepo, $productRepo, $siteRepo, $tokenRepo;
 
     /**
      * Create a new authentication controller instance.
@@ -59,7 +62,7 @@ class AuthController extends Controller
      * @param ProductContract $productContract
      * @param SiteContract $siteContract
      */
-    public function __construct(SubscriptionContract $subscriptionContract, MailerContract $mailerContract, MailingAgentContract $mailingAgentContract, CategoryContract $categoryContract, ProductContract $productContract, SiteContract $siteContract)
+    public function __construct(SubscriptionContract $subscriptionContract, MailerContract $mailerContract, MailingAgentContract $mailingAgentContract, CategoryContract $categoryContract, ProductContract $productContract, SiteContract $siteContract, TokenContract $tokenContract)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
         $this->subscriptionRepo = $subscriptionContract;
@@ -69,6 +72,7 @@ class AuthController extends Controller
         $this->categoryRepo = $categoryContract;
         $this->productRepo = $productContract;
         $this->siteRepo = $siteContract;
+        $this->tokenRepo = $tokenContract;
     }
 
     /**
@@ -106,7 +110,7 @@ class AuthController extends Controller
         $verificationCode = str_random(10);
 
         $user = User::create([
-            'title' => isset($data['title']) ? $data['title'] : null,
+            'title' => isset($data['title']) ? $data['title'] : '',
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
@@ -114,6 +118,7 @@ class AuthController extends Controller
             'phone' => isset($data['phone']) ? $data['phone'] : null,
             'verification_code' => $verificationCode,
             'agree_terms' => $data['agree_terms'],
+            'set_password' => isset($data['set_password']) ? $data['set_password'] : 'y',
         ]);
 
         $role = UMRole::where("name", "client")->first();
@@ -124,31 +129,12 @@ class AuthController extends Controller
         $this->mailingAgentRepo->addSubscriber(array(
             'EmailAddress' => $user->email,
             'Name' => $user->first_name . " " . $user->last_name,
-            'CustomFields' => array(
-                array(
-                    'Key' => 'Industry',
-                    'Value' => $data['industry']
-                ),
-                array(
-                    'Key' => 'CompanyType',
-                    'Value' => $data['company_type']
-                ),
-                array(
-                    'Key' => 'CompanyName',
-                    'Value' => $data['company_name']
-                ),
-            )
         ));
 
         /*create sample products*/
         $sampleCategory = $this->categoryRepo->createSampleCategory($user);
         $sampleProduct = $this->productRepo->createSampleProduct($sampleCategory);
         $sampleSites = $this->siteRepo->createSampleSite($sampleProduct);
-
-
-//        $options = $user->toArray();
-//        $options['subject'] = "Welcome to SpotLite";
-//        $this->dispatch((new SendMail("auth.emails.welcome", compact(['user']), $options))->onQueue("mailing"));
 
         if (request()->has('api_product_id')) {
             $product = Chargify::product()->get(request('api_product_id'));
@@ -229,35 +215,88 @@ class AuthController extends Controller
 
     protected function registerExternal()
     {
-
         $request = request();
 
-//        dd($request->all());
-        $validator = $this->externalValidator($request->all());
-
-        if ($validator->fails()) {
-            $errors = $validator->errors();
+        if (!$request->has('_token') || !$this->tokenRepo->verifyToken($request->get('_token'))) {
+            $status = false;
+            $errors = array(
+                ['Session has expired please refresh and try again.']
+            );
             if ($request->has('callback')) {
-                return response()->json(compact('errors'))->setCallback($request->get('callback'));
+                return response()->json(compact(['errors', 'status']))->setCallback($request->get('callback'));
             } else if ($request->wantsJson()) {
-                return response()->json(compact(['errors']));
+                return response()->json(compact(['errors', 'status']));
             } else {
-                return compact(['errors']);
+                return compact(['errors', 'status']);
             }
         }
 
-        Auth::guard($this->getGuard())->login($this->create($request->all()));
+        $validator = $this->externalValidator($request->all());
+
+        if ($validator->fails()) {
+            $status = false;
+            $errors = $validator->errors();
+            if ($request->has('callback')) {
+                return response()->json(compact(['errors', 'status']))->setCallback($request->get('callback'));
+            } else if ($request->wantsJson()) {
+                return response()->json(compact(['errors', 'status']));
+            } else {
+                return compact(['errors', 'status']);
+            }
+        }
+
+        $input = $request->all();
+        $input['password'] = bcrypt("secret");
+        $input['set_password'] = 'n';
+
+        Auth::guard($this->getGuard())->login($this->create($input));
 
 
         $redirectPath = $this->redirectPath();
         $status = true;
+        
+        return redirect($this->redirectPath());
+    }
+
+    protected function registerExternalPreview()
+    {
+        $request = request();
+        if (!$request->has('_token') || !$this->tokenRepo->verifyToken($request->get('_token'))) {
+            $status = false;
+            $errors = array(
+                ['Session has expired please refresh and try again.']
+            );
+            if ($request->has('callback')) {
+                return response()->json(compact(['errors', 'status']))->setCallback($request->get('callback'));
+            } else if ($request->wantsJson()) {
+                return response()->json(compact(['errors', 'status']));
+            } else {
+                return compact(['errors', 'status']);
+            }
+        }
+
+        $validator = $this->externalValidator($request->all());
+
+        if ($validator->fails()) {
+            $status = false;
+            $errors = $validator->errors();
+            if ($request->has('callback')) {
+                return response()->json(compact(['errors', 'status']))->setCallback($request->get('callback'));
+            } else if ($request->wantsJson()) {
+                return response()->json(compact(['errors', 'status']));
+            } else {
+                return compact(['errors', 'status']);
+            }
+        }
+
+        $status = true;
 
         if ($request->has('callback')) {
-            return response()->json(compact(['redirectPath', 'status']))->setCallback($request->get('callback'));
+            return response()->json(compact(['status']))->setCallback($request->get('callback'));
         } else if ($request->wantsJson()) {
-            return response()->json(compact(['redirectPath', 'status']));
+            return response()->json(compact(['status']));
         } else {
-            return compact(['redirectPath', 'status']);
+            return compact(['status']);
         }
     }
 }

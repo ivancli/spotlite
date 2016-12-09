@@ -36980,41 +36980,55 @@ $(function () {
             });
         }
 
-        // if ((typeof user.preferences == 'undefined' || user.preferences.DONT_SHOW_WELCOME != 1) && getLocalStorageOrCookie("met-first-login-welcome-msg-" + today + "-" + user.user_id) != 1) {
-        if (user.industry == null) {
-            showLoading();
-            showWelcomePopup(function () {
-                $("video").get(0).pause();
-
-                /*if bootstrap tour is available in this page*/
-                if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
-                    startTour();
-                    setTourVisited();
-                } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
-                    /*or if the credit card will be expire soon, show notification*/
-                    setLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
-                    showCreditCardExpiry();
-                }
-            });
+        if (user.set_password == 'n') {
+            showSetPasswordPopup(function () {
+                showLoading();
+                showWelcomePopup(function () {
+                    $("video").get(0).pause();
+                    tourOrCreditCard();
+                });
+            })
         } else {
-            if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
-                startTour();
-                setTourVisited();
-            } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
-                setLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
-                showCreditCardExpiry();
+            if (user.industry == null) {
+                showLoading();
+                showWelcomePopup(function () {
+                    $("video").get(0).pause();
+                    tourOrCreditCard();
+                });
+            } else {
+                tourOrCreditCard();
             }
         }
     } else {
-        if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
-            startTour();
-            setTourVisited();
-        } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
-            setLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
-            showCreditCardExpiry();
-        }
+        tourOrCreditCard();
     }
 });
+
+function showSetPasswordPopup(callback) {
+    showLoading();
+    $.ajax({
+        "url": "/password/init_reset",
+        "success": function (html) {
+            hideLoading();
+            var $modal = popupFrame(html);
+            $modal.find(".modal-dialog");
+            $modal.modal({
+                "backdrop": "static",
+                "keyboard": false
+            });
+
+            $modal.on("hidden.bs.modal", function () {
+                if ($.isFunction(callback)) {
+                    callback();
+                }
+            });
+        },
+        "error": function (xhr, status, error) {
+            hideLoading();
+            describeServerRespondedError(xhr.status);
+        }
+    })
+}
 
 function showWelcomePopup(callback) {
     $.get('/msg/subscription/welcome/0', function (html) {
@@ -37067,4 +37081,15 @@ function saveSidebarStatus() {
     }
 }
 
+function tourOrCreditCard() {
+    /*if bootstrap tour is available in this page*/
+    if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
+        startTour();
+        setTourVisited();
+    } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
+        /*or if the credit card will be expire soon, show notification*/
+        setLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id, 1);
+        showCreditCardExpiry();
+    }
+}
 //# sourceMappingURL=main.js.map

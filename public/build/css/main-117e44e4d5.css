@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-881fdbfba5.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-117e44e4d5.css */
 @media print {
   *,
   *:before,
@@ -15103,6 +15103,32 @@ input:focus::-ms-input-placeholder {
     }
 
     .welcome-form-container .form-group {
+        margin-bottom: 25px
+    }
+}
+
+.set-password-form-container p.set-password-form-heading {
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.set-password-form-container .form-group {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+@media (min-width: 600px) {
+    ul.steps div.title div.description {
+        width: 175px;
+        margin: 0 auto;
+    }
+
+    .set-password-form-container {
+        padding: 20px 125px;
+    }
+
+    .set-password-form-container .form-group {
         margin-bottom: 25px
     }
 }

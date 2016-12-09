@@ -8,7 +8,7 @@
                 Welcome!
             </h2>
             <p class="text-center">
-                We wnat you to get the most out of SpotLite. To kick-off we want to personalise your experience.
+                We want you to get the most out of SpotLite. To kick-off we want to personalise your experience.
             </p>
             <p class="text-center">
                 Samply answer the questions and follow the journey. Enjoy!
@@ -60,7 +60,7 @@
 
     <div class="row">
         <div class="col-sm-12 ">
-            <div class="jumbotron welcome-form-container">
+            <div class="jumbotron set-password-form-container">
                 <p class="welcome-form-heading">
                     <strong>STEP 1:</strong> Let's start by looking at what industry and company type you want to track:
                 </p>

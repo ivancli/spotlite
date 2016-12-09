@@ -182,6 +182,9 @@ Route::group(['middleware' => ['auth']], function () {
         'update'
     ]]);
 
+    Route::get('password/init_reset', 'Auth\PasswordController@getSetPasswordPopup')->name('password.init_reset.get');
+    Route::post('password/init_reset', 'Auth\PasswordController@postSetPassword')->name('password.init_reset.post');
+
     Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 
 
@@ -202,7 +205,11 @@ Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
 Route::post('register', 'Auth\AuthController@postRegister')->name('register.post');
 
-Route::get('register/external', 'Auth\AuthController@registerExternal')->name('register.post.external');
+Route::get('register/external', 'Auth\AuthController@registerExternalPreview')->name('register.get.external');
+//Route::get('register/external', function(){
+//    dd("fu");
+//})->name('register.get.external');
+Route::post('register/external', 'Auth\AuthController@registerExternal')->name('register.post.external');
 
 Route::get('password', 'Auth\PasswordController@getEmail')->name('password.get');
 Route::post('password', 'Auth\PasswordController@postEmail')->name('password.post');

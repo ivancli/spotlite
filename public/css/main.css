@@ -15106,6 +15106,32 @@ input:focus::-ms-input-placeholder {
         margin-bottom: 25px
     }
 }
+
+.set-password-form-container p.set-password-form-heading {
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.set-password-form-container .form-group {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+@media (min-width: 600px) {
+    ul.steps div.title div.description {
+        width: 175px;
+        margin: 0 auto;
+    }
+
+    .set-password-form-container {
+        padding: 20px 125px;
+    }
+
+    .set-password-form-container .form-group {
+        margin-bottom: 25px
+    }
+}
 .required label::after {
     content: " *";
     color: #ff0000;

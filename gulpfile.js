@@ -45,6 +45,7 @@ elixir(function (mix) {
         'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
         'resources/assets/css/nlform.css',
         'resources/assets/css/welcome_popup.css',
+        'resources/assets/css/set_password_popup.css',
         'resources/assets/css/spotlite.css'
     ], "public/css/main.css", "./");
     mix.scripts([
