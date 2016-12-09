@@ -63,7 +63,7 @@
     </tr>
     <tr>
         <td></td>
-        <td colspan="2">
+        <td colspan="3">
             <div class="text-light">
                 Created
                 @if(!is_null($product->created_at))
@@ -90,7 +90,7 @@
     <tbody>
     <tr>
         <td></td>
-        <td colspan="2" class="table-container">
+        <td colspan="3" class="table-container">
             <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in" aria-expanded="true">
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>

@@ -64,7 +64,7 @@
             </tr>
             <tr>
                 <th></th>
-                <td colspan="2" class="category-th">
+                <td colspan="3" class="category-th">
                     <div class="text-light">
                         Created
                         @if(!is_null($category->created_at))
@@ -80,7 +80,7 @@
             </tr>
             <tr>
                 <th></th>
-                <th colspan="2" class="category-th action-cell">
+                <th colspan="3" class="category-th action-cell">
                     <div class="add-item-block add-product-container"
                          onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
                         <div class="add-item-label">
@@ -130,7 +130,7 @@
             <tbody>
             <tr>
                 <td></td>
-                <td colspan="2" class="table-container">
+                <td colspan="3" class="table-container">
                     <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
                          aria-expanded="true">
                         @if($category->products()->count() > 0)
