@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repository\Product\Alert\AlertContract;
+use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Events\Products\Alert\AlertCreated;
@@ -17,6 +18,7 @@ use App\Events\Products\Alert\AlertListViewed;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\AlertEmail;
+use App\Repositories\Product\Category\CategoryRepository;
 use App\Validators\Product\Alert\UpdateProductAlertValidator;
 use App\Validators\Product\Alert\UpdateSiteAlertValidator;
 use Illuminate\Http\Request;
@@ -24,12 +26,13 @@ use Illuminate\Http\Request;
 class AlertController extends Controller
 {
     /*repositories*/
+    protected $categoryRepo;
     protected $productRepo;
     protected $alertRepo;
     protected $siteRepo;
 
 
-    public function __construct(ProductContract $productContract, AlertContract $alertContract, SiteContract $siteContract)
+    public function __construct(CategoryContract $categoryContract, ProductContract $productContract, AlertContract $alertContract, SiteContract $siteContract)
     {
         $this->middleware('permission:read_product_alert', ['only' => ['index']]);
         $this->middleware('permission:update_product_alert', ['only' => ['editProductAlert', 'updateProductAlert']]);
@@ -39,6 +42,7 @@ class AlertController extends Controller
         $this->middleware('permission:delete_site_alert', ['only' => ['deleteSiteAlert']]);
 
         $this->alertRepo = $alertContract;
+        $this->categoryRepo = $categoryContract;
         $this->productRepo = $productContract;
         $this->siteRepo = $siteContract;
 
@@ -57,6 +61,12 @@ class AlertController extends Controller
             event(new AlertListViewed());
             return view('products.alert.index');
         }
+    }
+
+    public function setUpNotification()
+    {
+        $categories = auth()->user()->categories;
+        return view('products.alert.notification_popup')->with(compact(['categories']));
     }
 
     /**

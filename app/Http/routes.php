@@ -96,6 +96,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('alert/site/{site_id}/edit', 'Product\AlertController@editSiteAlert')->name('alert.site.edit');
         Route::put('alert/site/{site_id}', 'Product\AlertController@updateSiteAlert')->name('alert.site.update');
         Route::delete('alert/site/{site_id}', 'Product\AlertController@deleteSiteAlert')->name('alert.site.destroy');
+        Route::get('alert/set_up_notifications', 'Product\AlertController@setUpNotification')->name('alert.set_up_notifications');
 
         Route::resource('alert', 'Product\AlertController');
         Route::resource('alert_log', 'Log\AlertActivityLogController');

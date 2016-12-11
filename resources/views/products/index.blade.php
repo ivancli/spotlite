@@ -49,7 +49,7 @@
                 <div class="box-body product-list-page-content">
 
                     <div class="row m-b-10 text-muted font-weight-bold">
-                        <div class="col-sm-12">
+                        <div class="col-md-8">
                             @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
                                 Credit: &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -71,6 +71,15 @@
                                 &nbsp;
                                 products
                             @endif
+                        </div>
+                        <div class="col-md-4">
+                            <div class="pull-right">
+                                <a href="#" onclick="return false;" class="btn btn-default">
+                                    <i class="fa fa-bell-o"></i>
+                                    &nbsp;
+                                    Set Up Notifications
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -438,6 +447,37 @@
                 /*TODO enable add product*/
                 $(".add-product-container").attr('onclick', 'appendCreateProductBlock(this); event.stopPropagation(); return false;');
             }
+        }
+
+        function showSetUpNotifications() {
+            showLoading();
+            $.ajax({
+                "url": "alert/set_up_notifications",
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    if ($.isFunction(callback)) {
+                                        callback(response);
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-site-prices").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
         }
     </script>
 
