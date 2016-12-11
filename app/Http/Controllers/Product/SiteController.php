@@ -351,7 +351,7 @@ class SiteController extends Controller
 
         /*set my price*/
         $companyURL = auth()->user()->company_url;
-        if (!is_null($companyURL)) {
+        if (!is_null($companyURL) && !empty($companyURL)) {
             $siteDomain = parse_url($site->site_url)['host'];
             $myCompanyDomain = parse_url($companyURL)['host'];
             if ($siteDomain == $myCompanyDomain) {
