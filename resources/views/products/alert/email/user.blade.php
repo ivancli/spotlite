@@ -502,22 +502,37 @@
                         <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
                             <p style="Margin-top: 0;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto"><strong>Hi {{isset($alert->alertable->user) ? $alert->alertable->user->first_name : ''}}&nbsp;,</strong></span></p>
                             <p style="Margin-top: 20px;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;">
-                                <span class="font-roboto">The price for {{$alert->alertable->product_name}} is found to be
-                                    @if($alert->operator == "=<")
-                                        equal or below
-                                    @elseif($alert->operator == "<")
-                                        below
-                                    @elseif($alert->operator == "=>")
-                                        equal or above
-                                    @elseif($alert->operator == ">")
-                                        above
+                                <span class="font-roboto">The price for the following product URLs are found
+                                    @if($alert->comparison_price_type == "price changed")
+                                        to have changed.
+                                    @elseif($alert->comparison_price_type == "my price")
+                                        to have beaten your price.
                                     @endif
-                                    @if($alert->comparison_price_type == "my price")
-                                        ${{number_format($mySite->recent_price, 2, '.', ',')}}.
-                                    @else
-                                        ${{number_format($alert->comparison_price, 2, '.', ',')}}.
-                                    @endif
-                                </span></p>
+                                </span>
+                            </p>
+
+                            <ul>
+                                @foreach($payload as $category)
+                                    <li>
+                                        <strong>{{$category['category_name']}}</strong>
+                                        <ul>
+                                            @foreach($category['products'] as $product)
+                                                <li>
+                                                    <strong>{{$product['product_name']}}</strong>
+                                                    <ul>
+                                                        @foreach($product['sites'] as $site)
+                                                            <li>
+                                                                <strong>{{parse_url($site['site_url'])['host']}}</strong>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                @endforeach
+                            </ul>
+
                             <p style="Margin-top: 20px;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto">You can also view this information through your Dashboard:</span></p>
                         </div>
                         <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
@@ -526,7 +541,6 @@
                                 <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://login.spotlite.com.au" style="width:175px" arcsize="9%" fillcolor="#7ED0C0" stroke="f"><v:shadow on="t" color="#65A69A" offset="0,2px"></v:shadow><v:textbox style="mso-fit-shape-to-text:t" inset="0px,11px,0px,10px"><center style="font-size:14px;line-height:24px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">GO TO DASHBOARD</center></v:textbox></v:roundrect><![endif]-->
                             </div>
                         </div>
-
                     </div>
                     <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
                 </div>

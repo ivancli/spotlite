@@ -67,15 +67,19 @@
                 <div class="simple-notifications m-b-20"
                      @if(auth()->user()->categoryAlerts()->count() != 0 || auth()->user()->productAlerts()->count() != 0)
                      style="display: none;"
-                     @endif
+                        @endif
                 >
                     <form id="frm-notification-simple" class="nl-form">
                         Send notification when
                         &nbsp;
                         <select name="notification_type" id="basic-notification-type">
-                            <option value=""> -- select notification type -- </option>
-                            <option value="my price" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'my price' ? "selected" : ""}}>my price was beaten</option>
-                            <option value="price changed" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'price changed' ? "selected" : ""}}>price changed</option>
+                            <option value=""> -- select notification type --</option>
+                            <option value="my price" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'my price' ? "selected" : ""}}>
+                                my price was beaten
+                            </option>
+                            <option value="price changed" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'price changed' ? "selected" : ""}}>
+                                price changed
+                            </option>
                         </select>
                         &nbsp;
                         in all categories.
@@ -83,9 +87,17 @@
                     </form>
                 </div>
                 <div class="m-b-20">
-                    <a href="#" data-status="simple" onclick="toggleSimpleAdvancedNotifications(this); return false;">
-                        <i class="fa fa-plus-square-o"></i>&nbsp;&nbsp;advanced notifications
-                    </a>
+                    @if(auth()->user()->categoryAlerts()->count() == 0 && auth()->user()->productAlerts()->count() == 0)
+                        <a href="#" data-status="simple"
+                           onclick="toggleSimpleAdvancedNotifications(this); return false;">
+                            <i class="fa fa-plus-square-o"></i>&nbsp;&nbsp;advanced notifications
+                        </a>
+                    @else
+                        <a href="#" data-status="advanced"
+                           onclick="toggleSimpleAdvancedNotifications(this); return false;">
+                            <i class="fa fa-plus-square-o"></i>&nbsp;&nbsp;simple notifications
+                        </a>
+                    @endif
                 </div>
                 <div class="advanced-notifications"
                      @if(auth()->user()->categoryAlerts()->count() == 0 && auth()->user()->productAlerts()->count() == 0)
@@ -277,6 +289,7 @@
                     if ($.isFunction(successCallback)) {
                         successCallback(response);
                     }
+                    $("#modal-set-up-notifications").modal("hide");
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();

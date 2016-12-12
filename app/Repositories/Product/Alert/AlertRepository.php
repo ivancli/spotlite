@@ -17,6 +17,9 @@ use App\Jobs\DeleteObject;
 use App\Jobs\LogUserActivity;
 use App\Jobs\SendMail;
 use App\Models\Alert;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Site;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -74,7 +77,6 @@ class AlertRepository implements AlertContract
         $user = $alert->alertable;
 
         $categories = $user->categories;
-
         /*
          * TODO
          * There are two types of alert trigger
@@ -89,6 +91,150 @@ class AlertRepository implements AlertContract
          *
          * */
 
+        $priceChangedCategories = array();
+        $priceBeatCategories = array();
+        $priceBeatSpecificCategories = array();
+        $excludedSites = $alert->excludedSites;
+        foreach ($categories as $category) {
+            $priceChangedCategories[$category->getKey()] = array();
+            $priceBeatCategories[$category->getKey()] = array();
+            $priceBeatSpecificCategories[$category->getKey()] = array();
+            $priceBeatSpecificProducts = array();
+
+            $products = $category->products;
+            if (is_null($category->alert) || $category->alert->comparison_price_type != $alert->comparison_price_type) {
+                foreach ($products as $product) {
+                    if (is_null($product->alert) || $product->alert->comparison_price_type != $alert->comparison_price_type) {
+
+                        $mySite = $product->sites()->where("my_price", "y")->first();
+                        if ($alert->comparison_price_type == 'my price') {
+                            $priceBeatCategories[$category->getKey()][$product->getKey()] = array();
+                            if (is_null($mySite) || is_null($mySite->recent_price)) {
+                                continue;
+                            } else {
+                                $comparisonPrice = $mySite->recent_price;
+                                foreach ($product->sites as $site) {
+
+                                    $excluded = false;
+                                    foreach ($excludedSites as $excludedSite) {
+                                        if ($excludedSite->getKey() == $site->getKey()) {
+                                            $excluded = true;
+                                        }
+                                    }
+                                    if ($excluded) {
+                                        continue;
+                                    } elseif ($site->status != 'ok') {
+                                        continue;
+                                    } elseif ($alert->comparison_price_type == 'my price' && $mySite->getKey() == $site->getKey()) {
+                                        continue;
+                                    } elseif ($this->comparePrices($site->recent_price, $comparisonPrice, "<")) {
+                                        $priceBeatCategories[$category->getKey()][$product->getkey()][] = $site->getKey();
+                                    }
+                                }
+                            }
+                        } elseif ($alert->comparison_price_type == 'price changed') {
+                            $priceChangedCategories[$category->getKey()][$product->getKey()] = array();
+                            foreach ($product->sites as $site) {
+                                $excluded = false;
+                                foreach ($excludedSites as $excludedSite) {
+                                    if ($excludedSite->getKey() == $site->getKey()) {
+                                        $excluded = true;
+                                    }
+                                }
+                                if ($excluded) {
+                                    continue;
+                                } elseif ($site->status != 'ok') {
+                                    continue;
+                                } elseif ($site->price_diff != 0) {
+                                    $priceChangedCategories[$category->getKey()][$product->getKey()][] = $site->getKey();
+                                }
+                            }
+                            /*A LIST OF SITE IDS WITH PRICE CHANGED*/
+                        } elseif ($alert->comparison_price_type == 'specific price') {
+                            $priceBeatSpecificCategories[$category->getKey()][$product->getKey()] = array();
+                            $comparisonPrice = $alert->comparison_price;
+                            foreach ($product->sites as $site) {
+                                $excluded = false;
+                                foreach ($excludedSites as $excludedSite) {
+                                    if ($excludedSite->getKey() == $site->getKey()) {
+                                        $excluded = true;
+                                    }
+                                }
+                                if ($excluded) {
+                                    continue;
+                                } elseif ($site->status != 'ok') {
+                                    continue;
+                                } elseif ($this->comparePrices($site->recent_price, $comparisonPrice, "<")) {
+                                    $priceBeatSpecificCategories[$category->getKey()][$product->getkey()][] = $site->getKey();
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+            }
+        }
+
+
+        switch ($alert->comparison_price_type) {
+            case "my price":
+                if (count(array_flatten($priceBeatCategories)) == 0) {
+                    return false;
+                }
+                $categoriesOfSites = $priceBeatCategories;
+                break;
+            case "price changed":
+                if (count(array_flatten($priceChangedCategories)) == 0) {
+                    return false;
+                }
+                $categoriesOfSites = $priceChangedCategories;
+                break;
+            case "specific price":
+                if (count(array_flatten($priceBeatSpecificCategories)) == 0) {
+                    return false;
+                }
+                $categoriesOfSites = $priceBeatSpecificCategories;
+                break;
+        }
+
+        $payload = array();
+        foreach ($categoriesOfSites as $categoryID => $products) {
+            $category = Category::find($categoryID)->toArray();
+            $category['products'] = array();
+            foreach ($products as $productID => $sites) {
+                if (!empty($sites)) {
+                    $product = Product::findOrFail($productID)->toArray();
+                    $product['sites'] = array();
+                    foreach ($sites as $siteID) {
+                        $site = Site::findOrFail($siteID)->toArray();
+                        $product['sites'][] = $site;
+                    }
+
+                    $category['products'][] = $product;
+                }
+            }
+            if (!empty($category['products'])) {
+                $payload[] = $category;
+            }
+        }
+
+        $emails = $alert->emails;
+        foreach ($emails as $email) {
+            dispatch((new SendMail('products.alert.email.user',
+                compact(['alert', 'payload', 'mySite']),
+                array(
+                    "email" => $email->alert_email_address,
+                    "subject" => 'SpotLite Price Alert',
+                )
+            ))->onQueue("mailing"));
+
+            event(new AlertSent($alert, $email));
+        }
+        if ($alert->one_off == 'y') {
+            dispatch((new DeleteObject($alert))->onQueue("deleting")->delay(300));
+        }
     }
 
     /**
@@ -101,19 +247,6 @@ class AlertRepository implements AlertContract
     {
         event(new AlertTriggered($alert));
         $category = $alert->alertable;
-        /*
-         * TODO
-         * There are two types of alert trigger
-         *
-         * 1. my price comparison
-         * 2. any price changed
-         *
-         * gotta loop through each site to check if the price has been changed or not
-         * gotta loop through each product to check
-         * 1) if my price is set
-         * 2) if my price is beaten
-         *
-         * */
         $products = $category->products;
 
         $priceChangedProducts = array();
@@ -193,32 +326,46 @@ class AlertRepository implements AlertContract
             /*$priceChangedProducts a list of site ids which have changed prices*/
             /*$priceBeatSpecificProducts a list of site ids which have beaten a specific price*/
         }
-
         switch ($alert->comparison_price_type) {
             case "my price":
-                if (count($priceBeatProducts->flatten()) == 0) {
+                if (count(array_flatten($priceBeatProducts)) == 0) {
                     return false;
                 }
                 $productsOfSites = $priceBeatProducts;
                 break;
             case "price changed":
-                if (count($priceChangedProducts->flatten()) == 0) {
+                if (count(array_flatten($priceChangedProducts)) == 0) {
                     return false;
                 }
                 $productsOfSites = $priceChangedProducts;
                 break;
             case "specific price":
-                if (count($priceBeatSpecificProducts->flatten()) == 0) {
+                if (count(array_flatten($priceBeatSpecificProducts)) == 0) {
                     return false;
                 }
                 $productsOfSites = $priceBeatSpecificProducts;
                 break;
         }
 
+
+        $payload = array();
+        foreach ($productsOfSites as $productID => $sites) {
+            if (!empty($sites)) {
+                $product = Product::findOrFail($productID)->toArray();
+                $product['sites'] = array();
+                foreach ($sites as $siteID) {
+                    $site = Site::findOrFail($siteID)->toArray();
+                    $product['sites'][] = $site;
+                }
+
+                $payload[] = $product;
+            }
+        }
+
         $emails = $alert->emails;
         foreach ($emails as $email) {
-            dispatch((new SendMail('category.alert.email.product',
-                compact(['alert', 'productsOfSites', 'mySite']),
+            dispatch((new SendMail('products.alert.email.category',
+                compact(['alert', 'payload', 'mySite']),
                 array(
                     "email" => $email->alert_email_address,
                     "subject" => 'SpotLite Price Alert ' . $category->category_name,

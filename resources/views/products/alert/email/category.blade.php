@@ -502,22 +502,28 @@
                         <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
                             <p style="Margin-top: 0;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto"><strong>Hi {{isset($alert->alertable->user) ? $alert->alertable->user->first_name : ''}}&nbsp;,</strong></span></p>
                             <p style="Margin-top: 20px;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;">
-                                <span class="font-roboto">The price for {{$alert->alertable->product_name}} is found to be
-                                    @if($alert->operator == "=<")
-                                        equal or below
-                                    @elseif($alert->operator == "<")
-                                        below
-                                    @elseif($alert->operator == "=>")
-                                        equal or above
-                                    @elseif($alert->operator == ">")
-                                        above
-                                    @endif
-                                    @if($alert->comparison_price_type == "my price")
-                                        ${{number_format($mySite->recent_price, 2, '.', ',')}}.
-                                    @else
-                                        ${{number_format($alert->comparison_price, 2, '.', ',')}}.
+                                <span class="font-roboto">The price for products in {{$alert->alertable->category_name}} is found
+                                    @if($alert->comparison_price_type == "price changed")
+                                        to have changed.
+                                    @elseif($alert->comparison_price_type == "my price")
+                                        to have beaten your price.
                                     @endif
                                 </span></p>
+
+                            <ul>
+                                @foreach($payload as $product)
+                                    <li>
+                                        <strong>{{$product['product_name']}}</strong>
+                                        <ul>
+                                            @foreach($product['sites'] as $site)
+                                                <li>
+                                                    <strong>{{parse_url($site['site_url'])['host']}}</strong>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                @endforeach
+                            </ul>
                             <p style="Margin-top: 20px;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto">You can also view this information through your Dashboard:</span></p>
                         </div>
                         <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
