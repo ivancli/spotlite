@@ -15,9 +15,7 @@ use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
-use App\Models\Alert;
 use App\Models\Dashboard\DashboardTemplate;
-use App\Repositories\Product\Alert\AlertRepository;
 use App\Validators\Dashboard\Dashboard\StoreValidator;
 use App\Validators\Dashboard\Dashboard\UpdateValidator;
 use Illuminate\Http\Request;
@@ -56,12 +54,8 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index(AlertRepository $alertRepository)
+    public function index()
     {
-        $alertRepository->triggerCategoryAlert(Alert::findOrFail(83));
-
-
-
         $dashboard = auth()->user()->dashboards()->orderBy('dashboard_order', 'asc')->first();
         if (!is_null($dashboard) && $dashboard->widgets()->count()) {
             return view('dashboard.home')->with(compact(['dashboard']));
