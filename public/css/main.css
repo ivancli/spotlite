@@ -15149,6 +15149,10 @@ input:focus::-ms-input-placeholder {
     margin-bottom: 20px;
 }
 
+.m-t-20 {
+    margin-top: 20px;
+}
+
 .p-10 {
     padding: 10px;
 }
@@ -15817,7 +15821,7 @@ h3.box-title {
     top: 12px;
 }
 
-#init-update-form .form-group{
+#init-update-form .form-group {
     position: relative;
 }
 
@@ -15976,6 +15980,10 @@ ul.treeview-menu li a {
 
 .sidebar-menu .treeview-menu > li > a.lnk-dashboard {
     padding-right: 30px;
+}
+
+.line-height-30 {
+    line-height: 30px;
 }
 
 @media (min-width: 768px) {

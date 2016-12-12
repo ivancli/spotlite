@@ -49,7 +49,7 @@
                 <div class="box-body product-list-page-content">
 
                     <div class="row m-b-10 text-muted font-weight-bold">
-                        <div class="col-md-8">
+                        <div class="col-md-8 line-height-30">
                             @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
                                 Credit: &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -74,7 +74,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="pull-right">
-                                <a href="#" onclick="return false;" class="btn btn-default">
+                                <a href="#" onclick="showSetUpNotifications(); return false;" class="btn btn-default btn-flat">
                                     <i class="fa fa-bell-o"></i>
                                     &nbsp;
                                     Set Up Notifications
@@ -470,7 +470,7 @@
                         }
                     });
                     $modal.on("hidden.bs.modal", function () {
-                        $("#modal-site-prices").remove();
+                        $("#modal-set-up-notifications").remove();
                     });
                 },
                 "error": function (xhr, status, error) {

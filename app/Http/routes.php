@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth']], function () {
         /**
          * Alert Related Routes
          */
+        //not being used in anywhere but keep them
         Route::get('alert/category/{category_id}/edit', 'Product\AlertController@editCategoryAlert')->name('alert.category.edit');
         Route::put('alert/category/{category_id}', 'Product\AlertController@updateCategoryAlert')->name('alert.category.update');
         Route::delete('alert/category/{category_id}', 'Product\AlertController@deleteCategoryAlert')->name('alert.category.destroy');
@@ -96,7 +97,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('alert/site/{site_id}/edit', 'Product\AlertController@editSiteAlert')->name('alert.site.edit');
         Route::put('alert/site/{site_id}', 'Product\AlertController@updateSiteAlert')->name('alert.site.update');
         Route::delete('alert/site/{site_id}', 'Product\AlertController@deleteSiteAlert')->name('alert.site.destroy');
+        Route::get('alert/user/edit', 'Product\AlertController@setUpNotification')->name('alert.user.edit');
+        Route::put('alert/user', 'Product\AlertController@updateNotification')->name('alert.user.update');
+        Route::delete('alert/user', 'Product\AlertController@deleteNotification')->name('alert.user.destroy');
+
+
+        //currently being used
         Route::get('alert/set_up_notifications', 'Product\AlertController@setUpNotification')->name('alert.set_up_notifications');
+        Route::put('alert/set_up_notifications', 'Product\AlertController@updateNotification')->name('alert.update_notifications');
 
         Route::resource('alert', 'Product\AlertController');
         Route::resource('alert_log', 'Log\AlertActivityLogController');

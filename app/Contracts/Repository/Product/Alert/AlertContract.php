@@ -23,6 +23,10 @@ interface AlertContract
 
     public function deleteAlert($alert_id);
 
+    public function triggerUserAlert(Alert $alert);
+
+    public function triggerCategoryAlert(Alert $alert);
+
     public function triggerProductAlert(Alert $alert);
 
     public function triggerSiteAlert(Alert $alert);

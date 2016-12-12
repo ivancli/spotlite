@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->orderBy("dashboard_order", "asc");
     }
 
+    public function alerts()
+    {
+        return $this->morphMany('App\Models\Alert', 'alert_owner', null, null, 'user_id');
+    }
+
     public function nonHiddenDashboards()
     {
         return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->where("is_hidden", "!=", "y")->orderBy("dashboard_order", "asc");
@@ -95,6 +100,10 @@ class User extends Authenticatable
     public function productReports()
     {
         return $this->hasManyThrough('App\Models\Report', 'App\Models\Product', 'user_id', 'report_owner_id', 'user_id')->where('report_owner_type', 'product');
+    }
+
+    public function categoryAlerts(){
+        return $this->hasManyThrough('App\Models\Alert', 'App\Models\Category', 'user_id', 'alert_owner_id', 'user_id')->where('alert_owner_type', 'category');
     }
 
     public function productAlerts()
