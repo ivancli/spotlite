@@ -96,6 +96,7 @@ class CategoryRepository implements CategoryContract
             $categoryBuilder->orderBy('category_order', 'asc')->orderBy('category_id');
         }
         $categories = $categoryBuilder->get();
+
         $output = new \stdClass();
         $output->recordTotal = $this->getCategoriesCount();
         $output->recordFiltered = $categories->count();

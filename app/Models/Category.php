@@ -37,8 +37,10 @@ class Category extends Model
         if (request()->has('keyword') && !empty(request()->get('keyword'))) {
             $keyword = request()->get('keyword');
             $queryBuilder = $this->products();
-            $filteredQueryBuilder = $queryBuilder->where('product_name', 'LIKE', "%{$keyword}%")->orWhereHas('sites', function ($query) use ($keyword) {
-                $query->where('site_url', 'LIKE', "%{$keyword}%");
+            $filteredQueryBuilder = $queryBuilder->where(function($query) use ($keyword){
+                $query->where('product_name', 'LIKE', "%{$keyword}%")->orWhereHas('sites', function ($query) use ($keyword) {
+                    $query->where('site_url', 'LIKE', "%{$keyword}%");
+                });
             });
             $filteredProductCount = $filteredQueryBuilder->count();
             if ($filteredProductCount > 0) {
