@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-d819bb3652.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-d64711fda8.css */
 @media print {
   *,
   *:before,
@@ -15929,8 +15929,8 @@ tr.empty-message-row td {
 
 @media (min-width: 991px) {
     .delete-popup-content-container {
-        padding-left: 100px;
-        padding-right: 100px;
+        padding-left: 50px;
+        padding-right: 50px;
     }
 }
 
