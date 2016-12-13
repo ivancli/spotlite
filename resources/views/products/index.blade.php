@@ -1,17 +1,6 @@
 @extends('layouts.adminlte')
 @section('title', 'Products')
 
-@section('notification_banner')
-    @if(auth()->user()->preference("HIDE_PRODUCT_BANNER_MESSAGE") != "1")
-        <div class="callout callout-default" style="margin-bottom: 0!important;">
-            <button type="button" class="close" onclick="hideProductBannerMessage(this); return false;">×</button>
-            <h4>Track how your competitors are pricing identical and similar products.</h4>
-            Configure your categories and products by adding URLs below. Make sure to set up the
-            alerts so you and more team members can receive timely notifications about price changes.
-        </div>
-    @endif
-@stop
-
 @section('header_title', "Products")
 
 
@@ -31,11 +20,20 @@
     <div class="row">
         <div class="col-sm-12">
             <p class="text-muted font-size-17">
-                In this area of SpotLite you can set-up all the prices that you want to track. Simply add a category,
-                then a product name. Once you have done this, simply copy and paste the product pages of the brands
-                prices you want to track. To do this go to each of the brand or competitors site, navigate to the
-                product details page or any place that holds the pricing information. Copy and paste the URL into the
-                Add URL box shown below.
+                {{--In this area of SpotLite you can set-up all the prices that you want to track. Simply add a category,--}}
+                {{--then a product name. Once you have done this, simply copy and paste the product pages of the brands--}}
+                {{--prices you want to track. To do this go to each of the brand or competitors site, navigate to the--}}
+                {{--product details page or any place that holds the pricing information. Copy and paste the URL into the--}}
+                {{--Add URL box shown below.--}}
+                You can set up all Categories and Products you want to keep an eye on and SpotLite will update the
+                prices for you automatically. Simply add a Category name, then a Product name. Now all you have to do is
+                copy and paste the Product Page URLs of the prices you want to track on the Product Page URL field
+                within each Product section, as shown below.
+
+            </p>
+            <p class="text-muted">
+                    Note: you can find the Product Page URLs on your competitors' website, usually on the product
+                    details page or where the pricing is located within their website
             </p>
         </div>
     </div>
@@ -51,7 +49,12 @@
                     <div class="row m-b-10 text-muted font-weight-bold">
                         <div class="col-md-8 line-height-30">
                             @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
-                                Credit: &nbsp;&nbsp;&nbsp;&nbsp;
+                                @if(!is_null(auth()->user()->apiSubscription->product()))
+                                    {{auth()->user()->apiSubscription->product()->name}} Plan:
+                                @else
+                                    Credit:
+                                @endif
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
 
                                 {{--TODO update color based on the ratio--}}
                                 <div class="progress vertical-align-middle"
@@ -74,10 +77,10 @@
                         </div>
                         <div class="col-md-4">
                             <div class="pull-right">
-                                <a href="#" onclick="showSetUpNotifications(); return false;" class="btn btn-default btn-flat">
+                                <a href="#" onclick="showSetUpNotifications(); return false;" class="btn btn-primary btn-flat">
                                     <i class="fa fa-bell-o"></i>
                                     &nbsp;
-                                    Set Up Notifications
+                                    Set Up Alerts
                                 </a>
                             </div>
                         </div>

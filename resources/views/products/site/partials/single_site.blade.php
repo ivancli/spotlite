@@ -3,7 +3,7 @@
     data-site-alert-url="{{$site->urls['alert']}}"
     data-site-product-show-url="{{$site->product->urls['show']}}"
     data-site-update-my-price-url="{{$site->urls['update_my_price']}}">
-    <td class="site-url">
+    <td class="site-url vertical-align-middle">
         <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-toggle="popover"
            data-container="body"
            data-trigger="hover"
@@ -22,15 +22,16 @@
                     </button>
                 </span>
         </div>
-
-        <span class="btn-edit btn-edit-site" onclick="toggleEditSiteURL(this)">
-            Edit &nbsp;
-            <i class="fa fa-pencil-square-o"></i>
-        </span>
+        <div class="btn-edit btn-edit-site pull-right">
+            <div onclick="toggleEditSiteURL(this)" class="btn-edit-align-middle">
+                Edit &nbsp;
+                <i class="fa fa-pencil-square-o"></i>
+            </div>
+        </div>
     </td>
     @if(auth()->user()->isStaff || auth()->user()->subscriptionCriteria()->my_price == true)
         <td align="center">
-            <a href="#" class="btn-my-price"  style="cursor: default;" onclick="return false;"
+            <a href="#" class="btn-my-price" style="cursor: default;" onclick="return false;"
                {{--onclick="toggleMyPrice(this); return false;"--}}
                data-product-alert-on-my-price="{{is_null($site->product->alertOnMyPrice()) ? "" : "y"}}"
                data-site-alerts-on-my-price="{{$site->product->siteAlertsOnMyPrice()->count()}}">
@@ -51,7 +52,7 @@
         @else
             <div class="text-right">
                 @if(is_null($site->recent_price))
-                    <div class="p-l-10">
+                    <div class="p-r-30">
                         <strong><i class="fa fa-minus"></i></strong>
                     </div>
                 @else
@@ -65,7 +66,9 @@
             @if(!is_null($site->previousPrice))
                 ${{number_format($site->previousPrice->price, 2, '.', ',')}}
             @else
-                <strong><i class="fa fa-minus"></i></strong>
+                <div class="p-r-30">
+                    <strong><i class="fa fa-minus"></i></strong>
+                </div>
             @endif
         </div>
     </td>
@@ -76,12 +79,12 @@
                     <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
                     ${{number_format(abs($site->diffPrice), 2, '.', ',')}}
                 @else
-                    <div class="p-l-10">
+                    <div class="p-r-10">
                         <strong><i class="fa fa-minus"></i></strong>
                     </div>
                 @endif
             @else
-                <div class="p-l-10">
+                <div class="p-r-10">
                     <strong><i class="fa fa-minus"></i></strong>
                 </div>
             @endif
@@ -92,7 +95,7 @@
             {{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->priceLastChangedAt))}}
 
         @else
-            <div class="p-l-10">
+            <div class="p-l-30">
                 <strong><i class="fa fa-minus"></i></strong>
             </div>
         @endif
@@ -105,14 +108,14 @@
                 <span class="hidden-xs hidden-sm">{{date(auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}</span>
             </span>
         @else
-            <div class="p-l-10">
+            <div class="p-l-15">
                 <strong><i class="fa fa-minus"></i></strong>
             </div>
         @endif
     </td>
     <td>
         <div title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->created_at))}}"
-              data-toggle="tooltip">
+             data-toggle="tooltip">
             {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->created_at))}}
         </div>
     </td>

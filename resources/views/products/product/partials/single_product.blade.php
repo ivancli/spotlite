@@ -10,7 +10,7 @@
                     {{--data-toggle="collapse"--}}
                     {{--data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}"--}}
             >
-                <i class="glyphicon glyphicon-menu-hamburger"></i>
+                <i class="fa fa-tag"></i>
             </a>
         </th>
         <th class="product-th">
@@ -104,7 +104,7 @@
                     <tr>
                         <th width="15%">Site</th>
                         @if(auth()->user()->isStaff || auth()->user()->subscriptionCriteria()->my_price == true)
-                            <th class="text-center" width="10%">My Price</th>
+                            <th class="text-center" width="10%">My Site</th>
                         @endif
                         <th width="10%" class="text-right">Current Price</th>
                         <th width="10%" class="text-right">Previous Price</th>
@@ -132,7 +132,7 @@
                     @endif
                     {{--sites here--}}
                     <tr class="add-site-row">
-                        <td colspan="9">
+                        <td colspan="9" class="add-item-cell">
 
                             <div class="add-item-block add-site-container"
                                  @if(!auth()->user()->isStaff && auth()->user()->subscriptionCriteria()->site != 0 && $product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
@@ -163,7 +163,7 @@
                                         <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
                                             <button class="btn btn-primary"
                                                     onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
-                                                ADD SITE
+                                                ADD PRODUCT URL
                                             </button>
                                             &nbsp;&nbsp;
                                             <button class="btn btn-default btn-cancel-add-site"

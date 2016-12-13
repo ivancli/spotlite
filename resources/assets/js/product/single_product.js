@@ -421,7 +421,7 @@ function updateProductEmptyMessage(el) {
             $tblSite.find("tbody").prepend(
                 $("<tr>").addClass("empty-message-row").append(
                     $("<td>").attr({
-                        "colspan": 8
+                        "colspan": 9
                     }).addClass("text-center").text("To start tracking prices, simply copy and paste the URL of the product page of the website your want to track.")
                 )
             )

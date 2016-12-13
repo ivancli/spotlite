@@ -8,11 +8,11 @@
             <tr>
                 <th class="shrink category-th">
                     <a class="btn-collapse btn-category-dragger"
-                       href="#category-{{$category->getKey()}}" role="button"
-                       data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
-                       aria-controls="category-{{$category->getKey()}}"
+                       {{--href="#category-{{$category->getKey()}}" role="button"--}}
+                       {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true"--}}
+                       {{--aria-controls="category-{{$category->getKey()}}"--}}
                     >
-                        <i class="fa fa-bookmark "></i>
+                        <i class="fa fa-tag "></i>
                     </a>
                 </th>
                 <th class="category-th">
@@ -85,7 +85,7 @@
             </tr>
             <tr>
                 <th></th>
-                <th colspan="3" class="category-th action-cell">
+                <th colspan="3" class="category-th action-cell add-item-cell">
                     <div class="add-item-block add-product-container"
                          onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
                         <div class="add-item-label">

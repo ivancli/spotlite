@@ -15139,43 +15139,56 @@ input:focus::-ms-input-placeholder {
     src: url("../fonts/flama/Flama-Bold.eot");
     src: url("../fonts/flama/Flama-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Bold.woff") format("woff"), url("../fonts/flama/Flama-Bold.ttf") format("truetype");
     font-weight: bold;
-    font-style: normal; }
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'Flama';
     src: url("../fonts/flama/Flama-Medium.eot");
     src: url("../fonts/flama/Flama-Medium.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Medium.woff") format("woff"), url("../fonts/flama/Flama-Medium.ttf") format("truetype");
     font-weight: 500;
-    font-style: normal; }
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'Flama';
     src: url("../fonts/flama/Flama-Light.eot");
     src: url("../fonts/flama/Flama-Light.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Light.woff") format("woff"), url("../fonts/flama/Flama-Light.ttf") format("truetype");
     font-weight: 300;
-    font-style: normal; }
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'Flama Book';
     src: url("../fonts/flama/Flama-BookItalic.eot");
     src: url("../fonts/flama/Flama-BookItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-BookItalic.woff") format("woff"), url("../fonts/flama/Flama-BookItalic.ttf") format("truetype");
     font-weight: normal;
-    font-style: italic; }
+    font-style: italic;
+}
+
 @font-face {
     font-family: 'Flama';
     src: url("../fonts/flama/Flama-Semibold.eot");
     src: url("../fonts/flama/Flama-Semibold.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Semibold.woff") format("woff"), url("../fonts/flama/Flama-Semibold.ttf") format("truetype");
     font-weight: 600;
-    font-style: normal; }
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'Flama Book';
     src: url("../fonts/flama/Flama-Book.eot");
     src: url("../fonts/flama/Flama-Book.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Book.woff") format("woff"), url("../fonts/flama/Flama-Book.ttf") format("truetype");
     font-weight: normal;
-    font-style: normal; }
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'Flama';
     src: url("../fonts/flama/Flama-Black.eot");
     src: url("../fonts/flama/Flama-Black.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Black.woff") format("woff"), url("../fonts/flama/Flama-Black.ttf") format("truetype");
     font-weight: 900;
-    font-style: normal; }
+    font-style: normal;
+}
 
 /*end of flama font*/
 
@@ -15208,8 +15221,33 @@ input:focus::-ms-input-placeholder {
     padding-left: 10px;
 }
 
+.p-r-10 {
+    padding-right: 10px;
+}
+
+.p-r-15 {
+    padding-right: 15px;
+}
+
+.p-l-15 {
+    padding-left: 15px;
+}
+
+.p-l-30 {
+    padding-left: 30px;
+}
+
+.p-r-30 {
+    padding-right: 30px;
+}
+
 .p-20 {
     padding: 20px;
+}
+
+.tbl-site > thead > tr > th {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .product-container {
@@ -15411,7 +15449,12 @@ td.shrink, th.shrink {
 
 table th.action-cell,
 table td.action-cell {
-    width: 150px;
+    width: 100px;
+}
+
+.category-name-link:hover, .product-name-link:hover {
+    color: #777;
+    cursor: default;
 }
 
 table td.table-container {
@@ -15457,10 +15500,10 @@ table td.table-container {
     vertical-align: middle;
 }
 
-.btn-category-dragger .fa-bookmark {
-    transform: rotate(-90deg);
+.btn-category-dragger .fa-bookmark,
+.btn-category-dragger .fa-tag {
     font-size: 30px;
-    margin-left: -3px;
+    margin-left: 10px;
 }
 
 .btn-edit.btn-edit-category,
@@ -15504,7 +15547,7 @@ table td.table-container {
 
 .collapsible-category-div table.product-wrapper > thead > tr > th:last-child,
 .collapsible-category-div table.product-wrapper > tbody > tr > td:last-child {
-    padding-right: 15px !important;
+    padding-right: 15px;
 }
 
 .collapsible-category-div table.product-wrapper thead tr:first-child th {
@@ -15512,7 +15555,7 @@ table td.table-container {
 }
 
 .collapsible-category-div table.product-wrapper tbody tr:last-child td {
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
 }
 
 .product-wrapper table.tbl-site {
@@ -15551,7 +15594,7 @@ table.tbl-site.table-striped > tbody > tr:nth-of-type(even) {
 
 .product-th.action-cell {
     padding-right: 25px;
-    width: 175px;
+    width: 100px;
 }
 
 .category-th.action-cell {
@@ -15630,6 +15673,10 @@ th.ellipsis {
 /*.site-wrapper td:not(:last-child){*/
 /*border: 1px solid #e6e6e6 !important;*/
 /*}*/
+
+td.add-item-cell, th.add-item-cell {
+    padding: 0px !important;
+}
 
 .site-wrapper {
     cursor: move;
@@ -15711,6 +15758,7 @@ h3.box-title {
 .main-header .sidebar-toggle:before {
     content: "\f100";
 }
+
 .main-header .sidebar-toggle {
     transform: rotate(-180deg);
     -moz-transform: rotate(-180deg);
@@ -15736,8 +15784,6 @@ h3.box-title {
     -o-transition: -o-transform 550ms ease;
     -webkit-transition: -webkit-transform 550ms ease;
 }
-
-
 
 .add-item-block {
     border: 2px dashed lightgrey;
@@ -15944,7 +15990,7 @@ tr.empty-message-row td {
     }
 
     .tbl-site th, .tbl-site tr.site-wrapper td, .tbl-site tr.add-site-row td {
-        padding: 15px !important;
+        padding: 15px;
     }
 }
 
@@ -15956,12 +16002,26 @@ tr.site-wrapper td.site-url {
 /*td.site-url a {*/
 /*line-height: 60px;*/
 /*}*/
+tr.add-site-row {
+    background-color: #fff !important;
+}
 
 .btn-edit.btn-edit-site {
     position: absolute;
     right: 0;
-    top: 16px;
+    top: 0;
     margin: 0 !important;
+    height: 100%;
+}
+
+.btn-edit.btn-edit-site .btn-edit-align-middle {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 tr.site-wrapper > td {

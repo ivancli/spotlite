@@ -61,7 +61,7 @@
                 </li>
                 <li class="{{Style::set_active('report')}}">
                     <a href="{{url('report')}}">
-                        <i class="fa fa-line-chart"></i>
+                        <i class="fa fa-envelope-o"></i>
                         <span>REPORTS</span>
                     </a>
                 </li>

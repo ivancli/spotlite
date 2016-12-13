@@ -61,24 +61,24 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Set Up Notifications</h4>
+                <h4 class="modal-title">Set Up Alerts</h4>
             </div>
             <div class="modal-body">
                 <div class="warnning-message-container text-danger m-b-10" style="display: none;">
-                    <i class="fa fa-info-circle"></i> &nbsp; For this notification to be set up, you need to
+                    <i class="fa fa-info-circle"></i> &nbsp; For this alert to be set up, you need to
                     <a href="#" class="text-danger" style="text-decoration: underline">nominate your company URL</a>
                 </div>
 
-                <div class="simple-notifications m-b-20"
+                <div class="basic-notifications m-b-20"
                      @if(auth()->user()->categoryAlerts()->count() != 0 || auth()->user()->productAlerts()->count() != 0)
                      style="display: none;"
                         @endif
                 >
-                    <form id="frm-notification-simple" class="nl-form">
-                        Send notification when
+                    <form id="frm-notification-basic" class="nl-form">
+                        Send alert when
                         &nbsp;
                         <select name="notification_type" id="basic-notification-type" onchange="checkCompanyURL();">
-                            <option value=""> -- select notification type --</option>
+                            <option value=""> -- select alert type --</option>
                             <option value="my price" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'my price' ? "selected" : ""}}>
                                 my price was beaten
                             </option>
@@ -93,14 +93,14 @@
                 </div>
                 <div class="m-b-20">
                     @if(auth()->user()->categoryAlerts()->count() == 0 && auth()->user()->productAlerts()->count() == 0)
-                        <a href="#" data-status="simple"
-                           onclick="toggleSimpleAdvancedNotifications(this); return false;">
-                            <i class="fa fa-plus-square-o"></i>&nbsp;&nbsp;advanced notifications
+                        <a href="#" data-status="basic"
+                           onclick="toggleBasicAdvancedNotifications(this); return false;">
+                            <i class="fa fa-plus-square-o"></i>&nbsp;&nbsp;advanced alerts
                         </a>
                     @else
                         <a href="#" data-status="advanced"
-                           onclick="toggleSimpleAdvancedNotifications(this); return false;">
-                            <i class="fa fa-plus-square-o"></i>&nbsp;&nbsp;simple notifications
+                           onclick="toggleBasicAdvancedNotifications(this); return false;">
+                            <i class="fa fa-plus-square-o"></i>&nbsp;&nbsp;basic alerts
                         </a>
                     @endif
                 </div>
@@ -109,7 +109,7 @@
                      style="display: none;"
                         @endif
                 >
-                    <p>Enable notification by checking checkboxes next to category / product.</p>
+                    <p>Enable alert by checking checkboxes next to category / product.</p>
                     <ul class="lst-category text-muted" style="padding-left: 20px;">
                         @foreach($categories as $category)
                             <li class="category-checkbox">
@@ -128,7 +128,7 @@
                                 <form class="form-control-inline frm-category-notification nl-form"
                                       style="display: none;">
                                     <select class="form-control input-sm form-control-inline sel-category-notification-type" onchange="checkCompanyURL();">
-                                        <option value=""> -- select notification type --</option>
+                                        <option value=""> -- select alert type --</option>
                                         <option value="my price" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'my price' ? "selected" : ""}}>
                                             beats my price
                                         </option>
@@ -161,7 +161,7 @@
                                                   style="display: none;">
                                                 <select class="form-control input-sm form-control-inline sel-notification-type"
                                                         onchange="toggleSpecificPriceInput(this);checkCompanyURL();">
-                                                    <option value=""> -- select notification type --</option>
+                                                    <option value=""> -- select alert type --</option>
                                                     <option value="price changed" {{!is_null($product->alert) && $product->alert->comparison_price_type == "price changed" ? "selected" : ""}}>
                                                         price changed
                                                     </option>
@@ -207,7 +207,7 @@
         function modalReady(options) {
             $("#sel-email").select2();
 
-            new NLForm($("#frm-notification-simple").get(0))
+            new NLForm($("#frm-notification-basic").get(0))
 
             $(".frm-category-notification, .frm-product-notification").each(function () {
                 new NLForm(this);
@@ -307,7 +307,7 @@
         }
 
         function collectFormData() {
-            if ($(".simple-notifications").is(":visible")) {
+            if ($(".basic-notifications").is(":visible")) {
                 return {
                     "notification_type": $("#basic-notification-type").val(),
                     "email[]": $(".txt-email").val()
@@ -346,23 +346,23 @@
             }
         }
 
-        function toggleSimpleAdvancedNotifications(el) {
-            if ($(el).attr("data-status") == 'simple') {
+        function toggleBasicAdvancedNotifications(el) {
+            if ($(el).attr("data-status") == 'basic') {
                 /*show advanced settings*/
                 $(el).attr("data-status", "advanced");
                 $(el).empty().append(
                         $("<i>").addClass("fa fa-minus-square-o"),
-                        "&nbsp;&nbsp;simple notifications"
+                        "&nbsp;&nbsp;basic notifications"
                 );
-                $(".simple-notifications").slideUp();
+                $(".basic-notifications").slideUp();
                 $(".advanced-notifications").slideDown();
             } else {
                 $(el).empty().append(
                         $("<i>").addClass("fa fa-plus-square-o"),
                         "&nbsp;&nbsp;advanced notifications"
                 );
-                $(el).attr("data-status", "simple");
-                $(".simple-notifications").slideDown();
+                $(el).attr("data-status", "basic");
+                $(".basic-notifications").slideDown();
                 $(".advanced-notifications").slideUp();
             }
         }
