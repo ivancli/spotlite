@@ -487,46 +487,48 @@
     {{--TOUR--}}
     <script type="text/javascript" src="{{elixir('js/product-tour.js')}}"></script>
     <script type="text/javascript">
-        var tour = new Tour({
-            steps: [
-                {
-                    element: ".btn-add-category",
-                    content: "Add a category of products you wish to track."
-                },
-                {
-                    element: ".btn-add-product:first",
-                    content: "Add products within each Category."
-                },
-                {
-                    element: ".btn-add-site:first",
-                    content: "Add webpages from your competitors' Sites for each Product."
-                },
-                {
-                    element: ".action-cell:first",
-                    content: "You can edit or delete a Category, Product or Site.",
-                    placement: "left"
-                },
-                {
-                    element: ".btn-report:first",
-                    content: "You can schedule a report for Categories and Products.",
-                    placement: "left"
-                },
-                {
-                    element: ".btn-alert:first",
-                    content: "You can set an Alert for Products and Sites.",
-                    placement: "left"
-                },
-                {
-                    element: ".btn-chart:first",
-                    content: "You can generate a chart for Categories, Products and Sites and add them to your Dashboard.",
-                    placement: "left"
-                }
-            ],
-            backdrop: true,
-            storage: false,
-            backdropPadding: 20
+        $(function(){
+            var tour = new Tour({
+                steps: [
+                    {
+                        element: ".btn-add-category",
+                        content: "Add a category of products you wish to track."
+                    },
+                    {
+                        element: ".btn-add-product:first",
+                        content: "Add products within each Category."
+                    },
+                    {
+                        element: ".btn-add-site:first",
+                        content: "Add webpages from your competitors' Sites for each Product."
+                    },
+                    {
+                        element: ".action-cell:first",
+                        content: "You can edit or delete a Category, Product or Site.",
+                        placement: "left"
+                    },
+                    {
+                        element: ".btn-report:first",
+                        content: "You can schedule a report for Categories and Products.",
+                        placement: "left"
+                    },
+                    {
+                        element: ".btn-alert:first",
+                        content: "You can set an Alert for Products and Sites.",
+                        placement: "left"
+                    },
+                    {
+                        element: ".btn-chart:first",
+                        content: "You can generate a chart for Categories, Products and Sites and add them to your Dashboard.",
+                        placement: "left"
+                    }
+                ],
+                backdrop: true,
+                storage: false,
+                backdropPadding: 20
+            });
+            tour.init();
         });
-        tour.init();
 
         function startTour() {
             tour.restart();

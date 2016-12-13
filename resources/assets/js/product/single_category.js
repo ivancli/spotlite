@@ -1,12 +1,13 @@
 
 function btnDeleteCategoryOnClick(el) {
-    deletePopup("Delete Category", "Are you sure you want to delete the " + $(el).attr("data-name") + " Category?",
-        "By deleting this category, you will lose the following data:",
+    deletePopup("Delete Category", "Are you sure you want to delete this Category?",
+        "By deleting this category, you will lose the following:",
         [
-            "All data related to the category you are tracking",
-            "All sites and products associated with this category",
-            "The charts of the category",
-            "The presentation of the data"
+            "All Products you have added",
+            "All URLs you have added",
+            "All Category and Product Charts generated, including any Charts displayed on your Dashboards",
+            "All Category Reports generated",
+            "This Category's pricing information tracked to date"
         ],
         {
             "affirmative": {
@@ -126,15 +127,24 @@ function loadSingleProduct(url, callback) {
 
 function toggleEditCategoryName(el) {
     var $tbl = $(el).closest(".tbl-category");
-    if ($(el).hasClass("editing")) {
-        $(el).removeClass("editing");
+    if ($tbl.find(".btn-edit-category").hasClass("editing")) {
+        $tbl.find(".btn-edit-category").removeClass("editing").show();
         $tbl.find(".category-name-link").show();
         $tbl.find(".frm-edit-category").hide();
     } else {
+        $tbl.find(".btn-edit-category").addClass("editing").hide();
+        $tbl.find("input.category-name").val($tbl.find(".category-name-link").text());
         $tbl.find(".category-name-link").hide();
         $tbl.find(".frm-edit-category").show();
         $tbl.find(".frm-edit-category .category-name").focus();
-        $(el).addClass("editing");
+    }
+}
+
+function cancelEditCategoryName(el, event) {
+    if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
+        toggleEditCategoryName(el);
+    } else if (event.keyCode == 27) {
+        $(el).blur();
     }
 }
 

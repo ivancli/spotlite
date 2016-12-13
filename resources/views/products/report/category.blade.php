@@ -174,10 +174,10 @@
             });
 
             $("#btn-delete-category-report").on("click", function () {
-                deletePopup("Delete Report Schedule", "Are you sure you want to delete the {{$category->category_name}} Category Report?",
-                        "By deleting this report schedule, you will lose the following data:",
+                deletePopup("Delete Report Schedule", "Are you sure you want to delete this Category Report?",
+                        "By deleting this Category Report, you will lose the following:",
                         [
-                            "Future reports"
+                            "Future Category Reports scheduled based on frequency, time and date previously set"
                         ],
                         {
                             "affirmative": {

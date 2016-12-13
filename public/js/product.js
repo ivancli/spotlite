@@ -1,12 +1,13 @@
 
 function btnDeleteCategoryOnClick(el) {
-    deletePopup("Delete Category", "Are you sure you want to delete the " + $(el).attr("data-name") + " Category?",
-        "By deleting this category, you will lose the following data:",
+    deletePopup("Delete Category", "Are you sure you want to delete this Category?",
+        "By deleting this category, you will lose the following:",
         [
-            "All data related to the category you are tracking",
-            "All sites and products associated with this category",
-            "The charts of the category",
-            "The presentation of the data"
+            "All Products you have added",
+            "All URLs you have added",
+            "All Category and Product Charts generated, including any Charts displayed on your Dashboards",
+            "All Category Reports generated",
+            "This Category's pricing information tracked to date"
         ],
         {
             "affirmative": {
@@ -126,15 +127,24 @@ function loadSingleProduct(url, callback) {
 
 function toggleEditCategoryName(el) {
     var $tbl = $(el).closest(".tbl-category");
-    if ($(el).hasClass("editing")) {
-        $(el).removeClass("editing");
+    if ($tbl.find(".btn-edit-category").hasClass("editing")) {
+        $tbl.find(".btn-edit-category").removeClass("editing").show();
         $tbl.find(".category-name-link").show();
         $tbl.find(".frm-edit-category").hide();
     } else {
+        $tbl.find(".btn-edit-category").addClass("editing").hide();
+        $tbl.find("input.category-name").val($tbl.find(".category-name-link").text());
         $tbl.find(".category-name-link").hide();
         $tbl.find(".frm-edit-category").show();
         $tbl.find(".frm-edit-category .category-name").focus();
-        $(el).addClass("editing");
+    }
+}
+
+function cancelEditCategoryName(el, event) {
+    if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
+        toggleEditCategoryName(el);
+    } else if (event.keyCode == 27) {
+        $(el).blur();
     }
 }
 
@@ -504,13 +514,14 @@ function loadSingleSite(url, callback) {
 
 
 function btnDeleteProductOnClick(el) {
-    deletePopup("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?",
-        "By deleting this product, you will lose the following data:",
+    deletePopup("Delete Product", "Are you sure you want to delete this Product?",
+        "By deleting this product, you will lose the following:",
         [
-            "All data related to the product you are tracking",
-            "All site associated with this product",
-            "The charts of the product",
-            "The presentation of the data"
+            "All URLs you have added",
+            "All Product charts generated, including any Charts displayed on your Dashboards",
+            "All Product Reports generated",
+            "All Alerts set up for this Product",
+            "This Product's pricing information tracked to date"
         ],
         {
             "affirmative": {
@@ -554,17 +565,27 @@ function btnDeleteProductOnClick(el) {
 
 function toggleEditProductName(el) {
     var $tbl = $(el).closest(".product-wrapper");
-    if ($(el).hasClass("editing")) {
-        $(el).removeClass("editing");
+    if ($tbl.find(".btn-edit-product").hasClass("editing")) {
+        $tbl.find(".btn-edit-product").removeClass("editing").show();
         $tbl.find(".product-name-link").show();
         $tbl.find(".frm-edit-product").hide();
     } else {
+        $tbl.find(".btn-edit-product").addClass("editing").hide();
+        $tbl.find("input.product-name").val($tbl.find(".product-name-link").text());
         $tbl.find(".product-name-link").hide();
         $tbl.find(".frm-edit-product").show();
         $tbl.find(".frm-edit-product .product-name").focus();
-        $(el).addClass("editing");
     }
 }
+
+function cancelEditProductName(el, event) {
+    if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
+        toggleEditProductName(el);
+    } else if (event.keyCode == 27) {
+        $(el).blur();
+    }
+}
+
 
 function submitEditProductName(el) {
     showLoading();
@@ -768,14 +789,14 @@ function updateAddSitePanelStatus(usage, total, el) {
         $addSiteContainer.attr('onclick', 'appendCreateSiteBlock(this); event.stopPropagation(); return false;');
     }
 }
-
 function btnDeleteSiteOnClick(el) {
-    deletePopup("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + " Site?",
-        "By deleting this site, you will lose the following data:",
+    deletePopup("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + "?",
+        "By deleting this site, you will lose the following:",
         [
-            "All data related to the site you are tracking",
-            "The charts of the site",
-            "The presentation of the data"
+            "All pricing information related to this Site, including any information displayed on your Charts and Dashboards",
+            "All Product reports generated",
+            "All alerts set up for this Site",
+            "This Site's pricing information tracked to date"
         ],
         {
             "affirmative": {
@@ -818,17 +839,41 @@ function btnDeleteSiteOnClick(el) {
         });
 }
 
+// function toggleEditSiteURL(el) {
+//     var $tr = $(el).closest(".site-wrapper");
+//     if ($(el).hasClass("editing")) {
+//         $(el).removeClass("editing");
+//         $tr.find(".site-url-link").show();
+//         $tr.find(".frm-edit-site-url").hide();
+//     } else {
+//         $tr.find(".site-url-link").hide();
+//         $tr.find(".frm-edit-site-url").show();
+//         $tr.find(".frm-edit-site-url .txt-site-url").focus();
+//         $(el).addClass("editing");
+//     }
+// }
+
+
 function toggleEditSiteURL(el) {
     var $tr = $(el).closest(".site-wrapper");
-    if ($(el).hasClass("editing")) {
-        $(el).removeClass("editing");
+    if ($tr.find(".btn-edit-align-middle").hasClass("editing")) {
+        $tr.find(".btn-edit-align-middle").removeClass("editing").show();
         $tr.find(".site-url-link").show();
         $tr.find(".frm-edit-site-url").hide();
     } else {
+        $tr.find(".btn-edit-align-middle").addClass("editing").hide();
+        $tr.find("input.txt-site-url").val($tr.find(".site-url-link").attr("data-content"));
         $tr.find(".site-url-link").hide();
         $tr.find(".frm-edit-site-url").show();
-        $tr.find(".frm-edit-site-url .txt-site-url").focus();
-        $(el).addClass("editing");
+        $tr.find(".frm-edit-site-url .txt-site-url").focus()
+    }
+}
+
+function cancelEditSiteURL(el, event) {
+    if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
+        toggleEditSiteURL(el);
+    } else if (event.keyCode == 27) {
+        $(el).blur();
     }
 }
 

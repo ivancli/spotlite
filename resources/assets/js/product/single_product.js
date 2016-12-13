@@ -207,13 +207,14 @@ function loadSingleSite(url, callback) {
 
 
 function btnDeleteProductOnClick(el) {
-    deletePopup("Delete Product", "Are you sure you want to delete the " + $(el).attr("data-name") + " Product?",
-        "By deleting this product, you will lose the following data:",
+    deletePopup("Delete Product", "Are you sure you want to delete this Product?",
+        "By deleting this product, you will lose the following:",
         [
-            "All data related to the product you are tracking",
-            "All site associated with this product",
-            "The charts of the product",
-            "The presentation of the data"
+            "All URLs you have added",
+            "All Product charts generated, including any Charts displayed on your Dashboards",
+            "All Product Reports generated",
+            "All Alerts set up for this Product",
+            "This Product's pricing information tracked to date"
         ],
         {
             "affirmative": {
@@ -257,17 +258,27 @@ function btnDeleteProductOnClick(el) {
 
 function toggleEditProductName(el) {
     var $tbl = $(el).closest(".product-wrapper");
-    if ($(el).hasClass("editing")) {
-        $(el).removeClass("editing");
+    if ($tbl.find(".btn-edit-product").hasClass("editing")) {
+        $tbl.find(".btn-edit-product").removeClass("editing").show();
         $tbl.find(".product-name-link").show();
         $tbl.find(".frm-edit-product").hide();
     } else {
+        $tbl.find(".btn-edit-product").addClass("editing").hide();
+        $tbl.find("input.product-name").val($tbl.find(".product-name-link").text());
         $tbl.find(".product-name-link").hide();
         $tbl.find(".frm-edit-product").show();
         $tbl.find(".frm-edit-product .product-name").focus();
-        $(el).addClass("editing");
     }
 }
+
+function cancelEditProductName(el, event) {
+    if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
+        toggleEditProductName(el);
+    } else if (event.keyCode == 27) {
+        $(el).blur();
+    }
+}
+
 
 function submitEditProductName(el) {
     showLoading();

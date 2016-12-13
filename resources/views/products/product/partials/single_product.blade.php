@@ -5,30 +5,19 @@
     <thead>
     <tr>
         <th class="shrink product-th">
-            <a class="btn-collapse btn-product-dragger" href="#" onclick="return false;"
-                    {{--href="#product-{{$product->getKey()}}" role="button"--}}
-                    {{--data-toggle="collapse"--}}
-                    {{--data-parent="#accordion" aria-expanded="true" aria-controls="product-{{$product->getKey()}}"--}}
-            >
-                <i class="fa fa-tag"></i>
-            </a>
+            <a class="btn-collapse btn-product-dragger" href="#" onclick="return false;"><i class="fa fa-tag"></i></a>
         </th>
         <th class="product-th">
-            <a class="text-muted product-name-link" href="#" onclick="return false;"
-                    {{--href="#product-{{$product->getKey()}}" role="button"--}}
-                    {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true" --}}
-                    {{--aria-controls="product-{{$product->getKey()}}"--}}
-            >
-                {{$product->product_name}}
-            </a>
+            <a class="text-muted product-name-link" href="#" onclick="return false;">{{$product->product_name}}</a>
             {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'onsubmit' => 'submitEditProductName(this); return false;', 'style'=>'display: none;')) !!}
             <div class="input-group sl-input-group">
                 <input type="text" name="product_name" placeholder="Product Name"
                        class="form-control sl-form-control input-lg product-name"
+                       onkeyup="cancelEditProductName(this, event)" onblur="cancelEditProductName(this)"
                        value="{{$product->product_name}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default btn-flat btn-lg">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fa fa-check"></i>
                     </button>
                 </span>
             </div>

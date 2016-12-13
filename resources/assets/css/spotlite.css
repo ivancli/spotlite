@@ -378,6 +378,11 @@ table td.table-container {
     margin-left: 30px;
     color: #aaa;
     font-size: 12px;
+}
+
+.btn-edit.btn-edit-category,
+.btn-edit.btn-edit-product,
+.btn-edit.btn-edit-site .btn-edit-align-middle {
     cursor: pointer;
 }
 

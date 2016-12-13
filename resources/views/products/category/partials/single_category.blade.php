@@ -7,30 +7,19 @@
             <thead>
             <tr>
                 <th class="shrink category-th">
-                    <a class="btn-collapse btn-category-dragger"
-                       {{--href="#category-{{$category->getKey()}}" role="button"--}}
-                       {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true"--}}
-                       {{--aria-controls="category-{{$category->getKey()}}"--}}
-                    >
-                        <i class="fa fa-tag "></i>
-                    </a>
+                    <a class="btn-collapse btn-category-dragger"><i class="fa fa-tag "></i></a>
                 </th>
                 <th class="category-th">
-                    <a class="text-muted category-name-link" href="#" onclick="return false;"
-                            {{--href="#category-{{$category->getKey()}}" role="button"--}}
-                            {{--data-toggle="collapse" data-parent="#accordion" aria-expanded="true"--}}
-                            {{--aria-controls="category-{{$category->getKey()}}"--}}
-                    >{{$category->category_name}}</a>
-
-
+                    <a class="text-muted category-name-link" href="#" onclick="return false;">{{$category->category_name}}</a>
                     {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style' => 'display: none;')) !!}
                     <div class="input-group sl-input-group">
                         <input type="text" name="category_name" placeholder="Category Name"
                                class="form-control sl-form-control input-lg category-name"
+                               onkeyup="cancelEditCategoryName(this, event)" onblur="cancelEditCategoryName(this)"
                                value="{{$category->category_name}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-default btn-flat btn-lg">
-                                <i class="fa fa-pencil"></i>
+                                <i class="fa fa-check"></i>
                             </button>
                         </span>
                     </div>

@@ -171,10 +171,10 @@
             });
 
             $("#btn-delete-product-report").on("click", function () {
-                deletePopup("Delete Report Schedule", "Are your sure you want to delete the {{$product->product_name}} Product Report?",
-                        "By deleting this report schedule, you will lose the following data:",
+                deletePopup("Delete Report Schedule", "Are you sure you want to delete this Product Report?",
+                        "By deleting this Product Report, you will lose the following:",
                         [
-                            "Future report"
+                            "Future Reports scheduled for this Product based on frequency, time and date previously set"
                         ],
                         {
                             "affirmative": {

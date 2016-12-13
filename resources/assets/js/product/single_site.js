@@ -1,11 +1,11 @@
-
 function btnDeleteSiteOnClick(el) {
-    deletePopup("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + " Site?",
-        "By deleting this site, you will lose the following data:",
+    deletePopup("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + "?",
+        "By deleting this site, you will lose the following:",
         [
-            "All data related to the site you are tracking",
-            "The charts of the site",
-            "The presentation of the data"
+            "All pricing information related to this Site, including any information displayed on your Charts and Dashboards",
+            "All Product reports generated",
+            "All alerts set up for this Site",
+            "This Site's pricing information tracked to date"
         ],
         {
             "affirmative": {
@@ -48,17 +48,41 @@ function btnDeleteSiteOnClick(el) {
         });
 }
 
+// function toggleEditSiteURL(el) {
+//     var $tr = $(el).closest(".site-wrapper");
+//     if ($(el).hasClass("editing")) {
+//         $(el).removeClass("editing");
+//         $tr.find(".site-url-link").show();
+//         $tr.find(".frm-edit-site-url").hide();
+//     } else {
+//         $tr.find(".site-url-link").hide();
+//         $tr.find(".frm-edit-site-url").show();
+//         $tr.find(".frm-edit-site-url .txt-site-url").focus();
+//         $(el).addClass("editing");
+//     }
+// }
+
+
 function toggleEditSiteURL(el) {
     var $tr = $(el).closest(".site-wrapper");
-    if ($(el).hasClass("editing")) {
-        $(el).removeClass("editing");
+    if ($tr.find(".btn-edit-align-middle").hasClass("editing")) {
+        $tr.find(".btn-edit-align-middle").removeClass("editing").show();
         $tr.find(".site-url-link").show();
         $tr.find(".frm-edit-site-url").hide();
     } else {
+        $tr.find(".btn-edit-align-middle").addClass("editing").hide();
+        $tr.find("input.txt-site-url").val($tr.find(".site-url-link").attr("data-content"));
         $tr.find(".site-url-link").hide();
         $tr.find(".frm-edit-site-url").show();
-        $tr.find(".frm-edit-site-url .txt-site-url").focus();
-        $(el).addClass("editing");
+        $tr.find(".frm-edit-site-url .txt-site-url").focus()
+    }
+}
+
+function cancelEditSiteURL(el, event) {
+    if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
+        toggleEditSiteURL(el);
+    } else if (event.keyCode == 27) {
+        $(el).blur();
     }
 }
 

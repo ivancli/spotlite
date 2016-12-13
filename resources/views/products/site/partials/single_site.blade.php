@@ -14,11 +14,12 @@
         <div class="frm-edit-site-url input-group sl-input-group" style="display: none;">
             <input type="text" name="site_url" placeholder="Site URL"
                    class="form-control sl-form-control txt-site-url"
+                   onkeyup="cancelEditSiteURL(this, event)" onblur="cancelEditSiteURL(this)"
                    value="{{$site->site_url}}">
             <span class="input-group-btn">
                     <button type="submit" class="btn btn-default btn-flat" data-url="{{$site->urls['update']}}"
                             onclick="getPricesEdit(this); return false;">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fa fa-check"></i>
                     </button>
                 </span>
         </div>

@@ -350,6 +350,7 @@
                     {
                         "sortable": false,
                         "data": function (data) {
+                            console.info(data);
                             return $("<div>").append(
                                     $("<div>").addClass("text-center").append(
                                             $("<a>").addClass("text-muted").attr({
@@ -359,7 +360,11 @@
                                             ),
                                             "&nbsp;&nbsp;",
                                             $("<a>").addClass("text-muted").attr({
-                                                "href": "#"
+                                                "href": "#",
+                                                "data-type": data.report_owner_type,
+                                                "data-id": data.report_id,
+                                                "data-delete-url": data.urls.delete,
+                                                "onclick": "deleteReport(this, function(){tblReport.ajax.reload();}); return false;"
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-trash text-danger")
                                             )
@@ -561,10 +566,10 @@
         }
 
         function deleteReportTask(el) {
-            deletePopup("Delete Report Schedule", "Are you sure you want to delete the " + $(el).attr("data-name") + " " + capitalise($(el).attr("data-report-type")) + " Report?",
-                    "By deleting this report schedule, you will lose the following data:",
+            deletePopup("Delete Report Schedule", "Are you sure you want to delete this " + capitalise($(el).attr("data-report-type")) + " Report?",
+                    "By deleting this " + capitalise($(el).attr("data-report-type")) + " Report, you will lose the following:",
                     [
-                        "Future reports"
+                        "Future Reports scheduled for this " + capitalise($(el).attr("data-report-type")) + " based on frequency, time and date previously set"
                     ],
                     {
                         "affirmative": {
@@ -605,10 +610,10 @@
         }
 
         function deleteReport(el, callback) {
-            deletePopup("Delete Report", "Are you sure you want to delete this report?",
-                    "By deleting this report, you will lose the following data:",
+            deletePopup("Delete Report", "Are you sure you want to delete this " + capitalise($(el).attr("data-type")) + " Report?",
+                    "By deleting this " + capitalise($(el).attr("data-type")) + " Report, you will lose the following:",
                     [
-                        "Presentation of the related historical data"
+                        "All historical data related to this " + capitalise($(el).attr("data-type")) + " Report"
                     ],
                     {
                         "affirmative": {
