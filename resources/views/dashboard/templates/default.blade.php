@@ -18,18 +18,18 @@
         </form>
     </div>
     &nbsp;&nbsp;
-    <div class="display-inline-block text-muted font-size-14 vertical-align-middle">Created on
+    <div class="display-inline-block text-muted font-size-14">Created on
         the {{date(auth()->user()->preferences['DATE_FORMAT'], strtotime($dashboard->created_at))}}
         <strong><i>by {{$dashboard->user->first_name}} {{$dashboard->user->last_name}}</i></strong>
         &nbsp; &nbsp; &#124; &nbsp;
-        <div class="btn-group vertical-align-text-top cursor-pointer">
+        <div class="btn-group cursor-pointer" style="vertical-align: baseline;">
             <a type="button" class="text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <strong>
                     Manage Dashboard <i class="fa fa-cog"></i>
                 </strong>
             </a>
             <ul class="dropdown-menu pull-right" role="menu">
-                <li><a href="#" onclick="addWidget(); return false;">Add Content to Dashboard</a></li>
+                <li><a href="#" onclick="addWidget(); return false;">Add Chart to Dashboard</a></li>
                 <li><a href="#" onclick="editDashboardName(); return false;">Rename Dashboard</a></li>
                 <li><a href="#" onclick="deleteDashboard(this); return false;"
                        data-url="{{$dashboard->urls['delete']}}">Delete Dashboard</a></li>
@@ -57,9 +57,12 @@
 <div class="row">
     <div class="col-lg-8 col-md-10 col-sm-12">
         <p class="text-muted font-size-17">
-            Welcome to your dashboard. Here you will see all the live feedback of the prices you are tracking. Add a
-            price you want to track by clicking on the "Add product price to track" link or go to the "Product Prices"
-            within the navigation.
+            {{--Welcome to your dashboard. Here you will see all the live feedback of the prices you are tracking. Add a--}}
+            {{--price you want to track by clicking on the "Add product price to track" link or go to the "Product Prices"--}}
+            {{--within the navigation.--}}
+            Welcome to your Dashboard. Here you'll be able to see all prices you're tricking through automatically
+            updated charts. Add a product price you want to track by clicking on "Add Product to Track" link or go to
+            the Products page on the navigation to add your Categories & Products.
         </p>
     </div>
 </div>
@@ -68,7 +71,7 @@
 
 <form class="text-muted dashboard-filter-container" id="frm-dashboard-filter-update"
       action="{{$dashboard->urls['filter_update']}}">
-    <span style="font-size: 15px;">Filter by:</span>
+    <span style="font-size: 15px;">FILTER BY:</span>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <select id="sel-timespan" name="timespan" class="form-control sl-form-control form-control-inline"
             onchange="submitUpdateFilters(this);">
@@ -122,7 +125,7 @@
             @if(is_null($dashboard->getPreference('timespan')) && is_null($dashboard->getPreference('resolution')))
             style="display: none;"
             @endif
-            onclick="submitResetFilters();return false;">Reset Filter
+            onclick="submitResetFilters();return false;">RESET FILTER
     </button>
 </form>
 <hr class="content-divider-white">

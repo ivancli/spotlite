@@ -7,7 +7,7 @@
                 <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
-                        <span>Dashboards</span>
+                        <span>DASHBOARDS</span>
                         <span class="pull-right-container">
                           <i class="fa fa-caret-down pull-right"></i>
                         </span>
@@ -45,24 +45,24 @@
                 <li class="bg-fff">
                     <a href="#" onclick="showAddDashboardForm(this); return false;">
                         <i class="fa fa-plus"></i>
-                        <span>Add a New Dashboard</span>
+                        <span>ADD A NEW DASHBOARD</span>
                     </a>
                 </li>
                 <li class="{{Style::set_active_starts_with('product')}}">
                     <a href="{{url('product')}}">
-                        <i class="fa fa-square-o"></i>
-                        <span>Products</span>
+                        <i class="fa fa-tag"></i>
+                        <span>PRODUCTS</span>
                     </a>
                 </li>
                 <li class="{{Style::set_active('alert')}}">
                     <a href="{{url('alert')}}">
                         <i class="fa fa-bell-o"></i>
-                        <span>Alerts</span></a>
+                        <span>ALERTS</span></a>
                 </li>
                 <li class="{{Style::set_active('report')}}">
                     <a href="{{url('report')}}">
                         <i class="fa fa-line-chart"></i>
-                        <span>Reports</span>
+                        <span>REPORTS</span>
                     </a>
                 </li>
             @endif
@@ -70,13 +70,13 @@
                 <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
                     <a href="{{route("admin.app_preference.index")}}">
                         <i class="fa fa-gears"></i>
-                        <span>App Preferences</span>
+                        <span>APP PREFERENCES</span>
                     </a>
                 </li>
                 <li class="treeview {{Style::set_active_and(array('admin', 'site'))}} {{Style::set_active_and(array('admin', 'domain'))}}">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
-                        <span>Crawler Management</span>
+                        <span>CRAWLER MANAGEMENT</span>
                         <span class="pull-right-container">
                           <i class="fa fa-caret-down pull-right"></i>
                         </span>
@@ -97,7 +97,7 @@
                 <li class="treeview {{Style::set_active_starts_with('um.')}}">
                     <a href="#">
                         <i class="fa fa-users"></i>
-                        <span>User Management</span>
+                        <span>USER MANAGEMENT</span>
                         <span class="pull-right-container">
                           <i class="fa fa-caret-down pull-right"></i>
                         </span>
@@ -132,7 +132,7 @@
                 <li class="treeview {{Style::set_active_starts_with('log.')}}">
                     <a href="#">
                         <i class="fa fa-file-text-o"></i>
-                        <span>System Log Management</span>
+                        <span>SYSTEM LOG MANAGEMENT</span>
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{Style::set_active_starts_with('log.crawler_activity')}}">

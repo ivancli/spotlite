@@ -138,10 +138,10 @@
         }
 
         function deleteWidget(el) {
-            deletePopup("Delete Chart", "Are you sure you want to delete the " + $(el).attr("data-name") + " Chart?",
-                    "By deleting this chart, you will lose the following data:",
+            deletePopup("Delete Chart", "Are you sure you want to delete this Chart?",
+                    "By deleting this Chart, you will lose the following:",
                     [
-                        "The presentation of the data"
+                        "All Category or Product data associated with this Chart displayed on the Dashboard"
                     ],
                     {
                         "affirmative": {

@@ -21,8 +21,8 @@
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" href="{{elixir('css/main.css')}}">
     <style>
-        body, h1, h2, h3, a, .main-header .header-label, div {
-            font-family: 'Lato', sans-serif;
+        body, h1, h2, h3, h4, h5, a, .main-header .header-label, div {
+            font-family: 'Flama', 'Lato', sans-serif;
         }
     </style>
 

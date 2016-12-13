@@ -10813,7 +10813,7 @@ function deletePopup(title, headingContent, subHeadingContent, listContent, btnO
                         "type": "checkbox",
                         "onclick": "updateDeletePopupButtonStatus(this);"
                     }),
-                    "&nbsp;&nbsp;I acknowledge I have read and understood."
+                    "&nbsp;&nbsp;I have read and understood that this action cannot be undone."
                 )
             )
         )

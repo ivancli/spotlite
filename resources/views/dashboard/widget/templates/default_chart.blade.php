@@ -1,25 +1,25 @@
-<div class="box box-widget" data-order="{{$widget->dashboard_widget_order}}" data-id="{{$widget->getKey()}}">
+<div class="box box-widget" data-order="{{$widget->dashboard_widget_order}}" data-id="{{$widget->getKey()}}" style="cursor: move;">
     <div class="box-header with-border">
         <h3 class="box-title">{{$widget->dashboard_widget_name}}</h3>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-content="{{
-            '<div>'.$widget->getPreference('chart_type') . ' - ' .
+            '<div>'.strtoupper($widget->getPreference('chart_type')) . ' - ' .
             '<strong>' .
             ($widget->getPreference('chart_type') == 'category' ? $widget->category()->category_name : '') .
             ($widget->getPreference('chart_type') == 'product' ? $widget->product()->product_name : '') .
             ($widget->getPreference('chart_type') == 'site' ? parse_url($widget->site()->site_url)['host'] : '') .
             '</strong></div>' .
-            "<div>Timespan: <strong>" . (!is_null($widget->dashboard->getPreference('timespan')) ? str_replace('_', ' ', $widget->dashboard->getPreference('timespan')) : str_replace('_', ' ', $widget->getPreference('timespan'))) . "</strong></div>" .
-            "<div>Period resolution: <strong>" . (!is_null($widget->dashboard->getPreference('resolution')) ? $widget->dashboard->getPreference('resolution') : $widget->getPreference('resolution')) . "</strong></div>"
+            "<div>TIMESPAN: <strong>" . (!is_null($widget->dashboard->getPreference('timespan')) ? str_replace('_', ' ', $widget->dashboard->getPreference('timespan')) : str_replace('_', ' ', $widget->getPreference('timespan'))) . "</strong></div>" .
+            "<div>PERIOD RESOLUTION: <strong>" . (!is_null($widget->dashboard->getPreference('resolution')) ? $widget->dashboard->getPreference('resolution') : $widget->getPreference('resolution')) . "</strong></div>"
             }}"
                    data-html="true" data-trigger="hover" data-placement="bottom" data-toggle="popover">
                 <i class="fa fa-info"></i>
             </button>
 
             <div class="btn-group">
-                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+                <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-download"></i>
-                </button>
+                </a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#" onclick="exportChart{{$widget->getKey()}}('png'); return false;">Download PNG</a></li>
                     <li><a href="#" onclick="exportChart{{$widget->getKey()}}('jpeg'); return false;">Download JPEG</a></li>
@@ -30,11 +30,11 @@
 
 
             <button type="button" class="btn btn-box-tool" onclick="editWidget(this)" data-url="{{$widget->urls['edit']}}">
-                <i class="fa fa-cog"></i>
+                <i class="fa fa-pencil"></i>
             </button>
             <button type="button" class="btn btn-box-tool" id="btn-delete-widget-{{$widget->getKey()}}"
                     data-url="{{$widget->urls['delete']}}" data-name="{{$widget->dashboard_widget_name}}" onclick="deleteWidget(this)">
-                <i class="fa fa-times"></i>
+                <i class="fa fa-trash-o"></i>
             </button>
         </div>
     </div>

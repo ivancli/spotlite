@@ -64,6 +64,11 @@
                 <h4 class="modal-title">Set Up Notifications</h4>
             </div>
             <div class="modal-body">
+                <div class="warnning-message-container text-danger m-b-10" style="display: none;">
+                    <i class="fa fa-info-circle"></i> &nbsp; For this notification to be set up, you need to
+                    <a href="#" class="text-danger" style="text-decoration: underline">nominate your company URL</a>
+                </div>
+
                 <div class="simple-notifications m-b-20"
                      @if(auth()->user()->categoryAlerts()->count() != 0 || auth()->user()->productAlerts()->count() != 0)
                      style="display: none;"
@@ -72,7 +77,7 @@
                     <form id="frm-notification-simple" class="nl-form">
                         Send notification when
                         &nbsp;
-                        <select name="notification_type" id="basic-notification-type">
+                        <select name="notification_type" id="basic-notification-type" onchange="checkCompanyURL();">
                             <option value=""> -- select notification type --</option>
                             <option value="my price" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'my price' ? "selected" : ""}}>
                                 my price was beaten
@@ -122,7 +127,7 @@
                                 &nbsp;&nbsp;&nbsp;
                                 <form class="form-control-inline frm-category-notification nl-form"
                                       style="display: none;">
-                                    <select class="form-control input-sm form-control-inline sel-category-notification-type">
+                                    <select class="form-control input-sm form-control-inline sel-category-notification-type" onchange="checkCompanyURL();">
                                         <option value=""> -- select notification type --</option>
                                         <option value="my price" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'my price' ? "selected" : ""}}>
                                             beats my price
@@ -155,7 +160,7 @@
                                             <form class="form-control-inline frm-product-notification frm-notification-type nl-form"
                                                   style="display: none;">
                                                 <select class="form-control input-sm form-control-inline sel-notification-type"
-                                                        onchange="toggleSpecificPriceInput(this);">
+                                                        onchange="toggleSpecificPriceInput(this);checkCompanyURL();">
                                                     <option value=""> -- select notification type --</option>
                                                     <option value="price changed" {{!is_null($product->alert) && $product->alert->comparison_price_type == "price changed" ? "selected" : ""}}>
                                                         price changed
@@ -360,6 +365,15 @@
                 $(".simple-notifications").slideDown();
                 $(".advanced-notifications").slideUp();
             }
+        }
+
+        function checkCompanyURL() {
+            $(".warnning-message-container").hide();
+            $(".sel-category-notification-type, .sel-notification-type, #basic-notification-type").each(function () {
+                if ($(this).val("my price") && (user.company_url == null || user.company_url.trim() == "")) {
+                    $(".warnning-message-container").show();
+                }
+            });
         }
     </script>
 </div>

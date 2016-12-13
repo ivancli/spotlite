@@ -97,10 +97,10 @@ function deleteDashboard(el) {
 //             "dismiss": true
 //         }
 //     });
-    deletePopup("Delete Dashboard", "Are you sure you want to delete this dashboard?",
-        "By deleting this dashboard, you will lose the following data:",
+    deletePopup("Delete Dashboard", "Are you sure you want to delete this Dashboard?",
+        "By deleting this Dashboard, you will lose the following:",
         [
-            "All charts in this dashboard"
+            "All Category or Product Charts generated on this Dashboard"
         ],
         {
             "affirmative": {

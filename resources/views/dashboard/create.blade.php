@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Create Dashboard</h4>
+                <h4 class="modal-title">Create a New Dashboard</h4>
             </div>
             <div class="modal-body">
                 <ul class="text-danger errors-container">
@@ -14,8 +14,8 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary btn-flat" id="btn-create-dashboard">OK</button>
-                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
+                <button class="btn btn-primary btn-flat" id="btn-create-dashboard">CONFIRM</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">CANCEL</button>
             </div>
         </div>
     </div>

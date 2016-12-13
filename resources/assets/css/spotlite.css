@@ -1,3 +1,50 @@
+/*flama font*/
+
+@font-face {
+    font-family: 'Flama';
+    src: url("../fonts/flama/Flama-Bold.eot");
+    src: url("../fonts/flama/Flama-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Bold.woff") format("woff"), url("../fonts/flama/Flama-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal; }
+@font-face {
+    font-family: 'Flama';
+    src: url("../fonts/flama/Flama-Medium.eot");
+    src: url("../fonts/flama/Flama-Medium.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Medium.woff") format("woff"), url("../fonts/flama/Flama-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal; }
+@font-face {
+    font-family: 'Flama';
+    src: url("../fonts/flama/Flama-Light.eot");
+    src: url("../fonts/flama/Flama-Light.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Light.woff") format("woff"), url("../fonts/flama/Flama-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal; }
+@font-face {
+    font-family: 'Flama Book';
+    src: url("../fonts/flama/Flama-BookItalic.eot");
+    src: url("../fonts/flama/Flama-BookItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-BookItalic.woff") format("woff"), url("../fonts/flama/Flama-BookItalic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic; }
+@font-face {
+    font-family: 'Flama';
+    src: url("../fonts/flama/Flama-Semibold.eot");
+    src: url("../fonts/flama/Flama-Semibold.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Semibold.woff") format("woff"), url("../fonts/flama/Flama-Semibold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal; }
+@font-face {
+    font-family: 'Flama Book';
+    src: url("../fonts/flama/Flama-Book.eot");
+    src: url("../fonts/flama/Flama-Book.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Book.woff") format("woff"), url("../fonts/flama/Flama-Book.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal; }
+@font-face {
+    font-family: 'Flama';
+    src: url("../fonts/flama/Flama-Black.eot");
+    src: url("../fonts/flama/Flama-Black.eot?#iefix") format("embedded-opentype"), url("../fonts/flama/Flama-Black.woff") format("woff"), url("../fonts/flama/Flama-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal; }
+
+/*end of flama font*/
+
 .required label::after {
     content: " *";
     color: #ff0000;
@@ -530,10 +577,33 @@ h3.box-title {
 .main-header .sidebar-toggle:before {
     content: "\f100";
 }
-
-.sidebar-collapse .main-header .sidebar-toggle:before {
-    content: "\f101" !important;
+.main-header .sidebar-toggle {
+    transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+    -webkit-transform: rotate(-180deg);
+    transition: transform 550ms ease;
+    -moz-transition: -moz-transform 550ms ease;
+    -ms-transition: -ms-transform 550ms ease;
+    -o-transition: -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
 }
+
+.sidebar-open .main-header .sidebar-toggle {
+    transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+    transition: transform 550ms ease;
+    -moz-transition: -moz-transform 550ms ease;
+    -ms-transition: -ms-transform 550ms ease;
+    -o-transition: -o-transform 550ms ease;
+    -webkit-transition: -webkit-transform 550ms ease;
+}
+
+
 
 .add-item-block {
     border: 2px dashed lightgrey;

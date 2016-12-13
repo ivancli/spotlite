@@ -12,7 +12,7 @@
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" onclick="saveSidebarStatus()">
+        <a href="#" class="sidebar-toggle visible-xs" data-toggle="offcanvas" role="button" onclick="saveSidebarStatus()">
             <span class="sr-only">Toggle navigation</span>
         </a>
 
@@ -20,55 +20,30 @@
             <ul class="nav navbar-nav">
                 @if(Auth::check())
                     <li>
-                        <a href="https://spotlitehelp.zendesk.com/hc/en-us" target="_blank">Need Help?</a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-question-circle"></i>
+                            &nbsp;NEED HELP ?
+                            &nbsp;&nbsp;&nbsp;
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us" target="_blank">FAQ</a></li>
+                            <li><a href="#">Tutorials</a></li>
+                            <li><a href="#">Contact us</a></li>
+                        </ul>
                     </li>
                     <li class="spotlite-user-menu">
                         <a href="{{route('account.index')}}">
                             <i class="fa fa-wrench"></i>&nbsp;
                             <span class="hidden-xs">
-                                Account Settings
+                                ACCOUNT SETTINGS
                             </span>&nbsp;
                         </a>
-                        {{--<ul class="dropdown-menu">--}}
-                            {{--<li>--}}
-                                {{--<ul class="spotlite-menu">--}}
-                                    {{--@if(auth()->user()->isStaff || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid()))--}}
-                                        {{--<li>--}}
-                                            {{--<a href="{{route('account.index')}}">--}}
-                                                {{--<h3>--}}
-                                                    {{--Settings--}}
-                                                {{--</h3>--}}
-                                            {{--</a>--}}
-                                        {{--</li>--}}
-                                        {{--@if(!auth()->user()->isStaff)--}}
-                                            {{--<li>--}}
-                                                {{--<a href="{{route('subscription.index')}}">--}}
-                                                    {{--<h3>--}}
-                                                        {{--Manage My Subscription--}}
-                                                    {{--</h3>--}}
-                                                {{--</a>--}}
-                                            {{--</li>--}}
-                                        {{--@endif--}}
-                                    {{--@endif--}}
-                                    {{--@if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())--}}
-                                        {{--<li>--}}
-                                            {{--<div style="padding: 2px;">--}}
-
-                                                {{--<a class="btn btn-success btn-block btn-flat"--}}
-                                                   {{--href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}">--}}
-                                                    {{--UPGRADE--}}
-                                                {{--</a>--}}
-                                            {{--</div>--}}
-                                        {{--</li>--}}
-                                    {{--@endif--}}
-                                {{--</ul>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
                     </li>
                     <li>
                         <a href="{{route('logout')}}" onclick="gaLogout();">
                             <i class="fa fa-sign-in"></i>&nbsp;
-                            Sign Out
+                            SIGN OUT
                         </a>
                     </li>
                 @endif

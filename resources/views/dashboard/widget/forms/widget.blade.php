@@ -4,9 +4,9 @@
     }
 </style>
 
-<div class="form-group required">
+<div class="form-group required hidden">
     {!! Form::label('dashboard_widget_type_id', 'Content type', array('class' => 'control-label col-md-4')) !!}
-    <div class="col-md-8">
+    <div class="col-md-8 ">
         {!! Form::select('dashboard_widget_type_id', $widgetTypes, null, ['class'=>'form-control', 'id' =>'sel-dashboard-widget-type-id', 'onchange' => 'updateFormComponentVisibility(); return false;']) !!}
     </div>
 </div>
@@ -78,7 +78,7 @@
 </div>
 
 <div class="form-group required">
-    {!! Form::label('dashboard_widget_name', 'Content Name', array('class' => 'control-label col-md-4')) !!}
+    {!! Form::label('dashboard_widget_name', 'Chart Name', array('class' => 'control-label col-md-4')) !!}
     <div class="col-md-8">
         {!! Form::text('dashboard_widget_name', null, array('class' => 'form-control')) !!}
     </div>

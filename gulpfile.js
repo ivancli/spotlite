@@ -125,9 +125,11 @@ elixir(function (mix) {
     mix.copy('resources/assets/videos', 'public/videos');
     mix.copy('resources/assets/others', 'public/others');
 
+    /* copy fonts */
     mix.copy("node_modules/bootstrap/dist/fonts", "public/fonts/");
     mix.copy("node_modules/font-awesome/fonts", "public/fonts/");
     mix.copy('vendor/driftyco/ionicons/fonts', 'public/fonts/');
+    mix.copy('resources/assets/fonts', 'public/fonts/');
 
     /* versioning */
     mix.version([
