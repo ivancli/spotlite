@@ -134,7 +134,7 @@
                         );
                     });
                 } else {
-                    alertP("Error", "Unable to update profile, please try again later.");
+                    alertP("Oops! Something went wrong.", "Unable to update profile, please try again later.");
                 }
             }
         }, function () {

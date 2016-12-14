@@ -87,7 +87,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to create/update alert, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to create/update alert, please try again later.");
                         }
                     }
                 })
@@ -100,7 +100,7 @@
                         ],
                         {
                             "affirmative": {
-                                "text": "Delete",
+                                "text": "DELETE",
                                 "class": "btn-danger btn-flat",
                                 "dismiss": true,
                                 "callback": function () {
@@ -121,14 +121,14 @@
                                                     );
                                                 });
                                             } else {
-                                                alertP("Error", "Unable to delete alert, please try again later.");
+                                                alertP("Oops! Something went wrong.", "Unable to delete alert, please try again later.");
                                             }
                                         }
                                     });
                                 }
                             },
                             "negative": {
-                                "text": "Cancel",
+                                "text": "CANCEL",
                                 "class": "btn-default btn-flat",
                                 "dismiss": true
                             }

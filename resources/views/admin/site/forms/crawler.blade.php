@@ -34,10 +34,10 @@
                     if (response.status == true) {
                         $("#modal-crawler-update").modal("hide");
                     } else {
-                        alertP("Error", "Unable to update crawler, please try again later.");
+                        alertP("Oops! Something went wrong.", "Unable to update crawler, please try again later.");
                     }
                 }, function (xhr, status, error) {
-                    alertP("Error", "Unable to update crawler, please try again later.");
+                    alertP("Oops! Something went wrong.", "Unable to update crawler, please try again later.");
                 })
             });
         }

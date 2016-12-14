@@ -180,7 +180,7 @@
             "dataType": 'json',
             "success": function (response) {
                 if (response.status != true) {
-                    alertP("Error", "Unable to update widget order, please try again later.");
+                    alertP("Oops! Something went wrong.", "Unable to update widget order, please try again later.");
                 }
             },
             "error": function (xhr, status, error) {
@@ -215,13 +215,13 @@
                     $(".lnk-dashboard-" + response.dashboard.dashboard_id).text(response.dashboard.dashboard_name);
 
                 } else {
-                    var errorMsg = "Unable to update dashboard name. ";
+                    var errorMsg = "";
                     if (response.errors != null) {
                         $.each(response.errors, function (index, error) {
                             errorMsg += error + " ";
                         })
                     }
-                    alertP("Error", errorMsg);
+                    alertP("Oops! Something went wrong.", errorMsg);
                 }
             },
             "error": function (xhr, status, error) {

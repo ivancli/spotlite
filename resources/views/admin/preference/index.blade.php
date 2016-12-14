@@ -45,7 +45,7 @@
                     if (response.status == true) {
                         alertP("Update Preferences", "App preferences are updated.");
                     } else {
-                        alertP("Error", "Unable to update app preferences, please try again later.");
+                        alertP("Oops! Something went wrong.", "Unable to update app preferences, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {

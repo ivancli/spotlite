@@ -46,7 +46,7 @@
                             );
                         });
                     } else {
-                        alertP("Error", "Unable to set group, please try again later.");
+                        alertP("Oops! Something went wrong.", "Unable to set group, please try again later.");
                     }
                 }
             }, function (xhr, status, error) {

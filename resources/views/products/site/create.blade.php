@@ -59,12 +59,12 @@
                 if (!$(".prices-container").is(":visible")) {
                     $(".rad-site-id").prop("checked", false);
                     if ($("#txt-comment").length > 0 && $("#txt-comment").val() == "") {
-                        alertP("Error", "Please describe the location of the price in the web page.");
+                        alertP("Oops! Something went wrong.", "Please describe the location of the price in the web page.");
                         return false;
                     }
                 } else {
                     if ($("#txt-comment").length == 0 && $(".prices-container input[type=radio]:checked").length == 0) {
-                        alertP("Error", "Please select a correct price from the list");
+                        alertP("Oops! Something went wrong.", "Please select a correct price from the list");
                         return false;
                     }
                 }
@@ -90,7 +90,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to add site, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
                         }
                     }
                 }, function (xhr, status, error) {
@@ -214,7 +214,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to get price, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to get price, please try again later.");
                         }
                     }
                 },

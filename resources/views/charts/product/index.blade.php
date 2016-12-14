@@ -69,8 +69,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary btn-flat" onclick="loadProductChartData()">Go</button>
-                                                <button class="btn btn-default btn-flat" data-dismiss="modal">Cancel</button>
+                                                <button class="btn btn-primary btn-flat" onclick="loadProductChartData()">GO</button>
+                                                <button class="btn btn-default btn-flat" data-dismiss="modal">CANCEL</button>
                                             </div>
                                         </div>
                                     </div>
@@ -122,7 +122,7 @@
                                                     <div class="row">
                                                         <div class="col-sm-12">
                                                             <button class="btn btn-primary btn-flat" id="btn-add-chart">
-                                                                Add Chart
+                                                                ADD CHART
                                                             </button>
                                                         </div>
                                                     </div>
@@ -240,7 +240,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to add chart to dashboard, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to add chart to dashboard, please try again later.");
                         }
                     }
                 },
@@ -314,7 +314,7 @@
             }
 
             if (startDate == null || endDate == null) {
-                alertP("Error", "Please select the start date and end date for the timespan.");
+                alertP("Oops! Something went wrong.", "Please select the start date and end date for the timespan.");
                 return false;
             }
 

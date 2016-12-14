@@ -250,7 +250,7 @@
                             successCallback(response);
                         }
                     } else {
-                        alertP("Error", "unable to load categories, please try again later.");
+                        alertP("Oops! Something went wrong.", "unable to load categories, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -295,7 +295,7 @@
                                 errorMsg += error + " ";
                             })
                         }
-                        alertP("Error", errorMsg);
+                        alertP("Oops! Something went wrong.", errorMsg);
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -375,7 +375,7 @@
                 "dataType": "json",
                 "success": function (response) {
                     if (response.status == false) {
-                        alertP("Error", "Unable to update category order, please try again later.");
+                        alertP("Oops! Something went wrong.", "Unable to update category order, please try again later.");
                     } else {
                         gaMoveCategory();
                     }

@@ -56,7 +56,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to update dashboard content, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to update dashboard content, please try again later.");
                         }
                     }
                 },

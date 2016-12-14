@@ -397,7 +397,7 @@
                         if ($.isFunction(errorCallback)) {
                             errorCallback(response);
                         }
-                        alertP("Error", "unable to update xpath, please try again later.");
+                        alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -419,9 +419,9 @@
                         alertP("Crawler Test", "The crawled price is $" + response.price);
                     } else {
                         if (typeof response.errors != "undefined") {
-                            alertP("Error", response.errors.join(" "));
+                            alertP("Oops! Something went wrong.", response.errors.join(" "));
                         } else {
-                            alertP("Error", "Unable to test the crawler, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to test the crawler, please try again later.");
                         }
                     }
                 },
@@ -529,7 +529,7 @@
                     ],
                     {
                         "affirmative": {
-                            "text": "Delete",
+                            "text": "DELETE",
                             "class": "btn-danger btn-flat",
                             "dismiss": true,
                             "callback": function () {
@@ -544,7 +544,7 @@
                                             alertP("Delete domain", "The site has been deleted.");
                                             tblSite.row($(el).closest("tr")).remove().draw();
                                         } else {
-                                            alertP("Error", "Unable to delete site, please try again later.");
+                                            alertP("Oops! Something went wrong.", "Unable to delete site, please try again later.");
                                         }
                                     },
                                     "error": function (xhr, status, error) {
@@ -555,7 +555,7 @@
                             }
                         },
                         "negative": {
-                            "text": "Cancel",
+                            "text": "CANCEL",
                             "class": "btn-default btn-flat",
                             "dismiss": true
                         }

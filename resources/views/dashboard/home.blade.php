@@ -145,7 +145,7 @@
                     ],
                     {
                         "affirmative": {
-                            "text": "Delete",
+                            "text": "DELETE",
                             "class": "btn-danger btn-flat",
                             "dismiss": true,
                             "callback": function () {
@@ -161,7 +161,7 @@
                                                 $(this).remove();
                                             })
                                         } else {
-                                            alertP("Error", "Unable to delete content, please try again later.");
+                                            alertP("Oops! Something went wrong.", "Unable to delete content, please try again later.");
                                         }
                                     },
                                     "error": function (xhr, status, error) {
@@ -172,7 +172,7 @@
                             }
                         },
                         "negative": {
-                            "text": "Cancel",
+                            "text": "CANCEL",
                             "class": "btn-default btn-flat",
                             "dismiss": true
                         }

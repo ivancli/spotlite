@@ -42,7 +42,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to add site, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
                         }
                     }
                 })

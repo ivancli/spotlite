@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{$category->category_name}} Category Report</h4>
+                <h4 class="modal-title">Category Report {{$category->category_name}}</h4>
             </div>
             <div class="modal-body">
                 <ul class="text-danger errors-container">
@@ -109,11 +109,11 @@
                 {!! Form::close() !!}
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary btn-flat" id="btn-update-category-report">OK</button>
+                <button class="btn btn-primary btn-flat" id="btn-update-category-report">CONFIRM</button>
                 @if(!is_null($category->reportTask))
-                    <button class="btn btn-danger btn-flat" id="btn-delete-category-report">Delete</button>
+                    <button class="btn btn-danger btn-flat" id="btn-delete-category-report">DELETE</button>
                 @endif
-                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-default btn-flat">CANCEL</button>
             </div>
         </div>
     </div>
@@ -167,7 +167,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to create/update alert, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to create/update alert, please try again later.");
                         }
                     }
                 })
@@ -181,7 +181,7 @@
                         ],
                         {
                             "affirmative": {
-                                "text": "Delete",
+                                "text": "DELETE",
                                 "class": "btn-danger btn-flat",
                                 "dismiss": true,
                                 "callback": function () {
@@ -202,14 +202,14 @@
                                                     );
                                                 });
                                             } else {
-                                                alertP("Error", "Unable to delete caetegory report schedule, please try again later.");
+                                                alertP("Oops! Something went wrong.", "Unable to delete caetegory report schedule, please try again later.");
                                             }
                                         }
                                     });
                                 }
                             },
                             "negative": {
-                                "text": "Cancel",
+                                "text": "CANCEL",
                                 "class": "btn-default btn-flat",
                                 "dismiss": true
                             }

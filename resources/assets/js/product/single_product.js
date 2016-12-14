@@ -40,7 +40,7 @@ function updateSiteOrder(product_id) {
         "dataType": "json",
         "success": function (response) {
             if (response.status == false) {
-                alertP("Error", "Unable to update site order, please try again later.");
+                alertP("Oops! Something went wrong.", "Unable to update site order, please try again later.");
             } else {
                 gaMoveSite();
             }
@@ -96,7 +96,7 @@ function getPricesCreate(el) {
                                 updateUserSiteUsagePerProduct(el);
                             });
                         } else {
-                            alertP("Error", "Unable to add site, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
                         }
                     })
                 } else {
@@ -130,7 +130,7 @@ function getPricesCreate(el) {
                                                         updateUserSiteUsagePerProduct(el);
                                                     });
                                                 } else {
-                                                    alertP("Error", "Unable to add site, please try again later.");
+                                                    alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
                                                 }
                                                 /*TODO big pb*/
                                             });
@@ -150,13 +150,13 @@ function getPricesCreate(el) {
                 }
             } else {
                 hideLoading();
-                var errorMsg = "Unable to add site. ";
+                var errorMsg = "";
                 if (response.errors != null) {
                     $.each(response.errors, function (index, error) {
                         errorMsg += error + " ";
                     })
                 }
-                alertP("Error", errorMsg);
+                alertP("Oops! Something went wrong.", errorMsg);
             }
         },
         "error": function (xhr, status, error) {
@@ -218,7 +218,7 @@ function btnDeleteProductOnClick(el) {
         ],
         {
             "affirmative": {
-                "text": "Delete",
+                "text": "DELETE",
                 "class": "btn-danger btn-flat",
                 "dismiss": true,
                 "callback": function () {
@@ -238,7 +238,7 @@ function btnDeleteProductOnClick(el) {
                                 $(el).closest(".product-wrapper").remove();
                                 updateUserProductCredit();
                             } else {
-                                alertP("Error", "Unable to delete product, please try again later.");
+                                alertP("Oops! Something went wrong.", "Unable to delete product, please try again later.");
                             }
                         },
                         "error": function (xhr, status, error) {
@@ -249,7 +249,7 @@ function btnDeleteProductOnClick(el) {
                 }
             },
             "negative": {
-                "text": "Cancel",
+                "text": "CANCEL",
                 "class": "btn-default btn-flat",
                 "dismiss": true
             }
@@ -303,7 +303,7 @@ function submitEditProductName(el) {
                         errorMsg += error + " ";
                     })
                 }
-                alertP("Error", errorMsg);
+                alertP("Oops! Something went wrong.", errorMsg);
             }
         },
         "error": function (xhr, status, error) {

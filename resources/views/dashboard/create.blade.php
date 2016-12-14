@@ -54,7 +54,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to create dashboard, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to create dashboard, please try again later.");
                         }
                     }
                 },

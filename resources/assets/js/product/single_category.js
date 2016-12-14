@@ -11,7 +11,7 @@ function btnDeleteCategoryOnClick(el) {
         ],
         {
             "affirmative": {
-                "text": "Delete",
+                "text": "DELETE",
                 "class": "btn-danger btn-flat",
                 "dismiss": true,
                 "callback": function () {
@@ -30,7 +30,7 @@ function btnDeleteCategoryOnClick(el) {
                                 $(el).closest(".category-wrapper").remove();
                                 updateUserProductCredit();
                             } else {
-                                alertP("Error", "Unable to delete category, please try again later.");
+                                alertP("Oops! Something went wrong.", "Unable to delete category, please try again later.");
                             }
                         },
                         "error": function (xhr, status, error) {
@@ -41,7 +41,7 @@ function btnDeleteCategoryOnClick(el) {
                 }
             },
             "negative": {
-                "text": "Cancel",
+                "text": "CANCEL",
                 "class": "btn-default btn-flat",
                 "dismiss": true
             }
@@ -96,13 +96,13 @@ function btnAddProductOnClick(el) {
                     });
                 }
             } else {
-                var errorMsg = "Unable to add product. ";
+                var errorMsg = "";
                 if (response.errors != null) {
                     $.each(response.errors, function (index, error) {
                         errorMsg += error + " ";
                     })
                 }
-                alertP("Error", errorMsg);
+                alertP("Oops! Something went wrong.", errorMsg);
             }
         },
         "error": function (xhr, status, error) {
@@ -170,7 +170,7 @@ function submitEditCategoryName(el) {
                         errorMsg += error + " ";
                     })
                 }
-                alertP("Error", errorMsg);
+                alertP("Oops! Something went wrong.", errorMsg);
             }
         },
         "error": function (xhr, status, error) {
@@ -214,7 +214,7 @@ function updateProductOrder(category_id) {
         "dataType": "json",
         "success": function (response) {
             if (response.status == false) {
-                alertP("Error", "Unable to update product order, please try again later.");
+                alertP("Oops! Something went wrong.", "Unable to update product order, please try again later.");
             } else {
                 gaMoveProduct();
             }

@@ -59,7 +59,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to add domain, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to add domain, please try again later.");
                         }
                     }
                 })

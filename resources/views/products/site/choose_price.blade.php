@@ -46,7 +46,7 @@
         function modalReady(params) {
             $("#btn-set-price").on("click", function () {
                 if ($(".rad-site-id:checked").length == 0) {
-                    alertP("Error", "Please select a price from the list.");
+                    alertP("Oops! Something went wrong.", "Please select a price from the list.");
                 } else {
                     if ($.isFunction(params.callback)) {
                         var callbackData = [];

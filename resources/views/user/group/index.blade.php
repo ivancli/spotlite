@@ -62,7 +62,7 @@
                     ],
                     {
                         "affirmative": {
-                            "text": "Delete",
+                            "text": "DELETE",
                             "class": "btn-danger btn-flat",
                             "dismiss": true,
                             "callback": function () {
@@ -94,7 +94,7 @@
 
 
                                         } else {
-                                            alertP("Error", "Unable to delete group, please try again later.");
+                                            alertP("Oops! Something went wrong.", "Unable to delete group, please try again later.");
                                         }
                                     },
                                     "error": function (xhr, status, errors) {
@@ -105,7 +105,7 @@
                             }
                         },
                         "negative": {
-                            "text": "Cancel",
+                            "text": "CANCEL",
                             "class": "btn-default btn-flat",
                             "dismiss": true
                         }

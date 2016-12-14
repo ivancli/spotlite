@@ -182,7 +182,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to perform initial set up, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to perform initial set up, please try again later.");
                         }
                     }
                 },

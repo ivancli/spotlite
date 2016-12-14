@@ -88,7 +88,7 @@
                     if (response.status == true) {
                         window.location.href = "{{route('subscription.index')}}";
                     } else {
-                        alertP("Error", "Unable to purchase {{$onboardingProduct->name}}, please try again later.");
+                        alertP("Oops! Something went wrong.", "Unable to purchase {{$onboardingProduct->name}}, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {

@@ -381,7 +381,7 @@
                     ],
                     {
                         "affirmative": {
-                            "text": "Delete",
+                            "text": "DELETE",
                             "class": "btn-danger btn-flat",
                             "dismiss": true,
                             "callback": function () {
@@ -399,7 +399,7 @@
 
                                             tblAlert.row($(el).closest("tr")).remove().draw();
                                         } else {
-                                            alertP("Error", "Unable to delete alert, please try again later.");
+                                            alertP("Oops! Something went wrong.", "Unable to delete alert, please try again later.");
                                         }
                                     },
                                     "error": function (xhr, status, error) {
@@ -410,7 +410,7 @@
                             }
                         },
                         "negative": {
-                            "text": "Cancel",
+                            "text": "CANCEL",
                             "class": "btn-default btn-flat",
                             "dismiss": true
                         }

@@ -573,7 +573,7 @@
                     ],
                     {
                         "affirmative": {
-                            "text": "Delete",
+                            "text": "DELETE",
                             "class": "btn-danger btn-flat",
                             "dismiss": true,
                             "callback": function () {
@@ -591,7 +591,7 @@
 
                                             tblReportTask.row($(el).closest("tr")).remove().draw();
                                         } else {
-                                            alertP("Error", "Unable to delete report schedule, please try again later.");
+                                            alertP("Oops! Something went wrong.", "Unable to delete report schedule, please try again later.");
                                         }
                                     },
                                     "error": function (xhr, status, error) {
@@ -602,7 +602,7 @@
                             }
                         },
                         "negative": {
-                            "text": "Cancel",
+                            "text": "CANCEL",
                             "class": "btn-default btn-flat",
                             "dismiss": true
                         }
@@ -617,7 +617,7 @@
                     ],
                     {
                         "affirmative": {
-                            "text": "Delete",
+                            "text": "DELETE",
                             "class": "btn-danger btn-flat",
                             "dismiss": true,
                             "callback": function () {
@@ -633,7 +633,7 @@
                                                 callback(response);
                                             }
                                         } else {
-                                            alertP("Error", "Unable to delete report, please try again later.");
+                                            alertP("Oops! Something went wrong.", "Unable to delete report, please try again later.");
                                         }
                                     },
                                     "error": function (xhr, status, error) {
@@ -644,7 +644,7 @@
                             }
                         },
                         "negative": {
-                            "text": "Cancel",
+                            "text": "CANCEL",
                             "class": "btn-default btn-flat",
                             "dismiss": true
                         }

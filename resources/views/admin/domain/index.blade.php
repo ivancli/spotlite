@@ -238,7 +238,7 @@
                         if ($.isFunction(errorCallback)) {
                             errorCallback(response);
                         }
-                        alertP("Error", "unable to update xpath, please try again later.");
+                        alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -265,7 +265,7 @@
                         if ($.isFunction(errorCallback)) {
                             errorCallback(response);
                         }
-                        alertP("Error", "unable to update xpath, please try again later.");
+                        alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -292,7 +292,7 @@
                         if ($.isFunction(errorCallback)) {
                             errorCallback(response);
                         }
-                        alertP("Error", "unable to update xpath, please try again later.");
+                        alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -339,7 +339,7 @@
                     ],
                     {
                         "affirmative": {
-                            "text": "Delete",
+                            "text": "DELETE",
                             "class": "btn-danger btn-flat",
                             "dismiss": true,
                             "callback": function () {
@@ -355,7 +355,7 @@
                                             $(el).closest(".site-wrapper").remove();
                                             tblDomain.row($(el).closest("tr")).remove().draw();
                                         } else {
-                                            alertP("Error", "Unable to delete domain, please try again later.");
+                                            alertP("Oops! Something went wrong.", "Unable to delete domain, please try again later.");
                                         }
                                     },
                                     "error": function (xhr, status, error) {
@@ -366,7 +366,7 @@
                             }
                         },
                         "negative": {
-                            "text": "Cancel",
+                            "text": "CANCEL",
                             "class": "btn-default btn-flat",
                             "dismiss": true
                         }

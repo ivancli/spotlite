@@ -104,7 +104,7 @@ function deleteDashboard(el) {
         ],
         {
             "affirmative": {
-                "text": "Delete",
+                "text": "DELETE",
                 "class": "btn-danger btn-flat",
                 "dismiss": true,
                 "callback": function () {
@@ -119,7 +119,7 @@ function deleteDashboard(el) {
 //                                    tblDashboard.row($(el).closest("tr")).remove().draw();
                                 window.location.href = "/";
                             } else {
-                                alertP("Error", "Unable to delete dashboard, please try again later.");
+                                alertP("Oops! Something went wrong.", "Unable to delete dashboard, please try again later.");
                             }
                         },
                         "error": function (xhr, status, error) {
@@ -130,7 +130,7 @@ function deleteDashboard(el) {
                 }
             },
             "negative": {
-                "text": "Cancel",
+                "text": "CANCEL",
                 "class": "btn-default btn-flat",
                 "dismiss": true
             }

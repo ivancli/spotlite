@@ -35943,7 +35943,13 @@ function welcome(bodyText) {
  * @param callback
  */
 function alertP(title, bodyText, callback) {
-    var $modal = popupHTML(title, bodyText, null, "sm");
+
+    var $footer = $("<button>").addClass("btn btn-primary").attr({
+        "type": "button",
+        "data-dismiss": "modal"
+    }).text("CANCEL");
+
+    var $modal = popupHTML(title, bodyText, $footer, "sm");
     $modal.modal();
 
     if (typeof callback != 'undefined') {
@@ -36023,7 +36029,7 @@ function popupHTML(title, $content, $footer, dialogSize) {
 
 
     if (typeof $footer == 'undefined' || $footer == null) {
-        $footer = $("<button>").addClass("btn").attr({
+        $footer = $("<button>").addClass("btn btn-primary").attr({
             "type": "button",
             "data-dismiss": "modal"
         }).text("OK");
@@ -36501,7 +36507,7 @@ function deletePopup(title, headingContent, subHeadingContent, listContent, btnO
             .attr("data-dismiss", function () {
                 return typeof btnOpts.negative.dismiss != 'undefined' && btnOpts.negative.dismiss == true ? "modal" : "";
             })
-            .text(typeof btnOpts.negative.text != 'undefined' ? btnOpts.negative.text : 'Cancel')
+            .text(typeof btnOpts.negative.text != 'undefined' ? btnOpts.negative.text : 'CANCEL')
     );
     var $warningList = $("<div>").addClass("warning-list");
     $.each(listContent, function (index, listItem) {

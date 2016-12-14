@@ -28,7 +28,7 @@
                         );
                     });
                 } else {
-                    alertP("Error", "Unable to create group, please try again later.");
+                    alertP("Oops! Something went wrong.", "Unable to create group, please try again later.");
                 }
             }
 

@@ -1,5 +1,5 @@
 function btnDeleteSiteOnClick(el) {
-    deletePopup("Delete Site", "Are you sure you want to delete the " + $(el).attr("data-name") + "?",
+    deletePopup("Delete Product URL", "Are you sure you want to delete the " + $(el).attr("data-name") + "?",
         "By deleting this site, you will lose the following:",
         [
             "All pricing information related to this Site, including any information displayed on your Charts and Dashboards",
@@ -9,7 +9,7 @@ function btnDeleteSiteOnClick(el) {
         ],
         {
             "affirmative": {
-                "text": "Delete",
+                "text": "DELETE",
                 "class": "btn-danger btn-flat",
                 "dismiss": true,
                 "callback": function () {
@@ -24,12 +24,12 @@ function btnDeleteSiteOnClick(el) {
                             hideLoading();
                             if (response.status == true) {
                                 gaDeleteSite();
-                                alertP("Delete Site", "The site has been deleted.");
+                                alertP("Delete Product URL", "The Product URL has been deleted.");
                                 updateUserSiteUsage(el);
                                 updateUserSiteUsagePerProduct(el);
                                 $(el).closest(".site-wrapper").remove();
                             } else {
-                                alertP("Error", "Unable to delete site, please try again later.");
+                                alertP("Oops! Something went wrong.", "Unable to delete this Product URL, please try again later.");
                             }
                             updateProductEmptyMessage();
                         },
@@ -41,7 +41,7 @@ function btnDeleteSiteOnClick(el) {
                 }
             },
             "negative": {
-                "text": "Cancel",
+                "text": "CANCEL",
                 "class": "btn-default btn-flat",
                 "dismiss": true
             }
@@ -116,7 +116,7 @@ function getPricesEdit(el) {
                                 updateProductEmptyMessage();
                             });
                         } else {
-                            alertP("Error", "Unable to add site, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
                         }
                     })
                 }
@@ -139,19 +139,19 @@ function getPricesEdit(el) {
                                     updateProductEmptyMessage();
                                 });
                             } else {
-                                alertP("Error", "Unable to add site, please try again later.");
+                                alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
                             }
                         });
                     });
                 }
             } else {
-                var errorMsg = "Unable to edit site. ";
+                var errorMsg = "";
                 if (response.errors != null) {
                     $.each(response.errors, function (index, error) {
                         errorMsg += error + " ";
                     })
                 }
-                alertP("Error", errorMsg);
+                alertP("Oops! Something went wrong.", errorMsg);
             }
         },
         "error": function (xhr, status, error) {
@@ -259,7 +259,7 @@ function toggleMyPrice(el) {
             ],
             {
                 "affirmative": {
-                    "text": "Delete",
+                    "text": "DELETE",
                     "class": "btn-danger btn-flat",
                     "dismiss": true,
                     "callback": function () {
@@ -267,7 +267,7 @@ function toggleMyPrice(el) {
                     }
                 },
                 "negative": {
-                    "text": "Cancel",
+                    "text": "CANCEL",
                     "class": "btn-default btn-flat",
                     "dismiss": true
                 }
@@ -306,7 +306,7 @@ function submitToggleMyPrice(el) {
                     }
                 });
             } else {
-                alertP("Error", "unable to set my price, please try again later.");
+                alertP("Oops! Something went wrong.", "unable to set my price, please try again later.");
             }
         },
         "error": function () {

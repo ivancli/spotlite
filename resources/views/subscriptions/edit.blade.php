@@ -62,7 +62,7 @@
                                 $.each(response.errors, function (index, error) {
                                     errors += error + " ";
                                 });
-                                alertP("Error", errors);
+                                alertP("Oops! Something went wrong.", errors);
                             }
                         }, function (xhr, status, error) {
                             hideLoading();

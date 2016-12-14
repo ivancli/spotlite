@@ -81,7 +81,7 @@
                     $(".rad-site-id").prop("checked", false);
 
                     if ($("#txt-comment").val() == "") {
-                        alertP("Error", "Please describe the location of the price in the web page.");
+                        alertP("Oops! Something went wrong.", "Please describe the location of the price in the web page.");
                         return false;
                     }
                 }
@@ -105,7 +105,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to update this site, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to update this site, please try again later.");
                         }
                     }
                 }, function (xhr, status, error) {
@@ -241,7 +241,7 @@
                                 );
                             });
                         } else {
-                            alertP("Error", "Unable to get price, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to get price, please try again later.");
                         }
                     }
                 },
