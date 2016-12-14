@@ -34,12 +34,19 @@
     color: #ffffff;
 }
 
-.skin-black-light .main-header .navbar > .sidebar-toggle{
+.skin-black-light .main-header .navbar > .sidebar-toggle {
     color: #ffffff;
 }
 
-.skin-black-light .main-header .navbar .sidebar-toggle:hover{
+.skin-black-light .main-header .navbar .sidebar-toggle:hover {
     color: #ffffff;
     background: #6dbdad;
 }
 
+.skin-black-light .sidebar-menu > li > .treeview-menu {
+    background: #6dbdad;
+}
+
+.skin-black-light .treeview-menu > li.active > a, .skin-black-light .treeview-menu > li > a:hover {
+    color: #ffffff;
+}
