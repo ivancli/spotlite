@@ -95,8 +95,7 @@
     <div class="col-sm-12">
         <div class="box box-danger">
             <div class="box-header with-border">
-                <h4 class="box-title text-danger"><i class="fa fa-info-circle"></i> Are you sure you want to cancel
-                    your subscription?</h4>
+                <h4 class="box-title text-danger"><i class="fa fa-exclamation-triangle"></i> Cancel my Subscription?</h4>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -111,8 +110,7 @@
                                 <div class="well">
                                     <p class="text-danger">
                                         <small>[Camila and Michael to work on terms and conditions, the words below
-                                            are
-                                            only an example]
+                                            are only an example]
                                         </small>
                                     </p>
                                     <p>Would you like to keep your profile in SpotLite just so you don't need to

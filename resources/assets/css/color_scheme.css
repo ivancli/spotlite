@@ -54,3 +54,7 @@
 .skin-black-light .treeview-menu > li.active > a, .skin-black-light .treeview-menu > li > a:hover {
     color: #fff;
 }
+
+.nav-tabs-custom>.nav-tabs>li.active{
+    border-top-color: #7ed0c0;
+}

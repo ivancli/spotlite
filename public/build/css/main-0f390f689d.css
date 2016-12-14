@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-7bc1de1741.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-0f390f689d.css */
 @media print {
   *,
   *:before,
@@ -16462,5 +16462,9 @@ ______________________________________________________________
 
 .skin-black-light .treeview-menu > li.active > a, .skin-black-light .treeview-menu > li > a:hover {
     color: #fff;
+}
+
+.nav-tabs-custom>.nav-tabs>li.active{
+    border-top-color: #7ed0c0;
 }
 /*# sourceMappingURL=main.css.map */
