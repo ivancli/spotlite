@@ -133,8 +133,8 @@
                                 <div class="add-item-label add-site-label">
                                     <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
                                     <div class="site-label-text-container">
-                                        <div>Add the product page URL of the price you want to watch.</div>
-                                        <div>For example http://www.company.com.au/productpage/price</div>
+                                        <div>ADD THE PRODUCT PAGE URL FOR THE PRICE YOU WANT TO TRACK. E.G. http://www.company.com.au/productpage/price</div>
+                                        {{--<div>For example http://www.company.com.au/productpage/price</div>--}}
                                     </div>
                                 </div>
                                 <div class="add-item-controls">
@@ -144,18 +144,18 @@
                                                   class="frm-store-site"
                                                   onsubmit="getPricesCreate(this); return false;">
                                                 <input type="text"
-                                                       placeholder="e.g. http://www.company.com.au/productpage/price"
+                                                       {{--placeholder="e.g. http://www.company.com.au/productpage/price"--}}
                                                        name="site_url"
                                                        class="txt-site-url form-control txt-item">
                                             </form>
                                         </div>
                                         <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                            <button class="btn btn-primary"
+                                            <button class="btn btn-primary btn-flat"
                                                     onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
                                                 ADD PRODUCT URL
                                             </button>
                                             &nbsp;&nbsp;
-                                            <button class="btn btn-default btn-cancel-add-site"
+                                            <button class="btn btn-default btn-flat btn-cancel-add-site"
                                                     id="btn-cancel-add-site-{{$product->getKey()}}"
                                                     onclick="cancelAddSite(this); event.stopPropagation(); event.preventDefault();">
                                                 CANCEL

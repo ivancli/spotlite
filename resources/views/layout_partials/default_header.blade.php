@@ -6,13 +6,17 @@
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg">
 {{--            <img src="{{asset('build/images/logo-fixed-custom.png')}}" alt="SpotLite" height="40">--}}
-            <img src="{{asset('build/images/SpotLite_Logo_with_tagline2.png')}}" alt="SpotLite" height="100">
+            {{--            <img src="{{asset('build/images/SpotLite_Logo_with_tagline2.png')}}" alt="SpotLite" height="100">--}}
+
+            <img src="{{asset('build/images/logo_transparent_white_text.png')}}" alt="SpotLite" height="75"
+                 style="padding-top: 20px;">
         </span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle visible-xs" data-toggle="offcanvas" role="button" onclick="saveSidebarStatus()">
+        <a href="#" class="sidebar-toggle visible-xs" data-toggle="offcanvas" role="button"
+           onclick="saveSidebarStatus()">
             <span class="sr-only">Toggle navigation</span>
         </a>
 

@@ -10,10 +10,22 @@
 
 
 @section('breadcrumbs')
-    <input type="text" class="form-control general-search-input" placeholder="Search">
-    <button class="btn btn-default general-search-button">
-        <i class="fa fa-search"></i>
-    </button>
+    <div class="search-input">
+        <div class="ico-search">
+            <div class="search-icon">
+                <i class="fa fa-search text-muted"></i>
+            </div>
+        </div>
+        <input type="text" class="form-control general-search-input" placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
+
+        <div class="btn-clear-search" onclick="clearProductSearch(this)">
+            <div class="clear-icon">
+                <a href="#">
+                    <i class="fa fa-times text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('content')
@@ -32,8 +44,8 @@
 
             </p>
             <p class="text-muted">
-                    Note: you can find the Product Page URLs on your competitors' website, usually on the product
-                    details page or where the pricing is located within their website
+                Note: you can find the Product Page URLs on your competitors' website, usually on the product
+                details page or where the pricing is located within their website
             </p>
         </div>
     </div>
@@ -54,7 +66,7 @@
                                 @else
                                     Credit:
                                 @endif
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;
 
                                 {{--TODO update color based on the ratio--}}
                                 <div class="progress vertical-align-middle"
@@ -77,10 +89,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="pull-right">
-                                <a href="#" onclick="showSetUpNotifications(); return false;" class="btn btn-primary btn-flat">
+                                <a href="#" onclick="showSetUpNotifications(); return false;"
+                                   class="btn btn-primary btn-flat">
                                     <i class="fa fa-bell-o"></i>
                                     &nbsp;
-                                    Set Up Alerts
+                                    SET UP ALERTS
                                 </a>
                             </div>
                         </div>
@@ -104,17 +117,17 @@
                                             <form action="{{route('category.store')}}" method="post"
                                                   class="frm-store-category"
                                                   onsubmit="btnAddCategoryOnClick(this); return false;">
-                                                <input type="text" placeholder="Category Name" id="txt-category-name"
+                                                <input type="text" id="txt-category-name"
                                                        class="form-control txt-item" name="category_name">
                                             </form>
                                         </div>
                                         <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                            <button class="btn btn-primary"
+                                            <button class="btn btn-primary btn-flat"
                                                     onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
                                                 ADD CATEGORY
                                             </button>
                                             &nbsp;&nbsp;
-                                            <button class="btn btn-default" id="btn-cancel-add-category"
+                                            <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
                                                     onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
                                                 CANCEL
                                             </button>
@@ -179,6 +192,12 @@
             });
 
             $(".general-search-input").on("input", function () {
+                if ($(this).val() != "") {
+                    $(".btn-clear-search").fadeIn();
+                } else {
+                    $(".btn-clear-search").fadeOut();
+                }
+
                 if (generalSearchPromise != null) {
                     clearTimeout(generalSearchPromise);
                 }
@@ -217,6 +236,24 @@
                 }
             });
         });
+
+        function clearProductSearch(el) {
+            $(".general-search-input").val("");
+            $(el).fadeOut();
+
+            resetFilters();
+            loadCategories(start, initLength, function (response) {
+                $(".list-container").fadeOut(function () {
+                    $(".list-container").html(response.categoriesHTML);
+                    $(".list-container").fadeIn();
+                });
+                hideLoading();
+                generalSearchPromise = null;
+            }, function (xhr, status, error) {
+                hideLoading();
+                generalSearchPromise = null;
+            });
+        }
 
         function appendCreateCategoryBlock(el) {
             $(el).find(".add-item-label").slideUp();
@@ -487,7 +524,7 @@
     {{--TOUR--}}
     <script type="text/javascript" src="{{elixir('js/product-tour.js')}}"></script>
     <script type="text/javascript">
-        $(function(){
+        $(function () {
             var tour = new Tour({
                 steps: [
                     {

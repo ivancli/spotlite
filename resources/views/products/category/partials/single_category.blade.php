@@ -87,17 +87,17 @@
                                     <form action="{{route('product.store')}}" method="post"
                                           class="frm-store-product"
                                           onsubmit="btnAddProductOnClick(this); return false;">
-                                        <input type="text" placeholder="Product Name" name="product_name"
+                                        <input type="text" name="product_name"
                                                class="form-control txt-item txt-product-name">
                                     </form>
                                 </div>
                                 <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                    <button class="btn btn-primary"
+                                    <button class="btn btn-primary btn-flat"
                                             onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
                                         ADD PRODUCT
                                     </button>
                                     &nbsp;&nbsp;
-                                    <button class="btn btn-default btn-cancel-add-product"
+                                    <button class="btn btn-default btn-flat btn-cancel-add-product"
                                             onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
                                         CANCEL
                                     </button>

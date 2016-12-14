@@ -197,7 +197,7 @@
                 </div>
             </div>
             <div class="modal-footer text-right">
-                <button class="btn btn-primary btn-flat" onclick="submitUpdateNotifications(); return false;">OK
+                <button class="btn btn-primary btn-flat" onclick="submitUpdateNotifications(); return false;">CONFIRM
                 </button>
                 <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>

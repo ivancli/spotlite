@@ -1,5 +1,6 @@
 @extends('layouts.adminlte')
 @section('title', 'Alerts')
+@section('header_title', "Alerts")
 
 @section('breadcrumbs')
     {{--    {!! Breadcrumbs::render('alert_index') !!}--}}
@@ -15,6 +16,23 @@
             padding: 5px 7px;
         }
     </style>
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="text-muted font-size-17">
+                {{--In this area of SpotLite you can set-up all the prices that you want to track. Simply add a category,--}}
+                {{--then a product name. Once you have done this, simply copy and paste the product pages of the brands--}}
+                {{--prices you want to track. To do this go to each of the brand or competitors site, navigate to the--}}
+                {{--product details page or any place that holds the pricing information. Copy and paste the URL into the--}}
+                {{--Add URL box shown below.--}}
+                Here you can see the list of alerts you have set up across your Categories and Products. You'll be able
+                to edit or delete them by clicking on the corresponding icons on the far right hand side of each
+                Category or Product line.
+            </p>
+        </div>
+    </div>
+
+    <hr class="content-divider-white">
+
     <div class="row">
         <div class="col-sm-12">
 
@@ -221,9 +239,9 @@
                                                 "onclick": "showAlertForm(this); return false;",
                                                 "data-alert-type": data.alert_owner_type
                                             }).append(
-                                                    $("<i>").addClass("glyphicon glyphicon-cog")
+                                                    $("<i>").addClass("glyphicon glyphicon-pencil")
                                             ),
-                                            "&nbsp;",
+                                            "&nbsp;&nbsp;",
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],

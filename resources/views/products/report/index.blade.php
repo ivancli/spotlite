@@ -8,6 +8,18 @@
 @stop
 
 @section('content')
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="text-muted font-size-17">
+                Here you can see the list of reports you have set up across your Categories and Products. You'll be able
+                to edit or delete them by clicking on the corresponding icons on the far right hand side of each
+                Category or Product line.
+            </p>
+        </div>
+    </div>
+
+    <hr class="content-divider-white">
+
 
     <div class="row">
         <div class="col-sm-12">
@@ -16,7 +28,7 @@
                 <!-- Tabs within a box -->
                 <ul class="nav nav-tabs ui-sortable-handle">
                     <li class="active">
-                        <a href="#report-schedule" data-toggle="tab" aria-expanded="true">Report Schedule</a>
+                        <a href="#report-schedule" data-toggle="tab" aria-expanded="true">Report Settings</a>
                     </li>
                     <li class="">
                         <a href="#report-history" data-toggle="tab" aria-expanded="false">Report History</a>
@@ -226,9 +238,9 @@
                                                 "onclick": "showReportTaskForm(this)",
                                                 "data-report-type": data.report_task_owner_type
                                             }).append(
-                                                    $("<i>").addClass("glyphicon glyphicon-cog")
+                                                    $("<i>").addClass("glyphicon glyphicon-pencil")
                                             ),
-                                            "&nbsp;",
+                                            "&nbsp;&nbsp;",
                                             $("<a>").addClass("text-danger").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],

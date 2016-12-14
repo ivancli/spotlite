@@ -164,7 +164,7 @@
                                 );
                             });
                         } else {
-                            alertP("Oops! Something went wrong.", "Unable to create/update alert, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to create/update report, please try again later.");
                         }
                     }
                 })

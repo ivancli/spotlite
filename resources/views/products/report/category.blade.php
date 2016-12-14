@@ -132,7 +132,7 @@
             $("#btn-update-category-report").on("click", function () {
                 submitEditReportTask(function (response) {
                     if (response.status == true) {
-                        alertP("Create/Update Report Schedule", "Report has been scheduled.");
+//                        alertP("Create/Update Report", "Report has been scheduled.");
                         $("#modal-report-task-category").modal("hide");
 
                         var gaParams = {

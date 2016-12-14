@@ -46,7 +46,8 @@ elixir(function (mix) {
         'resources/assets/css/nlform.css',
         'resources/assets/css/welcome_popup.css',
         'resources/assets/css/set_password_popup.css',
-        'resources/assets/css/spotlite.css'
+        'resources/assets/css/spotlite.css',
+        'resources/assets/css/color_scheme.css'
     ], "public/css/main.css", "./");
     mix.scripts([
         'node_modules/bootstrap-tour/build/css/bootstrap-tour.css'

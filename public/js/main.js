@@ -35944,10 +35944,10 @@ function welcome(bodyText) {
  */
 function alertP(title, bodyText, callback) {
 
-    var $footer = $("<button>").addClass("btn btn-primary").attr({
+    var $footer = $("<button>").addClass("btn btn-primary btn-flat").attr({
         "type": "button",
         "data-dismiss": "modal"
-    }).text("CANCEL");
+    }).text("OK");
 
     var $modal = popupHTML(title, bodyText, $footer, "sm");
     $modal.modal();
@@ -36029,7 +36029,7 @@ function popupHTML(title, $content, $footer, dialogSize) {
 
 
     if (typeof $footer == 'undefined' || $footer == null) {
-        $footer = $("<button>").addClass("btn btn-primary").attr({
+        $footer = $("<button>").addClass("btn btn-primary btn-flat").attr({
             "type": "button",
             "data-dismiss": "modal"
         }).text("OK");
@@ -36389,13 +36389,13 @@ function camelize(str) {
 function describeServerRespondedError(errorCode) {
     switch (errorCode) {
         case 403:
-            alertP("Permission denied", "You have no permission to perform this action.");
+            alertP("Oops. Something went wrong.", "You have no permission to perform this action.");
             break;
         case 404:
-            alertP("Content not found", "The content could not be found.");
+            alertP("Oops. Something went wrong.", "The content could not be found.");
             break;
         case 500:
-            alertP("Server error", "There was a server error which has been reported to our support team. Please try again later. Sorry for the inconvenience.");
+            alertP("Oops. Something went wrong.", "Our support team is already working to fix this technical issue. Please try again later.");
             break;
     }
 }

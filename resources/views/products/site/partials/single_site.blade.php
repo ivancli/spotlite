@@ -44,7 +44,8 @@
         @if($site->status == 'invalid')
             <div class="text-right">
                 <a href="#" onclick="return false;" data-toggle="popover" data-trigger="hover focus click"
-                   data-content="The site you have provided is not a valid page for pricing. Please update the site with product detail page URL.">
+                   {{--data-content="The site you have provided is not a valid page for pricing. Please update the site with product detail page URL.">--}}
+                   data-content="The Product Page URL you have provided does not contain pricing information. Please enter the Product Page URL where the pricing is located.">
                     <i class="fa fa-ban text-danger"></i>
                 </a>
                 &nbsp;

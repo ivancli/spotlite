@@ -42,7 +42,7 @@
                         </script>
                     </ul>
                 </li>
-                <li class="bg-fff">
+                <li>
                     <a href="#" onclick="showAddDashboardForm(this); return false;">
                         <i class="fa fa-plus"></i>
                         <span>ADD A NEW DASHBOARD</span>
