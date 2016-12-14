@@ -211,7 +211,10 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 
-Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
+//Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
+Route::get('register', function () {
+    return redirect()->to("http://www.spotlite.com.au");
+})->name('register.get');
 Route::post('register', 'Auth\AuthController@postRegister')->name('register.post');
 
 Route::get('register/external', 'Auth\AuthController@registerExternalPreview')->name('register.get.external');
@@ -246,3 +249,6 @@ Route::get('javascript_disabled', function () {
 Route::post('error/notify_error', 'ErrorController@notifyError')->name('errors.notify');
 
 Route::get('token', 'TokenController@getToken')->name('token.index');
+
+Route::get('contact_us', 'SupportController@contact_us')->name('contact_us.post');
+Route::get('sign_up_for_beta_testing', 'SupportController@signUpForBetaTesting')->name('contact_us.post');

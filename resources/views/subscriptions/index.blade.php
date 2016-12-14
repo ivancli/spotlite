@@ -107,44 +107,61 @@
                                 <p>We would love to know what made you want to cancel. Please <a href="#">send us your
                                         feedback</a>.</p>
                                 <p>
-                                    You may choose to keep your profile and settings in SpotLite (recommended) or delete your profile and settings from SpotLite completely
+                                    You may choose to keep your profile and settings in SpotLite (recommended) or delete
+                                    your profile and settings from SpotLite completely
                                 </p>
 
                                 <div class="well">
-                                    <p class="text-danger">
-                                        <small>[Camila and Michael to work on terms and conditions, the words below
-                                            are only an example]
-                                        </small>
-                                    </p>
-                                    <p>Would you like to keep your profile in SpotLite just so you don't need to
-                                        sign up
-                                        again when you change your mind.</p>
-                                    <p class="text-danger">
-                                        <small>[description here to indicate what we keep in SpotLite (or maybe
-                                            Chargify?]
+                                    <h4>Option 1</h4>
+                                    <p>I would like to cancel my subscription and keep my profile and settings stored in
+                                        SpotLite.</p>
+                                    <p>
+                                        <small class="text-muted">
+                                            You might want to use it again in the future so, by keeping your profile,
+                                            you can simply continue using SpotLite once you reactivate your account.
                                         </small>
                                     </p>
                                     <p class="text-danger">
-                                        <small>[description should also mention about the drawback of removing
-                                            profile]
-                                        </small>
+                                        Are you sure you want to cancel your subscription?
                                     </p>
-                                    <div class="checkbox">
+                                    <div class="radio">
                                         <label>
-                                            <input type="checkbox" name="keep_profile" value="1"> Yes, I agree to
-                                            keep my profile in SpotLite
-                                            <small class="text-danger">(and Chargify?)</small>
+                                            <input type="radio" name="keep_profile" value="1" checked="">
+                                            Yes. I agree to cancel my subscription and keep my profile.
                                         </label>
                                     </div>
                                 </div>
+
+                                <div class="well">
+                                    <h4>Option 2</h4>
+                                    <p>I would like to cancel my subscription and delete my profile and settings from
+                                        SpotLite.</p>
+                                    <p>
+                                        <small class="text-muted">
+                                            If you choose to continue using SpotLite in the future, you will need to
+                                            enter all your Categories, Products and Product Page URLs once again.
+                                        </small>
+                                    </p>
+                                    <p class="text-danger">
+                                        Are you sure you want to cancel your subscription? This action cannot be undone.
+                                    </p>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="keep_profile" value="">
+                                            Yes. I agree to cancel my subscription and delete my profile.
+                                        </label>
+                                    </div>
+                                </div>
+
+
                                 <div class="row">
                                     <div class="col-sm-12 text-right">
+                                        {!! Form::submit('CONFIRM CANCELLATION', ["class"=>"btn btn-default btn-flat"]) !!}
+
                                         <button class="btn btn-default btn-flat" id="btn-cancel-cancel"
                                                 onclick="toggleCancelSubscriptionPanel();return false;">
-                                            No, go back
+                                            CANCEL
                                         </button>
-
-                                        {!! Form::submit('Yes, cancel my subscription', ["class"=>"btn btn-default btn-flat"]) !!}
                                     </div>
                                 </div>
                             </div>
