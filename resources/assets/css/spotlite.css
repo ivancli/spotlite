@@ -815,6 +815,19 @@ h3.box-title {
     }
 }
 
+.errors-container {
+    padding-left: 0px;
+    list-style: none;
+}
+
+.errors-container li:before {
+    content: "\f06a";
+    font: normal normal normal 14px/1 FontAwesome;
+    -webkit-font-smoothing: antialiased;
+    padding-right: 5px;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 .sidebar-menu li.treeview > a > .fa-caret-down,
 .sidebar-menu li.treeview > a > .pull-right-container > .fa-caret-down {
     transform: rotate(-360deg);

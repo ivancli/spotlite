@@ -149,7 +149,7 @@
                     </div>
                     <div class="form-group">
                         <input type="text" name="company_url" class="form-control"
-                               placeholder="Company URL? e.g. http://www.example.com">
+                               placeholder="Your site URL? e.g. http://www.example.com">
                     </div>
                     <div class="form-group text-center">
                         <button class="btn btn-primary btn-flat" type="submit">Create Dashboard</button>

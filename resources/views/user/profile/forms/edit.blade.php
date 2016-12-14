@@ -103,7 +103,7 @@
     </div>
 </div>
 <div class="form-group">
-    {!! Form::label('company_url', 'Company URL', array('class' => 'control-label col-md-3')) !!}
+    {!! Form::label('company_url', 'My Site URL', array('class' => 'control-label col-md-3')) !!}
     <div class="col-md-9">
         {!! Form::text('company_url', null, array('class' => 'form-control', 'placeholder' => 'e.g. http://www.example.com')) !!}
     </div>
@@ -111,7 +111,7 @@
 
 
 <div class="text-right">
-    {!! Form::submit('Update Profile', ["class"=>"btn btn-primary btn-flat", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
+    {!! Form::submit('UPDATE', ["class"=>"btn btn-primary btn-flat", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}
 </div>
 {!! Form::close() !!}
 
@@ -126,7 +126,7 @@
                 alertP("Update Profile", "Profile has been updated.");
             } else {
                 if (typeof response.errors != 'undefined') {
-                    var $errorContainer = $(".errors-container");
+                    var $errorContainer = $("#user-settings").find(".errors-container");
                     clearErrorMessgae();
                     $.each(response.errors, function (index, error) {
                         $errorContainer.append(

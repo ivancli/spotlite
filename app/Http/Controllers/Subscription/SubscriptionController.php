@@ -132,7 +132,7 @@ class SubscriptionController extends Controller
                                     $previousSubscription->api_customer_id = $newSubscription->customer_id;
                                     $previousSubscription->cancelled_at = null;
                                     $previousSubscription->save();
-                                    return redirect()->route('subscription.index');
+                                    return redirect()->route('account.index');
                                 }
                             }
                         }
@@ -223,7 +223,7 @@ class SubscriptionController extends Controller
                         event(new SubscriptionCompleted($sub));
                         $user->clearCache();
                         $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
-                        return redirect()->route('subscription.index');
+                        return redirect()->route('account.index');
                     } catch (Exception $e) {
                         /*TODO need to handle exception properly*/
                         return $user;
@@ -285,7 +285,7 @@ class SubscriptionController extends Controller
                             event(new SubscriptionUpdated($sub));
                             $user->clearCache();
                             $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
-                            return redirect()->route('subscription.index');
+                            return redirect()->route('account.index');
 //                            }
                         } else {
                             /* create subscription record in DB */
@@ -379,7 +379,7 @@ class SubscriptionController extends Controller
         $this->subscriptionRepo->syncUserSubscription(auth()->user());
         auth()->user()->clearCache();
         $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
-        return redirect()->route('subscription.index');
+        return redirect()->route('account.index');
     }
 
     public function edit($id)

@@ -5,10 +5,13 @@
     <script src='https://www.google.com/recaptcha/api.js'></script>
 @stop
 
+@section('header_title', "Account Settings")
+
 @section('breadcrumbs')
     {{--    {!! Breadcrumbs::render('account_index') !!}--}}
 @stop
 @section('content')
+    <hr class="content-divider-white">
     <div class="nav-tabs-custom">
         <!-- Tabs within a box -->
         <ul class="nav nav-tabs ui-sortable-handle">
@@ -23,7 +26,7 @@
         <div class="tab-content">
             <div class="tab-pane active" id="user-settings">
                 <div class="row">
-                    <div class="col-md-offset-2 col-md-8">
+                    <div class="col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10">
                         <div class="p-10">
                             @include('user.profile.forms.edit')
                         </div>
@@ -32,15 +35,16 @@
             </div>
             <div class="tab-pane" id="user-password">
                 <div class="row">
-                    <div class="col-md-offset-2 col-md-8">
+                    <div class="col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10">
                         <div class="p-10">
 
                             <h4 class="lead">Reset Password</h4>
                             <hr>
-                            <p class="m-b-20">By clicking the reset password button, an email with update password link
-                                will be
-                                sent
-                                to <a href="mailto:{{$user->email}}">{{$user->email}}</a>.</p>
+                            <p class="m-b-20">
+                                By clicking the reset password button, an email with update password link will be sent
+                                to <a href="mailto:{{$user->email}}">{{$user->email}}</a>. Click on the link to set a
+                                new password and confirm. Your password will be automatically updated.
+                            </p>
                             {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
 
                             <ul class="text-danger errors-container">
@@ -56,7 +60,7 @@
 
                             <div class="row">
                                 <div class="col-sm-12">
-                                    {!! Form::submit('Reset Password', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
+                                    {!! Form::submit('RESET PASSWORD', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
                                 </div>
                             </div>
                             {!! Form::close() !!}
@@ -104,7 +108,7 @@
                             </div>
                             <div class="form-group text-right">
                                 <div class="col-sm-12">
-                                    {!! Form::submit('Update Settings', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
+                                    {!! Form::submit('UPDATE', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
                                 </div>
                             </div>
                             {!! Form::close() !!}
@@ -186,7 +190,7 @@
                     hideLoading();
                     if (response.status == true) {
                         gaUpdateDateTime();
-                        alertP("Display settings", "Display settings has been updated.");
+                        alertP("Display settings", "Your display settings have been successfully updated.");
                     } else {
                         var $errorContainer = $("#display-settings .errors-container");
                         $errorContainer.empty();
