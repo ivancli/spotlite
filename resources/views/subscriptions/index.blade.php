@@ -14,9 +14,9 @@
         <div class="row m-b-20">
             <div class="col-sm-12">
                 @if(!is_null($subscription->trial_ended_at))
-                        Trial:
-                        <strong>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_started_at))}}
-                            to {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_ended_at))}}</strong>
+                    Trial:
+                    <strong>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_started_at))}}
+                        to {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_ended_at))}}</strong>
                 @endif
             </div>
         </div>
@@ -66,14 +66,14 @@
             <div class="col-sm-12 text-right">
                 {{--                            @if(is_null($onboardingSubscription) || $onboardingSubscription->product()->initial_charge_in_cents < $onboardingProduct->initial_charge_in_cents)--}}
                 {{--@if(is_null($onboardingSubscription))--}}
-                    {{--<a href="{{route('onboarding.index')}}" class="btn btn-primary btn-flat">--}}
-                        {{--                                    @if(is_null($onboardingSubscription))--}}
-                        {{--Purchase Onboarding Service--}}
-                        {{--@else--}}
-                        {{--Upgrade Onboarding Service--}}
-                        {{--@endif--}}
-                    {{--</a>--}}
-                    {{--&nbsp;--}}
+                {{--<a href="{{route('onboarding.index')}}" class="btn btn-primary btn-flat">--}}
+                {{--                                    @if(is_null($onboardingSubscription))--}}
+                {{--Purchase Onboarding Service--}}
+                {{--@else--}}
+                {{--Upgrade Onboarding Service--}}
+                {{--@endif--}}
+                {{--</a>--}}
+                {{--&nbsp;--}}
                 {{--@endif--}}
                 <a href="{{$updatePaymentLink}}" class="btn btn-default btn-flat">
                     Update Payment Details
@@ -95,7 +95,8 @@
     <div class="col-sm-12">
         <div class="box box-danger">
             <div class="box-header with-border">
-                <h4 class="box-title text-danger"><i class="fa fa-exclamation-triangle"></i> Cancel my Subscription?</h4>
+                <h4 class="box-title text-danger"><i class="fa fa-exclamation-triangle"></i> Cancel my Subscription?
+                </h4>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -103,9 +104,11 @@
                         {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'class'=>'form-horizontal', 'method' => 'delete', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
                         <div class="row">
                             <div class="col-sm-12">
-                                <p>If you choose to cancel your subscription, you will no long be able to track your
-                                    competitors prices.</p>
-                                <p class="text-danger">NOTE: you will not be able to undo this cancellation.</p>
+                                <p>We would love to know what made you want to cancel. Please <a href="#">send us your
+                                        feedback</a>.</p>
+                                <p>
+                                    You may choose to keep your profile and settings in SpotLite (recommended) or delete your profile and settings from SpotLite completely
+                                </p>
 
                                 <div class="well">
                                     <p class="text-danger">
