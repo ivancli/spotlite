@@ -26,13 +26,13 @@ class TermAndConditionController extends Controller
                 if ($this->request->wantsJson()) {
                     $tnc = $this->termAndConditionRepo->getActive();
                     $status = !is_null($tnc);
+                    return response()->json(compact(['status', 'tnc']));
+                } else {
                     if ($this->request->has('callback')) {
                         return response()->json(compact(['status', 'tnc']))->setCallback($this->request->get('callback'));
-                    }else{
-                        return response()->json(compact(['status', 'tnc']));
+                    } else {
+                        return view('legal.tnc_pp');
                     }
-                } else {
-                    return view('legal.tnc_pp');
                 }
             } else {
                 return view('legal.tnc_pp');
