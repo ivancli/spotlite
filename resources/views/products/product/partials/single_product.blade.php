@@ -152,7 +152,7 @@
                                         <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
                                             <button class="btn btn-primary btn-flat"
                                                     onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
-                                                ADD PRODUCT URL
+                                                ADD PRODUCT PAGE URL
                                             </button>
                                             &nbsp;&nbsp;
                                             <button class="btn btn-default btn-flat btn-cancel-add-site"

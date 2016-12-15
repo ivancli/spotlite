@@ -37,6 +37,8 @@ return [
         "3pk",
         "(",
         "\"",
+        "Sale Price:",
+        "Sale:",
         "3.00kg",
         "7.50kb",
         "15.00kg"
