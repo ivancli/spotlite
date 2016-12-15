@@ -26,7 +26,7 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" value="{{$site->getKey()}}" name="site_id"
-                                       onclick="$('.rad-site-id[name=domain_id]').prop('checked', false);"
+                                       onclick="$('.rad-site-id[name=domain_id]')e.prop('checked', false);"
                                        class="rad-site-id">
                                 <span>${{number_format($site->recent_price, 2, '.', ',')}}</span>
                             </label>
@@ -42,8 +42,8 @@
             </div>
             <div class="modal-footer text-right">
                 <button class="btn btn-primary btn-flat" id="btn-set-price">OK</button>
-                <button class="btn btn-warning btn-flat" id="btn-error" onclick="showErrorPanel(this);return false;">NO
-                    CORRECT PRICE
+                <button class="btn btn-warning btn-flat" id="btn-error" onclick="showErrorPanel(this);return false;">
+                    INCORRECT PRICE
                 </button>
                 <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
@@ -60,7 +60,7 @@
                             return false;
                         }
                     } else {
-                        alertP("Oops! Something went wrong.", "Please select a price from the list. Alternatively, help us to locate the correct price by clicking 'NO CORRECT PRICE' button.");
+                        alertP("Oops! Something went wrong.", "Please select a price from the list. Alternatively, help us to locate the correct price by clicking 'INCORRECT PRICE' button.");
                         return false;
                     }
                 }
