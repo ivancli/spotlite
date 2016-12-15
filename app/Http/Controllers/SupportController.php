@@ -9,17 +9,21 @@
 namespace App\Http\Controllers;
 
 
+use App\Contracts\Repository\Mailer\MailerContract;
 use App\Contracts\Repository\Security\TokenContract;
 use App\Jobs\SendMail;
+use App\Repositories\Mailer\MailerRepository;
 use Illuminate\Http\Request;
 
 class SupportController extends Controller
 {
     protected $tokenRepo;
+    protected $mailerRepo;
 
-    public function __construct(TokenContract $tokenContract)
+    public function __construct(TokenContract $tokenContract, MailerContract $mailerContract)
     {
         $this->tokenRepo = $tokenContract;
+        $this->mailerRepo = $mailerContract;
     }
 
     public function contact_us(Request $request)
@@ -38,14 +42,23 @@ class SupportController extends Controller
 //            }
 //        }
 
+
+
         $input = $request->all();
-        dispatch((new SendMail('support.contact_us',
+
+        $this->mailerRepo->sendToSupport('support.contact_us',
             $input,
             array(
-                "email" => env("SUPPORT_EMAIL_ADDRESS"),
                 "subject" => 'SpotLite - Contact Us',
             )
-        ))->onQueue("mailing"));
+        );
+//        dispatch((new SendMail('support.contact_us',
+//            $input,
+//            array(
+//                "email" => env("SUPPORT_EMAIL_ADDRESS"),
+//                "subject" => 'SpotLite - Contact Us',
+//            )
+//        ))->onQueue("mailing"));
 
         $status = true;
         if ($request->has('callback')) {
@@ -75,13 +88,21 @@ class SupportController extends Controller
 //        }
 
         $input = $request->all();
-        dispatch((new SendMail('support.sign_up_for_beta',
+
+        $this->mailerRepo->sendToSupport('support.sign_up_for_beta',
             $input,
             array(
-                "email" => env("SUPPORT_EMAIL_ADDRESS"),
                 "subject" => 'SpotLite - Sign Up For Beta Notification',
             )
-        ))->onQueue("mailing"));
+        );
+
+
+//        dispatch((new SendMail('support.sign_up_for_beta',
+//            $input,
+//            array(
+//                "subject" => 'SpotLite - Sign Up For Beta Notification',
+//            )
+//        ))->onQueue("mailing"));
 
         $status = true;
         if ($request->has('callback')) {

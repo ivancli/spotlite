@@ -14,4 +14,6 @@ interface MailerContract
     public function sendWelcomeEmail(User $user);
 
     public function sendMail($view, array $data = array(), array $options = array());
+
+    public function sendToSupport($view, array $data = array(), array $options = array());
 }

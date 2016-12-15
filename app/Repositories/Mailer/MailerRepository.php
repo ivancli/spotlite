@@ -37,4 +37,13 @@ class MailerRepository implements MailerContract
             }
         });
     }
+
+    public function sendToSupport($view, array $data = array(), array $options = array())
+    {
+        Mail::send($view, $data, function ($m) use ($options) {
+            $m->from(config('mail.from.address'), config('mail.from.name'));
+            $m->to("support@spotlite.com.au")
+                ->subject($options['subject']);
+        });
+    }
 }
