@@ -139,12 +139,27 @@
                                     case "site":
                                     default:
                                         return "Site - ";
-
                                 }
-
                             });
 
                             switch (data.alert_owner_type) {
+                                case "category":
+                                    $cellText.append(
+                                            $("<a>").attr({
+                                                "href": "#",
+                                                "onclick": "return false;",
+                                                "data-toggle": "popover",
+                                                "data-content": $("<div>").append(
+                                                        $("<div>").append(
+                                                                "Name: ",
+                                                                $("<strong>").text(data.alert_owner.category_name)
+                                                        )
+                                                ).html(),
+                                                "data-html": true,
+                                                "data-trigger": "hover"
+                                            }).text(data.alert_owner.category_name)
+                                    );
+                                    break;
                                 case "product":
                                     $cellText.append(
                                             $("<a>").attr({
@@ -251,7 +266,7 @@
                                             $("<a>").addClass("text-muted").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['edit'],
-                                                "onclick": "showAlertForm(this); return false;",
+                                                "onclick": "showSetUpNotifications(this); return false;",
                                                 "data-alert-type": data.alert_owner_type
                                             }).append(
                                                     $("<i>").addClass("glyphicon glyphicon-pencil")
@@ -448,6 +463,37 @@
                             "dismiss": true
                         }
                     });
+        }
+
+        function showSetUpNotifications() {
+            showLoading();
+            $.ajax({
+                "url": "alert/set_up_notifications",
+                "method": "get",
+                "success": function (html) {
+                    hideLoading();
+                    var $modal = $(html);
+                    $modal.modal();
+                    $modal.on("shown.bs.modal", function () {
+                        if ($.isFunction(modalReady)) {
+                            modalReady({
+                                "callback": function (response) {
+                                    if ($.isFunction(callback)) {
+                                        callback(response);
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    $modal.on("hidden.bs.modal", function () {
+                        $("#modal-set-up-notifications").remove();
+                    });
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            });
         }
     </script>
 @stop

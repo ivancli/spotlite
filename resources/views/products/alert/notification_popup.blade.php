@@ -202,7 +202,7 @@
                 </button>
                 @if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)
                     <button class="btn btn-danger btn-flat" data-url="{{route('alert.delete_notifications')}}"
-                            onclick="deleteAllNotifications(this); return false;">DELETE
+                            onclick="deleteAllNotifications(this); return false;">DELETE ALL
                     </button>
                 @endif
                 <button data-dismiss="modal" class="btn btn-default btn-flat">CANCEL</button>
