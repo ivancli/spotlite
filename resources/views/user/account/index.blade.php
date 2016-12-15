@@ -80,16 +80,17 @@
                                 <div class="col-md-9">
                                     <select name="preferences[DATE_FORMAT]" id="sel-date-format"
                                             class="form-control">
+                                        <option value="j M y" {{auth()->user()->preference('DATE_FORMAT') == 'j M y' ? 'selected': ''}}>{{date('j M y')}}</option>
                                         <option value="Y-m-d" {{auth()->user()->preference('DATE_FORMAT') == 'Y-m-d' ? 'selected': ''}}>{{date('Y-m-d')}}</option>
                                         <option value="d F" {{auth()->user()->preference('DATE_FORMAT') == 'd F' ? 'selected': ''}}>{{date('d F')}}</option>
-                                        <option value="l j M Y" {{auth()->user()->preference('DATE_FORMAT') == 'l j M Y' ? 'selected': ''}}>{{date('l j M Y')}}</option>
-                                        <option value="l Ymd" {{auth()->user()->preference('DATE_FORMAT') == 'l Ymd' ? 'selected': ''}}>{{date('l Ymd')}}</option>
-                                        <option value="l Y-m-d" {{auth()->user()->preference('DATE_FORMAT') == 'l Y-m-d' ? 'selected': ''}}>{{date('l Y-m-d')}}</option>
-                                        <option value="l jS \of F Y" {{auth()->user()->preference('DATE_FORMAT') == 'l jS \of F Y' ? 'selected': ''}}>{{date('l jS \of F Y')}}</option>
-                                        <option value="l j F Y" {{auth()->user()->preference('DATE_FORMAT') == 'l j F Y' ? 'selected': ''}}>{{date('l j F Y')}}</option>
-                                        <option value="l F j, Y" {{auth()->user()->preference('DATE_FORMAT') == 'l F j, Y' ? 'selected': ''}}>{{date('l F j, Y')}}</option>
-                                        <option value="l d/m/Y" {{auth()->user()->preference('DATE_FORMAT') == 'l d/m/Y' ? 'selected': ''}}>{{date('l d/m/Y')}}</option>
-                                        <option value="l m/d/Y" {{auth()->user()->preference('DATE_FORMAT') == 'l m/d/Y' ? 'selected': ''}}>{{date('l m/d/Y')}}</option>
+                                        <option value="j M Y" {{auth()->user()->preference('DATE_FORMAT') == 'j M Y' ? 'selected': ''}}>{{date('j M Y')}}</option>
+                                        <option value="Ymd" {{auth()->user()->preference('DATE_FORMAT') == 'Ymd' ? 'selected': ''}}>{{date('Ymd')}}</option>
+                                        <option value="Y-m-d" {{auth()->user()->preference('DATE_FORMAT') == 'Y-m-d' ? 'selected': ''}}>{{date('Y-m-d')}}</option>
+                                        <option value="jS \of F Y" {{auth()->user()->preference('DATE_FORMAT') == 'jS \of F Y' ? 'selected': ''}}>{{date('jS \of F Y')}}</option>
+                                        <option value="j F Y" {{auth()->user()->preference('DATE_FORMAT') == 'j F Y' ? 'selected': ''}}>{{date('j F Y')}}</option>
+                                        <option value="F j, Y" {{auth()->user()->preference('DATE_FORMAT') == 'F j, Y' ? 'selected': ''}}>{{date('F j, Y')}}</option>
+                                        <option value="d/m/Y" {{auth()->user()->preference('DATE_FORMAT') == 'd/m/Y' ? 'selected': ''}}>{{date('d/m/Y')}}</option>
+                                        <option value="m/d/Y" {{auth()->user()->preference('DATE_FORMAT') == 'm/d/Y' ? 'selected': ''}}>{{date('m/d/Y')}}</option>
                                     </select>
                                 </div>
                             </div>
