@@ -10,7 +10,7 @@
         <div class="col-sm-12 ">
             <div class="jumbotron set-password-form-container">
                 <p class="set-password-form-heading">
-                    Set a password for future access.
+                    Please set your password.
                 </p>
 
                 <ul class="text-danger errors-container">
@@ -26,7 +26,7 @@
                                placeholder="Confirm password">
                     </div>
                     <div class="form-group text-center">
-                        <button class="btn btn-primary btn-flat" type="submit">Set Password</button>
+                        <button class="btn btn-primary btn-flat" type="submit">SET PASSWORD</button>
                     </div>
                 </form>
             </div>

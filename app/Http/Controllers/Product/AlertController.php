@@ -94,13 +94,39 @@ class AlertController extends Controller
             }
         }
 
-        if ($request->has('notification_type')) {
-            $notificationType = $request->get('notification_type');
-            if (!empty($notificationType)) {
+        $notificationType = $request->get('notification_type');
+        if (!empty($notificationType)) {
+            $alert = $this->alertRepo->storeAlert(array(
+                "alert_owner_id" => auth()->user()->getKey(),
+                "alert_owner_type" => "user",
+                "comparison_price_type" => $notificationType,
+                "operator" => $notificationType == '=<' ? $notificationType : ($notificationType == 'my price' ? '=<' : ''),
+            ));
+            if ($request->has('email')) {
+                foreach ($request->get('email') as $email) {
+                    $alertEmail = AlertEmail::create(array(
+                        "alert_id" => $alert->getKey(),
+                        "alert_email_address" => $email
+                    ));
+                    $alertEmails[] = $alertEmail;
+                }
+            }
+            event(new AlertEditing($alert));
+        }
+        $categoryNotifications = $request->has('categories') && is_array($request->get('categories')) ? $request->get('categories') : array();
+        $productNotifications = $request->has('products') && is_array($request->get('products')) ? $request->get('products') : array();
+
+        foreach ($categoryNotifications as $notification) {
+            if (!isset($notification['type']) || empty($notification['type'])) {
+                continue;
+            } else {
+                /*save alert*/
                 $alert = $this->alertRepo->storeAlert(array(
-                    "alert_owner_id" => auth()->user()->getKey(),
-                    "alert_owner_type" => "user",
-                    "comparison_price_type" => $notificationType,
+                    "alert_owner_id" => $notification['category_id'],
+                    "alert_owner_type" => "category",
+                    "comparison_price_type" => $notification['type'] == '=<' ? 'specific price' : $notification['type'],
+                    "comparison_price" => isset($notification['specificPrice']) && !empty($notification['specificPrice']) ? $notification['specificPrice'] : null,
+                    "operator" => $notification['type'] == '=<' ? $notification['type'] : ($notification['type'] == 'my price' ? '=<' : ''),
                 ));
                 if ($request->has('email')) {
                     foreach ($request->get('email') as $email) {
@@ -113,61 +139,33 @@ class AlertController extends Controller
                 }
                 event(new AlertEditing($alert));
             }
-        } else {
-            $categoryNotifications = $request->has('categories') && is_array($request->get('categories')) ? $request->get('categories') : array();
-            $productNotifications = $request->has('products') && is_array($request->get('products')) ? $request->get('products') : array();
+        }
 
-            foreach ($categoryNotifications as $notification) {
-                if (!isset($notification['type']) || empty($notification['type'])) {
+        foreach ($productNotifications as $notification) {
+            if (!isset($notification['type']) || empty($notification['type'])) {
+                continue;
+            } else {
+                if ($notification['type'] == '=<' && (!isset($notification['specificPrice']) || empty($notification['specificPrice']))) {
                     continue;
-                } else {
-                    /*save alert*/
-                    $alert = $this->alertRepo->storeAlert(array(
-                        "alert_owner_id" => $notification['category_id'],
-                        "alert_owner_type" => "category",
-                        "comparison_price_type" => $notification['type'] == '=<' ? 'specific price' : $notification['type'],
-                        "comparison_price" => isset($notification['specificPrice']) && !empty($notification['specificPrice']) ? $notification['specificPrice'] : null,
-                        "operator" => $notification['type'] == '=<' ? $notification['type'] : "",
-                    ));
-                    if ($request->has('email')) {
-                        foreach ($request->get('email') as $email) {
-                            $alertEmail = AlertEmail::create(array(
-                                "alert_id" => $alert->getKey(),
-                                "alert_email_address" => $email
-                            ));
-                            $alertEmails[] = $alertEmail;
-                        }
-                    }
-                    event(new AlertEditing($alert));
                 }
-            }
-
-            foreach ($productNotifications as $notification) {
-                if (!isset($notification['type']) || empty($notification['type'])) {
-                    continue;
-                } else {
-                    if ($notification['type'] == '=<' && (!isset($notification['specificPrice']) || empty($notification['specificPrice']))) {
-                        continue;
+                /*save alert*/
+                $alert = $this->alertRepo->storeAlert(array(
+                    "alert_owner_id" => $notification['product_id'],
+                    "alert_owner_type" => "product",
+                    "comparison_price_type" => $notification['type'] == '=<' ? 'specific price' : $notification['type'],
+                    "comparison_price" => isset($notification['specificPrice']) && !empty($notification['specificPrice']) ? $notification['specificPrice'] : null,
+                    "operator" => $notification['type'] == '=<' ? $notification['type'] : ($notification['type'] == 'my price' ? '=<' : ''),
+                ));
+                if ($request->has('email')) {
+                    foreach ($request->get('email') as $email) {
+                        $alertEmail = AlertEmail::create(array(
+                            "alert_id" => $alert->getKey(),
+                            "alert_email_address" => $email
+                        ));
+                        $alertEmails[] = $alertEmail;
                     }
-                    /*save alert*/
-                    $alert = $this->alertRepo->storeAlert(array(
-                        "alert_owner_id" => $notification['product_id'],
-                        "alert_owner_type" => "product",
-                        "comparison_price_type" => $notification['type'] == '=<' ? 'specific price' : $notification['type'],
-                        "comparison_price" => isset($notification['specificPrice']) && !empty($notification['specificPrice']) ? $notification['specificPrice'] : null,
-                        "operator" => $notification['type'] == '=<' ? $notification['type'] : "",
-                    ));
-                    if ($request->has('email')) {
-                        foreach ($request->get('email') as $email) {
-                            $alertEmail = AlertEmail::create(array(
-                                "alert_id" => $alert->getKey(),
-                                "alert_email_address" => $email
-                            ));
-                            $alertEmails[] = $alertEmail;
-                        }
-                    }
-                    event(new AlertEditing($alert));
                 }
+                event(new AlertEditing($alert));
             }
         }
 
@@ -183,9 +181,34 @@ class AlertController extends Controller
         }
     }
 
-    public function deleteNotification()
+    public function deleteNotification(Request $request)
     {
+        $user = auth()->user();
+        foreach ($user->alerts as $alert) {
+            $alert->delete();
+        }
+        foreach ($user->categories as $category) {
+            if (!is_null($category->alert)) {
+                $category->alert->delete();
+            }
+            foreach ($category->products as $product) {
+                if (!is_null($product->alert)) {
+                    $product->alert->delete();
+                }
+            }
+        }
 
+        $status = true;
+
+        if ($request->ajax()) {
+            if ($request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            /*TODO implement this if necessary*/
+        }
     }
 
     /**

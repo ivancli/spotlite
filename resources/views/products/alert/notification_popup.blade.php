@@ -70,9 +70,9 @@
                 </div>
 
                 <div class="basic-notifications m-b-20"
-                     @if(auth()->user()->categoryAlerts()->count() != 0 || auth()->user()->productAlerts()->count() != 0)
-                     style="display: none;"
-                        @endif
+                        {{--@if(auth()->user()->categoryAlerts()->count() != 0 || auth()->user()->productAlerts()->count() != 0)--}}
+                        {{--style="display: none;"--}}
+                        {{--@endif--}}
                 >
                     <form id="frm-notification-basic" class="nl-form">
                         Send alert when
@@ -83,7 +83,7 @@
                                 my price was beaten
                             </option>
                             <option value="price changed" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'price changed' ? "selected" : ""}}>
-                                price changed
+                                price changes
                             </option>
                         </select>
                         &nbsp;
@@ -127,13 +127,14 @@
                                 &nbsp;&nbsp;&nbsp;
                                 <form class="form-control-inline frm-category-notification nl-form"
                                       style="display: none;">
-                                    <select class="form-control input-sm form-control-inline sel-category-notification-type" onchange="checkCompanyURL();">
+                                    <select class="form-control input-sm form-control-inline sel-category-notification-type"
+                                            onchange="checkCompanyURL();">
                                         <option value=""> -- select alert type --</option>
                                         <option value="my price" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'my price' ? "selected" : ""}}>
                                             beats my price
                                         </option>
                                         <option value="price changed" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'price changed' ? "selected" : ""}}>
-                                            price changed
+                                            price changes
                                         </option>
                                     </select>
                                     <div class="nl-overlay"></div>
@@ -163,7 +164,7 @@
                                                         onchange="toggleSpecificPriceInput(this);checkCompanyURL();">
                                                     <option value=""> -- select alert type --</option>
                                                     <option value="price changed" {{!is_null($product->alert) && $product->alert->comparison_price_type == "price changed" ? "selected" : ""}}>
-                                                        price changed
+                                                        price changes
                                                     </option>
                                                     <option value="my price" {{!is_null($product->alert) && $product->alert->comparison_price_type == "my price" ? "selected" : ""}}>
                                                         beats my price
@@ -199,7 +200,12 @@
             <div class="modal-footer text-right">
                 <button class="btn btn-primary btn-flat" onclick="submitUpdateNotifications(); return false;">CONFIRM
                 </button>
-                <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
+                @if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)
+                    <button class="btn btn-danger btn-flat" data-url="{{route('alert.delete_notifications')}}"
+                            onclick="deleteAllNotifications(this); return false;">DELETE
+                    </button>
+                @endif
+                <button data-dismiss="modal" class="btn btn-default btn-flat">CANCEL</button>
             </div>
         </div>
     </div>
@@ -283,7 +289,7 @@
         function submitUpdateNotifications(successCallback, failCallback) {
             /*TODO collect data*/
             var data = collectFormData();
-
+            showLoading();
             $.ajax({
                 "url": "alert/set_up_notifications",
                 "method": "put",
@@ -295,6 +301,17 @@
                         successCallback(response);
                     }
                     $("#modal-set-up-notifications").modal("hide");
+                    if (data.notification_type == "" && data.products.length == 0 && data.categories.length == 0) {
+                        $("#btn-set-up-alerts").empty().append(
+                                $("<i>").addClass("fa fa-bell-o"),
+                                " &nbsp; SET UP ALERTS"
+                        );
+                    } else {
+                        $("#btn-set-up-alerts").empty().append(
+                                $("<i>").addClass("fa fa-bell ico-alert-enabled"),
+                                " &nbsp; MANAGE ALERTS"
+                        );
+                    }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
@@ -307,42 +324,36 @@
         }
 
         function collectFormData() {
-            if ($(".basic-notifications").is(":visible")) {
-                return {
-                    "notification_type": $("#basic-notification-type").val(),
-                    "email[]": $(".txt-email").val()
-                };
-            } else {
-                /*TODO category level data*/
-                var categoryNotifications = [];
-                var productNotifications = [];
+            /*TODO category level data*/
+            var categoryNotifications = [];
+            var productNotifications = [];
 
-                $(".chk-category:checked").each(function () {
-                    var $categoryList = $(this).closest(".category-checkbox");
-                    var categoryId = $categoryList.find("[data-category-id]").attr("data-category-id");
-                    var notificationType = $categoryList.find(".sel-category-notification-type").val();
-                    categoryNotifications.push({
-                        "category_id": categoryId,
-                        "type": notificationType
-                    })
-                });
+            $(".chk-category:checked").each(function () {
+                var $categoryList = $(this).closest(".category-checkbox");
+                var categoryId = $categoryList.find("[data-category-id]").attr("data-category-id");
+                var notificationType = $categoryList.find(".sel-category-notification-type").val();
+                categoryNotifications.push({
+                    "category_id": categoryId,
+                    "type": notificationType
+                })
+            });
 
-                $(".chk-product:checked").each(function () {
-                    var $productList = $(this).closest(".product-checkbox");
-                    var productId = $productList.find("[data-product-id]").attr("data-product-id");
-                    var notificationType = $productList.find(".sel-notification-type").val();
-                    var specificPrice = $productList.find(".txt-specific-price").val();
-                    productNotifications.push({
-                        "product_id": productId,
-                        "type": notificationType,
-                        "specificPrice": specificPrice
-                    })
-                });
-                return {
-                    "categories": categoryNotifications,
-                    "products": productNotifications,
-                    "email[]": $(".txt-email").val()
-                }
+            $(".chk-product:checked").each(function () {
+                var $productList = $(this).closest(".product-checkbox");
+                var productId = $productList.find("[data-product-id]").attr("data-product-id");
+                var notificationType = $productList.find(".sel-notification-type").val();
+                var specificPrice = $productList.find(".txt-specific-price").val();
+                productNotifications.push({
+                    "product_id": productId,
+                    "type": notificationType,
+                    "specificPrice": specificPrice
+                })
+            });
+            return {
+                "notification_type": $("#basic-notification-type").val(),
+                "categories": categoryNotifications,
+                "products": productNotifications,
+                "email[]": $(".txt-email").val()
             }
         }
 
@@ -354,7 +365,7 @@
                         $("<i>").addClass("fa fa-minus-square-o"),
                         "&nbsp;&nbsp;basic notifications"
                 );
-                $(".basic-notifications").slideUp();
+//                $(".basic-notifications").slideUp();
                 $(".advanced-notifications").slideDown();
             } else {
                 $(el).empty().append(
@@ -362,18 +373,69 @@
                         "&nbsp;&nbsp;advanced notifications"
                 );
                 $(el).attr("data-status", "basic");
-                $(".basic-notifications").slideDown();
+//                $(".basic-notifications").slideDown();
                 $(".advanced-notifications").slideUp();
             }
         }
 
         function checkCompanyURL() {
             $(".warnning-message-container").hide();
+            var show = false;
             $(".sel-category-notification-type, .sel-notification-type, #basic-notification-type").each(function () {
-                if ($(this).val("my price") && (user.company_url == null || user.company_url.trim() == "")) {
-                    $(".warnning-message-container").show();
+                if ($(this).val() == "my price" && (user.company_url == null || user.company_url.trim() == "")) {
+                    show = true;
                 }
             });
+            if (show == true) {
+                $(".warnning-message-container").show();
+            } else {
+                $(".warnning-message-container").hide();
+            }
+        }
+
+        function deleteAllNotifications(el) {
+            deletePopup("Delete Alert", "Are you sure you want to delete all Alerts?",
+                    "By deleting all Alerts, you will lose the following:",
+                    [
+                        "All Alerts set up for this account."
+                    ],
+                    {
+                        "affirmative": {
+                            "text": "DELETE",
+                            "class": "btn-danger btn-flat",
+                            "dismiss": true,
+                            "callback": function () {
+                                showLoading();
+                                $.ajax({
+                                    "url": $(el).attr("data-url"),
+                                    "method": "delete",
+                                    "dataType": "json",
+                                    "success": function (response) {
+                                        hideLoading();
+                                        if (response.status == true) {
+                                            $(el).closest(".modal").modal("hide");
+
+                                            $("#btn-set-up-alerts").empty().append(
+                                                    $("<i>").addClass("fa fa-bell-o"),
+                                                    " &nbsp; SET UP ALERTS"
+                                            );
+                                        } else {
+                                            alertP("Oops! Something went wrong.", "Unable to delete alert, please try again later.");
+                                        }
+                                    },
+                                    "error": function (xhr, status, error) {
+                                        hideLoading();
+                                        describeServerRespondedError(xhr.status);
+                                    }
+                                })
+                            }
+                        },
+                        "negative": {
+                            "text": "CANCEL",
+                            "class": "btn-default btn-flat",
+                            "dismiss": true
+                        }
+                    });
         }
     </script>
 </div>

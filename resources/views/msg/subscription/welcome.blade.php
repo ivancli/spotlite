@@ -152,7 +152,7 @@
                                placeholder="Your site URL? e.g. http://www.example.com">
                     </div>
                     <div class="form-group text-center">
-                        <button class="btn btn-primary btn-flat" type="submit">Create Dashboard</button>
+                        <button class="btn btn-primary btn-flat" type="submit">CREATE DASHBOARD</button>
                     </div>
                 </form>
             </div>

@@ -90,10 +90,16 @@
                         <div class="col-md-4">
                             <div class="pull-right">
                                 <a href="#" onclick="showSetUpNotifications(); return false;"
-                                   class="btn btn-primary btn-flat">
-                                    <i class="fa fa-bell-o"></i>
-                                    &nbsp;
-                                    SET UP ALERTS
+                                   class="btn btn-primary btn-flat" id="btn-set-up-alerts">
+                                    @if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)
+                                        <i class="fa fa-bell ico-alert-enabled"></i>
+                                        &nbsp;
+                                        MANAGE ALERTS
+                                        @else
+                                        <i class="fa fa-bell-o"></i>
+                                        &nbsp;
+                                        SET UP ALERTS
+                                    @endif
                                 </a>
                             </div>
                         </div>

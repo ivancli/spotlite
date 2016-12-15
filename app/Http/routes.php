@@ -105,6 +105,7 @@ Route::group(['middleware' => ['auth']], function () {
         //currently being used
         Route::get('alert/set_up_notifications', 'Product\AlertController@setUpNotification')->name('alert.set_up_notifications');
         Route::put('alert/set_up_notifications', 'Product\AlertController@updateNotification')->name('alert.update_notifications');
+        Route::delete('alert/set_up_notifications', 'Product\AlertController@deleteNotification')->name('alert.delete_notifications');
 
         Route::resource('alert', 'Product\AlertController');
         Route::resource('alert_log', 'Log\AlertActivityLogController');

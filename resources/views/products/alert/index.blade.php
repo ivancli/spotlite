@@ -125,9 +125,24 @@
                         "sortable": false,
                         "name": "alert_owner_type",
                         "data": function (data) {
-                            var $cellText = $("<div>").append(
-                                    data.alert_owner_type == "product" ? "Product - " : "Site - "
-                            );
+                            var $cellText = $("<div>").append(function () {
+                                switch (data.alert_owner_type) {
+                                    case "user":
+                                        return "All Categories Alert";
+                                        break;
+                                    case "category":
+                                        return "Category - ";
+                                        break;
+                                    case "product":
+                                        return "Product - ";
+                                        break;
+                                    case "site":
+                                    default:
+                                        return "Site - ";
+
+                                }
+
+                            });
 
                             switch (data.alert_owner_type) {
                                 case "product":

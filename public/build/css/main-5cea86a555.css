@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-0f390f689d.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-5cea86a555.css */
 @media print {
   *,
   *:before,
@@ -15909,6 +15909,10 @@ h3.box-title {
     -ms-transform: translateY(-50%);
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
+}
+
+.ico-alert-enabled {
+    color: #aef9af;
 }
 
 @media (min-width: 768px) {

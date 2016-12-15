@@ -15911,6 +15911,10 @@ h3.box-title {
     transform: translateY(-50%);
 }
 
+.ico-alert-enabled {
+    color: #aef9af;
+}
+
 @media (min-width: 768px) {
     .navbar-custom-menu {
         padding-top: 25px;

@@ -540,15 +540,19 @@ class AlertRepository implements AlertContract
             }
         }
 
-        return auth()->user()->productAlerts()->count() + count($siteAlerts);
+        return auth()->user()->alerts()->count() + auth()->user()->categoryAlerts()->count() + auth()->user()->productAlerts()->count() + count($siteAlerts);
     }
 
     public function getDataTableAlerts()
     {
+        $userAlerts = $this->getUserAlertsByAuthUser();
+        $categoryAlerts = $this->getCategoryAlertsByAuthUser();
         $productAlerts = $this->getProductAlertsByAuthUser();
         $siteAlerts = $this->getSiteAlertsByAuthUser();
 
-        $alerts = $productAlerts->merge($siteAlerts);
+        $alerts = $categoryAlerts->merge($userAlerts);
+        $alerts = $alerts->merge($productAlerts);
+        $alerts = $alerts->merge($siteAlerts);
 
 
         if ($this->request->has('order')) {
@@ -583,6 +587,8 @@ class AlertRepository implements AlertContract
                     return str_contains(strtolower($alert->alert_owner->domain), strtolower($searchString));
                 } elseif ($alert->alert_owner_type == "product") {
                     return str_contains(strtolower($alert->alert_owner->product_name), strtolower($searchString));
+                } elseif ($alert->alert_owner_type == "category") {
+                    return str_contains(strtolower($alert->alert_owner->category_name), strtolower($searchString));
                 }
             })->values();
         }
@@ -597,6 +603,16 @@ class AlertRepository implements AlertContract
         }
         $output->data = $alerts->toArray();
         return $output;
+    }
+
+    public function getCategoryAlertsByAuthUser()
+    {
+        return auth()->user()->categoryAlerts()->with('alertable')->get();
+    }
+
+    public function getUserAlertsByAuthUser()
+    {
+        return auth()->user()->alerts()->with('alertable')->get();
     }
 
     public function getProductAlertsByAuthUser()
