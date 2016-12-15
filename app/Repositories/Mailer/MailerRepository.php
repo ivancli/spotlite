@@ -42,7 +42,7 @@ class MailerRepository implements MailerContract
     {
         Mail::send($view, $data, function ($m) use ($options) {
             $m->from(config('mail.from.address'), config('mail.from.name'));
-            $m->to("support@spotlite.com.au")
+            $m->to(config("support.support_email_address"))
                 ->subject($options['subject']);
         });
     }

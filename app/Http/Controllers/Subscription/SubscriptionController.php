@@ -125,7 +125,7 @@ class SubscriptionController extends Controller
                                     "coupon_code" => $couponCode,
                                 ));
                                 $user->clearCache();
-                                $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
+//                                $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
                                 if (!isset($newSubscription->errors)) {
                                     $previousSubscription->api_product_id = $newSubscription->product_id;
                                     $previousSubscription->api_subscription_id = $newSubscription->id;

@@ -130,6 +130,7 @@ function getPricesEdit(el) {
                             "site_url": $txtSiteURL.val(),
                             "domain_id": editSiteData.domain_id,
                             "site_id": editSiteData.site_id,
+                            "comment": editSiteData.comment,
                             "url": $(el).attr("data-url")
                         }, function (edit_site_response) {
                             if (edit_site_response.status == true) {

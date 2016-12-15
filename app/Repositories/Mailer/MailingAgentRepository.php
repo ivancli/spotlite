@@ -375,7 +375,7 @@ class MailingAgentRepository implements MailingAgentContract
 
     public function updateNextLevelSubscriptionPlan(User $user)
     {
-        if (!$user->isStaff && !is_null($user->subscription)) {
+        if (!$user->isStaff && !is_null($user->subscription) && !is_null($user->apiSubscription)) {
             $subscription = $user->apiSubscription;
 
             /*somehow unable to use dependency injection in this repo*/

@@ -251,5 +251,7 @@ Route::post('error/notify_error', 'ErrorController@notifyError')->name('errors.n
 
 Route::get('token', 'TokenController@getToken')->name('token.index');
 
-Route::get('contact_us', 'SupportController@contact_us')->name('contact_us.post');
-Route::get('sign_up_for_beta_testing', 'SupportController@signUpForBetaTesting')->name('contact_us.post');
+Route::get('contact_us/form', 'SupportController@contactUsIndex')->name('contact_us.form');
+Route::post('contact_us', 'SupportController@contactUs')->name('contact_us.post');
+Route::get('contact_us', 'SupportController@contactUs')->name('contact_us.get');
+Route::get('sign_up_for_beta_testing', 'SupportController@signUpForBetaTesting')->name('contact_us.sign_up.post');

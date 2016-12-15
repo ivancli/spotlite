@@ -26,7 +26,12 @@ class SupportController extends Controller
         $this->mailerRepo = $mailerContract;
     }
 
-    public function contact_us(Request $request)
+    public function contactUsIndex(Request $request)
+    {
+        return view('support.contact_us');
+    }
+
+    public function contactUs(Request $request)
     {
 //        if (!$request->has('_token') || !$this->tokenRepo->verifyToken($request->get('_token'))) {
 //            $status = false;
@@ -43,10 +48,9 @@ class SupportController extends Controller
 //        }
 
 
-
         $input = $request->all();
 
-        $this->mailerRepo->sendToSupport('support.contact_us',
+        $this->mailerRepo->sendToSupport('support.email.contact_us',
             $input,
             array(
                 "subject" => 'SpotLite - Contact Us',
@@ -89,7 +93,7 @@ class SupportController extends Controller
 
         $input = $request->all();
 
-        $this->mailerRepo->sendToSupport('support.sign_up_for_beta',
+        $this->mailerRepo->sendToSupport('support.email.sign_up_for_beta',
             $input,
             array(
                 "subject" => 'SpotLite - Sign Up For Beta Notification',

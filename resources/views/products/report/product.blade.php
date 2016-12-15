@@ -198,7 +198,7 @@
                                                     );
                                                 });
                                             } else {
-                                                alertP("Oops! Something went wrong.", "Unable to delete caetegory report schedule, please try again later.");
+                                                alertP("Oops! Something went wrong.", "Unable to delete category report schedule, please try again later.");
                                             }
                                         }
                                     });

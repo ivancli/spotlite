@@ -103,13 +103,14 @@ class Product extends Model
 
     public function getUrlsAttribute()
     {
+        $key = $this->getKey();
         return array(
-            "show" => route("product.show", $this->getKey()),
-            "delete" => route("product.destroy", $this->getKey()),
-            "alert" => route("alert.product.edit", $this->getKey()),
-            "chart" => route("chart.product.index", $this->getKey()),
-            "report_task" => route("report_task.product.edit", $this->getKey()),
-            "site_usage" => route("product.site.usage", $this->getKey()),
+            "show" => route("product.show", $key),
+            "delete" => route("product.destroy", $key),
+            "alert" => route("alert.product.edit", $key),
+            "chart" => route("chart.product.index", $key),
+            "report_task" => route("report_task.product.edit", $key),
+            "site_usage" => route("product.site.usage", $key),
         );
     }
 }

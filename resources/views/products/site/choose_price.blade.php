@@ -33,11 +33,18 @@
                         </div>
                     @endforeach
                 </div>
-                {!! Form::close() !!}
-
+                <div class="error-panel" style="display: none;">
+                    <p>Please help us to locate the price from the Product URL: </p>
+                    <textarea name="comment" id="txt-comment-site-error" class="form-control" rows="5"
+                              style="resize: vertical;"
+                              placeholder="e.g. the correct price should be $121.40"></textarea>
+                </div>
             </div>
             <div class="modal-footer text-right">
                 <button class="btn btn-primary btn-flat" id="btn-set-price">OK</button>
+                <button class="btn btn-warning btn-flat" id="btn-error" onclick="showErrorPanel(this);return false;">NO
+                    CORRECT PRICE
+                </button>
                 <button data-dismiss="modal" class="btn btn-default btn-flat">Cancel</button>
             </div>
         </div>
@@ -45,17 +52,34 @@
     <script type="text/javascript">
         function modalReady(params) {
             $("#btn-set-price").on("click", function () {
+                var valid = true;
                 if ($(".rad-site-id:checked").length == 0) {
-                    alertP("Oops! Something went wrong.", "Please select a price from the list.");
-                } else {
-                    if ($.isFunction(params.callback)) {
-                        var callbackData = [];
-                        callbackData[$(".rad-site-id:checked").attr("name")] = $(".rad-site-id:checked").val();
-                        params.callback(callbackData);
+                    if ($(".error-panel").is(":visible")) {
+                        if ($("#txt-comment-site-error").val().trim() == "") {
+                            alertP("Oops! Something went wrong.", "Please help us to locate the correct price.");
+                            return false;
+                        }
+                    } else {
+                        alertP("Oops! Something went wrong.", "Please select a price from the list. Alternatively, help us to locate the correct price by clicking 'NO CORRECT PRICE' button.");
+                        return false;
                     }
-                    $("#modal-site-prices").modal("hide");
                 }
+
+                if ($.isFunction(params.callback)) {
+                    var callbackData = [];
+                    callbackData[$(".rad-site-id:checked").attr("name")] = $(".rad-site-id:checked").val();
+                    callbackData["comment"] = $("#txt-comment-site-error").val();
+                    params.callback(callbackData);
+                }
+                $("#modal-site-prices").modal("hide");
             });
+        }
+
+        function showErrorPanel(el) {
+            $(el).hide();
+            $(".error-panel").slideDown();
+            $(".prices-container").slideUp();
+            $(".rad-site-id").prop("checked", false);
         }
     </script>
 </div>

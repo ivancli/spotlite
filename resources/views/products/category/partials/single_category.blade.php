@@ -10,12 +10,13 @@
                     <a class="btn-collapse btn-category-dragger"><i class="fa fa-tag "></i></a>
                 </th>
                 <th class="category-th">
-                    <a class="text-muted category-name-link" href="#" onclick="return false;">{{$category->category_name}}</a>
+                    <a class="text-muted category-name-link" href="#"
+                       onclick="return false;">{{$category->category_name}}</a>
                     {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style' => 'display: none;')) !!}
                     <div class="input-group sl-input-group">
                         <input type="text" name="category_name" placeholder="Category Name"
                                class="form-control sl-form-control input-lg category-name"
-                               onkeyup="cancelEditCategoryName(this, event)" onblur="cancelEditCategoryName(this)"
+                               onkeyup="cancelEditCategoryName(this, event)" onblur="txtCategoryOnBlur(this);"
                                value="{{$category->category_name}}">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-default btn-flat btn-lg">
@@ -37,7 +38,7 @@
                     <a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"
                        data-toggle="tooltip"
                        title="report">
-                        <i class="fa {{!is_null($category->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
+                        <i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
                     </a>
                     {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
                     <a href="#" data-name="{{$category->category_name}}" class="btn-action"

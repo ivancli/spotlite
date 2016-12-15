@@ -119,7 +119,8 @@ function getPricesCreate(el) {
                                                 "site_url": $txtSiteURL.val(),
                                                 "domain_id": addSiteData.domain_id,
                                                 "site_id": addSiteData.site_id,
-                                                "product_id": productID
+                                                "product_id": productID,
+                                                "comment": addSiteData.comment
                                             }, function (add_site_response) {
                                                 if (add_site_response.status == true) {
                                                     loadSingleSite(add_site_response.site.urls.show, function (html) {
@@ -279,6 +280,13 @@ function cancelEditProductName(el, event) {
     }
 }
 
+function txtProductOnBlur(el) {
+    setTimeout(function () {
+        if (!$(":focus").is($(el).siblings("span").find("button"))) {
+            cancelEditProductName(el);
+        }
+    }, 10);
+}
 
 function submitEditProductName(el) {
     showLoading();
@@ -295,7 +303,7 @@ function submitEditProductName(el) {
                 alertP("Update Product", "Product name has been updated.");
                 $(el).siblings(".product-name-link").text($(el).find(".product-name").val()).show();
                 $(el).hide();
-                $(el).closest(".product-wrapper").find(".btn-action.editing").removeClass("editing");
+                $(el).closest(".product-wrapper").find(".btn-edit-product.editing").removeClass("editing").show();
             } else {
                 var errorMsg = "Unable to update product. ";
                 if (response.errors != null) {
@@ -393,7 +401,7 @@ function showProductReportTaskForm(el) {
                     modalReady({
                         "updateCallback": function (response) {
                             if (response.status == true) {
-                                $(el).find("i").removeClass().addClass("fa fa-envelope text-success");
+                                $(el).find("i").removeClass().addClass("fa fa-envelope ico-report-enabled");
                             }
                         },
                         "deleteCallback": function (response) {

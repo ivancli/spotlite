@@ -13,7 +13,7 @@
             <div class="input-group sl-input-group">
                 <input type="text" name="product_name" placeholder="Product Name"
                        class="form-control sl-form-control input-lg product-name"
-                       onkeyup="cancelEditProductName(this, event)" onblur="cancelEditProductName(this)"
+                       onkeyup="cancelEditProductName(this, event)" onblur="txtProductOnBlur(this)"
                        value="{{$product->product_name}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default btn-flat btn-lg">
@@ -37,7 +37,7 @@
             {{--</a>--}}
             <a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"
                data-toggle="tooltip" title="report">
-                <i class="fa {{!is_null($product->reportTask) ? "fa-envelope text-success" : "fa-envelope-o"}}"></i>
+                <i class="fa {{!is_null($product->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
             </a>
             {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
             <a href="#" class="btn-action" data-name="{{$product->product_name}}"

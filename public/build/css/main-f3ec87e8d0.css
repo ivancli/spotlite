@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-06848943cd.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-f3ec87e8d0.css */
 @media print {
   *,
   *:before,
@@ -15911,8 +15911,8 @@ h3.box-title {
     transform: translateY(-50%);
 }
 
-.ico-alert-enabled {
-    color: #f4cf0f;
+.ico-alert-enabled, .ico-report-enabled {
+    color: #7ED0C0;
 }
 
 @media (min-width: 768px) {
@@ -16470,5 +16470,56 @@ ______________________________________________________________
 
 .nav-tabs-custom>.nav-tabs>li.active{
     border-top-color: #7ed0c0;
+}
+
+
+.btn-primary {
+    background-color: #A892C3;
+    border-color: #ccb8e4;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary.hover {
+    background-color: #8b74a9;
+    border-color: #9c83bf;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+    background-color: #8b74a9;
+    border-color: #9c83bf;
+}
+
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled.focus,
+.btn-primary[disabled].focus,
+fieldset[disabled] .btn-primary.focus {
+    background-color: #b9afc3;
+    border-color: #d5c9d9;
+}
+
+.btn-primary:active:hover,
+.btn-primary.active:hover,
+.open > .dropdown-toggle.btn-primary:hover,
+.btn-primary:active:focus,
+.btn-primary.active:focus,
+.open > .dropdown-toggle.btn-primary:focus,
+.btn-primary:active.focus,
+.btn-primary.active.focus,
+.open > .dropdown-toggle.btn-primary.focus {
+    background-color: #8b74a9;
+    border-color: #9c83bf;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+    outline: none;
 }
 /*# sourceMappingURL=main.css.map */

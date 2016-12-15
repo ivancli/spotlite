@@ -148,6 +148,14 @@ function cancelEditCategoryName(el, event) {
     }
 }
 
+function txtCategoryOnBlur(el) {
+    setTimeout(function () {
+        if (!$(":focus").is($(el).siblings("span").find("button"))) {
+            cancelEditCategoryName(el);
+        }
+    }, 10);
+}
+
 function submitEditCategoryName(el) {
     showLoading();
     $.ajax({
@@ -160,9 +168,11 @@ function submitEditCategoryName(el) {
             if (response.status == true) {
                 gaEditCategory();
                 alertP("Update Category", "Category name has been updated.");
+                console.info("previous", $(el));
+                console.info("now", $(el).closest(".tbl-category").find(".btn-action.editing"));
                 $(el).siblings(".category-name-link").text($(el).find(".category-name").val()).show();
                 $(el).hide();
-                $(el).closest(".tbl-category").find(".btn-action.editing").removeClass("editing");
+                $(el).closest(".tbl-category").find(".btn-edit-category.editing").removeClass("editing").show();
             } else {
                 var errorMsg = "Unable to edit category name. ";
                 if (response.errors != null) {
@@ -265,7 +275,7 @@ function showCategoryReportTaskForm(el) {
                     modalReady({
                         "updateCallback": function (response) {
                             if (response.status == true) {
-                                $(el).find("i").removeClass().addClass("fa fa-envelope text-success");
+                                $(el).find("i").removeClass().addClass("fa fa-envelope ico-report-enabled");
                             }
                         },
                         "deleteCallback": function (response) {

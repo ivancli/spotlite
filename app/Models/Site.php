@@ -93,7 +93,7 @@ class Site extends Model
     public function getDiffPriceAttribute()
     {
         $historicalPrice = $this->previousPrice;
-        if (!is_null($historicalPrice)) {
+        if (!is_null($historicalPrice) && !is_null($this->recent_price)) {
             return $this->recent_price - $historicalPrice->price;
         }
         return null;

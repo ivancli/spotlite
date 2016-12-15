@@ -33,7 +33,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ" target="_blank">FAQ</a></li>
                             <li><a href="#">Tutorials</a></li>
-                            <li><a href="#">Contact us</a></li>
+                            <li><a href="#" onclick="showContactUs(); return false;">Contact us</a></li>
                         </ul>
                     </li>
                     <li class="spotlite-user-menu">

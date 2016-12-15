@@ -148,6 +148,14 @@ function cancelEditCategoryName(el, event) {
     }
 }
 
+function txtCategoryOnBlur(el) {
+    setTimeout(function () {
+        if (!$(":focus").is($(el).siblings("span").find("button"))) {
+            cancelEditCategoryName(el);
+        }
+    }, 10);
+}
+
 function submitEditCategoryName(el) {
     showLoading();
     $.ajax({
@@ -160,9 +168,11 @@ function submitEditCategoryName(el) {
             if (response.status == true) {
                 gaEditCategory();
                 alertP("Update Category", "Category name has been updated.");
+                console.info("previous", $(el));
+                console.info("now", $(el).closest(".tbl-category").find(".btn-action.editing"));
                 $(el).siblings(".category-name-link").text($(el).find(".category-name").val()).show();
                 $(el).hide();
-                $(el).closest(".tbl-category").find(".btn-action.editing").removeClass("editing");
+                $(el).closest(".tbl-category").find(".btn-edit-category.editing").removeClass("editing").show();
             } else {
                 var errorMsg = "Unable to edit category name. ";
                 if (response.errors != null) {
@@ -265,7 +275,7 @@ function showCategoryReportTaskForm(el) {
                     modalReady({
                         "updateCallback": function (response) {
                             if (response.status == true) {
-                                $(el).find("i").removeClass().addClass("fa fa-envelope text-success");
+                                $(el).find("i").removeClass().addClass("fa fa-envelope ico-report-enabled");
                             }
                         },
                         "deleteCallback": function (response) {
@@ -426,7 +436,8 @@ function getPricesCreate(el) {
                                                 "site_url": $txtSiteURL.val(),
                                                 "domain_id": addSiteData.domain_id,
                                                 "site_id": addSiteData.site_id,
-                                                "product_id": productID
+                                                "product_id": productID,
+                                                "comment": addSiteData.comment
                                             }, function (add_site_response) {
                                                 if (add_site_response.status == true) {
                                                     loadSingleSite(add_site_response.site.urls.show, function (html) {
@@ -586,6 +597,13 @@ function cancelEditProductName(el, event) {
     }
 }
 
+function txtProductOnBlur(el) {
+    setTimeout(function () {
+        if (!$(":focus").is($(el).siblings("span").find("button"))) {
+            cancelEditProductName(el);
+        }
+    }, 10);
+}
 
 function submitEditProductName(el) {
     showLoading();
@@ -602,7 +620,7 @@ function submitEditProductName(el) {
                 alertP("Update Product", "Product name has been updated.");
                 $(el).siblings(".product-name-link").text($(el).find(".product-name").val()).show();
                 $(el).hide();
-                $(el).closest(".product-wrapper").find(".btn-action.editing").removeClass("editing");
+                $(el).closest(".product-wrapper").find(".btn-edit-product.editing").removeClass("editing").show();
             } else {
                 var errorMsg = "Unable to update product. ";
                 if (response.errors != null) {
@@ -700,7 +718,7 @@ function showProductReportTaskForm(el) {
                     modalReady({
                         "updateCallback": function (response) {
                             if (response.status == true) {
-                                $(el).find("i").removeClass().addClass("fa fa-envelope text-success");
+                                $(el).find("i").removeClass().addClass("fa fa-envelope ico-report-enabled");
                             }
                         },
                         "deleteCallback": function (response) {
@@ -921,6 +939,7 @@ function getPricesEdit(el) {
                             "site_url": $txtSiteURL.val(),
                             "domain_id": editSiteData.domain_id,
                             "site_id": editSiteData.site_id,
+                            "comment": editSiteData.comment,
                             "url": $(el).attr("data-url")
                         }, function (edit_site_response) {
                             if (edit_site_response.status == true) {

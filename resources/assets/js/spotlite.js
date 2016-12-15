@@ -163,3 +163,15 @@ function tourOrCreditCard() {
         showCreditCardExpiry();
     }
 }
+
+function showContactUs() {
+    showLoading();
+    $.get('contact_us/form', function (html) {
+        hideLoading();
+        var $modal = $(html);
+        $modal.modal();
+        $modal.on("hidden.bs.modal", function () {
+            $("#modal-contact-us").remove();
+        });
+    });
+}

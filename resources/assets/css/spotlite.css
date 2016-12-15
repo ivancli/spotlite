@@ -777,8 +777,8 @@ h3.box-title {
     transform: translateY(-50%);
 }
 
-.ico-alert-enabled {
-    color: #f4cf0f;
+.ico-alert-enabled, .ico-report-enabled {
+    color: #7ED0C0;
 }
 
 @media (min-width: 768px) {
