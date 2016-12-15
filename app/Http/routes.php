@@ -212,10 +212,10 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 
-//Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
-Route::get('register', function () {
-    return redirect()->to("http://www.spotlite.com.au");
-})->name('register.get');
+Route::get('register', 'Auth\AuthController@getRegister')->name('register.get');
+//Route::get('register', function () {
+//    return redirect()->to("http://www.spotlite.com.au");
+//})->name('register.get');
 Route::post('register', 'Auth\AuthController@postRegister')->name('register.post');
 
 Route::get('register/external', 'Auth\AuthController@registerExternalPreview')->name('register.get.external');

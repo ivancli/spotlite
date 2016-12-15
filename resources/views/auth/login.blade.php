@@ -22,7 +22,8 @@
             {!! Form::close() !!}
             <div style="margin-bottom: 10px;"></div>
             <a href="{{route('password.get')}}" onclick="gaForgotPassword();">I forgot my password</a><br>
-            <a href="{{route('register.get')}}" onclick="gaRegister();" class="text-center">New to SpotLite? Sign up now!</a>
+            {{--<a href="{{route('register.get')}}" onclick="gaRegister();" class="text-center">New to SpotLite? Sign up now!</a>--}}
+            <a href="http://www.spotlite.com.au/#scroll-pricing" onclick="gaRegister();" class="text-center">New to SpotLite? Sign up now!</a>
         </div>
     </div>
 @stop
