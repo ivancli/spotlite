@@ -3,27 +3,31 @@
 <p>Here are the information</p>
 
 <label for="">What industry do you want to track</label>
-<div>{{isset($industry) ? $industry : "[empty]"}}</div>
-
+<div><strong>{{isset($industry) ? $industry : "[empty]"}}</strong></div>
+<br>
 <label for="">What Company Type?</label>
-<div>{{isset($company_type) ? $company_type : "[empty]"}}</div>
-
-<label for="">First Name</label>
-<div>{{isset($first_name) ? $first_name : "[empty]"}}</div>
-
-<label for="">Last Name</label>
-<div>{{isset($last_name) ? $last_name : "[empty]"}}</div>
-
-<label for="">Email</label>
-<div>{{isset($email) ? $email : "[empty]"}}</div>
-
-<label for="">Phone</label>
-<div>{{isset($phone) ? $phone : "[empty]"}}</div>
-
-<label for="">Comment</label>
-<div>{{isset($comment) ? $comment : "[empty]"}}</div>
+<div><strong>{{isset($company_type) ? $company_type : "[empty]"}}</strong></div>
 
 <br>
+<label for="">First Name</label>
+<div><strong>{{isset($first_name) ? $first_name : "[empty]"}}</strong></div>
+
+<br>
+<label for="">Last Name</label>
+<div><strong>{{isset($last_name) ? $last_name : "[empty]"}}</strong></div>
+
+<br>
+<label for="">Email</label>
+<div><strong>{{isset($email) ? $email : "[empty]"}}</strong></div>
+
+<br>
+<label for="">Phone</label>
+<div><strong>{{isset($phone) ? $phone : "[empty]"}}</strong></div>
+
+<br>
+<label for="">Comment</label>
+<div><strong>{{isset($comment) ? $comment : "[empty]"}}</strong></div>
+
 <br>
 <br>
 <p>Regards,</p>

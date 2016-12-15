@@ -11,6 +11,11 @@
                 </ul>
                 <form action="{{route('contact_us.post')}}" method="post" id="frm-contact-us"
                       onsubmit="submitContactUsForm(this);return false;">
+                    <input type="hidden" name="first_name" value="{{auth()->user()->first_name}}">
+                    <input type="hidden" name="last_name" value="{{auth()->user()->last_name}}">
+                    <input type="hidden" name="email" value="{{auth()->user()->email}}">
+                    <input type="hidden" name="industry" value="{{auth()->user()->industry}}">
+                    <input type="hidden" name="company_type" value="{{auth()->user()->company_type}}">
                     <textarea name="comment" class="form-control" rows="5" id="" placeholder="How can we help?"
                               style="resize: vertical;"></textarea>
                 </form>
