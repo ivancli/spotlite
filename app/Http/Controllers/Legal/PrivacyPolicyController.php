@@ -31,6 +31,11 @@ class PrivacyPolicyController extends Controller
                     return view('legal.tnc_pp');
                 }
             } else {
+                if ($this->request->has('callback')) {
+                    $pp = $this->privacyPolicyRepo->getActive();
+                    $status = true;
+                    return response()->json(compact(['status', 'pp']))->setCallback($this->request->get('callback'));
+                }
                 return view('legal.tnc_pp');
             }
         } else {

@@ -31,7 +31,7 @@
                             <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us" target="_blank">FAQ</a></li>
+                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ" target="_blank">FAQ</a></li>
                             <li><a href="#">Tutorials</a></li>
                             <li><a href="#">Contact us</a></li>
                         </ul>
