@@ -156,7 +156,6 @@ class DashboardController extends Controller
             abort(404);
             return false;
         }
-
         return view('dashboard.home')->with(compact(['dashboard']));
     }
 

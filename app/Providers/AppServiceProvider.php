@@ -7,6 +7,7 @@ use App\Models\Alert;
 use App\Models\AlertEmail;
 use App\Models\Crawler;
 use App\Models\Dashboard\Dashboard;
+use App\Models\Dashboard\DashboardWidgetPreference;
 use App\Models\DeletedRecordModels\DeletedAlert;
 use App\Models\DeletedRecordModels\DeletedAlertEmail;
 use App\Models\DeletedRecordModels\DeletedCategory;
@@ -124,6 +125,13 @@ class AppServiceProvider extends ServiceProvider
             foreach ($category->products as $product) {
                 $product->delete();
             }
+            /*DELETE RELATED DASHBOARD WIDGETS*/
+            $dashboardWidgetPreferences = DashboardWidgetPreference::where("element", "category_id")->where("value", $category->getKey())->get();
+            foreach ($dashboardWidgetPreferences as $dashboardWidgetPreference) {
+                if (!is_null($dashboardWidgetPreference->widget)) {
+                    $dashboardWidgetPreference->widget->delete();
+                }
+            }
             return true;
         });
 
@@ -158,6 +166,15 @@ class AppServiceProvider extends ServiceProvider
             foreach ($product->sites as $site) {
                 $site->delete();
             }
+
+            /*DELETE RELATED DASHBOARD WIDGETS*/
+            $dashboardWidgetPreferences = DashboardWidgetPreference::where("element", "product_id")->where("value", $product->getKey())->get();
+            foreach ($dashboardWidgetPreferences as $dashboardWidgetPreference) {
+                if (!is_null($dashboardWidgetPreference->widget)) {
+                    $dashboardWidgetPreference->widget->delete();
+                }
+            }
+
             return true;
         });
 
@@ -170,6 +187,15 @@ class AppServiceProvider extends ServiceProvider
             foreach ($site->historicalPrices as $price) {
                 $price->delete();
             }
+
+            /*DELETE RELATED DASHBOARD WIDGETS*/
+            $dashboardWidgetPreferences = DashboardWidgetPreference::where("element", "site_id")->where("value", $site->getKey())->get();
+            foreach ($dashboardWidgetPreferences as $dashboardWidgetPreference) {
+                if (!is_null($dashboardWidgetPreference->widget)) {
+                    $dashboardWidgetPreference->widget->delete();
+                }
+            }
+
             return true;
         });
 
