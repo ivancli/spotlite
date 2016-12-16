@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="row m-b-10">
-                <div class="col-sm-12 text-center">
+                <div class="col-sm-12">
                     @include('subscriptions.partials.products')
                 </div>
             </div>

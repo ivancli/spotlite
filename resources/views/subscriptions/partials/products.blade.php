@@ -1,417 +1,328 @@
-<style>
-    #plans, #plans ul, #plans ul li {
-        margin: 0;
-        padding: 0;
-        list-style: none;
+<style type="text/css">
+
+    /* -----------------------------------------
+    -  $Pricing section
+    ----------------------------------------- */
+    .section-pricing {
+        padding: 115px 0;
     }
 
-    #pricePlans:after {
-        content: '';
-        display: table;
-        clear: both;
+    .section-pricing h2 {
+        margin-bottom: 15px;
     }
 
-    #pricePlans {
-        zoom: 1;
-    }
-
-    #pricePlans {
-        max-width: 69em;
-        margin: 0 auto;
-    }
-
-    #pricePlans #plans .plan {
-        background: #fff;
-        float: left;
-        width: 100%;
+    .section-pricing .sub-text {
+        font-family: 'Flama Book';
+        font-size: 20px;
         text-align: center;
-        border-radius: 5px;
-        margin: 0 0 20px 0;
-
-        -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    .planContainer .title h2 {
-        font-size: 2.125em;
+    .pricing-level {
+        box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+    }
+
+    .pricing-level .lead-text {
+        font-weight: 500;
+        font-size: 27px;
+        color: #494949;
+    }
+
+    .pricing-level .price-month {
         font-weight: 300;
-        color: #3e4f6a;
-        margin: 0;
-        padding: .6em 0;
+        font-size: 33px;
+        color: #494949;
     }
 
-    .planContainer .recommended p {
-        background: #3e4f6a;
-
-        background: -webkit-linear-gradient(top, #475975, #364761);
-        background: -moz-linear-gradient(top, #475975, #364761);
-        background: -o-linear-gradient(top, #475975, #364761);
-        background: -ms-linear-gradient(top, #475975, #364761);
-        background: linear-gradient(top, #475975, #364761);
-        color: #fff;
-        font-size: 1.2em;
-        font-weight: 700;
-        height: 2.6em;
-        line-height: 2.6em;
-        margin: 0;
-        border-radius: 5px 5px 0 0;
-    }
-
-    .planContainer .price p {
-        background: #3e4f6a;
-
-        background: -webkit-linear-gradient(top, #475975, #364761);
-        background: -moz-linear-gradient(top, #475975, #364761);
-        background: -o-linear-gradient(top, #475975, #364761);
-        background: -ms-linear-gradient(top, #475975, #364761);
-        background: linear-gradient(top, #475975, #364761);
-        color: #fff;
-        font-size: 1.2em;
-        font-weight: 700;
-        height: 2.6em;
-        line-height: 2.6em;
-        margin: 0 0 1em;
-    }
-
-    .planContainer .price p span {
-        color: #8eaea8;
-    }
-
-    .planContainer .options {
-        margin-top: 10em;
-    }
-
-    .planContainer .options li {
-        font-weight: 700;
-        color: #364762;
-        line-height: 2.5;
-    }
-
-    .planContainer .options li span {
-        font-weight: 400;
-        color: #979797;
-    }
-
-    .planContainer .button button {
+    .pricing-level .price-month span {
+        font-size: 15px;
         text-transform: uppercase;
-        text-decoration: none;
-        color: #3e4f6a;
-        font-weight: 700;
-        letter-spacing: 3px;
-        line-height: 2.4em;
-        border: 2px solid #3e4f6a;
+    }
+
+    .pricing-level header {
+        background-color: #f7f8fa;
+        padding: 20px;
+    }
+
+    .pricing-level .pricing-body {
+        padding: 25px 10px 10px 10px;
+        background-color: #fff;
+    }
+
+    .pricing-level .pricing-body ul {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #d8d8d8;
+        list-style-image: url("/build/images/green-tick.png");
+    }
+
+    .pricing-level .pricing-body ul li {
+        margin-bottom: 10px;
+    }
+
+    .pricing-level footer {
+        padding: 0 20px 20px 20px;
+        background-color: #fff;
+    }
+
+    .pricing-level footer .button {
+        padding: 10px 7px;
+        width: 100%;
+    }
+
+    .pricing-level footer span {
         display: inline-block;
-        width: 80%;
-        height: 2.8em;
-        border-radius: 4px;
-        margin: 1.5em 0 1.8em;
-        background-color: white;
-    }
-
-    #credits {
         text-align: center;
-        font-size: .8em;
-        font-style: italic;
-        color: #777;
+        width: 100%;
+        font-size: 13px;
     }
 
-    #credits a {
-        color: #333;
+    .pricing-level.recommended header {
+        background-color: #e4fbf6;
+        padding: 40px 20px 20px 20px;
     }
 
-    #credits a:hover {
-        text-decoration: none;
+    .pricing-level.recommended .price-month,
+    .pricing-level.recommended .lead-text {
+        font-weight: 700;
+        font-size: 33px;
     }
 
-    .planContainer.bestPlan .price p {
-        background: #f7814d;
+    .pricing-level.recommended .price-month span {
+        font-weight: 500;
     }
 
-    .planContainer.bestPlan .title h2 {
-        background: #3e4f6a;
+    .trapezoid {
+        border-bottom: 40px solid #78d0be;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+        height: 0;
+        width: 100%;
+        position: relative;
+    }
 
-        background: -webkit-linear-gradient(top, #475975, #364761);
-        background: -moz-linear-gradient(top, #475975, #364761);
-        background: -o-linear-gradient(top, #475975, #364761);
-        background: -ms-linear-gradient(top, #475975, #364761);
-        background: linear-gradient(top, #475975, #364761);
+    .trapezoid span {
         color: #fff;
-        border-radius: 5px 5px 0 0;
+        text-transform: uppercase;
+        font-size: 16px;
+        font-weight: 500;
+        position: absolute;
+        left: 50%;
+        bottom: -32px;
+        transform: translateX(-50%);
     }
 
-    .planContainer.bestPlan .button button {
+    @media (min-width: 992px) {
+        .recommend-outer {
+            margin-top: -41px;
+        }
+    }
+
+    .underline {
+        text-decoration: underline;
+    }
+
+    /* -----------------------------------------
+    -  $Buttons
+    ----------------------------------------- */
+    a.button {
+        display: inline-block;
+        font-family: "Flama" !important;
+    }
+
+    .button {
+        font-family: "Flama" !important;
+        text-transform: uppercase;
+        text-align: center;
         color: #fff;
-        background: #f7814d;
-        border: 2px solid #f7814d;
+        padding: 15px 25px;
+        transition: all 0.5s ease;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 1px;
     }
 
-    .planContainer.bestPlan .button button:hover {
-        background: #ff9c70;
-        border: 2px solid #ff9c70;
-    }
-
-    @media screen and (min-width: 481px) and (max-width: 768px) {
-
-        #pricePlans #plans .plan {
-            width: 49%;
-            margin: 0 2% 20px 0;
-        }
-
-        #pricePlans #plans > li:nth-child(2n) {
-            margin-right: 0;
-        }
-
-    }
-
-    @media screen and (min-width: 769px) and (max-width: 1024px) {
-
-        #pricePlans #plans .plan {
-            width: 49%;
-            margin: 0 2% 20px 0;
-        }
-
-        #pricePlans #plans > li:nth-child(2n) {
-            margin-right: 0;
-        }
-
-    }
-
-    @media screen and (min-width: 1025px) {
-
-        #pricePlans {
-            margin: 0 auto;
-        }
-
-        #pricePlans #plans .plan {
-            width: 24%;
-            margin: 0 1.33% 20px 0;
-
-            -webkit-transition: all .25s;
-            -moz-transition: all .25s;
-            -ms-transition: all .25s;
-            -o-transition: all .25s;
-            transition: all .25s;
-        }
-
-        #pricePlans #plans > li:last-child {
-            margin-right: 0;
-        }
-
-        #pricePlans #plans .plan:hover {
-            -webkit-transform: scale(1.04);
-            -moz-transform: scale(1.04);
-            -ms-transform: scale(1.04);
-            -o-transform: scale(1.04);
-            transform: scale(1.04);
-        }
-
-        .planContainer .button button {
-            -webkit-transition: all .25s;
-            -moz-transition: all .25s;
-            -ms-transition: all .25s;
-            -o-transition: all .25s;
-            transition: all .25s;
-        }
-
-        .planContainer .button button:hover {
-            background: #3e4f6a;
-            color: #fff;
-        }
-    }
-
-    .plan.selected .price p,
-    .plan.chosen .price p {
-        background: -webkit-linear-gradient(top, #634775, #473661);
-        background: -moz-linear-gradient(top, #634775, #473661);
-        background: -o-linear-gradient(top, #634775, #473661);
-        background: -ms-linear-gradient(top, #634775, #473661);
-        background: linear-gradient(top, #634775, #473661);
-    }
-
-    .plan.selected .recommended p,
-    .plan.chosen .recommended p {
-        background: -webkit-linear-gradient(top, #634775, #473661);
-        background: -moz-linear-gradient(top, #634775, #473661);
-        background: -o-linear-gradient(top, #634775, #473661);
-        background: -ms-linear-gradient(top, #634775, #473661);
-        background: linear-gradient(top, #634775, #473661);
-    }
-
-    .plan.selected .price p span,
-    .plan.chosen .price p span {
-        color: #8eaea8;
-    }
-
-    .plan.selected .button button,
-    .plan.chosen .button button {
-        background: #473661;
+    .button:focus, .button:active {
         color: #fff;
     }
 
-    .plan.selected .title h2,
-    .plan.chosen .title h2 {
-        color: #4c416a;
+    .button-orange {
+        background-color: #F8A66F;
+        border-bottom: 4px solid #f2710d;
     }
 
-    .plan.selected, .plan.chosen {
-        -webkit-transform: scale(1.04);
-        -moz-transform: scale(1.04);
-        -ms-transform: scale(1.04);
-        -o-transform: scale(1.04);
-        transform: scale(1.04);
+    .button-orange:hover {
+        background-color: #78d0be;
+        border-bottom: 4px solid #599488;
+        color: #fff;
     }
 
+    .button-orange:disabled {
+        background-color: #d3d3d3;
+        border-bottom-color: #808080;
+    }
+
+    .button-orange:disabled:hover {
+        background-color: #d3d3d3;
+        border-bottom-color: #808080;
+    }
+
+    .button-green {
+        background-color: #78d0be;
+        border-bottom: 4px solid #599488;
+    }
+
+    .button-green:hover {
+        background-color: #F8A66F;
+        border-bottom: 4px solid #f2710d;
+        color: #fff;
+    }
+
+    .button-blue {
+        background-color: #72bbdb;
+        border-bottom: 4px solid #0098c7;
+    }
+
+    .button-blue:hover {
+        background-color: #78d0be;
+        border-bottom: 4px solid #599488;
+        color: #fff;
+    }
+
+    a.button.disabled, a.button.disabled:hover, a.button.disabled:focus, a.button.disabled:active {
+        background-color: #F8A66F !important;
+        border-bottom: 4px solid #f2710d !important;
+        cursor: default;
+    }
 </style>
 
+
 @if(!is_null($productFamilies))
-    <section id="pricePlans">
-        <ul id="plans">
+    <section id="pricePlans" style="margin-top: 50px;">
+        <div class="row">
             @foreach($productFamilies as $productFamily)
-
-                <li class="plan
-                    {{(is_null(old("api_product_id")) && \Request::route()->getName() == "register.get"  && \Request::has("pid") && \Request::get("pid") == $productFamily->product->id) ? 'selected' : ''}}
-                {{!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id ? 'selected' : ''}}
-                {{isset($chosenAPIProductID) && $productFamily->product->id == $chosenAPIProductID ? 'chosen': ''}}"
-                    @if(!isset($productFamily->product->criteria->recommended) || $productFamily->product->criteria->recommended != true)
-                    style="margin-top: 44px;"
-                    @endif
-                    data-link="{{array_first($productFamily->product->public_signup_pages)->url}}"
-                    data-id="{{$productFamily->product->id}}"
-                    data-price="{{$productFamily->product->price_in_cents}}"
-                >
-                    <ul class="planContainer">
+                <div class="col-lg-3 col-md-6 plan"
+                     data-link="{{array_first($productFamily->product->public_signup_pages)->url}}"
+                     data-id="{{$productFamily->product->id}}"
+                     data-price="{{$productFamily->product->price_in_cents}}">
+                    <div>
                         @if(isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
-                            <li class="recommended"><p>Recommended</p></li>
+                            <div class="recommend-outer">
+                                <div class="trapezoid">
+                                    <span>Recommended</span>
+                                </div>
+                                @endif
+                                <div class="pricing-level
+                                 @if(isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                                        recommended
+                                        @endif
+                                        ">
+                                    <header><p class="lead-text">{{$productFamily->product->name}}</p>
+                                        <p class="price-month">
+                                            @if(!is_null($productFamily->preview))
+                                                ${{number_format($productFamily->preview->next_billing_manifest->total_in_cents/100, 2)}}@else
+                                                ${{number_format($productFamily->product->price_in_cents/100, 2)}} (GST
+                                                exc)@endif<span>/{{$productFamily->product->trial_interval_unit}}</span>
+                                        </p>
+                                    </header>
+                                    @if(!is_null($productFamily->product->criteria))
+                                        <div class="pricing-body">
+                                            <ul>
+                                                @if(isset($productFamily->product->criteria->product))
+                                                    <li>
+                                                        @if($productFamily->product->criteria->product != 0)
+                                                            Up to
+                                                            <strong>{{$productFamily->product->criteria->product}} {{str_plural('Product', $productFamily->product->criteria->product)}}</strong>
+                                                        @else
+                                                            <strong>Unlimited Products</strong>
+                                                        @endif
+                                                    </li>
+                                                @endif
+
+                                                @if(isset($productFamily->product->criteria->site))
+                                                    <li>
+                                                        @if($productFamily->product->criteria->site != 0)
+                                                            Up to
+                                                            <strong>{{$productFamily->product->criteria->site}} {{str_plural('Competitor', $productFamily->product->criteria->site)}}</strong>
+                                                            per product
+                                                            <span>per Product</span>
+                                                        @else
+                                                            <strong>Unlimited Competitor</strong> Tracking
+                                                        @endif
+                                                    </li>
+                                                @endif
+
+                                                @if(isset($productFamily->product->criteria->dashboard) && $productFamily->product->criteria->dashboard == true)
+                                                    <li>
+                                                        Customisable Dashboard
+                                                    </li>
+                                                @endif
+
+                                                @if(isset($productFamily->product->criteria->alert_report))
+                                                    <li>
+                                                        @if($productFamily->product->criteria->alert_report == "basic")
+                                                            <strong>Basic</strong> Alerts and Reports
+                                                        @else
+                                                            <strong>Advanced</strong> Alerts and Reports
+                                                        @endif
+                                                    </li>
+                                                @endif
+                                                @if(isset($productFamily->product->criteria->frequency))
+                                                    <li>
+                                                        @if($productFamily->product->criteria->frequency == 24)
+                                                            Updates <strong>Every Day</strong>
+                                                        @else
+                                                            Updates
+                                                            <strong>Every {{$productFamily->product->criteria->frequency}} {{str_plural('Hour', $productFamily->product->criteria->frequency)}}</strong>
+                                                        @endif
+                                                    </li>
+                                                @endif
+                                                @if(isset($productFamily->product->criteria->historic_pricing))
+                                                    <li>
+                                                        @if($productFamily->product->criteria->historic_pricing == 0)
+                                                            <strong>Lifetime</strong> Historic Pricing
+                                                        @else
+                                                            <strong>{{$productFamily->product->criteria->historic_pricing}} {{str_plural('Month', $productFamily->product->criteria->historic_pricing)}}</strong>
+                                                            Historic Pricing
+                                                        @endif
+                                                    </li>
+                                                @endif
+                                                @if(isset($productFamily->product->criteria->my_price) && $productFamily->product->criteria->my_price == true)
+                                                    <li>
+                                                        <strong>"My Price" Nomination</strong>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    @endif
+                                    <footer><p class="text-center">
+                                            <a href="#"
+                                               class="button button-blue {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id? 'disabled': '' }}"
+                                               @if((!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id)
+                                               onclick="return false;"
+                                               @else
+                                               onclick="submitSubscriptionUpdateOnclick(this);return false;"
+                                                    @endif>
+                                                @if($chosenAPIProduct->price_in_cents > $productFamily->product->price_in_cents)
+                                                    Downgrade
+                                                @elseif($chosenAPIProductID == $productFamily->product->id)
+                                                    My Plan
+                                                @else
+                                                    Upgrade
+                                                @endif</a>
+                                        </p>
+                                        @if(is_null(old('api_product_id')) || old('api_product_id') != $productFamily->product->id)
+                                            <span>1 Month Free for the Professional Pack</span>
+                                        @endif
+                                    </footer>
+                                </div>
+                                @if(isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                            </div>
                         @endif
-                        <li class="title"><h2>{{$productFamily->product->name}}</h2></li>
-                        <li class="price">
-                            <p>
-                                @if(!is_null($productFamily->preview))
-                                    ${{number_format($productFamily->preview->next_billing_manifest->total_in_cents/100, 2)}}
-                                @else
-                                    ${{number_format($productFamily->product->price_in_cents/100, 2)}} (GST exc)
-                                @endif
-                                /
-                                <span>{{$productFamily->product->trial_interval_unit}}</span>
-                            </p>
-                        </li>
-                        <li>
-                            <ul class="options">
-
-                                @if(!is_null($productFamily->product->criteria))
-                                    @if(isset($productFamily->product->criteria->product))
-                                        <li>
-                                            @if($productFamily->product->criteria->product != 0)
-                                                <span>Up to</span> {{$productFamily->product->criteria->product}} {{str_plural('Product', $productFamily->product->criteria->product)}}
-                                            @else
-                                                Unlimited Products
-                                            @endif
-                                        </li>
-                                    @endif
-
-                                    @if(isset($productFamily->product->criteria->site))
-                                        <li>
-                                            @if($productFamily->product->criteria->site != 0)
-                                                <span>Up to</span> {{$productFamily->product->criteria->site}} {{str_plural('Competitor', $productFamily->product->criteria->site)}}
-                                                <span>per Product</span>
-                                            @else
-                                                Unlimited Competitor <span>Tracking</span>
-                                            @endif
-                                        </li>
-                                    @endif
-
-                                    @if(isset($productFamily->product->criteria->dashboard) && $productFamily->product->criteria->dashboard == true)
-                                        <li>
-                                            <span>Customisable Dashboard</span>
-                                        </li>
-                                    @endif
-
-                                    @if(isset($productFamily->product->criteria->alert_report))
-                                        <li>
-                                            @if($productFamily->product->criteria->alert_report == "basic")
-                                                Basic <span>Alerts and Reports</span>
-                                            @else
-                                                Unlimited <span>Alerts and Reports</span>
-                                            @endif
-                                        </li>
-                                    @endif
-
-                                    @if(isset($productFamily->product->criteria->frequency))
-                                        <li>
-                                            @if($productFamily->product->criteria->frequency == 24)
-                                                <span>Updates</span> Every Day
-                                            @else
-                                                <span>Updates</span>
-                                                Every {{$productFamily->product->criteria->frequency}} {{str_plural('Hour', $productFamily->product->criteria->frequency)}}
-                                            @endif
-                                        </li>
-                                    @endif
-
-                                    @if(isset($productFamily->product->criteria->historic_pricing))
-                                        <li>
-                                            @if($productFamily->product->criteria->historic_pricing == 0)
-                                                Lifetime <span>Historic Pricing</span>
-                                            @else
-                                                {{$productFamily->product->criteria->historic_pricing}} {{str_plural('Month', $productFamily->product->criteria->historic_pricing)}}
-                                                <span>Historic Pricing</span>
-                                            @endif
-                                        </li>
-                                    @endif
-
-                                    <li
-                                            @if(!isset($productFamily->product->criteria->my_price) || $productFamily->product->criteria->my_price != true)
-                                            style="visibility: hidden"
-                                            @endif
-                                    >
-                                        'My Price' Nomination
-                                    </li>
-                                @endif
-                            </ul>
-                        </li>
-                        <li class="button">
-                            @if(\Request::route()->getName() == "subscription.edit")
-
-                                <button href="#"
-                                        class="btn-select"
-                                        {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id? 'disabled="disabled"': '' }}
-                                        onclick="submitSubscriptionUpdateOnclick(this)">
-                                    @if($chosenAPIProduct->price_in_cents > $productFamily->product->price_in_cents)
-                                        Downgrade
-                                    @elseif($chosenAPIProductID == $productFamily->product->id)
-                                        My Plan
-                                    @else
-                                        Upgrade
-                                    @endif
-                                </button>
-                            @elseif(\Request::route()->getName() == "subscription.back")
-                                <button href="#" class="btn-select" onclick="subscribeNowOnClick(this);">
-                                    Subscribe Now
-                                </button>
-                            @else
-                                <button href="#"
-                                        class="btn-select" {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)? 'disabled="disabled"': '' }}>
-                                    @if(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id)
-                                        Selected
-                                    @else
-                                        Start Free Trial
-                                    @endif
-                                </button>
-                            @endif
-                        </li>
-                    </ul>
-                </li>
-            @endforeach
-        </ul>
-    </section>
-    @if(\Request::route()->getName() == "register.get")
-        <div class="row coupon-code-container">
-            <div class="col-sm-12 text-center">
-                <div class="form-group form-inline">
-                    <label for="" class="sl-control-label">Have a Coupon Code?</label>
-                    &nbsp;
-                    <input type="text" class="form-control sl-form-control" id="visual-coupon-code">
+                    </div>
                 </div>
-            </div>
+            @endforeach
         </div>
-    @endif
+    </section>
 @endif
+
+

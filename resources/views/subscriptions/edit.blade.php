@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="row m-b-10">
-                <div class="col-sm-12 text-center">
+                <div class="col-sm-12">
                     @include('subscriptions.partials.products')
                 </div>
             </div>
@@ -51,10 +51,10 @@
                             hideLoading();
                             if (response.status == true) {
                                 alertP("Updated", "Your subscription plan has been updated.");
-                                $(".plan.chosen").removeClass("chosen");
+                                $(".plan").find(".button-blue.disabled").removeClass("disabled").attr("onclick", "submitSubscriptionUpdateOnclick(this);return false;");
                                 $(".plan").filter(function () {
                                     return $(this).attr("data-id") == response.subscription.api_product_id;
-                                }).addClass("chosen");
+                                }).find(".button-blue").addClass("disabled").attr("onclick", "return false;");
                                 updateButtonText();
                             } else {
                                 console.info('response', response);
@@ -80,12 +80,12 @@
 
         function updateButtonText() {
             $(".plan").each(function () {
-                if ($(this).hasClass("chosen")) {
-                    $(this).find(".btn-select").text("My Plan").prop("disabled", true);
+                if ($(this).find(".button-blue").hasClass("disabled")) {
+                    $(this).find(".button-blue").text("My Plan");
                 }
                 else {
                     var buttonText = parseFloat($(this).attr("data-price")) > parseFloat($(".plan.chosen").attr("data-price")) ? "Upgrade" : "Downgrade";
-                    $(this).find(".btn-select").text(buttonText).prop("disabled", false);
+                    $(this).find(".button-blue").text(buttonText);
                 }
             });
         }

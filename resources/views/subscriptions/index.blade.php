@@ -76,16 +76,16 @@
                 {{--&nbsp;--}}
                 {{--@endif--}}
                 <a href="{{$updatePaymentLink}}" class="btn btn-default btn-flat">
-                    Update Payment Details
+                    UPDATE PAYMENT DETAILS
                 </a>
                 &nbsp;
                 <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-default btn-flat">
-                    Change My Plan
+                    CHANGE MY PLAN
                 </a>
                 &nbsp;
                 <button class="btn btn-default btn-flat"
                         onclick="toggleCancelSubscriptionPanel(); return false;">
-                    Cancel Subscription
+                    CANCEL SUBSCRIPTION
                 </button>
             </div>
         </div>
