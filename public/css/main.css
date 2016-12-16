@@ -16531,4 +16531,8 @@ fieldset[disabled] .btn-purple.focus {
 .form-control:focus {
     border-color: #7ed0c0;
 }
+
+.thead-inverse th {
+    background-color: #7ed0c0;
+}
 /*# sourceMappingURL=main.css.map */

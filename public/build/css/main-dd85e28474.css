@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-95a5e92fdf.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-dd85e28474.css */
 @media print {
   *,
   *:before,
@@ -16530,5 +16530,9 @@ fieldset[disabled] .btn-purple.focus {
 
 .form-control:focus {
     border-color: #7ed0c0;
+}
+
+.thead-inverse th {
+    background-color: #7ed0c0;
 }
 /*# sourceMappingURL=main.css.map */

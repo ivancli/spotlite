@@ -59,7 +59,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-12 text-right">
                                     {!! Form::submit('RESET PASSWORD', ["class"=>"btn btn-primary btn-flat", "href"=>"#"]) !!}
                                 </div>
                             </div>

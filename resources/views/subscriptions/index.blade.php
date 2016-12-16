@@ -2,33 +2,32 @@
     <div class="col-sm-12">
         <div class="row m-b-20">
             <div class="col-sm-12">
-                You are currently subscribed to <strong>{{$subscription->product()->name}}</strong>
-                @if(!is_null($onboardingSubscription))
-                    and {{$onboardingSubscription->product()->name}}
-                @endif
-                <div class="box-tools pull-right">
-                    Reference ID: {{$subscription->customer_id}}
-                </div>
-            </div>
-        </div>
-        <div class="row m-b-20">
-            <div class="col-sm-12">
+                <h4>My Plan</h4>
+                <p>{{$subscription->product()->name}}</p>
                 @if(!is_null($subscription->trial_ended_at))
-                    Trial:
-                    <strong>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_started_at))}}
-                        to {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_ended_at))}}</strong>
+                    <p>
+                        Trial expiry:
+                        {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->trial_ended_at))}}
+                    </p>
                 @endif
+            </div>
+            <div class="col-sm-12">
+                <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-primary btn-flat">
+                    CHANGE MY PLAN
+                </a>
             </div>
         </div>
         <div class="row m-b-20">
             <div class="col-sm-12">
+                <h4>Payment Details</h4>
                 Upcoming Invoice:
                 <strong>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($subscription->next_assessment_at))}}
-                    | ${{number_format($subscription->current_billing_amount_in_cents/100, 2)}}</strong>
+                    {{--                    | ${{number_format($subscription->current_billing_amount_in_cents/100, 2)}}--}}
+                </strong>
             </div>
         </div>
         @if(isset($transactions))
-            <h4>Payment History</h4>
+            <p>Payment History: </p>
             <table class="table table-bordered table-hover table-striped">
                 <thead class="thead-inverse">
                 <tr>
@@ -39,26 +38,31 @@
                 </tr>
                 </thead>
                 <tbody>
+                @if($transactions->filter(function($value){return $value->transaction_type == "payment";})->count() == 0)
+                    <tr>
+                        <td colspan="4" align="center">No payment histories in the list</td>
+                    </tr>
+                @else
+                    @foreach($transactions as $transaction)
 
-                @foreach($transactions as $transaction)
-
-                    @if($transaction->transaction_type == "payment")
-                        <tr>
-                            <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($transaction->created_at))}}</td>
-                            <td>{{$transaction->memo}}</td>
-                            <td>
-                                @if($transaction->kind == "baseline")
-                                    Subscription
-                                @elseif($transaction->kind == "initial")
-                                    Initial Setup
-                                @endif
-                            </td>
-                            <td>
-                                ${{number_format($transaction->amount_in_cents/100, 2)}}
-                            </td>
-                        </tr>
-                    @endif
-                @endforeach
+                        @if($transaction->transaction_type == "payment")
+                            <tr>
+                                <td>{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($transaction->created_at))}}</td>
+                                <td>{{$transaction->memo}}</td>
+                                <td>
+                                    @if($transaction->kind == "baseline")
+                                        Subscription
+                                    @elseif($transaction->kind == "initial")
+                                        Initial Setup
+                                    @endif
+                                </td>
+                                <td>
+                                    ${{number_format($transaction->amount_in_cents/100, 2)}}
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
+                @endif
                 </tbody>
             </table>
         @endif
@@ -75,12 +79,8 @@
                 {{--</a>--}}
                 {{--&nbsp;--}}
                 {{--@endif--}}
-                <a href="{{$updatePaymentLink}}" class="btn btn-default btn-flat">
+                <a href="{{$updatePaymentLink}}" class="btn btn-primary btn-flat">
                     UPDATE PAYMENT DETAILS
-                </a>
-                &nbsp;
-                <a href="{{route('subscription.edit', $sub->getKey())}}" class="btn btn-default btn-flat">
-                    CHANGE MY PLAN
                 </a>
                 &nbsp;
                 <button class="btn btn-default btn-flat"
