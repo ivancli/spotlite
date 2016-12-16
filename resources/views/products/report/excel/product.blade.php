@@ -1,7 +1,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style type="text/css">
     .header {
-        background-color: #d3d3d3;
+        background-color: #7ed0c0;
+        color: #ffffff;
     }
 
     .text-center {

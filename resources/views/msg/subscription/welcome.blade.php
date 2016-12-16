@@ -5,67 +5,26 @@
                 <img src="{{asset('build/images/logo-fixed-2.png')}}" style="width: 30%;">
             </h3>
             <h2 class="text-center">
-                Welcome!
+                Welcome to SpotLite!
             </h2>
             <p class="text-center">
-                We want you to get the most out of SpotLite. To kick-off we want to personalise your experience.
+                We want you to get the most out of your trial so, to kick off, we want to personalise your experience.
             </p>
             <p class="text-center">
-                Samply answer the questions and follow the journey. Enjoy!
+                Simply answer the questions below and follow the journey!
             </p>
 
-        </div>
-    </div>
-    <div class="row steps-container">
-        <div class="col-sm-12">
-            <ul class="steps">
-                <li data-step="1" class="active">
-                    <span class="step">
-                        <i class="fa fa-check"></i>
-                    </span>
-                    <div class="title">
-                        <div>
-                            STEP 1
-                        </div>
-                        <div class="description">
-                            Let's kick off by creating your Dashboard
-                        </div>
-                    </div>
-                </li>
-                <li data-step="2">
-                    <span class="step">&nbsp;</span>
-                    <div class="title">
-                        <div>
-                            STEP 2
-                        </div>
-                        <div class="description">
-                            Set up product prices you want to track
-                        </div>
-                    </div>
-                </li>
-                <li data-step="3">
-                    <span class="step">&nbsp;</span>
-                    <div class="title">
-                        <div>
-                            STEP 3
-                        </div>
-                        <div class="description">
-                            Set notifications
-                        </div>
-                    </div>
-                </li>
-            </ul>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12 ">
-            <div class="jumbotron set-password-form-container">
+            <div class="jumbotron welcome-form-container">
                 <p class="welcome-form-heading">
-                    <strong>STEP 1:</strong> Let's start by looking at what industry and company type you want to track:
+                    Please choose:
                 </p>
 
-                <ul class="text-danger errors-container" id="welcome-errors-container">
+                <ul class="text-danger errors-container" id="welcome-errors-container" style="padding-left: 22px;">
                 </ul>
                 <form action="{{route('profile.init_update')}}" id="init-update-form"
                       onsubmit="submitInitUpdate(); return false; ">
@@ -135,11 +94,13 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <select name="category" id="" class="form-control">
+                    <div class="form-group required">
+                        <select name="category" id="sel-welcome-category" class="form-control"
+                                onchange="updateSubmitButtonText(this);">
                             <option value="">
                                 Would you like us to set up some sample data for you?
                             </option>
+                            <option value="-1">I don’t want any sample data, thanks!</option>
                             @if(isset($sampleData))
                                 @foreach($sampleData as $item)
                                     <option value="{{$item}}">{{$item}}</option>
@@ -152,10 +113,53 @@
                                placeholder="Your site URL? e.g. http://www.example.com">
                     </div>
                     <div class="form-group text-center">
-                        <button class="btn btn-primary btn-flat" type="submit">CREATE DASHBOARD</button>
+                        <button class="btn btn-primary btn-flat" id="btn-submit-welcome" type="submit" disabled="disabled">
+                            GO TO PRODUCTS
+                        </button>
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+    <div class="row steps-container">
+        <div class="col-sm-12">
+            <ul class="steps">
+                <li data-step="1" class="active">
+                    <span class="step">
+                        <i class="fa fa-check"></i>
+                    </span>
+                    <div class="title">
+                        <div>
+                            STEP 1
+                        </div>
+                        <div class="description">
+                            Let's kick off by creating your Dashboard
+                        </div>
+                    </div>
+                </li>
+                <li data-step="2">
+                    <span class="step">&nbsp;</span>
+                    <div class="title">
+                        <div>
+                            STEP 2
+                        </div>
+                        <div class="description">
+                            Set up product prices you want to track
+                        </div>
+                    </div>
+                </li>
+                <li data-step="3">
+                    <span class="step">&nbsp;</span>
+                    <div class="title">
+                        <div>
+                            STEP 3
+                        </div>
+                        <div class="description">
+                            Set notifications
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -195,6 +199,16 @@
 
         function cleanErrorMessage() {
             $("#welcome-errors-container").empty();
+        }
+
+        function updateSubmitButtonText() {
+            if ($("#sel-welcome-category").val() == "-1") {
+                $("#btn-submit-welcome").text("GO TO PRODUCTS").prop("disabled", false);
+            } else if ($("#sel-welcome-category").val() == "") {
+                $("#btn-submit-welcome").text("GO TO PRODUCTS").prop("disabled", true);
+            } else {
+                $("#btn-submit-welcome").text("CREATE DASHBOARD").prop("disabled", false);
+            }
         }
     </script>
 </div>

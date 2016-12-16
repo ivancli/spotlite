@@ -102,6 +102,10 @@
     padding-right: 5px;
 }
 
+#init-update-form{
+    padding-left: 15px;
+}
+
 @media (min-width: 600px) {
     ul.steps div.title div.description {
         width: 175px;

@@ -13,7 +13,7 @@
                     Please set your password.
                 </p>
 
-                <ul class="text-danger errors-container">
+                <ul class="text-danger errors-container" style="padding-left: 8px;">
                 </ul>
                 <form action="{{route('password.init_reset.post')}}" id="set-password-form" method="post"
                       onsubmit="submitSetPasswordForm(this); return false;">

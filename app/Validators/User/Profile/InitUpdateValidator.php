@@ -34,7 +34,7 @@ class InitUpdateValidator extends ValidatorAbstract
         return array(
             "industry.required" => "Industry is required.",
             "company_type.required" => "Company type is required.",
-            "company_url.url" => "Please enter a correct URL for your site.",
+            "company_url.url" => "Please enter a correct URL for your site (including the http://).",
         );
     }
 }
