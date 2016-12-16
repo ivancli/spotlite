@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-032805fd76.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-95a5e92fdf.css */
 @media print {
   *,
   *:before,
@@ -16460,7 +16460,7 @@ ______________________________________________________________
     background: #6dbdad;
 }
 
-.skin-black-light .treeview-menu > li > a{
+.skin-black-light .treeview-menu > li > a {
     color: #fff;
 }
 
@@ -16468,16 +16468,16 @@ ______________________________________________________________
     color: #fff;
 }
 
-.nav-tabs-custom>.nav-tabs>li.active{
+.nav-tabs-custom > .nav-tabs > li.active {
     border-top-color: #7ed0c0;
 }
-
 
 .btn-purple {
     background-color: #A892C3;
     border-color: #ccb8e4;
     color: #fff;
 }
+
 .btn-purple:hover, .btn-purple:active, .btn-purple.hover {
     background-color: #8b74a9;
     border-color: #9c83bf;
@@ -16526,5 +16526,9 @@ fieldset[disabled] .btn-purple.focus {
 .btn:active.focus,
 .btn.active.focus {
     outline: none;
+}
+
+.form-control:focus {
+    border-color: #7ed0c0;
 }
 /*# sourceMappingURL=main.css.map */
