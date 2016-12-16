@@ -130,6 +130,7 @@ function getPricesEdit(el) {
                             "site_url": $txtSiteURL.val(),
                             "domain_id": editSiteData.domain_id,
                             "site_id": editSiteData.site_id,
+                            "domain_price": editSiteData.domain_price,
                             "comment": editSiteData.comment,
                             "url": $(el).attr("data-url")
                         }, function (edit_site_response) {

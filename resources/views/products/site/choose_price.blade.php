@@ -68,6 +68,7 @@
                 if ($.isFunction(params.callback)) {
                     var callbackData = [];
                     callbackData[$(".rad-site-id:checked").attr("name")] = $(".rad-site-id:checked").val();
+                    callbackData["domain_price"] = $(".rad-site-id:checked").attr("name") == "domain_id" ? $(".rad-site-id:checked").siblings('span') : null;
                     callbackData["comment"] = $("#txt-comment-site-error").val();
                     params.callback(callbackData);
                 }

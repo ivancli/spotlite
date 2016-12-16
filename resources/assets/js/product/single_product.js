@@ -119,6 +119,7 @@ function getPricesCreate(el) {
                                                 "site_url": $txtSiteURL.val(),
                                                 "domain_id": addSiteData.domain_id,
                                                 "site_id": addSiteData.site_id,
+                                                "domain_price": addSiteData.domain_price,
                                                 "product_id": productID,
                                                 "comment": addSiteData.comment
                                             }, function (add_site_response) {
