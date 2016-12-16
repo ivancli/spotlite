@@ -193,6 +193,9 @@
         border-bottom: 4px solid #f2710d !important;
         cursor: default;
     }
+    .plan .selected-header header{
+        background-color: #fdeed5;
+    }
 </style>
 
 
@@ -205,16 +208,19 @@
                      data-id="{{$productFamily->product->id}}"
                      data-price="{{$productFamily->product->price_in_cents}}">
                     <div>
-                        @if(isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                        @if(\Request::route()->getName() == "subscription.back" && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
                             <div class="recommend-outer">
                                 <div class="trapezoid">
                                     <span>Recommended</span>
                                 </div>
                                 @endif
                                 <div class="pricing-level
-                                 @if(isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                                 @if(\Request::route()->getName() == "subscription.back" && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
                                         recommended
                                         @endif
+                                @if(isset($chosenAPIProductID) && $chosenAPIProductID == $productFamily->product->id)
+                                        selected-header
+                                @endif
                                         ">
                                     <header><p class="lead-text">{{$productFamily->product->name}}</p>
                                         <p class="price-month">
@@ -286,11 +292,13 @@
                                                         @endif
                                                     </li>
                                                 @endif
-                                                @if(isset($productFamily->product->criteria->my_price) && $productFamily->product->criteria->my_price == true)
-                                                    <li>
+                                                    <li
+                                                    @if(!isset($productFamily->product->criteria->my_price) || $productFamily->product->criteria->my_price != true)
+                                                        style="visibility: hidden"
+                                                            @endif
+                                                    >
                                                         <strong>"My Price" Nomination</strong>
                                                     </li>
-                                                @endif
                                             </ul>
                                         </div>
                                     @endif
@@ -318,11 +326,11 @@
                                             </a>
                                         </p>
                                         {{--@if(!isset($chosenAPIProduct) &&)--}}
-                                            {{--<span>1 Month Free for the {{$productFamily->product->name}} Pack</span>--}}
+                                        {{--<span>1 Month Free for the {{$productFamily->product->name}} Pack</span>--}}
                                         {{--@endif--}}
                                     </footer>
                                 </div>
-                                @if(isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                                @if(\Request::route()->getName() == "subscription.back" && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
                             </div>
                         @endif
                     </div>
