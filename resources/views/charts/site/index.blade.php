@@ -17,14 +17,15 @@
                                         <h3 class="box-title">Chart Characteristics</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="row m-b-10">
+                                        <div class="row m-b-5">
                                             <div class="col-sm-12">
                                                 <form action="" class="nl-form"
                                                       id="frm-site-chart-characteristics">
                                                     <p>
                                                         Generate a chart for
                                                         &nbsp;
-                                                        <select id="sel-timespan" name="timespan" onchange="timespanOnChange(this)">
+                                                        <select id="sel-timespan" name="timespan"
+                                                                onchange="timespanOnChange(this)">
                                                             <option value="this_week">this week</option>
                                                             <option value="last_week">last week</option>
                                                             <option value="last_7_days">last 7 days</option>
@@ -39,7 +40,8 @@
                                                         &nbsp;
                                                         showing a price for each
                                                         &nbsp;
-                                                        <select id="sel-period-resolution" name="resolution" onchange="periodResolutionOnChange(this)">
+                                                        <select id="sel-period-resolution" name="resolution"
+                                                                onchange="periodResolutionOnChange(this)">
                                                             <option value="daily">day</option>
                                                             <option value="weekly">week</option>
                                                             <option value="monthly">month</option>
@@ -68,10 +70,62 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        @if(auth()->user()->dashboards->count() > 0)
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="chk-add-to-dashboard" value="1"
+                                                                   onclick="updateDivAddToDashboardStatus()">
+                                                            I would like to add this chart to my dashboard.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row div-add-to-dashboard" style="display: none;">
+                                                <div class="col-sm-12">
+                                                    <ul class="text-danger errors-container">
+                                                    </ul>
+                                                    {!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "nl-form", "id"=>"frm-dashboard-widget-store")) !!}
+                                                    <input type="hidden" name="dashboard_widget_type_id"
+                                                           value="1">
+
+                                                    <p>
+                                                        Name this chart
+                                                        &nbsp;
+                                                        <input type="text" name="dashboard_widget_name"
+                                                               id="txt-dashboard-widget-name"
+                                                               placeholder="enter a chart name">
+                                                        &nbsp;
+                                                        and add it to my
+                                                        &nbsp;
+
+                                                        <select id="sel-dashboard-id" name="dashboard_id"
+                                                                class="form-control form-control-inline">
+                                                            @foreach(auth()->user()->dashboards as $dashboard)
+                                                                <option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </p>
+                                                    <div class="nl-overlay"></div>
+                                                    {!! Form::close() !!}
+                                                </div>
+                                            </div>
+                                            <div class="row m-t-20 div-add-to-dashboard" style="display: none;">
+                                                <div class="col-sm-12">
+                                                    <button class="btn btn-primary btn-flat" id="btn-add-chart">
+                                                        ADD CHART
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <div class="row m-t-20 submit-view-chart">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary btn-flat" onclick="loadSiteChartData()">GO</button>
-                                                <button class="btn btn-default btn-flat" data-dismiss="modal">CANCEL</button>
+                                                <button class="btn btn-primary btn-flat" onclick="loadSiteChartData()">
+                                                    GO
+                                                </button>
+                                                <button class="btn btn-default btn-flat" data-dismiss="modal">CANCEL
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -79,59 +133,59 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-12">
-                                @if(auth()->user()->dashboards->count() > 0)
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="box box-solid">
-                                                <div class="box-header with-border">
-                                                    <h3 class="box-title">Add to Dashboard</h3>
-                                                </div>
-                                                <div class="box-body">
-                                                    <div class="row m-b-10">
-                                                        <div class="col-sm-12">
-                                                            <ul class="text-danger errors-container">
-                                                            </ul>
-                                                            {!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "nl-form", "id"=>"frm-dashboard-widget-store")) !!}
-                                                            <input type="hidden" name="dashboard_widget_type_id"
-                                                                   value="1">
+                        {{--<div class="row">--}}
+                            {{--<div class="col-sm-12">--}}
+                                {{--@if(auth()->user()->dashboards->count() > 0)--}}
+                                    {{--<div class="row">--}}
+                                        {{--<div class="col-sm-12">--}}
+                                            {{--<div class="box box-solid">--}}
+                                                {{--<div class="box-header with-border">--}}
+                                                    {{--<h3 class="box-title">Add to Dashboard</h3>--}}
+                                                {{--</div>--}}
+                                                {{--<div class="box-body">--}}
+                                                    {{--<div class="row m-b-10">--}}
+                                                        {{--<div class="col-sm-12">--}}
+                                                            {{--<ul class="text-danger errors-container">--}}
+                                                            {{--</ul>--}}
+                                                            {{--{!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "nl-form", "id"=>"frm-dashboard-widget-store")) !!}--}}
+                                                            {{--<input type="hidden" name="dashboard_widget_type_id"--}}
+                                                                   {{--value="1">--}}
 
-                                                            <p>
-                                                                Name this chart
-                                                                &nbsp;
-                                                                <input type="text" name="dashboard_widget_name"
-                                                                       id="txt-dashboard-widget-name"
-                                                                       placeholder="enter a chart name">
-                                                                &nbsp;
-                                                                and add it to my
-                                                                &nbsp;
+                                                            {{--<p>--}}
+                                                                {{--Name this chart--}}
+                                                                {{--&nbsp;--}}
+                                                                {{--<input type="text" name="dashboard_widget_name"--}}
+                                                                       {{--id="txt-dashboard-widget-name"--}}
+                                                                       {{--placeholder="enter a chart name">--}}
+                                                                {{--&nbsp;--}}
+                                                                {{--and add it to my--}}
+                                                                {{--&nbsp;--}}
 
-                                                                <select id="sel-dashboard-id" name="dashboard_id"
-                                                                        class="form-control form-control-inline">
-                                                                    @foreach(auth()->user()->dashboards as $dashboard)
-                                                                        <option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </p>
-                                                            <div class="nl-overlay"></div>
-                                                            {!! Form::close() !!}
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <button class="btn btn-primary btn-flat" id="btn-add-chart">
-                                                                ADD CHART
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
+                                                                {{--<select id="sel-dashboard-id" name="dashboard_id"--}}
+                                                                        {{--class="form-control form-control-inline">--}}
+                                                                    {{--@foreach(auth()->user()->dashboards as $dashboard)--}}
+                                                                        {{--<option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>--}}
+                                                                    {{--@endforeach--}}
+                                                                {{--</select>--}}
+                                                            {{--</p>--}}
+                                                            {{--<div class="nl-overlay"></div>--}}
+                                                            {{--{!! Form::close() !!}--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="row">--}}
+                                                        {{--<div class="col-sm-12">--}}
+                                                            {{--<button class="btn btn-primary btn-flat" id="btn-add-chart">--}}
+                                                                {{--ADD CHART--}}
+                                                            {{--</button>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                {{--@endif--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                     </div>
                     <div class="col-lg-7 col-md-6 col-sm-12">
                         <div id="chart-container">
@@ -163,9 +217,9 @@
             });
             new NLForm($("#frm-site-chart-characteristics").get(0));
             @if(auth()->user()->dashboards->count() > 0)
-            new NLForm($("#frm-dashboard-widget-store").get(0));
+                    new NLForm($("#frm-dashboard-widget-store").get(0));
             @endif
-            siteChart = new Highcharts.Chart({
+                    siteChart = new Highcharts.Chart({
                 credits: {
                     enabled: false
                 },
@@ -227,6 +281,8 @@
                             "Dashboard": $("#sel-dashboard-id option:selected").text()
                         });
                         alertP("Add to Dashboard", "Chart has been added successfully");
+                        $("#chk-add-to-dashboard").prop("checked", false);
+                        updateDivAddToDashboardStatus();
                     } else {
                         if (typeof response.errors != 'undefined') {
                             var $errorContainer = $("#modal-site-chart .errors-container");
@@ -358,6 +414,16 @@
         function removeSeries() {
             while (siteChart.series.length > 0)
                 siteChart.series[0].remove(true);
+        }
+
+        function updateDivAddToDashboardStatus() {
+            if ($("#chk-add-to-dashboard").is(":checked")) {
+                $(".div-add-to-dashboard").slideDown();
+                $(".submit-view-chart").slideUp();
+            } else {
+                $(".div-add-to-dashboard").slideUp();
+                $(".submit-view-chart").slideDown();
+            }
         }
     </script>
 </div>

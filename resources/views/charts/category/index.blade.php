@@ -16,7 +16,7 @@
                                         <h3 class="box-title">Chart Characteristics</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="row m-b-10">
+                                        <div class="row m-b-5">
                                             <div class="col-sm-12">
                                                 <form action="" class="nl-form"
                                                       id="frm-category-chart-characteristics">
@@ -73,32 +73,25 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <button class="btn btn-primary btn-flat" onclick="loadCategoryChartData()">
-                                                    GO
-                                                </button>
-                                                <button class="btn btn-default btn-flat" data-dismiss="modal">CANCEL</button>
+                                        @if(auth()->user()->dashboards->count() > 0)
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="chk-add-to-dashboard" value="1"
+                                                                   onclick="updateDivAddToDashboardStatus()">
+                                                            I would like to add this chart to my dashboard.
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @if(auth()->user()->dashboards->count() > 0)
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="box box-solid">
-                                        <div class="box-header with-border">
-                                            <h3 class="box-title">Add to Dashboard</h3>
-                                        </div>
-                                        <div class="box-body">
-                                            <div class="row m-b-10">
+                                            <div class="row div-add-to-dashboard" style="display: none;">
                                                 <div class="col-sm-12">
                                                     <ul class="text-danger errors-container">
                                                     </ul>
                                                     {!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "nl-form", "id"=>"frm-dashboard-widget-store")) !!}
-                                                    <input type="hidden" name="dashboard_widget_type_id" value="1">
+                                                    <input type="hidden" name="dashboard_widget_type_id"
+                                                           value="1">
 
                                                     <p>
                                                         Name this chart
@@ -110,7 +103,8 @@
                                                         and add it to my
                                                         &nbsp;
 
-                                                        <select id="sel-dashboard-id" name="dashboard_id">
+                                                        <select id="sel-dashboard-id" name="dashboard_id"
+                                                                class="form-control form-control-inline">
                                                             @foreach(auth()->user()->dashboards as $dashboard)
                                                                 <option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>
                                                             @endforeach
@@ -120,18 +114,26 @@
                                                     {!! Form::close() !!}
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row m-t-20 div-add-to-dashboard" style="display: none;">
                                                 <div class="col-sm-12">
                                                     <button class="btn btn-primary btn-flat" id="btn-add-chart">
                                                         ADD CHART
                                                     </button>
                                                 </div>
                                             </div>
+                                        @endif
+                                        <div class="row m-t-20 submit-view-chart">
+                                            <div class="col-sm-12">
+                                                <button class="btn btn-primary btn-flat" onclick="loadCategoryChartData()">
+                                                    GO
+                                                </button>
+                                                <button class="btn btn-default btn-flat" data-dismiss="modal">CANCEL</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endif
+                        </div>
                     </div>
                     <div class="col-lg-7 col-md-6 col-sm-12">
                         <div id="chart-container">
@@ -229,6 +231,8 @@
                         });
 
                         alertP("Add to Dashboard", "Chart has been added successfully");
+                        $("#chk-add-to-dashboard").prop("checked", false);
+                        updateDivAddToDashboardStatus();
                     } else {
                         if (typeof response.errors != 'undefined') {
                             var $errorContainer = $("#modal-category-chart .errors-container");
@@ -379,6 +383,16 @@
         function removeSeries() {
             while (categoryChart.series.length > 0)
                 categoryChart.series[0].remove(true);
+        }
+
+        function updateDivAddToDashboardStatus() {
+            if ($("#chk-add-to-dashboard").is(":checked")) {
+                $(".div-add-to-dashboard").slideDown();
+                $(".submit-view-chart").slideUp();
+            } else {
+                $(".div-add-to-dashboard").slideUp();
+                $(".submit-view-chart").slideDown();
+            }
         }
     </script>
 </div>

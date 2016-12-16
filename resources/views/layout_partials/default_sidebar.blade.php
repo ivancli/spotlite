@@ -66,7 +66,7 @@
                     </a>
                 </li>
             @endif
-            @if(auth()->check() && auth()->user()->isStaff)
+            @if(auth()->check() && auth()->user()->hasRole(['super_admin', 'tier_1']))
                 <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
                     <a href="{{route("admin.app_preference.index")}}">
                         <i class="fa fa-gears"></i>
