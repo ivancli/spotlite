@@ -36990,7 +36990,9 @@ $(function () {
             showSetPasswordPopup(function () {
                 showLoading();
                 showWelcomePopup(function () {
-                    $("video").get(0).pause();
+                    if ($("video").length > 0) {
+                        $("video").get(0).pause();
+                    }
                     tourOrCreditCard();
                 });
             })
@@ -36998,7 +37000,9 @@ $(function () {
             if (user.industry == null) {
                 showLoading();
                 showWelcomePopup(function () {
-                    $("video").get(0).pause();
+                    if ($("video").length > 0) {
+                        $("video").get(0).pause();
+                    }
                     tourOrCreditCard();
                 });
             } else {
