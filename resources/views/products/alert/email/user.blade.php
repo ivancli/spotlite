@@ -537,8 +537,8 @@
                         </div>
                         <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
                             <div class="btn btn--shadow btn--large" style="text-align:left;">
-                                <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px 13px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #fff;box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.2);background-color: #7ed0c0; font-family: 'Open Sans', sans-serif;" href="https://login.spotlite.com.au">GO TO DASHBOARD</a><![endif]>
-                                <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://login.spotlite.com.au" style="width:175px" arcsize="9%" fillcolor="#7ED0C0" stroke="f"><v:shadow on="t" color="#65A69A" offset="0,2px"></v:shadow><v:textbox style="mso-fit-shape-to-text:t" inset="0px,11px,0px,10px"><center style="font-size:14px;line-height:24px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">GO TO DASHBOARD</center></v:textbox></v:roundrect><![endif]-->
+                                <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px 13px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #fff;box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.2);background-color: #7ed0c0; font-family: 'Open Sans', sans-serif;" href="http://login.spotlite.com.au">GO TO DASHBOARD</a><![endif]>
+                                <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="http://login.spotlite.com.au" style="width:175px" arcsize="9%" fillcolor="#7ED0C0" stroke="f"><v:shadow on="t" color="#65A69A" offset="0,2px"></v:shadow><v:textbox style="mso-fit-shape-to-text:t" inset="0px,11px,0px,10px"><center style="font-size:14px;line-height:24px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">GO TO DASHBOARD</center></v:textbox></v:roundrect><![endif]-->
                             </div>
                         </div>
                     </div>
@@ -563,7 +563,7 @@
                                     </div>
 
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
-                                        <h3 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #0f0c0f;font-size: 16px;line-height: 24px;font-family:roboto,tahoma,sans-serif;"><span class="font-roboto">Do you want to change your alert preferences? Click here:</span></h3><p class="size-18" style="Margin-top: 12px;Margin-bottom: 0;font-size: 17px;line-height: 26px;" lang="x-size-18"><strong><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="https://login.spotlite.com.au">Change Preferences</a></strong></p>
+                                        <h3 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #0f0c0f;font-size: 16px;line-height: 24px;font-family:roboto,tahoma,sans-serif;"><span class="font-roboto">Do you want to change your alert preferences? Click here:</span></h3><p class="size-18" style="Margin-top: 12px;Margin-bottom: 0;font-size: 17px;line-height: 26px;" lang="x-size-18"><strong><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://login.spotlite.com.au/alert">Change Preferences</a></strong></p>
                                     </div>
 
                                 </td>
@@ -603,7 +603,7 @@
                         <div class="column wide" style="text-align: left;font-size:12px;line-height: 19px;color: #e6e6e6;font-family: Roboto,Tahoma,sans-serif;Float: left;max-width: 400px;min-width: 320px; width: 320px;width: calc(8000% - 47600px);">
                             <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
                                 <table class="email-footer__links emb-web-links" style="border-collapse: collapse;table-layout: fixed;" role="presentation"><tbody><tr>
-                                        <td class="emb-web-links" style="padding: 0;width: 26px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #e6e6e6;" href="https://login.spotlite.com.au"><img style="border: 0;" src="http://i9.cmail19.com/static/eb/master/13-the-blueprint-3/images/youtube.png" width="26" height="26"></a></td><td class="emb-web-links" style="padding: 0 0 0 3px;width: 26px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #e6e6e6;" href="https://login.spotlite.com.au"><img style="border: 0;" src="http://i3.cmail19.com/static/eb/master/13-the-blueprint-3/images/website.png" width="26" height="26"></a></td>
+                                        <td class="emb-web-links" style="padding: 0;width: 26px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #e6e6e6;" href="http://login.spotlite.com.au"><img style="border: 0;" src="http://i9.cmail19.com/static/eb/master/13-the-blueprint-3/images/youtube.png" width="26" height="26"></a></td><td class="emb-web-links" style="padding: 0 0 0 3px;width: 26px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #e6e6e6;" href="http://login.spotlite.com.au"><img style="border: 0;" src="http://i3.cmail19.com/static/eb/master/13-the-blueprint-3/images/website.png" width="26" height="26"></a></td>
                                     </tr></tbody></table>
                                 <div style="Margin-top: 20px;">
                                     <div>SpotLite - focus on what matters.</div>
@@ -644,5 +644,5 @@
             </div>
             <div style="line-height:40px;font-size:40px;">&nbsp;</div>
         </td></tr></tbody></table>
-<img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://login.spotlite.com.au" width="1" height="1" border="0" alt="">
+<img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="http://login.spotlite.com.au" width="1" height="1" border="0" alt="">
 </body></html>
