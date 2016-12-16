@@ -86,7 +86,7 @@
                     $(this).find(".button-blue").text("My Plan");
                 }
                 else {
-                    var buttonText = parseFloat($(this).attr("data-price")) > parseFloat($(".plan.chosen").attr("data-price")) ? "Upgrade" : "Downgrade";
+                    var buttonText = parseFloat($(this).attr("data-price")) > parseFloat($(".button-blue.disabled").closest(".plan").attr("data-price")) ? "UPGRADE" : "DOWNGRADE";
                     $(this).find(".button-blue").text(buttonText);
                 }
             });
