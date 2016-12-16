@@ -19,7 +19,7 @@
             padding-left: 20px;
         }
 
-        .form-group{
+        .form-group {
             position: relative;
         }
 
@@ -32,7 +32,7 @@
             top: 10px;
         }
 
-        input.form-control{
+        input.form-control {
             padding-left: 15px;
         }
     </style>
@@ -92,11 +92,15 @@
                 radioClass: 'iradio_square-blue',
                 increaseArea: '20%' // optional
             });
-            $(".btn-select").on("click", function () {
+            $(".plan .button-blue").removeAttr("onclick");
+
+            $(".plan .button-blue").on("click", function () {
                 /* button */
-                $(".btn-select").text("Start Free Trial").prop("disabled", false);
-                $(".plan.selected").removeClass("selected");
-                $(this).text("Selected").prop("disabled", true);
+                $(".plan .button-blue").each(function () {
+                    var planName = $(this).closest(".plan").find(".lead-text").text();
+                    $(this).removeClass("disabled").text("GET " + planName + " PACK");
+                });
+                $(this).text("Selected").addClass("disabled");
                 var $plan = $(this).closest(".plan");
                 $plan.addClass("selected");
                 var link = $plan.attr("data-link");

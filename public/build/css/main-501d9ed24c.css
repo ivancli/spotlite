@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-e469e84f6c.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-501d9ed24c.css */
 @media print {
   *,
   *:before,
@@ -16319,6 +16319,10 @@ ______________________________________________________________
 
 .subscription-panel .block-button-container a {
     color: white;
+}
+
+.advanced-notifications {
+    margin-bottom: 20px;
 }
 
 .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a {

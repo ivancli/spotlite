@@ -169,10 +169,12 @@ class User extends Authenticatable
 
     public function subscriptionCriteria()
     {
-        $product = Chargify::product()->get($this->apiSubscription->product_id);
-        if (!is_null($product->description)) {
-            $criteria = json_decode($product->description);
-            return $criteria;
+        if(!is_null($this->apiSubscription)){
+            $product = Chargify::product()->get($this->apiSubscription->product_id);
+            if (!is_null($product->description)) {
+                $criteria = json_decode($product->description);
+                return $criteria;
+            }
         }
         return null;
     }

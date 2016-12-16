@@ -321,7 +321,7 @@
                                                         UPGRADE
                                                     @endif
                                                 @else
-                                                    Get {{$productFamily->product->name}} pack
+                                                    Get {{$productFamily->product->name}} plan
                                                 @endif
                                             </a>
                                         </p>

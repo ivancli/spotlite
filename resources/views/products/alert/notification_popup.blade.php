@@ -109,87 +109,95 @@
                      style="display: none;"
                         @endif
                 >
-                    <p>Enable alert by checking checkboxes next to category / product.</p>
-                    <ul class="lst-category text-muted" style="padding-left: 20px;">
-                        @foreach($categories as $category)
-                            <li class="category-checkbox">
-                                <div class="checkbox form-control-inline" onclick="toggleProductList(this);"
-                                     data-category-id="{{$category->getKey()}}">
-                                    <label for="">
-                                        <input type="checkbox" class="chk-category"
-                                               @if(!is_null($category->alert))
-                                               checked="checked"
-                                               @endif
-                                               onclick="toggleCategoryNotificationForm(this); event.stopPropagation();">
-                                        {{$category->category_name}}
-                                    </label>
-                                </div>
-                                &nbsp;&nbsp;&nbsp;
-                                <form class="form-control-inline frm-category-notification nl-form"
-                                      style="display: none;">
-                                    <select class="form-control input-sm form-control-inline sel-category-notification-type"
-                                            onchange="checkCompanyURL();">
-                                        <option value=""> -- select alert type --</option>
-                                        <option value="my price" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'my price' ? "selected" : ""}}>
-                                            beats my price
-                                        </option>
-                                        <option value="price changed" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'price changed' ? "selected" : ""}}>
-                                            price changes
-                                        </option>
-                                    </select>
-                                    <div class="nl-overlay"></div>
-                                </form>
-                                <ul class="lst-product"
-                                    @if($category->productAlerts()->count() == 0)
-                                    style="display: none;"
-                                    @endif
-                                    id="product-list-{{$category->getKey()}}">
-                                    @foreach($category->products as $product)
-                                        <li class="product-checkbox">
-                                            <div class="checkbox form-control-inline"
-                                                 data-product-id="{{$product->getKey()}}">
-                                                <label>
-                                                    <input type="checkbox" class="chk-product"
-                                                           @if(!is_null($product->alert))
-                                                           checked="checked"
-                                                           @endif
-                                                           onclick="toggleProductNotificationForm(this); event.stopPropagation();">
-                                                    {{$product->product_name}}
-                                                </label>
-                                            </div>
-                                            &nbsp;&nbsp;&nbsp;
-                                            <form class="form-control-inline frm-product-notification frm-notification-type nl-form"
-                                                  style="display: none;">
-                                                <select class="form-control input-sm form-control-inline sel-notification-type"
-                                                        onchange="toggleSpecificPriceInput(this);checkCompanyURL();">
-                                                    <option value=""> -- select alert type --</option>
-                                                    <option value="price changed" {{!is_null($product->alert) && $product->alert->comparison_price_type == "price changed" ? "selected" : ""}}>
-                                                        price changes
-                                                    </option>
-                                                    <option value="my price" {{!is_null($product->alert) && $product->alert->comparison_price_type == "my price" ? "selected" : ""}}>
-                                                        beats my price
-                                                    </option>
-                                                    <option value="=<" {{!is_null($product->alert) && $product->alert->comparison_price_type == "specific price" ? "selected" : ""}}>
-                                                        equal or below a specific price
-                                                    </option>
-                                                </select>
-                                                <div class="nl-overlay"></div>
-                                            </form>
-                                            &nbsp;&nbsp;&nbsp;
-                                            <form class="form-control-inline frm-product-notification frm-specific-price nl-form"
-                                                  style="display: none;">
-                                                $<input type="text" placeholder="enter a price"
-                                                        class="txt-specific-price"
-                                                        value="{{!is_null($product->alert) && !is_null($product->alert->comparison_price) ? number_format($product->alert->comparison_price, 2, '.', '') : ""}}"
-                                                >
-                                                <div class="nl-overlay"></div>
-                                            </form>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        @endforeach
-                    </ul>
+                    @if(!is_null(auth()->user()->subscriptionCriteria()) && auth()->user()->subscriptionCriteria()->alert_report == "basic")
+                        <p>
+                            Please <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}">upgrade
+                                your subscription</a> to set up Advanced Alerts
+                        </p>
+                    @else
+
+                        <p>Enable alert by checking checkboxes next to category / product.</p>
+                        <ul class="lst-category text-muted" style="padding-left: 20px;">
+                            @foreach($categories as $category)
+                                <li class="category-checkbox">
+                                    <div class="checkbox form-control-inline" onclick="toggleProductList(this);"
+                                         data-category-id="{{$category->getKey()}}">
+                                        <label for="">
+                                            <input type="checkbox" class="chk-category"
+                                                   @if(!is_null($category->alert))
+                                                   checked="checked"
+                                                   @endif
+                                                   onclick="toggleCategoryNotificationForm(this); event.stopPropagation();">
+                                            {{$category->category_name}}
+                                        </label>
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <form class="form-control-inline frm-category-notification nl-form"
+                                          style="display: none;">
+                                        <select class="form-control input-sm form-control-inline sel-category-notification-type"
+                                                onchange="checkCompanyURL();">
+                                            <option value=""> -- select alert type --</option>
+                                            <option value="my price" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'my price' ? "selected" : ""}}>
+                                                beats my price
+                                            </option>
+                                            <option value="price changed" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'price changed' ? "selected" : ""}}>
+                                                price changes
+                                            </option>
+                                        </select>
+                                        <div class="nl-overlay"></div>
+                                    </form>
+                                    <ul class="lst-product"
+                                        @if($category->productAlerts()->count() == 0)
+                                        style="display: none;"
+                                        @endif
+                                        id="product-list-{{$category->getKey()}}">
+                                        @foreach($category->products as $product)
+                                            <li class="product-checkbox">
+                                                <div class="checkbox form-control-inline"
+                                                     data-product-id="{{$product->getKey()}}">
+                                                    <label>
+                                                        <input type="checkbox" class="chk-product"
+                                                               @if(!is_null($product->alert))
+                                                               checked="checked"
+                                                               @endif
+                                                               onclick="toggleProductNotificationForm(this); event.stopPropagation();">
+                                                        {{$product->product_name}}
+                                                    </label>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <form class="form-control-inline frm-product-notification frm-notification-type nl-form"
+                                                      style="display: none;">
+                                                    <select class="form-control input-sm form-control-inline sel-notification-type"
+                                                            onchange="toggleSpecificPriceInput(this);checkCompanyURL();">
+                                                        <option value=""> -- select alert type --</option>
+                                                        <option value="price changed" {{!is_null($product->alert) && $product->alert->comparison_price_type == "price changed" ? "selected" : ""}}>
+                                                            price changes
+                                                        </option>
+                                                        <option value="my price" {{!is_null($product->alert) && $product->alert->comparison_price_type == "my price" ? "selected" : ""}}>
+                                                            beats my price
+                                                        </option>
+                                                        <option value="=<" {{!is_null($product->alert) && $product->alert->comparison_price_type == "specific price" ? "selected" : ""}}>
+                                                            equal or below a specific price
+                                                        </option>
+                                                    </select>
+                                                    <div class="nl-overlay"></div>
+                                                </form>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <form class="form-control-inline frm-product-notification frm-specific-price nl-form"
+                                                      style="display: none;">
+                                                    $<input type="text" placeholder="enter a price"
+                                                            class="txt-specific-price"
+                                                            value="{{!is_null($product->alert) && !is_null($product->alert->comparison_price) ? number_format($product->alert->comparison_price, 2, '.', '') : ""}}"
+                                                    >
+                                                    <div class="nl-overlay"></div>
+                                                </form>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
                 <div class="form-group required">
                     {!! Form::label('email[]', 'Email Address', array('class' => 'control-label')) !!}

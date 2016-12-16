@@ -26,6 +26,7 @@ class InitUpdateValidator extends ValidatorAbstract
             "industry" => "required|max:255",
             "company_type" => "required|max:255",
             "company_url" => "url",
+            "category" => "required_if:sample_data,1"
         );
     }
 
@@ -35,6 +36,7 @@ class InitUpdateValidator extends ValidatorAbstract
             "industry.required" => "Industry is required.",
             "company_type.required" => "Company type is required.",
             "company_url.url" => "Please enter a correct URL for your site (including the http://).",
+            "category.required_if" => "Please select sample products from the list."
         );
     }
 }

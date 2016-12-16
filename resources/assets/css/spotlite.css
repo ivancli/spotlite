@@ -1183,6 +1183,10 @@ ______________________________________________________________
     color: white;
 }
 
+.advanced-notifications {
+    margin-bottom: 20px;
+}
+
 .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a {
     background-color: #487a9e;
 }

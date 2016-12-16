@@ -88,34 +88,42 @@
                     </div>
                     <div class="form-group required">
                         <select name="company_type" class="form-control">
-                            <option value="">What Company Type?</option>
+                            <option value="">What is your company type?</option>
                             <option value="Retailer">Retailer</option>
                             <option value="Brand">Brand</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div class="form-group required">
+
+                    <div class="form-group">
+                        <input type="text" name="company_url" class="form-control"
+                               placeholder="What is your site URL?">
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="chk-set-up-sample-data"
+                                       onclick="updateDivSetUpSampleDataStatus();updateSubmitButtonText();"
+                                       name="sample_data" value="1">
+                                I would like to start with sample data
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group required" id="div-set-up-sample-data" style="display: none;">
                         <select name="category" id="sel-welcome-category" class="form-control"
                                 onchange="updateSubmitButtonText(this);">
                             <option value="">
-                                Would you like us to set up some sample data for you?
+                                Select sample product from the list
                             </option>
-                            <option value="-1">I don’t want any sample data, thanks!</option>
                             @if(isset($sampleData))
                                 @foreach($sampleData as $item)
                                     <option value="{{$item}}">{{$item}}</option>
                                 @endforeach
                             @endif
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="company_url" class="form-control"
-                               placeholder="Your site URL? e.g. http://www.example.com">
-                    </div>
-                    <div class="form-group text-center">
-                        <button class="btn btn-primary btn-flat" id="btn-submit-welcome" type="submit" disabled="disabled">
-                            GO TO PRODUCTS
-                        </button>
                     </div>
                 </form>
             </div>
@@ -163,6 +171,15 @@
         </div>
     </div>
 
+    <div class="row" style="margin-bottom: 30px;">
+        <div class="col-sm-12 text-center">
+            <button class="btn btn-primary btn-flat" id="btn-submit-welcome" type="submit"
+                    onclick="submitInitUpdate();return false;">
+                GO TO PRODUCTS
+            </button>
+        </div>
+    </div>
+
     <script type="text/javascript">
         function submitInitUpdate() {
             cleanErrorMessage();
@@ -202,13 +219,20 @@
         }
 
         function updateSubmitButtonText() {
-            if ($("#sel-welcome-category").val() == "-1") {
+            if (!$("#chk-set-up-sample-data").is(":checked")) {
                 $("#btn-submit-welcome").text("GO TO PRODUCTS").prop("disabled", false);
-            } else if ($("#sel-welcome-category").val() == "") {
-                $("#btn-submit-welcome").text("GO TO PRODUCTS").prop("disabled", true);
             } else {
                 $("#btn-submit-welcome").text("CREATE DASHBOARD").prop("disabled", false);
             }
+        }
+
+        function updateDivSetUpSampleDataStatus() {
+            if ($("#chk-set-up-sample-data").is(":checked")) {
+                $("#div-set-up-sample-data").slideDown();
+            } else {
+                $("#div-set-up-sample-data").slideUp();
+            }
+
         }
     </script>
 </div>
