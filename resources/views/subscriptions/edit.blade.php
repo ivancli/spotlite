@@ -31,8 +31,8 @@
         function submitSubscriptionUpdateOnclick(el) {
             var productId = $(el).closest(".plan").attr("data-id");
             $("#txt-api-product-id").val(productId);
-            var fromPrice = $(".plan.chosen").attr("data-price");
-            var toPrice = $(".plan.selected").attr("data-price");
+            var fromPrice = $("a.button-blue.disabled").closest(".plan").attr("data-price");
+            var toPrice = $(el).closest(".plan").attr("data-price");
             var title, content;
             if (parseInt(fromPrice) > parseInt(toPrice)) {
                 title = "Downgrade Subscription";

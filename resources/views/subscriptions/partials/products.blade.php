@@ -296,19 +296,26 @@
                                     @endif
                                     <footer><p class="text-center">
                                             <a href="#"
-                                               class="button button-blue {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id? 'disabled': '' }}"
-                                               @if((!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || $chosenAPIProductID == $productFamily->product->id)
+                                               class="button button-blue {{(!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || (isset($chosenAPIProductID) &&$chosenAPIProductID == $productFamily->product->id)? 'disabled': '' }}"
+                                               @if(\Request::route()->getName() == "subscription.back"))
+                                               onclick="subscribeNowOnClick(this);return false;"
+                                               @elseif((!is_null(old('api_product_id')) && old('api_product_id') == $productFamily->product->id) || (isset($chosenAPIProductID) && $chosenAPIProductID == $productFamily->product->id))
                                                onclick="return false;"
                                                @else
                                                onclick="submitSubscriptionUpdateOnclick(this);return false;"
                                                     @endif>
-                                                @if($chosenAPIProduct->price_in_cents > $productFamily->product->price_in_cents)
-                                                    DOWNGRADE
-                                                @elseif($chosenAPIProductID == $productFamily->product->id)
-                                                    MY PLAN
+                                                @if(isset($chosenAPIProduct))
+                                                    @if($chosenAPIProduct->price_in_cents > $productFamily->product->price_in_cents)
+                                                        DOWNGRADE
+                                                    @elseif($chosenAPIProductID == $productFamily->product->id)
+                                                        MY PLAN
+                                                    @else
+                                                        UPGRADE
+                                                    @endif
                                                 @else
-                                                    UPGRADE
-                                                @endif</a>
+                                                    Get {{$productFamily->product->name}} pack
+                                                @endif
+                                            </a>
                                         </p>
                                         @if(is_null(old('api_product_id')) || old('api_product_id') != $productFamily->product->id)
                                             <span>1 Month Free for the Professional Pack</span>
