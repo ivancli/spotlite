@@ -318,7 +318,7 @@
                                             </a>
                                         </p>
                                         @if(is_null(old('api_product_id')) || old('api_product_id') != $productFamily->product->id)
-                                            <span>1 Month Free for the Professional Pack</span>
+                                            <span>1 Month Free for the {{$productFamily->product->name}} Pack</span>
                                         @endif
                                     </footer>
                                 </div>

@@ -44,6 +44,7 @@
             confirmP(title, content + "<br><br>Are you sure you want to change your subscription?", {
                 "affirmative": {
                     "class": "btn-primary btn-flat",
+                    "text": "CONFIRM",
                     "callback": function () {
                         $("#txt-coupon-code").val($("#visual-coupon-code").val());
                         showLoading();
@@ -73,6 +74,7 @@
                 },
                 "negative": {
                     "class": "btn-default btn-flat",
+                    "text": "CANCEL",
                     "dismiss": true
                 }
             });
