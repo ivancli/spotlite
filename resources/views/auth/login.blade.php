@@ -11,7 +11,7 @@
         <div class="login-box-body">
             <p class="login-box-msg">Sign in to start your session</p>
             @if(isset($errors))
-                <ul class="text-danger">
+                <ul class="text-danger errors-container">
                     @foreach ($errors->all('<li>:message</li>') as $message)
                         {!! $message !!}
                     @endforeach

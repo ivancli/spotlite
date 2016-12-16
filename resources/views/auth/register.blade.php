@@ -15,9 +15,9 @@
             max-width: 100%;
         }
 
-        .register-box-body ul.text-danger {
-            padding-left: 20px;
-        }
+        /*.register-box-body ul.text-danger {*/
+            /*padding-left: 20px;*/
+        /*}*/
 
         .form-group {
             position: relative;
@@ -51,7 +51,7 @@
             <div class="registration-form">
                 <p class="register-box-msg">Sign up now</p>
                 @if(isset($errors))
-                    <ul class="text-danger">
+                    <ul class="text-danger errors-container">
                         @foreach ($errors->all('<li>:message</li>') as $message)
                             {!! $message !!}
                         @endforeach

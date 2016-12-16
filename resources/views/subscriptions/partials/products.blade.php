@@ -208,14 +208,14 @@
                      data-id="{{$productFamily->product->id}}"
                      data-price="{{$productFamily->product->price_in_cents}}">
                     <div>
-                        @if(\Request::route()->getName() == "subscription.back" && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                        @if((\Request::route()->getName() == "subscription.back" || \Request::route()->getName() == "register.get") && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
                             <div class="recommend-outer">
                                 <div class="trapezoid">
                                     <span>Recommended</span>
                                 </div>
                                 @endif
                                 <div class="pricing-level
-                                 @if(\Request::route()->getName() == "subscription.back" && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                                 @if((\Request::route()->getName() == "subscription.back" || \Request::route()->getName() == "register.get") && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
                                         recommended
                                         @endif
                                 @if(isset($chosenAPIProductID) && $chosenAPIProductID == $productFamily->product->id)
@@ -330,7 +330,7 @@
                                         {{--@endif--}}
                                     </footer>
                                 </div>
-                                @if(\Request::route()->getName() == "subscription.back" && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
+                                @if((\Request::route()->getName() == "subscription.back" || \Request::route()->getName() == "register.get") && isset($productFamily->product->criteria->recommended) && $productFamily->product->criteria->recommended == true)
                             </div>
                         @endif
                     </div>
