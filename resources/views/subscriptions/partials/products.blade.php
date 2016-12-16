@@ -303,11 +303,11 @@
                                                onclick="submitSubscriptionUpdateOnclick(this);return false;"
                                                     @endif>
                                                 @if($chosenAPIProduct->price_in_cents > $productFamily->product->price_in_cents)
-                                                    Downgrade
+                                                    DOWNGRADE
                                                 @elseif($chosenAPIProductID == $productFamily->product->id)
-                                                    My Plan
+                                                    MY PLAN
                                                 @else
-                                                    Upgrade
+                                                    UPGRADE
                                                 @endif</a>
                                         </p>
                                         @if(is_null(old('api_product_id')) || old('api_product_id') != $productFamily->product->id)
