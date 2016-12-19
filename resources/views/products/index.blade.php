@@ -379,17 +379,23 @@
         }
 
         function toggleCollapseCategories(el) {
-            if ($(".collapsible-category-div").attr("aria-expanded") == "true") {
+            var $collapsededDiv = $(".collapsible-category-div").filter(function(){
+                return $(this).attr("aria-expanded") == "false";
+            });
+            if($collapsededDiv.length != $(".collapsible-category-div").length){
                 $(".collapsible-category-div").slideUp(function () {
-                    $(this).attr("aria-expanded", false).removeClass("in");
+                    $(this).css({
+                        "height": "0px",
+                        "display": ""
+                    }).attr("aria-expanded", false).removeClass("in");
                 });
-                $(".tbl-category > thead > tr > th > a.btn-collapse").addClass("collapsed");
+                $(".tbl-category > thead > tr > th > a.btn-collapse").addClass("collapsed").attr("aria-expanded", "false");
                 $(el).text("Expand All");
             } else {
-                $(".collapsible-category-div").slideDown(function () {
-                    $(this).attr("aria-expanded", true).addClass("in");
+                $(".collapsible-category-div").css("height", "").slideDown(function () {
+                    $(this).css("display", "").attr("aria-expanded", true).addClass("in");
                 });
-                $(".tbl-category > thead > tr > th > a.btn-collapse").removeClass("collapsed");
+                $(".tbl-category > thead > tr > th > a.btn-collapse").removeClass("collapsed").attr("aria-expanded", "true");;
                 $(el).text("Collapse All");
             }
         }
