@@ -263,7 +263,7 @@
                         "data": function (data) {
                             return $("<div>").append(
                                     $("<div>").append(
-                                            $("<a>").addClass("text-muted").attr({
+                                            $("<a>").addClass("text-muted btn-edit-alert").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['edit'],
                                                 "onclick": "showSetUpNotifications(this); return false;",
@@ -496,4 +496,11 @@
             });
         }
     </script>
+
+
+    @if(auth()->user()->categories()->count() > 0)
+        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
+    @else
+        <script type="text/javascript" src="{{elixir('js/alert-tour.js')}}"></script>
+    @endif
 @stop

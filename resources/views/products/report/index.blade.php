@@ -75,29 +75,6 @@
         var tblReportTask = null;
         var tblReport = null;
         $(function () {
-//            $.contextMenu({
-//                "selector": '.report-list-container .file-anchor',
-//                "items": {
-//                    "download": {
-//                        "name": "Download",
-//                        "callback": function (key, opt) {
-//                            var el = opt.$trigger.context;
-//                            el.click();
-//                        }
-//                    },
-//                    "delete": {
-//                        "name": "Delete",
-//                        "callback": function (key, opt) {
-//                            var el = opt.$trigger.context;
-//                            deleteReport(el, function (response) {
-//                                $(el).closest("li").remove();
-//                            });
-//
-//                        }
-//                    }
-//                }
-//            });
-
 
             jQuery.fn.dataTable.Api.register('processing()', function (show) {
                 return this.iterator('table', function (ctx) {
@@ -232,7 +209,7 @@
                         "data": function (data) {
                             return $("<div>").append(
                                     $("<div>").append(
-                                            $("<a>").addClass("text-muted").attr({
+                                            $("<a>").addClass("text-muted btn-edit-report").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['edit'],
                                                 "onclick": "showReportTaskForm(this)",
@@ -663,4 +640,10 @@
                     });
         }
     </script>
+
+    @if(auth()->user()->categories()->count() > 0)
+        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
+    @else
+        <script type="text/javascript" src="{{elixir('js/report-tour.js')}}"></script>
+    @endif
 @stop

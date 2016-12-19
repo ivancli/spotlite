@@ -24,15 +24,28 @@
             <ul class="nav navbar-nav">
                 @if(Auth::check())
                     <li>
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"
+                           aria-expanded="false">
                             <i class="fa fa-question-circle"></i>
                             &nbsp;NEED HELP ?
                             &nbsp;&nbsp;&nbsp;
                             <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ" target="_blank">FAQ</a></li>
-                            <li><a href="#">Tutorials</a></li>
+                            <li><a href="#"
+                                   onclick="if(typeof startTour != 'undefined' && $.isFunction(startTour)) startTour(); return false;">
+                                    SpotLite Tour
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682247-Video-Tutorials">Video
+                                    Tutorials</a></li>
+                            <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ"
+                                   target="_blank">FAQ</a></li>
+                            <li>
+                                <a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682187-Step-by-Step-Guide">Step
+                                    by Step Guide</a>
+                            </li>
                             <li><a href="#" onclick="showContactUs(); return false;">Contact us</a></li>
                         </ul>
                     </li>

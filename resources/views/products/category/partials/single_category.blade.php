@@ -41,7 +41,7 @@
                         <i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
                     </a>
                     {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
-                    <a href="#" data-name="{{$category->category_name}}" class="btn-action"
+                    <a href="#" data-name="{{$category->category_name}}" class="btn-action btn-delete-category"
                        onclick="btnDeleteCategoryOnClick(this); return false;" data-toggle="tooltip"
                        title="delete">
                         <i class="glyphicon glyphicon-trash"></i>

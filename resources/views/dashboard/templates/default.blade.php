@@ -11,7 +11,7 @@
                        value="{{$dashboard->dashboard_name}}">
                 <span class="input-group-btn">
                 <button type="submit" class="btn btn-default btn-flat btn-lg">
-                    <i class="fa fa-pencil"></i>
+                    <i class="fa fa-check"></i>
                 </button>
             </span>
             </div>
@@ -23,7 +23,7 @@
         <strong><i>by {{$dashboard->user->first_name}} {{$dashboard->user->last_name}}</i></strong>
         &nbsp; &nbsp; &#124; &nbsp;
         <div class="btn-group cursor-pointer" style="vertical-align: baseline;">
-            <a type="button" class="text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <a type="button" class="text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="btn-dropdown-manage-dashboard">
                 <strong>
                     Manage Dashboard <i class="fa fa-cog"></i>
                 </strong>

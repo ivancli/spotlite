@@ -29,7 +29,7 @@
             </div>
 
 
-            <button type="button" class="btn btn-box-tool" onclick="editWidget(this)" data-url="{{$widget->urls['edit']}}">
+            <button type="button" class="btn btn-box-tool btn-edit-widget" onclick="editWidget(this)" data-url="{{$widget->urls['edit']}}">
                 <i class="fa fa-pencil"></i>
             </button>
             <button type="button" class="btn btn-box-tool" id="btn-delete-widget-{{$widget->getKey()}}"

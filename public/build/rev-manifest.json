@@ -8,6 +8,7 @@
   "js/dashboard.js": "js/dashboard-90f5880399.js",
   "js/main.js": "js/main-67cf86f017.js",
   "js/product.js": "js/product-fb30499957.js",
-  "js/tour.js": "js/tour-7b82a67599.js",
+  "js/tour-with-sample-data.js": "js/tour-with-sample-data-808d7dec74.js",
+  "js/tour-without-sample-data.js": "js/tour-without-sample-data-74c9280f23.js",
   "js/zendesk.js": "js/zendesk-b36e038a54.js"
 }

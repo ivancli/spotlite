@@ -48,13 +48,13 @@
                         <span>ADD A NEW DASHBOARD</span>
                     </a>
                 </li>
-                <li class="{{Style::set_active_starts_with('product')}}">
+                <li class="{{Style::set_active_starts_with('product')}} lnk-product">
                     <a href="{{url('product')}}">
                         <i class="fa fa-tag"></i>
                         <span>PRODUCTS</span>
                     </a>
                 </li>
-                <li class="{{Style::set_active('alert')}}">
+                <li class="{{Style::set_active('alert')}} lnk-alert">
                     <a href="{{url('alert')}}">
                         <i class="fa fa-bell-o"></i>
                         <span>ALERTS</span></a>
