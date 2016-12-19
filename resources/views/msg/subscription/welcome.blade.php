@@ -1,4 +1,9 @@
 <div class="modal-header" style="border-bottom: 0">
+    <style type="text/css">
+        .select2-container {
+            width: 100% !important;
+        }
+    </style>
     <div class="row">
         <div class="col-sm-12">
             <h3 class="text-center">
@@ -113,11 +118,10 @@
                     </div>
 
                     <div class="form-group required" id="div-set-up-sample-data" style="display: none;">
-                        <select name="category" id="sel-welcome-category" class="form-control"
-                                onchange="updateSubmitButtonText(this);">
-                            <option value="">
-                                Select sample product from the list
-                            </option>
+                        <select name="category[]" id="sel-welcome-category" class="form-control" multiple="multiple"
+                                onchange="updateSubmitButtonText(this);"
+                                data-placeholder="Select sample products from the list">
+                            <option></option>
                             @if(isset($sampleData))
                                 @foreach($sampleData as $item)
                                     <option value="{{$item}}">{{$item}}</option>
@@ -181,6 +185,10 @@
     </div>
 
     <script type="text/javascript">
+        $(function () {
+            $("#sel-welcome-category").select2()
+        });
+
         function submitInitUpdate() {
             cleanErrorMessage();
             showLoading();

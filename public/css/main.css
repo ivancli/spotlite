@@ -16410,6 +16410,31 @@ ______________________________________________________________
     background-position: -216px 0;
 }
 
+.select2-search__field::-moz-placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+.select2-search__field:-ms-input-placeholder {
+    color: #999;
+}
+
+.select2-search__field::-webkit-input-placeholder {
+    color: #999;
+}
+
+.select2-search:first-child {
+    width: 100% !important;
+}
+
+.select2-search:first-child .select2-search__field {
+    width: 100% !important;
+}
+
+.select2-selection__rendered {
+    padding-left: 12px;
+}
+
 /* Retina support */
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) {
     .icheckbox_square-blue,
