@@ -567,8 +567,9 @@
     {{--TOUR--}}
     <script type="text/javascript" src="{{elixir('js/tour.js')}}"></script>
     <script type="text/javascript">
+        var tour;
         $(function () {
-            var tour = new Tour({
+            tour = new Tour({
                 steps: [
                     {
                         element: ".btn-add-category",
