@@ -51,7 +51,7 @@ elixir(function (mix) {
     ], "public/css/main.css", "./");
     mix.scripts([
         'node_modules/bootstrap-tour/build/css/bootstrap-tour.css'
-    ], "public/css/product-tour.css", './');
+    ], "public/css/tour.css", './');
     mix.styles([
         'resources/assets/css/email.css'
     ], "public/css/email.css", "./");
@@ -116,7 +116,7 @@ elixir(function (mix) {
 
     mix.scripts([
         'node_modules/bootstrap-tour/build/js/bootstrap-tour.js'
-    ], "public/js/product-tour.js", './');
+    ], "public/js/tour.js", './');
 
     /* copy images */
     mix.copy('resources/assets/images', 'public/images');
@@ -134,8 +134,8 @@ elixir(function (mix) {
 
     /* versioning */
     mix.version([
-        'public/css/main.css', 'public/css/product-tour.css', 'public/css/email.css', 'public/css/email_import.css', 'public/css/email_brand.css',
-        'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/product-tour.js', 'public/js/dashboard.js', 'public/js/product.js'
+        'public/css/main.css', 'public/css/tour.css', 'public/css/email.css', 'public/css/email_import.css', 'public/css/email_brand.css',
+        'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/tour.js', 'public/js/dashboard.js', 'public/js/product.js'
     ]);
     mix.copy('public/fonts', 'public/build/fonts');
     mix.copy('public/images', 'public/build/images');

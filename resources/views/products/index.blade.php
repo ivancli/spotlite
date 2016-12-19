@@ -5,7 +5,7 @@
 
 
 @section('links')
-    <link rel="stylesheet" href="{{elixir('css/product-tour.css')}}">
+    <link rel="stylesheet" href="{{elixir('css/tour.css')}}">
 @stop
 
 
@@ -565,7 +565,7 @@
     </script>
 
     {{--TOUR--}}
-    <script type="text/javascript" src="{{elixir('js/product-tour.js')}}"></script>
+    <script type="text/javascript" src="{{elixir('js/tour.js')}}"></script>
     <script type="text/javascript">
         $(function () {
             var tour = new Tour({

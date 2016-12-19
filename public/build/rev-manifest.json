@@ -3,11 +3,11 @@
   "css/email_brand.css": "css/email_brand-e71ed23ee0.css",
   "css/email_import.css": "css/email_import-43bca2dc97.css",
   "css/main.css": "css/main-501d9ed24c.css",
-  "css/product-tour.css": "css/product-tour-e13db7b8c1.css",
+  "css/tour.css": "css/tour-6c127a332d.css",
   "js/auth.js": "js/auth-86e3eeb650.js",
   "js/dashboard.js": "js/dashboard-90f5880399.js",
   "js/main.js": "js/main-67cf86f017.js",
-  "js/product-tour.js": "js/product-tour-f32ee9223f.js",
-  "js/product.js": "js/product-0544a68bd1.js",
+  "js/product.js": "js/product-fb30499957.js",
+  "js/tour.js": "js/tour-7b82a67599.js",
   "js/zendesk.js": "js/zendesk-b36e038a54.js"
 }

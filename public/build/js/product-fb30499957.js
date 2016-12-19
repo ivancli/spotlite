@@ -432,6 +432,7 @@ function getPricesCreate(el) {
                                 if ($.isFunction(modalReady)) {
                                     modalReady({
                                         "callback": function (addSiteData) {
+                                            console.info(addSiteData);
                                             addSite({
                                                 "site_url": $txtSiteURL.val(),
                                                 "domain_id": addSiteData.domain_id,

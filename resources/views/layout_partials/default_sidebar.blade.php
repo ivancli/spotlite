@@ -43,7 +43,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#" onclick="showAddDashboardForm(this); return false;">
+                    <a href="#" onclick="showAddDashboardForm(this); return false;" id="btn-add-new-dashboard">
                         <i class="fa fa-plus"></i>
                         <span>ADD A NEW DASHBOARD</span>
                     </a>

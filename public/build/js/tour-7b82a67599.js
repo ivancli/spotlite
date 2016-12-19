@@ -987,4 +987,4 @@
   return Tour;
 });
 
-//# sourceMappingURL=product-tour.js.map
+//# sourceMappingURL=tour.js.map
