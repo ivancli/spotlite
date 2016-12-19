@@ -147,7 +147,7 @@
                     <div class="row m-b-20">
                         <div class="col-sm-12 text-right">
                             <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
-                               style="font-size: 12px;">Collapse All</a>
+                               id="btn-collapse-all" style="font-size: 12px;">Collapse All</a>
                         </div>
                     </div>
                     <div class="row">
@@ -247,6 +247,10 @@
                         });
                     }
                 }
+            });
+
+            $(document).on('shown.bs.collapse hidden.bs.collapse', ".collapsible-category-div", function () {
+                updateCollapseButtonStatus();
             });
         });
 
@@ -379,10 +383,10 @@
         }
 
         function toggleCollapseCategories(el) {
-            var $collapsededDiv = $(".collapsible-category-div").filter(function(){
+            var $collapsedDiv = $(".collapsible-category-div").filter(function () {
                 return $(this).attr("aria-expanded") == "false";
             });
-            if($collapsededDiv.length != $(".collapsible-category-div").length){
+            if ($collapsedDiv.length != $(".collapsible-category-div").length) {
                 $(".collapsible-category-div").slideUp(function () {
                     $(this).css({
                         "height": "0px",
@@ -395,9 +399,21 @@
                 $(".collapsible-category-div").css("height", "").slideDown(function () {
                     $(this).css("display", "").attr("aria-expanded", true).addClass("in");
                 });
-                $(".tbl-category > thead > tr > th > a.btn-collapse").removeClass("collapsed").attr("aria-expanded", "true");;
+                $(".tbl-category > thead > tr > th > a.btn-collapse").removeClass("collapsed").attr("aria-expanded", "true");
                 $(el).text("Collapse All");
             }
+        }
+
+        function updateCollapseButtonStatus() {
+            var $collapsedDiv = $(".collapsible-category-div").filter(function () {
+                return $(this).attr("aria-expanded") == "false";
+            });
+            if ($collapsedDiv.length != $(".collapsible-category-div").length) {
+                $("#btn-collapse-all").text("Collapse All");
+            } else {
+                $("#btn-collapse-all").text("Expand All");
+            }
+
         }
 
         function toggleCollapseProducts() {
