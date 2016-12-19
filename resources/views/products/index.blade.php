@@ -16,7 +16,8 @@
                 <i class="fa fa-search text-muted"></i>
             </div>
         </div>
-        <input type="text" class="form-control general-search-input" placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
+        <input type="text" class="form-control general-search-input"
+               placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
 
         <div class="btn-clear-search" onclick="clearProductSearch(this)">
             <div class="clear-icon">
@@ -95,7 +96,7 @@
                                         <i class="fa fa-bell ico-alert-enabled"></i>
                                         &nbsp;
                                         MANAGE ALERTS
-                                        @else
+                                    @else
                                         <i class="fa fa-bell-o"></i>
                                         &nbsp;
                                         SET UP ALERTS
@@ -141,6 +142,12 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row m-b-20">
+                        <div class="col-sm-12 text-right">
+                            <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
+                               style="font-size: 12px;">Collapse All</a>
                         </div>
                     </div>
                     <div class="row">
@@ -371,11 +378,19 @@
             length = 5;
         }
 
-        function toggleCollapseCategories() {
+        function toggleCollapseCategories(el) {
             if ($(".collapsible-category-div").attr("aria-expanded") == "true") {
-                $(".collapsible-category-div").attr("aria-expanded", false).removeClass("in")
+                $(".collapsible-category-div").slideUp(function () {
+                    $(this).attr("aria-expanded", false).removeClass("in");
+                });
+                $(".tbl-category > thead > tr > th > a.btn-collapse").addClass("collapsed");
+                $(el).text("Expand All");
             } else {
-                $(".collapsible-category-div").attr("aria-expanded", true).addClass("in")
+                $(".collapsible-category-div").slideDown(function () {
+                    $(this).attr("aria-expanded", true).addClass("in");
+                });
+                $(".tbl-category > thead > tr > th > a.btn-collapse").removeClass("collapsed");
+                $(el).text("Collapse All");
             }
         }
 
