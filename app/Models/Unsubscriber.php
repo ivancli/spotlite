@@ -16,7 +16,7 @@ class Unsubscriber extends Model
     protected $table = "unsubscribers";
     protected $primaryKey = "unsubscriber_id";
     protected $fillable = [
-        "email", "blocked"
+        "email", "blocked", "page"
     ];
 
     public function block()
