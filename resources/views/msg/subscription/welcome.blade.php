@@ -102,7 +102,7 @@
 
                     <div class="form-group">
                         <input type="text" name="company_url" class="form-control"
-                               placeholder="What is your site URL? e.g. http://www.company.com.au/productpage/price">
+                               placeholder="What is your site URL? e.g. http://www.company.com.au">
                     </div>
 
 
