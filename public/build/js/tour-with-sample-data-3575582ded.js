@@ -993,10 +993,92 @@ $(function () {
     tour = new Tour({
         steps: [
             {
+                element: "#btn-add-new-dashboard",
+                title: "YOUR DASHBOARDS",
+                content: "You can view your Dashboards or add a new one anytime through the menu navigation.",
+                onShown: function (tour) {
+                    $(".tour-step-background").append(
+                        $("<div>").css({
+                            "height": "100%",
+                            "padding": "20px"
+                        }).append(
+                            $("<a>").addClass("tour-step-backdrop tour-tour-element tour-tour-0-element").attr({
+                                "href": "#",
+                                "onclick": "showAddDashboardForm(this); return false;",
+                                "id": "btn-add-new-dashboard"
+                            }).css({
+                                "background-color": "#7ed0c0",
+                                "height": "100%",
+                                "display": "block",
+                                "padding": "10px",
+                                "color": "#fff"
+                            }).append(
+                                $("<i>").addClass("fa fa-plus"),
+                                $("<span>").text(" ADD A NEW DASHBOARD")
+                            )
+                        )
+                    )
+                }
+            },
+            {
+                element: "#btn-dropdown-manage-dashboard",
+                title: "MANAGE DASHBOARD",
+                content: "This is your Default Dashboard with Sample Data. You can Add a Chart, Rename or Delete a Dashboard through this menu."
+            },
+            {
+                element: ".widget-container:first .box-tools",
+                title: "CHART CONFIGURATION",
+                content: "You can view information about this Chart, download it, edit or delete it through these icons.",
+                placement: "bottom"
+            },
+            {
+                element: ".widget-container:first .box-tools .btn-edit-widget",
+                title: "EDIT CHART",
+                content: "You can change the Chart type category and product, time span, resolution period and name.",
+                placement: "bottom"
+            },
+            {
+                element: ".add-chart-to-dashboard-placeholder",
+                title: "ADD CHART TO DASHBOARD",
+                content: "You can choose your own Chart characteristic and add it to the Dashboard",
+                placement: "right"
+            },
+            {
+                element: ".lnk-product",
+                title: "ADD YOUR PRODUCTS",
+                content: "If you want to add your own products to track, let's go to the PRODUCTS page and get started.",
+                placement: "right",
+                path: "/dashboard",
+                onShown: function () {
+                    $(".tour-step-background").append(
+                        $("<div>").css({
+                            "height": "100%",
+                            "padding": "20px"
+                        }).append(
+                            $("<a>").addClass("tour-step-backdrop tour-tour-element tour-tour-0-element").attr({
+                                "href": "http://app.spotlite.dev/product"
+                            }).css({
+                                "background-color": "#7ed0c0",
+                                "height": "100%",
+                                "display": "block",
+                                "padding": "10px",
+                                "color": "#fff"
+                            }).append(
+                                $("<i>").addClass("fa fa-tag"),
+                                $("<span>").text(" PRODUCTS")
+                            )
+                        )
+                    )
+                }
+            },
+
+
+            {
                 element: ".add-category-container",
                 title: "ADD CATEGORY",
                 content: "Start with naming the Category. You can add multiple Categories. More Category examples: Running Shoes, Eye Liner or Books.",
-                placement: "top"
+                placement: "top",
+                path: "/product"
             },
             {
                 element: ".add-product-container:first",
@@ -1011,10 +1093,10 @@ $(function () {
                 placement: "top"
             },
             {
-                element: ".btn-delete-category:first",
-                title: "DELETE",
-                content: "You can delete Categories & Products easily through here.",
-                placement: "bottom"
+                element: ".btn-chart:first",
+                title: "CHARTS",
+                content: "Create Category & Product Charts based on a period (e.g. month) and granularity (e.g. day). You can also add it to your Dashboard to easily visualise past and current price trends.",
+                placement: "left"
             },
             {
                 element: ".btn-report:first",
@@ -1023,10 +1105,10 @@ $(function () {
                 placement: "bottom"
             },
             {
-                element: ".btn-chart:first",
-                title: "CHARTS",
-                content: "Create Category & Product Charts based on a period (e.g. month) and granularity (e.g. day). You can also add it to your Dashboard to easily visualise past and current price trends. Once you've added a Chart to your Dashboard, it will be automatically updated if any price change occurs.",
-                placement: "left"
+                element: ".btn-delete-category:first",
+                title: "DELETE",
+                content: "You can delete Categories & Products easily through here.",
+                placement: "bottom"
             },
             {
                 element: "#btn-set-up-alerts",
@@ -1034,16 +1116,41 @@ $(function () {
                 content: "You can now set up Basic Alerts across all Categories or Advanced Alerts in specific Categories and/or Products so you're notified of price changes immediately.",
                 placement: "left"
             },
+            {
+                element: ".lnk-drop-down-need-help",
+                title: "WE'RE HERE FOR YOU",
+                content: "You can always check our FAQ, Tutorials or contact us in case you have questions or concerns.",
+                placement: "bottom",
+                onShown: function () {
+                    $(".tour-step-background").append(
+                        $("<div>").css({
+                            "height": "100%",
+                            "padding": "15px"
+                        }).append(
+                            $("<a>").addClass("dropdown-toggle lnk-drop-down-need-help tour-step-backdrop tour-tour-element tour-tour-13-element").attr({
+                                "href": "http://app.spotlite.dev/product",
+                                "data-toggle": "dropdown",
+                                "aria-expanded": "false"
+                            }).css({
+                                "background-color": "#7ed0c0",
+                                "height": "100%",
+                                "display": "block",
+                                "padding": "10px",
+                                "color": "#fff"
+                            }).append(
+                                "&nbsp;NEED HELP ? &nbsp;&nbsp;&nbsp;",
+                                $("<i>").addClass("fa fa-caret-down")
+                            )
+                        )
+                    )
+                }
+            }
         ],
         backdrop: true,
         storage: window.localStorage,
         backdropPadding: 20
     });
     tour.init();
-    if (tourNotYetVisit()) {
-        startTour();
-        setTourVisited();
-    }
 });
 
 function startTour() {
@@ -1052,7 +1159,7 @@ function startTour() {
 
 function setTourVisited() {
     $.ajax({
-        "url": "preference/DASHBOARD_TOUR_VISITED/1",
+        "url": "preference/ALL_TOUR_VISITED/1",
         "method": "put",
         "dataType": "json",
         "success": function (response) {
@@ -1065,6 +1172,6 @@ function setTourVisited() {
 }
 
 function tourNotYetVisit() {
-    return user.preferences.DASHBOARD_TOUR_VISITED != 1
+    return user.preferences.ALL_TOUR_VISITED != 1 && user.preferences.PRODUCT_TOUR_VISITED != 1 && user.preferences.DASHBOARD_TOUR_VISITED != 1
 }
-//# sourceMappingURL=tour-without-sample-data.js.map
+//# sourceMappingURL=tour-with-sample-data.js.map

@@ -6,6 +6,10 @@
     {{--    {!! Breadcrumbs::render('alert_index') !!}--}}
 @stop
 
+@section('links')
+    <link rel="stylesheet" href="{{elixir('css/tour.css')}}">
+@stop
+
 @section('content')
     <style>
         #tbl-report-task .popover {

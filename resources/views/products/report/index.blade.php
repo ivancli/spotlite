@@ -7,6 +7,10 @@
     {{--    {!! Breadcrumbs::render('report_index') !!}--}}
 @stop
 
+@section('links')
+    <link rel="stylesheet" href="{{elixir('css/tour.css')}}">
+@stop
+
 @section('content')
     <div class="row">
         <div class="col-sm-12">

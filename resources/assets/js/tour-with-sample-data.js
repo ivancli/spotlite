@@ -25,7 +25,7 @@ $(function () {
                                 "color": "#fff"
                             }).append(
                                 $("<i>").addClass("fa fa-plus"),
-                                $("<span>").text("ADD A NEW DASHBOARD")
+                                $("<span>").text(" ADD A NEW DASHBOARD")
                             )
                         )
                     )
@@ -76,7 +76,7 @@ $(function () {
                                 "color": "#fff"
                             }).append(
                                 $("<i>").addClass("fa fa-tag"),
-                                $("<span>").text("PRODUCTS")
+                                $("<span>").text(" PRODUCTS")
                             )
                         )
                     )
