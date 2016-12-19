@@ -4,6 +4,7 @@ namespace App\Repositories\Mailer;
 use App\Contracts\Repository\Mailer\MailerContract;
 use App\Models\AlertEmail;
 use App\Models\ReportEmail;
+use App\Models\Unsubscriber;
 use App\Models\User;
 use DaveJamesMiller\Breadcrumbs\View;
 use Illuminate\Support\Facades\Mail;
@@ -27,6 +28,13 @@ class MailerRepository implements MailerContract
 
     public function sendMail($view, array $data = array(), array $options = array())
     {
+        $unsubscriber = Unsubscriber::where('email', $options['email'])->first();
+        if (!is_null($unsubscriber)) {
+            $unsubscriber->blocked++;
+            $unsubscriber->save();
+            return false;
+        }
+
         Mail::send($view, $data, function ($m) use ($options) {
             $m->from(config('mail.from.address'), config('mail.from.name'));
             $m->to($options['email'], (isset($options['first_name']) && isset($options['last_name'])) ? "{$options['first_name']}  {$options['last_name']}" : null)

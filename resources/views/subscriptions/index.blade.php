@@ -104,8 +104,6 @@
                         {!! Form::model($sub, array('route' => array('subscription.destroy', $sub->getKey()), 'class'=>'form-horizontal', 'method' => 'delete', 'onsubmit'=>'return confirm("Do you want to cancel this subscription package? Please be aware of that this action cannot be undone.")')) !!}
                         <div class="row">
                             <div class="col-sm-12">
-                                <p>We would love to know what made you want to cancel. Please <a href="#">send us your
-                                        feedback</a>.</p>
                                 <p>
                                     You may choose to keep your profile and settings in SpotLite (recommended) or delete
                                     your profile and settings from SpotLite completely

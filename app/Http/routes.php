@@ -255,3 +255,7 @@ Route::get('contact_us/form', 'SupportController@contactUsIndex')->name('contact
 Route::post('contact_us', 'SupportController@contactUs')->name('contact_us.post');
 Route::get('contact_us', 'SupportController@contactUs')->name('contact_us.get');
 Route::get('sign_up_for_beta_testing', 'SupportController@signUpForBetaTesting')->name('contact_us.sign_up.post');
+
+
+Route::get('unsubscribe/{page}', 'UnsubscribeController@create')->name('unsubscribe.create');
+Route::post('unsubscribe', 'UnsubscribeController@store')->name('unsubscribe.store');
