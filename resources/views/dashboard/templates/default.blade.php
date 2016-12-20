@@ -180,7 +180,15 @@
             "dataType": 'json',
             "success": function (response) {
                 if (response.status != true) {
-                    alertP("Oops! Something went wrong.", "Unable to update widget order, please try again later.");
+                    if (typeof response.errors != 'undefined') {
+                        var errorMessage = "";
+                        $.each(response.errors, function (index, error) {
+                            errorMessage += error + " ";
+                        });
+                        alertP("Oops! Something went wrong.", errorMessage);
+                    } else {
+                        alertP("Oops! Something went wrong.", "Unable to update widget order, please try again later.");
+                    }
                 }
             },
             "error": function (xhr, status, error) {
@@ -244,7 +252,15 @@
                     reloadAllWidgets();
                     updateFilterButtonStatus();
                 } else {
-                    alertP('Error', 'Unable to update filters, please try again later.');
+                    if (typeof response.errors != 'undefined') {
+                        var errorMessage = "";
+                        $.each(response.errors, function (index, error) {
+                            errorMessage += error + " ";
+                        });
+                        alertP("Oops! Something went wrong.", errorMessage);
+                    } else {
+                        alertP('Error', 'Unable to update filters, please try again later.');
+                    }
                 }
             },
             "error": function (xhr, status, error) {
@@ -269,7 +285,15 @@
                     updateFilterButtonStatus();
                     reloadAllWidgets();
                 } else {
-                    alertP('Error', 'Unable to update filters, please try again later.');
+                    if (typeof response.errors != 'undefined') {
+                        var errorMessage = "";
+                        $.each(response.errors, function (index, error) {
+                            errorMessage += error + " ";
+                        });
+                        alertP("Oops! Something went wrong.", errorMessage);
+                    } else {
+                        alertP('Error', 'Unable to reset filters, please try again later.');
+                    }
                 }
             },
             "error": function (xhr, status, error) {

@@ -111,7 +111,15 @@
                         }
                         $("#modal-dashboard-filter-update").modal("hide");
                     } else {
-                        alertP('Error', 'Unable to update filters, please try again later.');
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP('Error', 'Unable to update filters, please try again later.');
+                        }
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -135,7 +143,15 @@
                         }
                         $("#modal-dashboard-filter-update").modal("hide");
                     } else {
-                        alertP('Error', 'Unable to update filters, please try again later.');
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP('Error', 'Unable to reset filters, please try again later.');
+                        }
                     }
                 },
                 "error": function (xhr, status, error) {

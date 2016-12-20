@@ -238,7 +238,15 @@
                         if ($.isFunction(errorCallback)) {
                             errorCallback(response);
                         }
-                        alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                        }
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -265,7 +273,15 @@
                         if ($.isFunction(errorCallback)) {
                             errorCallback(response);
                         }
-                        alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                        }
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -292,7 +308,15 @@
                         if ($.isFunction(errorCallback)) {
                             errorCallback(response);
                         }
-                        alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                        }
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -355,7 +379,18 @@
                                             $(el).closest(".site-wrapper").remove();
                                             tblDomain.row($(el).closest("tr")).remove().draw();
                                         } else {
-                                            alertP("Oops! Something went wrong.", "Unable to delete domain, please try again later.");
+                                            if ($.isFunction(errorCallback)) {
+                                                errorCallback(response);
+                                            }
+                                            if (typeof response.errors != 'undefined') {
+                                                var errorMessage = "";
+                                                $.each(response.errors, function (index, error) {
+                                                    errorMessage += error + " ";
+                                                });
+                                                alertP("Oops! Something went wrong.", errorMessage);
+                                            } else {
+                                                alertP("Oops! Something went wrong.", "Unable to delete domain, please try again later.");
+                                            }
                                         }
                                     },
                                     "error": function (xhr, status, error) {

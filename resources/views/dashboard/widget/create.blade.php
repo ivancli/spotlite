@@ -72,7 +72,7 @@
                                 );
                             });
                         } else {
-                            alertP("Oops! Something went wrong.", "Unable to create dashboard content, please try again later.");
+                            alertP("Oops! Something went wrong.", "Unable to add chart, please try again later.");
                         }
                     }
                 },

@@ -40,7 +40,15 @@ function updateSiteOrder(product_id) {
         "dataType": "json",
         "success": function (response) {
             if (response.status == false) {
-                alertP("Oops! Something went wrong.", "Unable to update site order, please try again later.");
+                if (typeof response.errors != 'undefined') {
+                    var errorMessage = "";
+                    $.each(response.errors, function (index, error) {
+                        errorMessage += error + " ";
+                    });
+                    alertP("Oops! Something went wrong.", errorMessage);
+                } else {
+                    alertP("Oops! Something went wrong.", "Unable to update site order, please try again later.");
+                }
             } else {
                 gaMoveSite();
             }
@@ -96,7 +104,15 @@ function getPricesCreate(el) {
                                 updateUserSiteUsagePerProduct(el);
                             });
                         } else {
-                            alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
+                            if (typeof response.errors != 'undefined') {
+                                var errorMessage = "";
+                                $.each(response.errors, function (index, error) {
+                                    errorMessage += error + " ";
+                                });
+                                alertP("Oops! Something went wrong.", errorMessage);
+                            } else {
+                                alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
+                            }
                         }
                     })
                 } else {
@@ -133,7 +149,15 @@ function getPricesCreate(el) {
                                                         updateUserSiteUsagePerProduct(el);
                                                     });
                                                 } else {
-                                                    alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
+                                                    if (typeof response.errors != 'undefined') {
+                                                        var errorMessage = "";
+                                                        $.each(response.errors, function (index, error) {
+                                                            errorMessage += error + " ";
+                                                        });
+                                                        alertP("Oops! Something went wrong.", errorMessage);
+                                                    } else {
+                                                        alertP("Oops! Something went wrong.", "Unable to add site, please try again later.");
+                                                    }
                                                 }
                                                 /*TODO big pb*/
                                             });
@@ -241,7 +265,15 @@ function btnDeleteProductOnClick(el) {
                                 $(el).closest(".product-wrapper").remove();
                                 updateUserProductCredit();
                             } else {
-                                alertP("Oops! Something went wrong.", "Unable to delete product, please try again later.");
+                                if (typeof response.errors != 'undefined') {
+                                    var errorMessage = "";
+                                    $.each(response.errors, function (index, error) {
+                                        errorMessage += error + " ";
+                                    });
+                                    alertP("Oops! Something went wrong.", errorMessage);
+                                } else {
+                                    alertP("Oops! Something went wrong.", "Unable to delete product, please try again later.");
+                                }
                             }
                         },
                         "error": function (xhr, status, error) {

@@ -211,7 +211,16 @@
                                 );
                             });
                         } else {
-                            alertP("Oops! Something went wrong.", "Unable to perform initial set up, please try again later.");
+
+                            if (typeof response.errors != 'undefined') {
+                                var errorMessage = "";
+                                $.each(response.errors, function (index, error) {
+                                    errorMessage += error + " ";
+                                });
+                                alertP("Oops! Something went wrong.", errorMessage);
+                            } else {
+                                alertP("Oops! Something went wrong.", "Unable to perform initial set up, please try again later.");
+                            }
                         }
                     }
                 },
