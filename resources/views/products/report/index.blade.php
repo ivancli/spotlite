@@ -7,6 +7,14 @@
     {{--    {!! Breadcrumbs::render('report_index') !!}--}}
 @stop
 
+@section('head_scripts')
+    @if(auth()->user()->categories()->count() > 0)
+        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
+    @else
+        <script type="text/javascript" src="{{elixir('js/report-tour.js')}}"></script>
+    @endif
+@stop
+
 @section('links')
     <link rel="stylesheet" href="{{elixir('css/tour.css')}}">
 @stop
@@ -645,9 +653,4 @@
         }
     </script>
 
-    @if(auth()->user()->categories()->count() > 0)
-        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
-    @else
-        <script type="text/javascript" src="{{elixir('js/report-tour.js')}}"></script>
-    @endif
 @stop

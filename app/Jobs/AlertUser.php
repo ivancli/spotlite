@@ -131,17 +131,19 @@ class AlertUser extends Job implements ShouldQueue
                     $products = $category->products;
                     foreach ($products as $product) {
                         foreach ($product->sites as $site) {
-                            $excludedSites = $product->alert->excludedSites;
-                            $excluded = false;
-                            foreach ($excludedSites as $excludedSite) {
-                                if ($excludedSite->getKey() == $site->getKey()) {
-                                    $excluded = true;
+                            if(!is_null($product->alert)){
+                                $excludedSites = $product->alert->excludedSites;
+                                $excluded = false;
+                                foreach ($excludedSites as $excludedSite) {
+                                    if ($excludedSite->getKey() == $site->getKey()) {
+                                        $excluded = true;
+                                    }
                                 }
-                            }
-                            if (!$excluded) {
-                                if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
-                                    $allCategoriesCrawled = false;
-                                    break;
+                                if (!$excluded) {
+                                    if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
+                                        $allCategoriesCrawled = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -154,7 +156,7 @@ class AlertUser extends Job implements ShouldQueue
                     }
                 }
 
-                if ($allCategoriesCrawled == true && !$category->alert->lastActiveWithinHour()) {
+                if ($allCategoriesCrawled == true && !is_null($category->alert) && !$category->alert->lastActiveWithinHour()) {
                     $alert = $user->alerts()->first();
                     $alert->last_active_at = date("Y-m-d H:i:s");
                     $alert->save();

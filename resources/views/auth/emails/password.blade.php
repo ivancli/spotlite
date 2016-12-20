@@ -1,672 +1,618 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
-      xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:fb="http://ogp.me/ns/fb#">
-<head><!--[if gte mso 9]>
-    <xml>
-        <o:OfficeDocumentSettings>
-            <o:AllowPNG/>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-        </o:OfficeDocumentSettings>
-    </xml>
-    <![endif]-->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password - SpotLite</title>
-    <!--[if gte mso 12]>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--[if IE]><html xmlns="http://www.w3.org/1999/xhtml" class="ie"><![endif]--><!--[if !IE]><!--><html style="margin: 0;padding: 0;" xmlns="http://www.w3.org/1999/xhtml"><!--<![endif]--><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+    <meta name="viewport" content="width=device-width"><style type="text/css">
+        @media only screen and (min-width: 620px){.wrapper{min-width:600px !important}.wrapper h1{}.wrapper h1{font-size:26px !important;line-height:34px !important}.wrapper h2{}.wrapper h2{font-size:20px !important;line-height:28px !important}.wrapper h3{}.column p,.column ol,.column ul{}.wrapper .size-8{font-size:8px !important;line-height:14px !important}.wrapper .size-9{font-size:9px !important;line-height:16px !important}.wrapper .size-10{font-size:10px !important;line-height:18px !important}.wrapper .size-11{font-size:11px !important;line-height:19px !important}.wrapper .size-12{font-size:12px !important;line-height:19px !important}.wrapper .size-13{font-size:13px !important;line-height:21px !important}.wrapper .size-14{font-size:14px !important;line-height:21px !important}.wrapper .size-15{font-size:15px !important;line-height:23px !important}.wrapper .size-16{font-size:16px
+        !important;line-height:24px !important}.wrapper .size-17{font-size:17px !important;line-height:26px !important}.wrapper .size-18{font-size:18px !important;line-height:26px !important}.wrapper .size-20{font-size:20px !important;line-height:28px !important}.wrapper .size-22{font-size:22px !important;line-height:31px !important}.wrapper .size-24{font-size:24px !important;line-height:32px !important}.wrapper .size-26{font-size:26px !important;line-height:34px !important}.wrapper .size-28{font-size:28px !important;line-height:36px !important}.wrapper .size-30{font-size:30px !important;line-height:38px !important}.wrapper .size-32{font-size:32px !important;line-height:40px!important}.wrapper .size-34{font-size:34px !important;line-height:43px !important}.wrapper .size-36{font-size:36px !important;line-height:43px !important}.wrapper .size-40{font-size:40px !important;line-height:47px
+        !important}.wrapper .size-44{font-size:44px !important;line-height:50px !important}.wrapper .size-48{font-size:48px !important;line-height:54px !important}.wrapper .size-56{font-size:56px !important;line-height:60px !important}.wrapper .size-64{font-size:64px !important;line-height:63px !important}}
+    </style>
     <style type="text/css">
-        .custom_font {
-            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        * {
+            line-height: inherit;
+        }
+        [x-apple-data-detectors],
+        [href^="tel"],
+        [href^="sms"] {
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+        .wrapper .footer__share-button a:hover,
+        .wrapper .footer__share-button a:focus {
+            color: #ffffff !important;
+        }
+        .btn a:hover,
+        .btn a:focus,
+        .footer__share-button a:hover,
+        .footer__share-button a:focus,
+        .email-footer__links a:hover,
+        .email-footer__links a:focus {
+            opacity: 0.8;
+        }
+        .preheader,
+        .header,
+        .layout,
+        .column {
+            transition: width 0.25s ease-in-out, max-width 0.25s ease-in-out;
+        }
+        .layout,
+        .header {
+            max-width: 400px !important;
+            -fallback-width: 95% !important;
+            width: calc(100% - 20px) !important;
+        }
+        div.preheader {
+            max-width: 360px !important;
+            -fallback-width: 90% !important;
+            width: calc(100% - 60px) !important;
+        }
+        .snippet,
+        .webversion {
+            Float: none !important;
+        }
+        .column {
+            max-width: 400px !important;
+            width: 100% !important;
+        }
+        .fixed-width.has-border {
+            max-width: 402px !important;
+        }
+        .fixed-width.has-border .layout__inner {
+            box-sizing: border-box;
+        }
+        .snippet,
+        .webversion {
+            width: 50% !important;
+        }
+        .ie .btn {
+            width: 100%;
+        }
+        .ie .column,
+        [owa] .column,
+        .ie .gutter,
+        [owa] .gutter {
+            display: table-cell;
+            float: none !important;
+            vertical-align: top;
+        }
+        .ie div.preheader,
+        [owa] div.preheader,
+        .ie .email-footer,
+        [owa] .email-footer {
+            max-width: 560px !important;
+            width: 560px !important;
+        }
+        .ie .snippet,
+        [owa] .snippet,
+        .ie .webversion,
+        [owa] .webversion {
+            width: 280px !important;
+        }
+        .ie .header,
+        [owa] .header,
+        .ie .layout,
+        [owa] .layout,
+        .ie .one-col .column,
+        [owa] .one-col .column {
+            max-width: 600px !important;
+            width: 600px !important;
+        }
+        .ie .fixed-width.has-border,
+        [owa] .fixed-width.has-border,
+        .ie .has-gutter.has-border,
+        [owa] .has-gutter.has-border {
+            max-width: 602px !important;
+            width: 602px !important;
+        }
+        .ie .two-col .column,
+        [owa] .two-col .column {
+            max-width: 300px !important;
+            width: 300px !important;
+        }
+        .ie .three-col .column,
+        [owa] .three-col .column,
+        .ie .narrow,
+        [owa] .narrow {
+            max-width: 200px !important;
+            width: 200px !important;
+        }
+        .ie .wide,
+        [owa] .wide {
+            width: 400px !important;
+        }
+        .ie .two-col.has-gutter .column,
+        [owa] .two-col.x_has-gutter .column {
+            max-width: 290px !important;
+            width: 290px !important;
+        }
+        .ie .three-col.has-gutter .column,
+        [owa] .three-col.x_has-gutter .column,
+        .ie .has-gutter .narrow,
+        [owa] .has-gutter .narrow {
+            max-width: 188px !important;
+            width: 188px !important;
+        }
+        .ie .has-gutter .wide,
+        [owa] .has-gutter .wide {
+            max-width: 394px !important;
+            width: 394px !important;
+        }
+        .ie .two-col.has-gutter.has-border .column,
+        [owa] .two-col.x_has-gutter.x_has-border .column {
+            max-width: 292px !important;
+            width: 292px !important;
+        }
+        .ie .three-col.has-gutter.has-border .column,
+        [owa] .three-col.x_has-gutter.x_has-border .column,
+        .ie .has-gutter.has-border .narrow,
+        [owa] .has-gutter.x_has-border .narrow {
+            max-width: 190px !important;
+            width: 190px !important;
+        }
+        .ie .has-gutter.has-border .wide,
+        [owa] .has-gutter.x_has-border .wide {
+            max-width: 396px !important;
+            width: 396px !important;
+        }
+        .ie .fixed-width .layout__inner {
+            border-left: 0 none white !important;
+            border-right: 0 none white !important;
+        }
+        .ie .layout__edges {
+            display: none;
+        }
+        .mso .layout__edges {
+            font-size: 0;
+        }
+        .layout-fixed-width,
+        .mso .layout-full-width {
+            background-color: #ffffff;
+        }
+        @media only screen and (min-width: 620px) {
+            .column,
+            .gutter {
+                display: table-cell;
+                Float: none !important;
+                vertical-align: top;
+            }
+            div.preheader,
+            .email-footer {
+                max-width: 560px !important;
+                width: 560px !important;
+            }
+            .snippet,
+            .webversion {
+                width: 280px !important;
+            }
+            .header,
+            .layout,
+            .one-col .column {
+                max-width: 600px !important;
+                width: 600px !important;
+            }
+            .fixed-width.has-border,
+            .fixed-width.ecxhas-border,
+            .has-gutter.has-border,
+            .has-gutter.ecxhas-border {
+                max-width: 602px !important;
+                width: 602px !important;
+            }
+            .two-col .column {
+                max-width: 300px !important;
+                width: 300px !important;
+            }
+            .three-col .column,
+            .column.narrow {
+                max-width: 200px !important;
+                width: 200px !important;
+            }
+            .column.wide {
+                width: 400px !important;
+            }
+            .two-col.has-gutter .column,
+            .two-col.ecxhas-gutter .column {
+                max-width: 290px !important;
+                width: 290px !important;
+            }
+            .three-col.has-gutter .column,
+            .three-col.ecxhas-gutter .column,
+            .has-gutter .narrow {
+                max-width: 188px !important;
+                width: 188px !important;
+            }
+            .has-gutter .wide {
+                max-width: 394px !important;
+                width: 394px !important;
+            }
+            .two-col.has-gutter.has-border .column,
+            .two-col.ecxhas-gutter.ecxhas-border .column {
+                max-width: 292px !important;
+                width: 292px !important;
+            }
+            .three-col.has-gutter.has-border .column,
+            .three-col.ecxhas-gutter.ecxhas-border .column,
+            .has-gutter.has-border .narrow,
+            .has-gutter.ecxhas-border .narrow {
+                max-width: 190px !important;
+                width: 190px !important;
+            }
+            .has-gutter.has-border .wide,
+            .has-gutter.ecxhas-border .wide {
+                max-width: 396px !important;
+                width: 396px !important;
+            }
+        }
+        @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and(min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+            .fblike {
+                background-image: url(http://i3.cmail2.com/static/eb/master/13-the-blueprint-3/images/fblike@2x.png) !important;
+            }
+            .tweet {
+                background-image: url(http://i4.cmail2.com/static/eb/master/13-the-blueprint-3/images/tweet@2x.png) !important;
+            }
+            .linkedinshare {
+                background-image: url(http://i5.cmail2.com/static/eb/master/13-the-blueprint-3/images/lishare@2x.png) !important;
+            }
+            .forwardtoafriend {
+                background-image: url(http://i7.cmail2.com/static/eb/master/13-the-blueprint-3/images/forward@2x.png) !important;
+            }
+        }
+        @media (max-width: 321px) {
+            .fixed-width.has-border .layout__inner {
+                border-width: 1px 0 !important;
+            }
+            .layout,
+            .column {
+                min-width: 320px !important;
+                width: 320px !important;
+            }
+            .border {
+                display: none;
+            }
+        }
+        .mso div {
+            border: 0 none white !important;
+        }
+        .mso .w560 .divider {
+            Margin-left: 260px !important;
+            Margin-right: 260px !important;
+        }
+        .mso .w360 .divider {
+            Margin-left: 160px !important;
+            Margin-right: 160px !important;
+        }
+        .mso .w260 .divider {
+            Margin-left: 110px !important;
+            Margin-right: 110px !important;
+        }
+        .mso .w160 .divider {
+            Margin-left: 60px !important;
+            Margin-right: 60px !important;
+        }
+        .mso .w354 .divider {
+            Margin-left: 157px !important;
+            Margin-right: 157px !important;
+        }
+        .mso .w250 .divider {
+            Margin-left: 105px !important;
+            Margin-right: 105px !important;
+        }
+        .mso .w148 .divider {
+            Margin-left: 54px !important;
+            Margin-right: 54px !important;
+        }
+        .mso .font-avenir,
+        .mso .font-cabin,
+        .mso .font-open-sans,
+        .mso .font-ubuntu {
+            font-family: sans-serif !important;
+        }
+        .mso .font-bitter,
+        .mso .font-merriweather,
+        .mso .font-pt-serif {
+            font-family: Georgia, serif !important;
+        }
+        .mso .font-lato,
+        .mso .font-roboto {
+            font-family: Tahoma, sans-serif !important;
+        }
+        .mso .font-pt-sans {
+            font-family: "Trebuchet MS", sans-serif !important;
+        }
+        .mso .footer__share-button p {
+            margin: 0;
+        }
+        .mso .size-8,
+        .ie .size-8 {
+            font-size: 8px !important;
+            line-height: 14px !important;
+        }
+        .mso .size-9,
+        .ie .size-9 {
+            font-size: 9px !important;
+            line-height: 16px !important;
+        }
+        .mso .size-10,
+        .ie .size-10 {
+            font-size: 10px !important;
+            line-height: 18px !important;
+        }
+        .mso .size-11,
+        .ie .size-11 {
+            font-size: 11px !important;
+            line-height: 19px !important;
+        }
+        .mso .size-12,
+        .ie .size-12 {
+            font-size: 12px !important;
+            line-height: 19px !important;
+        }
+        .mso .size-13,
+        .ie .size-13 {
+            font-size: 13px !important;
+            line-height: 21px !important;
+        }
+        .mso .size-14,
+        .ie .size-14 {
+            font-size: 14px !important;
+            line-height: 21px !important;
+        }
+        .mso .size-15,
+        .ie .size-15 {
+            font-size: 15px !important;
+            line-height: 23px !important;
+        }
+        .mso .size-16,
+        .ie .size-16 {
+            font-size: 16px !important;
+            line-height: 24px !important;
+        }
+        .mso .size-17,
+        .ie .size-17 {
+            font-size: 17px !important;
+            line-height: 26px !important;
+        }
+        .mso .size-18,
+        .ie .size-18 {
+            font-size: 18px !important;
+            line-height: 26px !important;
+        }
+        .mso .size-20,
+        .ie .size-20 {
+            font-size: 20px !important;
+            line-height: 28px !important;
+        }
+        .mso .size-22,
+        .ie .size-22 {
+            font-size: 22px !important;
+            line-height: 31px !important;
+        }
+        .mso .size-24,
+        .ie .size-24 {
+            font-size: 24px !important;
+            line-height: 32px !important;
+        }
+        .mso .size-26,
+        .ie .size-26 {
+            font-size: 26px !important;
+            line-height: 34px !important;
+        }
+        .mso .size-28,
+        .ie .size-28 {
+            font-size: 28px !important;
+            line-height: 36px !important;
+        }
+        .mso .size-30,
+        .ie .size-30 {
+            font-size: 30px !important;
+            line-height: 38px !important;
+        }
+        .mso .size-32,
+        .ie .size-32 {
+            font-size: 32px !important;
+            line-height: 40px !important;
+        }
+        .mso .size-34,
+        .ie .size-34 {
+            font-size: 34px !important;
+            line-height: 43px !important;
+        }
+        .mso .size-36,
+        .ie .size-36 {
+            font-size: 36px !important;
+            line-height: 43px !important;
+        }
+        .mso .size-40,
+        .ie .size-40 {
+            font-size: 40px !important;
+            line-height: 47px !important;
+        }
+        .mso .size-44,
+        .ie .size-44 {
+            font-size: 44px !important;
+            line-height: 50px !important;
+        }
+        .mso .size-48,
+        .ie .size-48 {
+            font-size: 48px !important;
+            line-height: 54px !important;
+        }
+        .mso .size-56,
+        .ie .size-56 {
+            font-size: 56px !important;
+            line-height: 60px !important;
+        }
+        .mso .size-64,
+        .ie .size-64 {
+            font-size: 64px !important;
+            line-height: 63px !important;
+        }
+        .footer__share-button p {
+            margin: 0;
         }
     </style>
-    <![endif]--></head>
-<body style="margin: 0px; padding: 0" id="body">
-<style type="text/css">
-    body {
-        margin: 0 auto;
-        padding: 0;
-    }
-</style>
-<style>
-    .glyphicon.glyphicon-arrow-down {
-        display: none !important
-    }
 
-    #layout > tbody > tr > td, #layout > tbody > tr > td > table > tbody > tr > td {
-        border: none !important
-    }
-
-    .block {
-        cursor: auto !important
-    }
-
-    @media screen and (max-width: 650px) {
-        #layout .btn-cm, #layout .grid > table, #layout .section, .section > tbody > tr > td > .grid > table {
-            width: 100% !important
-        }
-
-        #layout .block[data-sd-content=article] .figure img:not([data-full-width=false]), #layout .block[data-sd-content=image] img:not([data-full-width=false]), #layout .block[data-sd-content=map] img, #layout .block[data-sd-content=video-email] img:not([data-full-width=false]):not(.btn-play) {
-            width: 100% !important;
-            height: auto !important
-        }
-
-        #layout .btn-cm {
-            padding: 10px 0 !important
-        }
-
-        #layout .btn-width-auto {
-            padding: 10px 6% !important;
-            width: auto !important
-        }
-
-        #layout, #layout > tbody > tr > td > div > table, #layout > tbody > tr > td > table, .grid > table > tbody > tr > td > table {
-            display: table !important
-        }
-
-        .sd-mobile-quicklinks .grid {
-            display: block !important;
-            font-size: 12px !important;
-            max-height: none !important
-        }
-
-        #layout, #layout .block > table, #layout .grid, #layout .grid > table > tbody > tr > td > table.contenttable, #layout .section > tbody > tr > td > table {
-            height: auto !important;
-            width: 100% !important
-        }
-
-        .grid > table > tbody > tr > td > table.contenttable > tbody > tr > td {
-            height: auto !important
-        }
-
-        .block[data-sd-content=links] {
-            display: none !important
-        }
-
-        .sd-mobile-quicklinks .block:not([data-sd-content=none]) {
-            display: table-cell !important;
-            font-size: 12px !important;
-            line-height: normal !important;
-            max-height: none !important;
-            width: auto !important;
-            height: auto !important;
-            overflow: visible !important;
-            padding: 15px !important
-        }
-
-        .sd-mobile-quicklinks .guttertable, .sd-mobile-quicklinks .margintable {
-            height: 0 !important
-        }
-
-        .sd-mobile-hidden {
-            display: none !important
-        }
-
-        .block[data-sd-content=video-page] .figure iframe, .sd-mobile-full-width {
-            width: 100% !important
-        }
-
-        .sd-padding-0 {
-            padding: 0 !important
-        }
-
-        .sd-padding-top-0 {
-            padding-top: 0 !important
-        }
-
-        .sd-padding-right-0 {
-            padding-right: 0 !important
-        }
-
-        .sd-padding-bottom-0 {
-            padding-bottom: 0 !important
-        }
-
-        .sd-padding-left-0 {
-            padding-left: 0 !important
-        }
-
-        .sd-padding-top-15 {
-            padding-top: 15px !important
-        }
-
-        .sd-padding-right-15 {
-            padding-right: 15px !important
-        }
-
-        .sd-padding-bottom-15 {
-            padding-bottom: 15px !important
-        }
-
-        .sd-padding-left-15 {
-            padding-left: 15px !important
-        }
-
-        .sd-padding-15 {
-            padding: 15px !important
-        }
-
-        .sd-padding-top-20 {
-            padding-top: 20px !important
-        }
-
-        .sd-padding-right-20 {
-            padding-right: 20px !important
-        }
-
-        .sd-padding-bottom-20 {
-            padding-bottom: 20px !important
-        }
-
-        .sd-padding-left-20 {
-            padding-left: 20px !important
-        }
-
-        .sd-padding-20 {
-            padding: 20px !important
-        }
-    }
-
-</style>
+    <!--[if !mso]><!--><style type="text/css">
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400|Roboto:400,700,400italic,700italic);
+    </style><link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400|Roboto:400,700,400italic,700italic" rel="stylesheet" type="text/css"><!--<![endif]--><style type="text/css">
+        body{background-color:#fff}.mso h1{}.mso h1{font-family:sans-serif !important}.mso h2{}.mso h2{font-family:sans-serif !important}.mso h3{}.mso h3{font-family:sans-serif !important}.mso .column,.mso .column__background td{}.mso .column,.mso .column__background td{font-family:sans-serif !important}.mso .btn a{}.mso .btn a{font-family:sans-serif !important}.mso .webversion,.mso .snippet,.mso .layout-email-footer td,.mso .footer__share-button p{}.mso.webversion,.mso .snippet,.mso .layout-email-footer td,.mso .footer__share-button p{font-family:Tahoma,sans-serif !important}.mso .logo{}.mso .logo{font-family:Tahoma,sans-serif !important}.logo a:hover,.logo a:focus{color:#859bb1 !important}.mso .layout-has-border{border-top:1px solid #ccc;border-bottom:1px solid #ccc}.mso .layout-has-bottom-border{border-bottom:1px solid #ccc}.mso .border,.ie .border{background-color:#ccc}.mso h1,.ie h1{}.mso
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      h1,.ie h1{font-size:26px !important;line-height:34px !important}.mso h2,.ieh2{}.mso h2,.ie h2{font-size:20px !important;line-height:28px !important}.mso h3,.ie h3{}.mso .layout__inner p,.ie .layout__inner p,.mso .layout__inner ol,.ie .layout__inner ol,.mso .layout__inner ul,.ie .layout__inner ul{}
+    </style></head>
 <!--[if mso]>
-<style>
-    [style*="Open Sans"] {
-        font-family: 'Open Sans', Arial, sans-serif !important
-    }
-
-    #layout .mso-full-width {
-        width: 100% !important
-    }
-
-    .sd-mobile-quicklinks table {
-        border-collapse: collapse !important;
-        border-spacing: 0 !important;
-        display: none;
-        font-size: 0;
-        margin: 0;
-        max-height: 0;
-        line-height: 0;
-        mso-hide: all;
-        overflow: hidden;
-        padding: 0;
-        position: relative;
-        width: 0
-    }
-</style>
-<![endif]--><!--[if gte mso 12]>
-<style type="text/css">
-    #layout {
-        font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
-    }
-</style>
+<body class="mso">
 <![endif]-->
-<div>
-    <div id="layout" style="background: white; display: block; line-height: 1.42857143">
-        <style class="page-width" type="text/css">.section > tbody > tr > td > .grid > table {
-                width: 650px;
-            }
-        </style>
-        <table border="0" cellpadding="0" cellspacing="0" id="header_wide" width="100%"
-               style="font-family: sans-serif; font-size: 14px">
-            <tbody>
-            <tr>
-                <td align="center" style="padding: 0">
-                    <table border="0" cellpadding="0" cellspacing="0" class="section section-wide" id="header"
-                           style="font-family: sans-serif; font-size: 14px; width: 100%">
-                        <tbody>
-                        <tr>
-                            <td class="allow allow-4" style="padding: 0">
-                                <div class="grid grid-3 allow-top allow-bottom allow-move allow-delete"
-                                     style="display: block; text-align: center" align="center">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
-                                        <tbody>
-                                        <tr>
-                                            <td align="left" valign="top" style="padding: 0">
+<!--[if !mso]><!-->
+<body class="full-padding" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;">
+<!--<![endif]-->
+<table class="wrapper" style="border-collapse: collapse;table-layout: fixed;min-width: 320px;width: 100%;background-color: #fff;" cellpadding="0" cellspacing="0" role="presentation"><tbody><tr><td>
+            <div class="preheader" style="Margin: 0 auto;max-width: 560px;min-width: 280px; width: 280px;width: calc(28000% - 167440px);">
+                <div style="border-collapse: collapse;display: table;width: 100%;">
+                    <!--[if (mso)|(IE)]><table align="center" class="preheader" cellpadding="0" cellspacing="0" role="presentation"><tr><td style="width: 280px" valign="top"><![endif]-->
+                    <div class="snippet" style="display: table-cell;Float: left;font-size: 12px;line-height: 19px;max-width: 280px;min-width: 140px; width: 140px;width: calc(14000% - 78120px);padding: 10px 0 5px 0;color: #dedede;font-family: Roboto,Tahoma,sans-serif;">
 
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 76px; width: 217px"
-                                                       width="217">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="76"
-                                                            nodelete="false" quicklink="true" share="false"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0 30px"
-                                                            valign="top" bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2016/07/logo-fixed-2.png"
-                                                                                style="display: block" width="157"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="217px" style="width: 217px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: auto; width: 217px"
-                                                       width="217">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block" data-sd-content="none" valign="top"
-                                                            style="padding: 0">
-                                                            <!-- Blank 4-column grid --><span
-                                                                    class="glyphicon glyphicon-arrow-down"></span>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="216px" style="width: 216px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: auto; width: 216px"
-                                                       width="216">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block" data-sd-content="none" valign="top"
-                                                            style="padding: 0">
-                                                            <!-- Blank 4-column grid --><span
-                                                                    class="glyphicon glyphicon-arrow-down"></span>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                    </div>
+                    <!--[if (mso)|(IE)]></td><td style="width: 280px" valign="top"><![endif]-->
+                    <div class="webversion" style="display: table-cell;Float: left;font-size: 12px;line-height: 19px;max-width: 280px;min-width: 139px; width: 139px;width: calc(14100% - 78680px);padding: 10px 0 5px 0;text-align: right;color: #dedede;font-family: Roboto,Tahoma,sans-serif;">
+
+                    </div>
+                    <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                </div>
+            </div>
+
+            <div class="layout one-col fixed-width" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+                <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #e6e6e6;">
+                    <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #e6e6e6;"><td style="width: 600px" class="w560"><![endif]-->
+                    <div class="column" style='text-align: left;color: #464447;font-size: 14px;line-height: 21px;font-family: "Open Sans",sans-serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);'>
+
+                        <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
+                            <div style="font-size: 12px;font-style: normal;font-weight: normal;Margin-bottom: 20px;" align="center">
+                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://spotlite.cmail2.com/t/n/i-i-uldjjld-l-r-r-r/"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 900px;" alt="" width="560" src="http://i1.cmail2.com/ei/i/15/907/B40/133022/csfinal/SpotLiteHeaderFinal.png"></a>
+                            </div>
+                        </div>
+
+                        <div style="Margin-left: 20px;Margin-right: 20px;">
+                            <div style="line-height:18px;font-size:1px">&nbsp;</div>
+                        </div>
+
+                        <div style="Margin-left: 20px;Margin-right: 20px;">
+                            <p style="Margin-top: 0;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto"><strong>Hi {{$user->first_name}},</strong></span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto">You requested to reset your SpotLite password.</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto">Click here to choose a new one:</span></p>
+                        </div>
+
+                        <div style="Margin-left: 20px;Margin-right: 20px;">
+                            <div class="btn btn--shadow btn--large" style="Margin-bottom: 20px;text-align: left;">
+                                <![if !mso]><a style='border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px 13px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #fff;box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.2);background-color: #7ed0c0; font-family: "Open Sans", sans-serif;font-family: "Open Sans",sans-serif;' href="{{ route('password.reset.get', $token).'?email='.urlencode($user->getEmailForPasswordReset()) }}">CHOOSE NEW PASSWORD</a><![endif]>
+                                <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ route('password.reset.get', $token).'?email='.urlencode($user->getEmailForPasswordReset()) }}" style="width:224px" arcsize="9%" fillcolor="#7ED0C0" stroke="f"><v:shadow on="t" color="#65A69A" offset="0,2px"></v:shadow><v:textbox style="mso-fit-shape-to-text:t" inset="0px,11px,0px,10px"><center style="font-size:14px;line-height:24px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">CHOOSE NEW PASSWORD</center></v:textbox></v:roundrect><![endif]--></div>
+                        </div>
+
+                        <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
+                            <p style="Margin-top: 0;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto">If you didn't mean to reset your password, you can simply ignore this email. Your password will remain the same.</span></p>
+                        </div>
+
+                    </div>
+                    <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                </div>
+            </div>
+
+            <div style="line-height:20px;font-size:20px;">&nbsp;</div>
+
+            <div class="layout two-col has-gutter" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+                <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
+                    <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr><td style="width: 290px" valign="top" class="w250"><![endif]-->
+                    <div class="column" style="Float: left;max-width: 320px;min-width: 290px; width: 320px;width: calc(18290px - 3000%);">
+                        <table class="column__background" style="border-collapse: collapse;table-layout: fixed;background-color: #e3e3e3;" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+                            <tbody><tr>
+                                <td style='text-align: left;color: #464447;font-size: 14px;line-height: 21px;font-family: "Open Sans",sans-serif;'>
+
+                                    <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
+                                        <div style="font-size: 12px;font-style: normal;font-weight: normal;Margin-bottom: 20px;" align="center">
+                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://spotlite.cmail2.com/t/n/i-i-uldjjld-l-j-r-r/"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i2.cmail2.com/ei/i/15/907/B40/133022/csfinal/FAQ1.png"></a>
+                                        </div>
+                                    </div>
+
+                                    <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
+                                        <h3 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #0f0c0f;font-size: 16px;line-height: 24px;font-family:roboto,tahoma,sans-serif;"><span class="font-roboto">Do you have any questions?&nbsp;Check out our FAQ:</span></h3><p class="size-18" style="Margin-top: 12px;Margin-bottom: 0;font-size: 17px;line-height: 26px;" lang="x-size-18"><strong><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ">Read now</a></strong></p>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            </tbody></table>
+                    </div>
+                    <!--[if (mso)|(IE)]></td><td style="width: 20px"><![endif]--><div class="gutter" style="Float: left;width: 20px;">&nbsp;</div><!--[if (mso)|(IE)]></td><td style="width: 290px" valign="top" class="w250"><![endif]-->
+                    <div class="column" style="Float: left;max-width: 320px;min-width: 290px; width: 320px;width: calc(18290px - 3000%);">
+                        <table class="column__background" style="border-collapse: collapse;table-layout: fixed;background-color: #e3e3e3;" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+                            <tbody><tr>
+                                <td style='text-align: left;color: #464447;font-size: 14px;line-height: 21px;font-family: "Open Sans",sans-serif;'>
+
+                                    <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
+                                        <div style="font-size: 12px;font-style: normal;font-weight: normal;Margin-bottom: 20px;" align="center">
+                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="mailto:support@spotlite.com.au"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i3.cmail2.com/ei/i/15/907/B40/133022/csfinal/HELP31.png"></a>
+                                        </div>
+                                    </div>
+
+                                    <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
+                                        <h3 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #0f0c0f;font-size: 16px;line-height: 24px;font-family:roboto,tahoma,sans-serif;"><span class="font-roboto">Having trouble? No worries, we'll help you!</span></h3><p class="size-18" style="Margin-top: 12px;Margin-bottom: 0;font-size: 17px;line-height: 26px;" lang="x-size-18"><strong><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="mailto:support@spotlite.com.au">Contact Us</a></strong></p>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            </tbody></table>
+                    </div>
+                    <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                </div>
+            </div>
+
+            <div style="line-height:40px;font-size:40px;">&nbsp;</div>
+
+            <div>
+                <div class="layout email-footer" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+                    <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
+                        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><td style="width: 400px;" valign="top" class="w360"><![endif]-->
+                        <div class="column wide" style="text-align: left;font-size:12px;line-height: 19px;color: #dedede;font-family: Roboto,Tahoma,sans-serif;Float: left;max-width: 400px;min-width: 320px; width: 320px;width: calc(8000% - 47600px);">
+                            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
+                                <table class="email-footer__links emb-web-links" style="border-collapse: collapse;table-layout: fixed;" role="presentation"><tbody><tr>
+                                        <td class="emb-web-links" style="padding: 0;width: 26px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #dedede;" href="http://spotlite.cmail2.com/t/n/i-i-uldjjld-l-i-r-r/"><img style="border: 0;" src="http://i10.cmail2.com/static/eb/master/13-the-blueprint-3/images/youtube.png" width="26" height="26"></a></td><td class="emb-web-links" style="padding: 0 0 0 3px;width: 26px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #dedede;" href="http://spotlite.cmail2.com/t/n/i-i-uldjjld-l-d-r-r/"><img style="border: 0;" src="http://i3.cmail2.com/static/eb/master/13-the-blueprint-3/images/website.png" width="26" height="26"></a></td>
+                                    </tr></tbody></table>
+                                <div style="Margin-top: 20px;">
+                                    <div>INVIGOR GROUP LIMITED - ACN 081 368 274<br>
+                                        Level 16, 56 Pitt Street<br>
+                                        Sydney, NSW 2000</div>
                                 </div>
-
-                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
-                                     style="display: block; text-align: center" align="center">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
-                                        <tbody>
-                                        <tr>
-                                            <td style="padding: 0">
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="650px" style="width: 650px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="contenttable mso-full-width"
-                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
-                                                       width="650">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false"
-                                                            nodelete="false" quicklink="false" share="false"
-                                                            valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                height="60"
-                                                                                src="https://placehold.it/650x60"
-                                                                                width="650" style="display: block"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                <div style="Margin-top: 18px;">
+                                    <div>You've received this email because you are subscribed to SpotLite.</div>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr class="sd-mobile-quicklinks hidden" style="display: none !important">
-                            <td class="allow allow-1" style="padding: 0">
-                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
-                                     style="border-collapse: collapse !important; border-spacing: 0 !important; display: none; font-size: 0; height: 0; margin: 0; max-height: 0; mso-hide: all; overflow: hidden; padding: 0; position: relative; text-align: center; width: 0"
-                                     align="center">
-                                    <table border="0" cellpadding="0" cellspacing="0"
-                                           style="border-collapse: collapse; font-family: sans-serif; font-size: 12px; margin: 0px auto; text-align: left; width: 100%"
-                                           width="100%">
-                                        <tbody>
-                                        <tr>
-                                            <td class="block" data-sd-content="none" droppable="false" editable="false"
-                                                export="false" quicklink="false" share="false"
-                                                style="display: none; font-size: 0; line-height: 0; max-height: 0; mso-hide: all; padding: 0">
-                                                &#x00a0;</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                            </div>
+                        </div>
+                        <!--[if (mso)|(IE)]></td><td style="width: 200px;" valign="top" class="w160"><![endif]-->
+                        <div class="column narrow" style="text-align: left;font-size: 12px;line-height: 19px;color: #dedede;font-family: Roboto,Tahoma,sans-serif;Float: left;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);">
+                            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
+
+                            </div>
+                        </div>
+                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                    </div>
+                </div>
+                <div class="layout one-col email-footer" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+                    <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
+                        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><td style="width: 600px;" class="w560"><![endif]-->
+                        <div class="column" style="text-align: left;font-size: 12px;line-height: 19px;color: #dedede;font-family: Roboto,Tahoma,sans-serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);">
+                            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
+                                <div>
+
                                 </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <table border="0" cellpadding="0" cellspacing="0" id="middle_0_wide" width="100%"
-               style="font-family: sans-serif; font-size: 14px">
-            <tbody>
-            <tr>
-                <td align="center" style="padding: 0">
-                    <table border="0" cellpadding="0" cellspacing="0" class="section section-fixed" id="middle_0"
-                           style="font-family: sans-serif; font-size: 14px; width: 650px" width="650">
-                        <tbody>
-                        <tr>
-                            <td class="allow allow-4" style="padding: 0">
-                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
-                                     style="display: block; text-align: center" align="center">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
-                                        <tbody>
-                                        <tr>
-                                            <td style="padding: 0">
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="650px" style="width: 650px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="contenttable mso-full-width"
-                                                       style="font-family: sans-serif; font-size: 14px; width: 650px"
-                                                       width="650">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="article"
-                                                            droppable="true" editable="true" nodelete="false"
-                                                            quicklink="true" share="false" valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="article sd-editable block-body"
-                                                                   href="#67ac1e2a4ba93e7569d1"
-                                                                   id="67ac1e2a4ba93e7569d1" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="header-container">
-                                                                    <td class="header"
-                                                                        style="color: #646c78; line-height: 26px; padding: 20px 20px 15px">
-                                                                        <div class="header1"
-                                                                             style="color: #646c78; font-family: 'Lato', Arial, sans-serif; font-size: 1.5em; line-height: 1.2em">
-                                                                            Welcome to SpotLite
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr class="main-container">
-                                                                    <td class="main"
-                                                                        style="color: #646c78; font-family: 'Open Sans', sans-serif; line-height: 20px; padding: 0 20px 20px">
-                                                                        <div>Dear {{$user->first_name}},</div>
-
-                                                                        <p>There was a request to change your password.</p>
-
-                                                                        <p>If you did not make this request, please ignore this email. Otherwise, click the button below to change your
-                                                                            password:</p>
-
-                                                                        <div><!--[if mso]>
-                                                                            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
-                                                                                         href="{{ route('password.reset.get', $token).'?email='.urlencode($user->getEmailForPasswordReset()) }}"
-                                                                                         style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#2e8bef">
-                                                                                <w:anchorlock/>
-                                                                                <center>
-                                                                            <![endif]-->
-                                                                            <a href="{{ route('password.reset.get', $token).'?email='.urlencode($user->getEmailForPasswordReset()) }}"
-                                                                               style="background-color:#2e8bef;border-radius:4px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">
-                                                                                Reset Password
-                                                                            </a>
-                                                                            <!--[if mso]>
-                                                                            </center>
-                                                                            </v:roundrect>
-                                                                            <![endif]--></div>
-
-
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="grid grid-2 allow-top allow-bottom allow-move allow-delete"
-                                     style="display: block; text-align: center" align="center">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
-                                        <tbody>
-                                        <tr>
-                                            <td align="left" valign="top" style="padding: 0">
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="235"
-                                                            nodelete="false" quicklink="true" share="false" valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/imgpsh_fullsize-1.jpg"
-                                                                                width="325" style="display: block"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="235"
-                                                            nodelete="false" quicklink="true" share="false" valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/Insightful-spotlite.jpg"
-                                                                                width="325" style="display: block"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="grid grid-2 allow-top allow-bottom allow-move allow-delete"
-                                     style="display: block; text-align: center" align="center">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
-                                        <tbody>
-                                        <tr>
-                                            <td align="left" valign="top" style="padding: 0">
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" height="235"
-                                                            nodelete="false" quicklink="true" share="false"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/Actionable-spotlite.jpg"
-                                                                                style="display: block" width="325"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="325px" style="width: 325px;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="mso-full-width contenttable"
-                                                       style="font-family: sans-serif; font-size: 14px; height: 235px; width: 325px"
-                                                       width="325">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="image"
-                                                            droppable="true" editable="true" export="false" height="235"
-                                                            nodelete="false" quicklink="true" share="false" valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="block-body" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="figure-container">
-                                                                    <td class="figure"
-                                                                        style="color: #646c78; padding: 0"><img
-                                                                                src="http://www.spotlite.com.au/wp-content/uploads/2014/04/affordable-spotlite.jpg"
-                                                                                width="325" style="display: block"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <table border="0" cellpadding="0" cellspacing="0" id="footer_wide" width="100%"
-               style="font-family: sans-serif; font-size: 14px">
-            <tbody>
-            <tr>
-                <td align="center" style="padding: 0">
-                    <table border="0" cellpadding="0" cellspacing="0" class="section section-wide" id="footer"
-                           style="font-family: sans-serif; font-size: 14px; width: 100%">
-                        <tbody>
-                        <tr>
-                            <td class="allow allow-4" style="padding: 0">
-                                <div class="grid grid-1 allow-top allow-bottom allow-move allow-delete"
-                                     style="text-align: center" align="center">
-                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                           style="font-family: sans-serif; font-size: 14px; margin: 0px auto; text-align: left; width: 650px">
-                                        <tbody>
-                                        <tr>
-                                            <td style="padding: 0">
-                                                <!--[if mso]> </td>
-                                                <td valign="top" align="left" width="100%" style="width: 100%;">
-                                                <![endif]-->
-                                                <table align="left" border="0" cellpadding="0" cellspacing="0"
-                                                       class="contenttable mso-full-width"
-                                                       style="font-family: sans-serif; font-size: 14px; width: 100%"
-                                                       width="100%">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="block text-style-1" data-sd-content="article"
-                                                            droppable="true" editable="true" nodelete="false"
-                                                            quicklink="true" share="false" valign="top"
-                                                            style="background: white; color: #646c78; font-family: 'Open Sans', sans-serif; font-size: 14px; line-height: 21px; padding: 0"
-                                                            bgcolor="white">
-                                                            <table border="0" cellpadding="0" cellspacing="0"
-                                                                   class="article sd-editable block-body"
-                                                                   href="#93f2ad8c412cd26199c0"
-                                                                   id="93f2ad8c412cd26199c0" width="100%"
-                                                                   style="font-family: sans-serif; font-size: 14px">
-                                                                <tbody>
-                                                                <tr class="main-container">
-                                                                    <td class="main"
-                                                                        style="color: #646c78; font-family: 'Open Sans', sans-serif; line-height: 20px; padding: 20px">
-                                                                        <div style="text-align: center" align="center">
-                                                                            <span style="font-size: 12px">[unsubscribe link here]</span>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-</body>
-</html>
+                            </div>
+                        </div>
+                        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+                    </div>
+                </div>
+            </div>
+            <div style="line-height:40px;font-size:40px;">&nbsp;</div>
+        </td></tr></tbody></table>
+<img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://spotlite.cmail2.com/t/n/i-o-uldjjld-l-r/o.gif" width="1" height="1" border="0" alt="">
+</body></html>

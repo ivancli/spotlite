@@ -6,6 +6,15 @@
     {{--    {!! Breadcrumbs::render('alert_index') !!}--}}
 @stop
 
+@section('head_scripts')
+    {{--TOUR--}}
+    @if(auth()->user()->categories()->count() > 0)
+        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
+    @else
+        <script type="text/javascript" src="{{elixir('js/alert-tour.js')}}"></script>
+    @endif
+@stop
+
 @section('links')
     <link rel="stylesheet" href="{{elixir('css/tour.css')}}">
 @stop
@@ -501,10 +510,4 @@
         }
     </script>
 
-
-    @if(auth()->user()->categories()->count() > 0)
-        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
-    @else
-        <script type="text/javascript" src="{{elixir('js/alert-tour.js')}}"></script>
-    @endif
 @stop

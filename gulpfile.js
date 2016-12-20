@@ -85,8 +85,7 @@ elixir(function (mix) {
         'resources/assets/js/nlform.js',
         'resources/assets/js/commonFunctions.js',
         'resources/assets/js/google_analytics.js',
-        'resources/assets/js/sidebar.js',
-        'resources/assets/js/spotlite.js'
+        'resources/assets/js/sidebar.js'
     ], "public/js/main.js", "./");
     mix.scripts([
         'vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js',
@@ -140,6 +139,10 @@ elixir(function (mix) {
         'resources/assets/js/report-tour.js'
     ], "public/js/report-tour.js", './');
 
+    mix.scripts([
+        'resources/assets/js/spotlite.js'
+    ], "public/js/spotlite.js", './');
+
     /* copy images */
     mix.copy('resources/assets/images', 'public/images');
     mix.copy('vendor/almasaeed2010/adminlte/plugins/iCheck/square/blue.png', 'public/images//blue.png');
@@ -158,7 +161,8 @@ elixir(function (mix) {
     mix.version([
         'public/css/main.css', 'public/css/tour.css', 'public/css/email.css', 'public/css/email_import.css', 'public/css/email_brand.css',
         'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/tour-with-sample-data.js', 'public/js/product-tour.js',
-        'public/js/dashboard-tour.js', 'public/js/alert-tour.js', 'public/js/report-tour.js', 'public/js/dashboard.js', 'public/js/product.js'
+        'public/js/dashboard-tour.js', 'public/js/alert-tour.js', 'public/js/report-tour.js', 'public/js/dashboard.js', 'public/js/product.js',
+        'public/js/spotlite.js'
     ]);
     mix.copy('public/fonts', 'public/build/fonts');
     mix.copy('public/images', 'public/build/images');

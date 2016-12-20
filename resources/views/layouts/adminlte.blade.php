@@ -55,9 +55,10 @@
     </script>
     <script type="text/javascript" src="{{elixir('js/zendesk.js')}}"></script>
     <script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
-    <script type="text/javascript" src="{{elixir('js/dashboard.js')}}"></script>
-
     @yield('head_scripts')
+    <script type="text/javascript" src="{{elixir('js/dashboard.js')}}"></script>
+    <script type="text/javascript" src="{{elixir('js/spotlite.js')}}"></script>
+
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
 <div class="wrapper">
