@@ -31,7 +31,7 @@
                                         {{$field}}
                                     </th>
                                     <td>
-                                        {{$value}}
+                                        {{dump($value)}}
                                     </td>
                                 </tr>
                             @endif
