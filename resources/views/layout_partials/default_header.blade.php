@@ -32,8 +32,7 @@
                             <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#"
-                                   onclick="if(typeof startTour != 'undefined' && $.isFunction(startTour)) startTour(); return false;">
+                            <li><a href="#" onclick="startSpotLiteTour(this); return false;">
                                     SpotLite Tour
                                 </a>
                             </li>

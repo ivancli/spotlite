@@ -115,14 +115,8 @@ elixir(function (mix) {
 
     mix.scripts([
         'node_modules/bootstrap-tour/build/js/bootstrap-tour.js',
-        'resources/assets/js/tour-with-sample-data.js'
-    ], "public/js/tour-with-sample-data.js", './');
-
-    mix.scripts([
-        'node_modules/bootstrap-tour/build/js/bootstrap-tour.js',
         'resources/assets/js/dashboard-tour.js'
     ], "public/js/dashboard-tour.js", './');
-
 
     mix.scripts([
         'node_modules/bootstrap-tour/build/js/bootstrap-tour.js',
@@ -160,9 +154,8 @@ elixir(function (mix) {
     /* versioning */
     mix.version([
         'public/css/main.css', 'public/css/tour.css', 'public/css/email.css', 'public/css/email_import.css', 'public/css/email_brand.css',
-        'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/tour-with-sample-data.js', 'public/js/product-tour.js',
-        'public/js/dashboard-tour.js', 'public/js/alert-tour.js', 'public/js/report-tour.js', 'public/js/dashboard.js', 'public/js/product.js',
-        'public/js/spotlite.js'
+        'public/js/main.js', 'public/js/auth.js', 'public/js/zendesk.js', 'public/js/product-tour.js', 'public/js/dashboard-tour.js',
+        'public/js/alert-tour.js', 'public/js/report-tour.js', 'public/js/dashboard.js', 'public/js/product.js', 'public/js/spotlite.js'
     ]);
     mix.copy('public/fonts', 'public/build/fonts');
     mix.copy('public/images', 'public/build/images');

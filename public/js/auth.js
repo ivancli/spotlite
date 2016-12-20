@@ -10416,6 +10416,19 @@ function strtotime(str) {
     return new Date(str).getTime() / 1000
 }
 
+$.urlParam = function (name, uri) {
+    if (typeof uri == 'undefined') {
+        uri = window.location.href;
+    }
+    // Thanks to R.B.: http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(uri);
+    if (results == null) {
+        return null;
+    } else {
+        return results[1] || 0;
+    }
+};
+
 /**
  * Replication of PHP datetime format
  *

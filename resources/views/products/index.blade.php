@@ -10,8 +10,8 @@
 
 @section('head_scripts')
     {{--TOUR--}}
-    @if(auth()->user()->categories()->count() > 0)
-        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
+    @if(\Request::has('tour') && \Request::get('tour') == 'dashboard')
+        <script type="text/javascript" src="{{elixir('js/dashboard-tour.js')}}"></script>
     @else
         <script type="text/javascript" src="{{elixir('js/product-tour.js')}}"></script>
     @endif

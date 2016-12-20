@@ -34,7 +34,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'preferences', 'apiSubscription', 'apiOnboardingSubscription', 'isStaff'
+        'preferences', 'apiSubscription', 'apiOnboardingSubscription', 'isStaff', 'firstAvailableDashboard'
     ];
 
     public function subscription()
@@ -153,6 +153,12 @@ class User extends Authenticatable
     public function getIsStaffAttribute()
     {
         return $this->hasRole(['super_admin', 'tier_1', 'tier_2']);
+    }
+
+    public function getFirstAvailableDashboardAttribute()
+    {
+        $dashboard = $this->dashboards()->orderBy('dashboard_order', 'asc')->first();
+        return $dashboard;
     }
 
 //----------------------------------------------------------------------------------------------------------------------

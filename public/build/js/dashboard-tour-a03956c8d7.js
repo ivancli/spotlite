@@ -1048,7 +1048,6 @@ $(function () {
                 title: "ADD YOUR PRODUCTS",
                 content: "If you want to add your own products to track, let's go to the PRODUCTS page and get started.",
                 placement: "right",
-                path: "/dashboard",
                 onShown: function () {
                     $(".tour-step-background").append(
                         $("<div>").css({
@@ -1069,16 +1068,19 @@ $(function () {
                             )
                         )
                     )
+                },
+                onShow: function () {
+                    if (window.location.href.indexOf("/dashboard") == -1) {
+                        window.location.href = user.firstAvailableDashboard.urls.show;
+                    }
                 }
             },
-
-
             {
                 element: ".add-category-container",
                 title: "ADD CATEGORY",
                 content: "Start with naming the Category. You can add multiple Categories. More Category examples: Running Shoes, Eye Liner or Books.",
                 placement: "top",
-                path: "/product"
+                path: "/product?tour=dashboard"
             },
             {
                 element: ".add-product-container:first",
@@ -1174,4 +1176,4 @@ function setTourVisited() {
 function tourNotYetVisit() {
     return user.preferences.ALL_TOUR_VISITED != 1 && user.preferences.PRODUCT_TOUR_VISITED != 1 && user.preferences.DASHBOARD_TOUR_VISITED != 1
 }
-//# sourceMappingURL=tour-with-sample-data.js.map
+//# sourceMappingURL=dashboard-tour.js.map

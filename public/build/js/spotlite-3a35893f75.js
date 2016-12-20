@@ -157,7 +157,10 @@ function saveSidebarStatus() {
 
 function tourOrCreditCard() {
     /*if bootstrap tour is available in this page*/
-    if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
+    if ($.urlParam('auto_tour') == 'true' && typeof tour != 'undefined') {
+        startTour();
+        setTourVisited();
+    } else if (typeof tour != 'undefined' && $.isFunction(tourNotYetVisit) && tourNotYetVisit()) {
         startTour();
         setTourVisited();
     } else if (typeof cc_expire_within_a_month != 'undefined' && cc_expire_within_a_month == true && getLocalStorageOrCookie("met-cc-expiry-msg-" + today + "-" + user.user_id) != 1) {
@@ -177,5 +180,17 @@ function showContactUs() {
             $("#modal-contact-us").remove();
         });
     });
+}
+
+
+function startSpotLiteTour(el) {
+    if (user.firstAvailableDashboard != null) {
+        window.location.href = user.firstAvailableDashboard.urls.show + "?auto_tour=true";
+    } else {
+        removeLocalStorageOrCookie('tour_current_step');
+        removeLocalStorageOrCookie('tour_end');
+        startTour();
+        setTourVisited();
+    }
 }
 //# sourceMappingURL=spotlite.js.map

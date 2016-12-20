@@ -9,7 +9,7 @@
 @section('head_scripts')
     {{--TOUR--}}
     @if(auth()->user()->categories()->count() > 0)
-        <script type="text/javascript" src="{{elixir('js/tour-with-sample-data.js')}}"></script>
+        <script type="text/javascript" src="{{elixir('js/dashboard-tour.js')}}"></script>
     @else
         <script type="text/javascript" src="{{elixir('js/alert-tour.js')}}"></script>
     @endif
