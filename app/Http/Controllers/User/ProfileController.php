@@ -139,7 +139,7 @@ class ProfileController extends Controller
             $industry = $input['industry'];
             if (isset($input['category']) && !empty($input['category'])) {
                 $selectedCategories = $input['category'];
-                foreach($selectedCategories as $selectedCategory){
+                foreach ($selectedCategories as $selectedCategory) {
                     $category = $sampleUser->categories()->where('category_name', $selectedCategory)->first();
                     if (!is_null($category)) {
                         $clonedCategory = $category->replicate();
@@ -159,11 +159,14 @@ class ProfileController extends Controller
                                 $clonedSite = $clonedSite->fresh(['crawler']);
                                 $clonedCrawlerData = $site->crawler->toArray();
                                 $clonedCrawlerData['site_id'] = $clonedSite->getKey();
+
+                                $clonedSitePreferenceData = $site->crawler->toArray();
+                                $clonedSitePreferenceData['site_id'] = $clonedSite->getKey();
+
                                 $clonedSite->crawler->update($clonedCrawlerData);
                                 $clonedSite->crawler->save();
-
-                                $clonedSitePreference = $site->preference->replicate();
-                                $clonedSitePreference->site_id = $clonedSite->getKey();
+                                $clonedSite->preference->update($clonedSitePreferenceData);
+                                $clonedSite->crawler->save();
 
                                 foreach ($site->historicalPrices as $historicalPrice) {
                                     $clonedHistoricalPrice = $historicalPrice->replicate();
