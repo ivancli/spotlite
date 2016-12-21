@@ -117,6 +117,7 @@ function getPricesEdit(el) {
                         "site_url": $txtSiteURL.val(),
                         "url": $(el).attr("data-url")
                     }, function (edit_site_response) {
+                        alertP("Updated Product Page URL", "This price will be updated soon. Note: If it doesn't come up in up to 48 hours, please contact us.");
                         if (edit_site_response.status == true) {
                             loadSingleSite(edit_site_response.site.urls.show, function (html) {
                                 toggleEditSiteURL($(el).closest(".site-wrapper").find("btn-edit-site").get(0));

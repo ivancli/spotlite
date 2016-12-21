@@ -95,6 +95,7 @@ function getPricesCreate(el) {
                         "site_url": $txtSiteURL.val(),
                         "product_id": productID
                     }, function (add_site_response) {
+                        alertP("Added Product Page URL", "This price will be updated soon. Note: If it doesn't come up in up to 48 hours, please contact us.");
                         if (add_site_response.status == true) {
                             loadSingleSite(add_site_response.site.urls.show, function (html) {
                                 $(el).closest(".tbl-site").find("tbody").prepend(html);
