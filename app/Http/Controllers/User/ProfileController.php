@@ -157,16 +157,18 @@ class ProfileController extends Controller
                                 $clonedSite->product_id = $clonedProduct->getKey();
                                 $clonedSite->save();
                                 $clonedSite = $clonedSite->fresh(['crawler']);
+
                                 $clonedCrawlerData = $site->crawler->toArray();
                                 $clonedCrawlerData['site_id'] = $clonedSite->getKey();
 
-                                $clonedSitePreferenceData = $site->crawler->toArray();
+                                $clonedSitePreferenceData = $site->preference->toArray();
                                 $clonedSitePreferenceData['site_id'] = $clonedSite->getKey();
 
                                 $clonedSite->crawler->update($clonedCrawlerData);
                                 $clonedSite->crawler->save();
+
                                 $clonedSite->preference->update($clonedSitePreferenceData);
-                                $clonedSite->crawler->save();
+                                $clonedSite->preference->save();
 
                                 foreach ($site->historicalPrices as $historicalPrice) {
                                     $clonedHistoricalPrice = $historicalPrice->replicate();
