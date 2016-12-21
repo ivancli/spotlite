@@ -162,6 +162,9 @@ class ProfileController extends Controller
                                 $clonedSite->crawler->update($clonedCrawlerData);
                                 $clonedSite->crawler->save();
 
+                                $clonedSitePreference = $site->preference->replicate();
+                                $clonedSitePreference->site_id = $clonedSite->getKey();
+
                                 foreach ($site->historicalPrices as $historicalPrice) {
                                     $clonedHistoricalPrice = $historicalPrice->replicate();
                                     $clonedHistoricalPrice->site_id = $clonedSite->getKey();
