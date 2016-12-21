@@ -10,6 +10,7 @@ use App\Models\Crawler;
 use App\Models\HistoricalPrice;
 use Illuminate\Support\Facades\Cache;
 use Invigor\Crawler\Contracts\CrawlerInterface;
+use Invigor\Crawler\Contracts\CurrencyFormatterInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
 
 /**
@@ -77,7 +78,7 @@ class CrawlerRepository implements CrawlerContract
         return $crawler;
     }
 
-    public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass)
+    public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass, CurrencyFormatterInterface $currencyFormatterClass = null)
     {
         /*TODO check once again to prevent duplication*/
 
@@ -111,7 +112,7 @@ class CrawlerRepository implements CrawlerContract
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
             if ($xpath != null || (!is_null($crawler->crawler_class) || !is_null($crawler->parser_class))) {
-                $result = $this->parserPrice($xpath, $content, $parserClass);
+                $result = $this->parserPrice($xpath, $content, $parserClass, $currencyFormatterClass);
                 if (isset($result['status']) && $result['status'] == true) {
                     $price = $result['price'];
                     $historicalPrice = HistoricalPrice::create(array(
@@ -167,7 +168,7 @@ class CrawlerRepository implements CrawlerContract
         return $html;
     }
 
-    public function parserPrice($xpath, $content, ParserInterface $parserClass)
+    public function parserPrice($xpath, $content, ParserInterface $parserClass, CurrencyFormatterInterface $currencyFormatterClass = null)
     {
         $options = array(
             "xpath" => $xpath,
@@ -182,6 +183,12 @@ class CrawlerRepository implements CrawlerContract
             foreach (config("constants.price_describers") as $priceDescriber) {
                 $price = str_replace($priceDescriber, '', $price);
             }
+            if (!is_null($currencyFormatterClass)) {
+                $currencyFormatterClass->setPriceText($price);
+                $currencyFormatterClass->formatPriceText();
+                $price = $currencyFormatterClass->getPriceText();
+            }
+
             $price = floatval($price);
             if ($price > 0) {
                 /*correct price*/

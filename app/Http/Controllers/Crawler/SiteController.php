@@ -21,6 +21,7 @@ use App\Validators\Crawler\Site\StoreValidator;
 use App\Validators\Crawler\Site\UpdateValidator;
 use Illuminate\Http\Request;
 use Invigor\Crawler\Contracts\CrawlerInterface;
+use Invigor\Crawler\Contracts\CurrencyFormatterInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
 
 class SiteController extends Controller
@@ -120,6 +121,13 @@ class SiteController extends Controller
         if (!is_null($site->crawler->parser_class)) {
             $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $site->crawler->parser_class);
         }
+        if (!is_null($site->crawler->currency_formatter_class)) {
+            $currencyFormatterClass = app()->make('Invigor\Crawler\Repositories\CurrencyFormatters\\' . $site->crawler->currency_formatter_class);
+        } else {
+            $currencyFormatterClass = null;
+        }
+
+
         $options = array(
             "url" => $site->site_url,
         );
@@ -143,7 +151,7 @@ class SiteController extends Controller
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
 
             if ($xpath != null || (!is_null($site->crawler->crawler_class) || !is_null($site->crawler->parser_class))) {
-                $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass);
+                $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass, $currencyFormatterClass);
 
                 if (isset($result['status']) && $result['status'] == true) {
                     $price = $result['price'];

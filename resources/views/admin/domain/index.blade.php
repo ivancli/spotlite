@@ -18,6 +18,7 @@
                             <th>Domain xPath</th>
                             <th>Crawler Class</th>
                             <th>Parser Class</th>
+                            <th>Currency Formatter Class</th>
                             <th width="70"></th>
                         </tr>
                         </thead>
@@ -139,6 +140,27 @@
                         }
                     },
                     {
+                        "name": "currency_formatter_class",
+                        "data": function (data) {
+                            return $("<div>").append(
+                                    $("<div>").css("padding-right", "20px").append(
+                                            $("<span>").text(data.currency_formatter_class).addClass("lbl-domain-currency-formatter-class"),
+                                            $("<input>").attr({
+                                                "type": "text",
+                                                "value": data.currency_formatter_class
+                                            }).hide().addClass("txt-domain-currency-formatter-class form-control input-sm"),
+                                            $("<a>").attr({
+                                                "href": "#",
+                                                "onclick": "toggleCurrencyFormatterClassInput(this); return false;",
+                                                "data-url": data.urls.currency_formatter_class_update
+                                            }).append(
+                                                    $("<i>").addClass("fa fa-pencil float-right text-muted").css("margin-right", "-20px")
+                                            )
+                                    )
+                            ).html();
+                        }
+                    },
+                    {
                         "class": "text-center",
                         "sortable": false,
                         "data": function (data) {
@@ -221,6 +243,23 @@
             }
         }
 
+        function toggleCurrencyFormatterClassInput(el) {
+            var $txt = $(el).closest("tr").find(".txt-domain-currency-formatter-class");
+            var $lbl = $(el).closest("tr").find(".lbl-domain-currency-formatter-class");
+            if ($lbl.is(":visible")) {
+                $lbl.hide();
+                $txt.show();
+            } else {
+                /* TODO save xpath */
+                updateCurrencyFormatterClass($(el).attr("data-url"), {"currency_formatter_class": $txt.val()}, function (response) {
+                    $lbl.show().text(response.domain.currency_formatter_class);
+                    $txt.hide().val(response.domain.currency_formatter_class);
+                }, function (response) {
+
+                });
+            }
+        }
+
         function updateCrawlerClass(url, data, successCallback, errorCallback) {
             showLoading();
             $.ajax({
@@ -245,7 +284,7 @@
                             });
                             alertP("Oops! Something went wrong.", errorMessage);
                         } else {
-                            alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                            alertP("Oops! Something went wrong.", "unable to update crawler class, please try again later.");
                         }
                     }
                 },
@@ -280,7 +319,42 @@
                             });
                             alertP("Oops! Something went wrong.", errorMessage);
                         } else {
-                            alertP("Oops! Something went wrong.", "unable to update xpath, please try again later.");
+                            alertP("Oops! Something went wrong.", "unable to update parser class, please try again later.");
+                        }
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status)
+                }
+            })
+        }
+
+        function updateCurrencyFormatterClass(url, data, successCallback, errorCallback) {
+            showLoading();
+            $.ajax({
+                "url": url,
+                "method": "put",
+                "data": data,
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoading();
+                    if (response.status == true) {
+                        if ($.isFunction(successCallback)) {
+                            successCallback(response);
+                        }
+                    } else {
+                        if ($.isFunction(errorCallback)) {
+                            errorCallback(response);
+                        }
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP("Oops! Something went wrong.", "unable to update currency formatter class, please try again later.");
                         }
                     }
                 },

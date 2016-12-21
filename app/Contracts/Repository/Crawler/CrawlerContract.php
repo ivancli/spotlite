@@ -3,6 +3,7 @@ namespace App\Contracts\Repository\Crawler;
 
 use App\Models\Crawler;
 use Invigor\Crawler\Contracts\CrawlerInterface;
+use Invigor\Crawler\Contracts\CurrencyFormatterInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
 
 /**
@@ -27,7 +28,7 @@ interface CrawlerContract
 
     public function setCrawlerRunning($crawler_id);
 
-    public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass);
+    public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass, CurrencyFormatterInterface $currencyFormatterClass = null);
 
     public function crawlPage($option, CrawlerInterface $crawlerClass);
 

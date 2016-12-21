@@ -18,6 +18,10 @@
                     {!! Form::label('parser_class', 'Parser Class', array('class' => 'control-label')) !!}
                     {!! Form::text('parser_class', null, array('class' => 'form-control', 'id'=>'txt-parser-class', 'placeholder'=>'XPathParser')) !!}
                 </div>
+                <div class="form-group">
+                    {!! Form::label('currency_formatter_class', 'Currency Formatter Class', array('class' => 'control-label')) !!}
+                    {!! Form::text('currency_formatter_class', null, array('class' => 'form-control', 'id'=>'txt-currency-formatter-class', 'placeholder'=>'Currency Formatter, empty by default')) !!}
+                </div>
                 {!! Form::close() !!}
 
             </div>

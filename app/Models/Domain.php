@@ -17,7 +17,7 @@ class Domain extends Model
 {
     protected $primaryKey = "domain_id";
     protected $fillable = [
-        "domain_url", "domain_name", "cookie_id", "crawler_class", "parser_class"
+        "domain_url", "domain_name", "cookie_id", "crawler_class", "parser_class", "currency_formatter_class",
     ];
     protected $appends = ['urls'];
     public $timestamps = false;
@@ -31,6 +31,7 @@ class Domain extends Model
             "xpath_edit" => route("admin.domain.xpath.edit", $this->getKey()),
             "crawler_class_update" => route("admin.domain.classes.update", $this->getKey()),
             "parser_class_update" => route("admin.domain.classes.update", $this->getKey()),
+            "currency_formatter_class_update" => route("admin.domain.classes.update", $this->getKey()),
         );
     }
 

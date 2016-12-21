@@ -76,8 +76,28 @@ class CrawlSite extends Job implements ShouldQueue
         }
         $parserClassFullPath = 'Invigor\Crawler\Repositories\Parsers\\' . $parser_class;
 
+        $currency_formatter_class = null;
+        if (!is_null($this->crawler->currency_formatter_class)) {
+            $currency_formatter_class = $this->crawler->currency_formatter_class;
+        } else {
+            /*TODO enable domain in the second phase*/
+            $domain = Domain::where("domain_url", $this->crawler->site->domain)->first();
+            if (!is_null($domain) && !is_null($domain->currency_formatter_class)) {
+                $currency_formatter_class = $domain->currency_formatter_class;
+            }
+        }
+
+
         $crawlerClass = app()->make($crawlerClassFullPath);
         $parserClass = app()->make($parserClassFullPath);
-        $crawler->crawl($this->crawler, $crawlerClass, $parserClass);
+
+        $currencyFormatterClass = null;
+        if (!is_null($currency_formatter_class)) {
+            $currencyFormatterClassFullPath = 'Invigor\Crawler\Repositories\CurrencyFormatters\\' . $currency_formatter_class;
+            $currencyFormatterClass = app()->make($currencyFormatterClassFullPath);
+        }
+
+
+        $crawler->crawl($this->crawler, $crawlerClass, $parserClass, $currencyFormatterClass);
     }
 }

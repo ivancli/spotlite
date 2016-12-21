@@ -17,7 +17,7 @@ class Crawler extends Model
 {
     protected $primaryKey = "crawler_id";
     protected $fillable = [
-        "crawler_class", "parser_class", "status", "site_id", "cookie_id", "active_at"
+        "crawler_class", "parser_class", "currency_formatter_class", "status", "site_id", "cookie_id", "active_at"
     ];
     public $timestamps = false;
 

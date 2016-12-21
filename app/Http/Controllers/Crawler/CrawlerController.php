@@ -35,12 +35,16 @@ class CrawlerController extends Controller
     {
         /*TODO validation here*/
         $input = $request->all();
-        if(!$request->has('crawler_class') || strlen($input['crawler_class']) == 0){
+        if (!$request->has('crawler_class') || strlen($input['crawler_class']) == 0) {
             $input['crawler_class'] = null;
         }
 
-        if(!$request->has('parser_class') || strlen($input['parser_class']) == 0){
+        if (!$request->has('parser_class') || strlen($input['parser_class']) == 0) {
             $input['parser_class'] = null;
+        }
+
+        if (!$request->has('currency_formatter_class') || strlen($input['currency_formatter_class']) == 0) {
+            $input['currency_formatter_class'] = null;
         }
 
         $crawler = $this->crawler->getCrawler($crawler_id);
