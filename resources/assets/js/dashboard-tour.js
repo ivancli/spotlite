@@ -52,7 +52,7 @@ $(function () {
                 element: ".add-chart-to-dashboard-placeholder",
                 title: "ADD CHART TO DASHBOARD",
                 content: "You can choose your own Chart characteristic and add it to the Dashboard",
-                placement: "right"
+                placement: "top"
             },
             {
                 element: ".lnk-product",

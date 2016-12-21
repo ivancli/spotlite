@@ -43,6 +43,7 @@ return [
         "7.50kb",
         "15.00kg",
         "A",
+        "R",
         "Special Price:",
         "Special Price",
     ]
