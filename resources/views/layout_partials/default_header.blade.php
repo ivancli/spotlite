@@ -37,13 +37,14 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682247-Video-Tutorials">Video
+                                <a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682247-Video-Tutorials"
+                                   target="_blank">Video
                                     Tutorials</a></li>
                             <li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ"
                                    target="_blank">FAQ</a></li>
                             <li>
-                                <a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682187-Step-by-Step-Guide">Step
-                                    by Step Guide</a>
+                                <a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682187-Step-by-Step-Guide"
+                                   target="_blank">Step by Step Guide</a>
                             </li>
                             <li><a href="#" onclick="showContactUs(); return false;">Contact us</a></li>
                         </ul>
