@@ -146,7 +146,6 @@ class SiteController extends Controller
                 /*TODO implement if needed*/
             }
         }
-
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
 
