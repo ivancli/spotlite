@@ -32,6 +32,7 @@ return [
         "AU",
         "US",
         "£",
+        "&#163;",
         "Our Price :",
         "6pk",
         "3pk",
