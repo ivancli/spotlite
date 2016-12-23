@@ -24,6 +24,8 @@ return [
     ],
 
     "price_describers" => [
+        "\n",
+        "\t",
         ",",
         "now",
         "$",

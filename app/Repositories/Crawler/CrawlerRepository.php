@@ -185,6 +185,7 @@ class CrawlerRepository implements CrawlerContract
                 $currencyFormatterClass->formatPriceText();
                 $price = $currencyFormatterClass->getPriceText();
             }
+            $price = preg_replace('@[^0-9\.]+@i', '', $price);
             foreach (config("constants.price_describers") as $priceDescriber) {
                 $price = str_replace($priceDescriber, '', $price);
             }
