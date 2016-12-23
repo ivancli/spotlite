@@ -172,7 +172,7 @@ function tourOrCreditCard() {
 
 function showContactUs() {
     showLoading();
-    $.get('contact_us/form', function (html) {
+    $.get('/contact_us/form', function (html) {
         hideLoading();
         var $modal = $(html);
         $modal.modal();
