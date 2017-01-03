@@ -925,7 +925,7 @@
                                              align="center">
                                             <img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;"
                                                  alt="" width="250"
-                                                 src="http://i3.cmail20.com/ei/i/B1/0BA/267/164316/csfinal/SpotLiteHelpsYousmaller6.png">
+                                                 src="http://i3.cmail19.com/ei/i/B1/0BA/267/091321/csfinal/HELP3.png">
                                         </div>
                                     </div>
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
