@@ -154,7 +154,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddCategoryDate()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if ($user->isStaff && !$user->hasRole("tier_2")) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
