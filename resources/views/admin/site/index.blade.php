@@ -19,6 +19,7 @@
                             <option value="fail_xpath">Incorrect xPath</option>
                             <option value="null_xpath">No xPath</option>
                             <option value="waiting">Waiting</option>
+                            <option value="no_price">No Price</option>
                             <option value="sample">Sample</option>
                         </select>
                     </div>
@@ -256,6 +257,18 @@
                                         "data-toggle": "tooltip"
                                     });
                                     break;
+                                case "no_price":
+                                    $text.append(
+                                            $("<i>").addClass("text-danger fa fa-question"),
+                                            "&nbsp;",
+                                            $("<i>").addClass("text-warning fa fa-money"),
+                                            "&nbsp;",
+                                            $("<i>").addClass("text-danger fa fa-question")
+                                    ).attr({
+                                        "title": "Out of stock or price is not available in this page",
+                                        "data-toggle": "tooltip"
+                                    });
+                                    break;
                                 default:
                             }
                             var $output = $("<div>").append(
@@ -307,6 +320,13 @@
                                                                 "onclick": "setSiteStatus(this, 'waiting'); return false;",
                                                                 "data-url": data.urls.admin_status_update
                                                             }).text("Waiting")
+                                                    ),
+                                                    $("<li>").append(
+                                                            $("<a>").attr({
+                                                                "href": "#",
+                                                                "onclick": "setSiteStatus(this, 'no_price'); return false;",
+                                                                "data-url": data.urls.admin_status_update
+                                                            }).text("No Price")
                                                     )
                                             )
                                     ),

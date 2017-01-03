@@ -21,6 +21,7 @@ class CreateSitesTable extends Migration
                 "null_xpath",
                 "waiting",
                 "invalid",
+                "no_price",
                 "sample",
             ))->default("waiting");
             $table->decimal('recent_price', 20, 4)->nullable();

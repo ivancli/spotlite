@@ -132,7 +132,6 @@ class SiteController extends Controller
             "url" => $site->site_url,
         );
         $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
-
         if (is_null($content) || strlen($content) == 0) {
             $status = false;
             $errors = array("HTML is blank");

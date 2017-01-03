@@ -73,7 +73,7 @@ class ReportTaskRepository implements ReportTaskContract
     {
         event(new ReportCreating($reportTask));
         $category = $reportTask->reportable;
-
+        if()
         $data = $category;
         $fileName = str_replace(' ', '_', $category->category_name) . "_category_report";
         $excel = Excel::create($fileName, function ($excel) use ($category, $data, $fileName) {
