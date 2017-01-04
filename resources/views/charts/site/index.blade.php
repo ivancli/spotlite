@@ -4,6 +4,17 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
+                <div class="btn-group" style="float: right; margin-top: -4px;margin-right: 5px;">
+                    <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#" style="font-size: 15px; opacity: 0.5;">
+                        <i class="fa fa-download"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" onclick="exportChart('png'); return false;">Download PNG</a></li>
+                        <li><a href="#" onclick="exportChart('jpeg'); return false;">Download JPEG</a></li>
+                        <li><a href="#" onclick="exportChart('pdf'); return false;">Download PDF</a></li>
+                        <li><a href="#" onclick="exportChart('svg'); return false;">Download SVG</a></li>
+                    </ul>
+                </div>
                 <h4 class="modal-title">{{parse_url($site->site_url)['host']}}</h4>
             </div>
             <div class="modal-body" style="background-color: #f5f5f5;">
@@ -251,7 +262,10 @@
                 tooltip: {
                     valuePrefix: '$'
                 },
-                series: []
+                series: [],
+                exporting:{
+                    enabled: false
+                }
             });
         }
 
@@ -389,7 +403,6 @@
 
                         removeSeries();
 
-                        console.info("called");
                         $.each(response.data, function (siteId, site) {
                             console.info(site);
                             siteChart.addSeries({
@@ -424,6 +437,12 @@
                 $(".div-add-to-dashboard").slideUp();
                 $(".submit-view-chart").slideDown();
             }
+        }
+
+        function exportChart(type) {
+            siteChart.exportChart({
+                type: type
+            });
         }
     </script>
 </div>
