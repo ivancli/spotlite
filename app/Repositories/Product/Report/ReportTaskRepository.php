@@ -73,39 +73,42 @@ class ReportTaskRepository implements ReportTaskContract
     {
         event(new ReportCreating($reportTask));
         $category = $reportTask->reportable;
-        if()
-        $data = $category;
-        $fileName = str_replace(' ', '_', $category->category_name) . "_category_report";
-        $excel = Excel::create($fileName, function ($excel) use ($category, $data, $fileName) {
-            $excel->sheet($category->category_name, function ($sheet) use ($data) {
-                $sheet->loadview('products.report.excel.category')->with(compact(['data']));
-                $sheet->setColumnFormat(array(
-                    'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
-                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
-                ));
-                $sheet->setWidth('A', 30);
-                $sheet->setWidth('B', 30);
-                $sheet->setWidth('C', 30);
-                $sheet->setWidth('D', 20);
-                $sheet->setWidth('E', 20);
-                $sheet->setWidth('F', 20);
-                $sheet->setWidth('G', 20);
+        if (!is_null($category)) {
+            $data = $category;
+            $fileName = str_replace(' ', '_', $category->category_name) . "_category_report";
+            $excel = Excel::create($fileName, function ($excel) use ($category, $data, $fileName) {
+                $excel->sheet($category->category_name, function ($sheet) use ($data) {
+                    $sheet->loadview('products.report.excel.category')->with(compact(['data']));
+                    $sheet->setColumnFormat(array(
+                        'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                        'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                        'F' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+                        'G' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
+                    ));
+                    $sheet->setWidth('A', 30);
+                    $sheet->setWidth('B', 30);
+                    $sheet->setWidth('C', 30);
+                    $sheet->setWidth('D', 20);
+                    $sheet->setWidth('E', 20);
+                    $sheet->setWidth('F', 20);
+                    $sheet->setWidth('G', 20);
+                });
             });
-        });
-        $excelFileContent = $excel->string($reportTask->file_type);
-        $binaryExcelFileContent = base64_encode($excelFileContent);
-        $report = $this->reportRepo->storeReport(array(
-            "report_task_id" => $reportTask->getKey(),
-            "report_owner_type" => "category",
-            "report_owner_id" => $category->getKey(),
-            "content" => $binaryExcelFileContent,
-            "file_name" => $fileName,
-            "file_type" => $reportTask->file_type
-        ));
-        event(new ReportCreated($report));
-        return $report;
+            $excelFileContent = $excel->string($reportTask->file_type);
+            $binaryExcelFileContent = base64_encode($excelFileContent);
+            $report = $this->reportRepo->storeReport(array(
+                "report_task_id" => $reportTask->getKey(),
+                "report_owner_type" => "category",
+                "report_owner_id" => $category->getKey(),
+                "content" => $binaryExcelFileContent,
+                "file_name" => $fileName,
+                "file_type" => $reportTask->file_type
+            ));
+            event(new ReportCreated($report));
+            return $report;
+        } else {
+            return null;
+        }
     }
 
     public function generateProductReport(ReportTask $reportTask)
