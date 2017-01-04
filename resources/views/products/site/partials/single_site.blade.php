@@ -65,7 +65,7 @@
     </td>
     <td>
         <div class="text-right">
-            @if(!is_null($site->previousPrice))
+            @if(!is_null($site->previousPrice) && !is_null($site->diffPrice) && round($site->diffPrice, 2, PHP_ROUND_HALF_UP) != 0)
                 ${{number_format($site->previousPrice->price, 2, '.', ',')}}
             @else
                 <div class="p-r-30">
