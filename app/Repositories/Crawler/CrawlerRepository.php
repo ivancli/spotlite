@@ -139,7 +139,10 @@ class CrawlerRepository implements CrawlerContract
                 } else {
                     $status = false;
                     if (isset($result['error'])) {
-                        if ($result['error'] == "incorrect price") {
+                        if ($site->status == "no_price") {
+                            $site->statusNoPrice();
+                            continue;
+                        } elseif ($result['error'] == "incorrect price") {
                             $site->statusFailPrice();
                             continue;
                         } elseif ($result['error'] == "incorrect xpath") {

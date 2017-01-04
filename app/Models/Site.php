@@ -122,6 +122,11 @@ class Site extends Model
         $this->save();
     }
 
+    public function statusNoPrice()
+    {
+        $this->status = "no_price";
+        $this->save();
+    }
 
     public function statusFailHtml()
     {
