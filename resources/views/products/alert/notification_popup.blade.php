@@ -66,7 +66,7 @@
             <div class="modal-body">
                 <div class="warnning-message-container text-danger m-b-10" style="display: none;">
                     <i class="fa fa-info-circle"></i> &nbsp; For this alert to be set up, you need to
-                    <a href="#" class="text-danger" style="text-decoration: underline">nominate your site URL</a>
+                    <a href="https://spotlitehelp.zendesk.com/hc/en-us/articles/235847887-How-do-I-nominate-My-Site-URL-" class="text-danger" style="text-decoration: underline">nominate your site URL</a>
                 </div>
 
                 <div class="basic-notifications m-b-20"
