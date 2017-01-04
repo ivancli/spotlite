@@ -192,7 +192,7 @@
              */
             siteDrake{{$product->getKey()}} = dragula([$("#product-{{$product->getKey()}} > table > tbody").get(0)], {
                 moves: function (el, container, handle) {
-                    return !$(handle).hasClass("add-site-row") && $(handle).closest(".add-site-row").length == 0;
+                    return !$(handle).hasClass("add-site-row") && $(handle).closest(".add-site-row").length == 0 && !$(handle).hasClass("empty-message-row") && $(handle).closest(".empty-message-row").length == 0;
                 }
             }).on('drop', function (el, target, source, sibling) {
                 updateSiteOrder({{$product->getKey()}});
