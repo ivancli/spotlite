@@ -531,12 +531,12 @@
 
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
                                         <div style="font-size: 12px;font-style: normal;font-weight: normal;Margin-bottom: 20px;" align="center">
-                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://spotlite.cmail19.com/t/n/i-i-uredll-l-j-r-r/"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i2.cmail19.com/ei/i/B1/0BA/267/091321/csfinal/Reports.png"></a>
+                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://login.spotlite.com.au/report"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i2.cmail19.com/ei/i/B1/0BA/267/091321/csfinal/Reports.png"></a>
                                         </div>
                                     </div>
 
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
-                                        <h3 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #0f0c0f;font-size: 16px;line-height: 24px;font-family:roboto,tahoma,sans-serif;"><span class="font-roboto">Do you want to change your report preferences? Click here:</span></h3><p class="size-18" style="Margin-top: 12px;Margin-bottom: 0;font-size: 17px;line-height: 26px;"lang="x-size-18"><strong><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://spotlite.cmail19.com/t/n/i-i-uredll-l-t-r-r/">Change Preferences</a></strong></p>
+                                        <h3 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #0f0c0f;font-size: 16px;line-height: 24px;font-family:roboto,tahoma,sans-serif;"><span class="font-roboto">Do you want to change your report preferences? Click here:</span></h3><p class="size-18" style="Margin-top: 12px;Margin-bottom: 0;font-size: 17px;line-height: 26px;"lang="x-size-18"><strong><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://login.spotlite.com.au/report">Change Preferences</a></strong></p>
                                     </div>
 
                                 </td>

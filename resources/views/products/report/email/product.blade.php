@@ -886,9 +886,11 @@
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
                                         <div style="font-size: 12px;font-style: normal;font-weight: normal;Margin-bottom: 20px;"
                                              align="center">
-                                            <img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;"
-                                                 alt="" width="250"
-                                                 src="http://i2.cmail20.com/ei/i/B1/0BA/267/164316/csfinal/Reports.png">
+                                            <a href="http://login.spotlite.com.au/report">
+                                                <img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;"
+                                                     alt="" width="250"
+                                                     src="http://i2.cmail20.com/ei/i/B1/0BA/267/164316/csfinal/Reports.png">
+                                            </a>
                                         </div>
                                     </div>
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">

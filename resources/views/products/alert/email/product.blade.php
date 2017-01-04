@@ -546,7 +546,7 @@
 
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
                                         <div style="font-size: 12px;font-style: normal;font-weight: normal;Margin-bottom: 20px;" align="center">
-                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://spotlite.cmail19.com/t/n/i-i-uldjjld-l-j-r-r/"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i2.cmail19.com/ei/i/15/907/B40/131748/csfinal/Alerts.png"></a>
+                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://login.spotlite.com.au/alert"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i2.cmail19.com/ei/i/15/907/B40/131748/csfinal/Alerts.png"></a>
                                         </div>
                                     </div>
 
@@ -566,7 +566,7 @@
 
                                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
                                         <div style="font-size: 12px;font-style: normal;font-weight: normal;Margin-bottom: 20px;" align="center">
-                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="http://spotlite.cmail19.com/t/n/i-i-uldjjld-l-i-r-r/"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i3.cmail19.com/ei/i/15/907/B40/131748/csfinal/HELP31.png"></a>
+                                            <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #7217bd;" href="https://spotlitehelp.zendesk.com/hc/en-us"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="250" src="http://i3.cmail19.com/ei/i/15/907/B40/131748/csfinal/HELP31.png"></a>
                                         </div>
                                     </div>
 
