@@ -831,6 +831,12 @@ h3.box-title {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.sidebar-menu > li {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .sidebar-menu li.treeview > a > .fa-caret-down,
 .sidebar-menu li.treeview > a > .pull-right-container > .fa-caret-down {
     transform: rotate(-360deg);

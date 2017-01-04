@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-d3870f95fa.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-8653b68fde.css */
 @media print {
   *,
   *:before,
@@ -15967,6 +15967,12 @@ h3.box-title {
     -webkit-font-smoothing: antialiased;
     padding-right: 5px;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.sidebar-menu > li {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .sidebar-menu li.treeview > a > .fa-caret-down,
