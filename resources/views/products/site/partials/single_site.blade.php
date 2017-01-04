@@ -77,7 +77,7 @@
     <td class="hidden-xs">
         <div class="text-right">
             @if(!is_null($site->diffPrice))
-                @if($site->diffPrice != 0)
+                @if(floatval($site->diffPrice) != 0)
                     <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
                     ${{number_format(abs($site->diffPrice), 2, '.', ',')}}
                 @else

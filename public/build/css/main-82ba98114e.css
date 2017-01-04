@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-8653b68fde.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-82ba98114e.css */
 @media print {
   *,
   *:before,
@@ -15969,7 +15969,7 @@ h3.box-title {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.sidebar-menu > li {
+.sidebar-menu > li > a {
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;
     overflow: hidden;
