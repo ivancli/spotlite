@@ -93,7 +93,7 @@
         </div>
     </td>
     <td class="hidden-xs" style="padding-left: 20px;">
-        @if(!is_null($site->priceLastChangedAt))
+        @if(!is_null($site->previousPrice) && !is_null($site->diffPrice) && round($site->diffPrice, 2, PHP_ROUND_HALF_UP) != 0 && !is_null($site->priceLastChangedAt))
             {{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->priceLastChangedAt))}}
 
         @else
