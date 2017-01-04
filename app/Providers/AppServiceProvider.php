@@ -125,6 +125,12 @@ class AppServiceProvider extends ServiceProvider
             foreach ($category->products as $product) {
                 $product->delete();
             }
+            if (!is_null($category->alert)) {
+                $category->alert->delete();
+            }
+            if (!is_null($category->reportTask)) {
+                $category->reportTask->delete();
+            }
             /*DELETE RELATED DASHBOARD WIDGETS*/
             $dashboardWidgetPreferences = DashboardWidgetPreference::where("element", "category_id")->where("value", $category->getKey())->get();
             foreach ($dashboardWidgetPreferences as $dashboardWidgetPreference) {
@@ -166,6 +172,12 @@ class AppServiceProvider extends ServiceProvider
             foreach ($product->sites as $site) {
                 $site->delete();
             }
+            if (!is_null($product->alert)) {
+                $product->alert->delete();
+            }
+            if (!is_null($product->reportTask)) {
+                $product->reportTask->delete();
+            }
 
             /*DELETE RELATED DASHBOARD WIDGETS*/
             $dashboardWidgetPreferences = DashboardWidgetPreference::where("element", "product_id")->where("value", $product->getKey())->get();
@@ -186,6 +198,10 @@ class AppServiceProvider extends ServiceProvider
 
             foreach ($site->historicalPrices as $price) {
                 $price->delete();
+            }
+
+            if (!is_null($site->alert)) {
+                $site->alert->delete();
             }
 
             /*DELETE RELATED DASHBOARD WIDGETS*/

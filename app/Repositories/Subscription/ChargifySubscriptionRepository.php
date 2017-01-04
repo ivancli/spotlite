@@ -91,27 +91,30 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         $creditCard = $apiSubscription->paymentProfile();
         $expiryYear = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_YEAR');
         $expiryMonth = SubscriptionDetail::getDetail($subscription->getKey(), 'CREDIT_CARD_EXPIRY_MONTH');
-
-        if (is_null($expiryYear) || is_null($expiryMonth)) {
-            if (is_null($expiryYear)) {
-                $expiryYear = SubscriptionDetail::create(array(
-                    "element" => "CREDIT_CARD_EXPIRY_YEAR",
-                    "value" => $creditCard->expiration_year,
-                    "subscription_id" => $subscription->getKey()
-                ));
-            }
-            if (is_null($expiryMonth)) {
-                $expiryMonth = SubscriptionDetail::create(array(
-                    "element" => "CREDIT_CARD_EXPIRY_MONTH",
-                    "value" => $creditCard->expiration_month,
-                    "subscription_id" => $subscription->getKey()
-                ));
+        if (!is_null($creditCard)) {
+            if (is_null($expiryYear) || is_null($expiryMonth)) {
+                if (is_null($expiryYear)) {
+                    $expiryYear = SubscriptionDetail::create(array(
+                        "element" => "CREDIT_CARD_EXPIRY_YEAR",
+                        "value" => $creditCard->expiration_year,
+                        "subscription_id" => $subscription->getKey()
+                    ));
+                }
+                if (is_null($expiryMonth)) {
+                    $expiryMonth = SubscriptionDetail::create(array(
+                        "element" => "CREDIT_CARD_EXPIRY_MONTH",
+                        "value" => $creditCard->expiration_month,
+                        "subscription_id" => $subscription->getKey()
+                    ));
+                }
+            } else {
+                $expiryYear->value = $creditCard->expiration_year;
+                $expiryYear->save();
+                $expiryMonth->value = $creditCard->expiration_month;
+                $expiryMonth->save();
             }
         } else {
-            $expiryYear->value = $creditCard->expiration_year;
-            $expiryYear->save();
-            $expiryMonth->value = $creditCard->expiration_month;
-            $expiryMonth->save();
+            return false;
         }
 
         return compact(['expiryYear', 'expiryMonth']);

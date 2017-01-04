@@ -34,6 +34,7 @@ class SendReport extends Job implements ShouldQueue
     /**
      * Execute the job.
      * @param ReportTaskContract $reportTaskRepo
+     * @return bool
      */
     public function handle(ReportTaskContract $reportTaskRepo)
     {
@@ -44,6 +45,9 @@ class SendReport extends Job implements ShouldQueue
             case "category":
                 $report = $reportTaskRepo->generateCategoryReport($this->reportTask);
                 $category = $this->reportTask->reportable;
+                if (!is_null($category)) {
+                    return false;
+                }
                 $fileName = date("Y-m-d") . " SpotLite Category Report for {$category->category_name}" . "." . $this->reportTask->file_type;
                 $subject = "{$category->category_name} Category Report for " . date("Y-m-d");
                 $view = 'products.report.email.category';
@@ -51,6 +55,9 @@ class SendReport extends Job implements ShouldQueue
             case "product":
                 $report = $reportTaskRepo->generateProductReport($this->reportTask);
                 $product = $this->reportTask->reportable;
+                if (!is_null($product)) {
+                    return false;
+                }
                 $subject = "{$product->product_name} Product Report for " . date("Y-m-d");
                 $fileName = date("Y-m-d") . " SpotLite Product Report for {$product->product_name}" . "." . $this->reportTask->file_type;
                 $view = 'products.report.email.product';
