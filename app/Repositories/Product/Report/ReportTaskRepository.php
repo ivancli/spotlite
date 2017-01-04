@@ -116,8 +116,10 @@ class ReportTaskRepository implements ReportTaskContract
         event(new ReportCreating($reportTask));
         $product = $reportTask->reportable;
 
-
         $data = $product;
+        if (is_null($product)) {
+            return false;
+        }
         $fileName = str_replace(' ', '_', $product->product_name) . "_product_report";
         $excel = Excel::create($fileName, function ($excel) use ($data, $fileName) {
             $excel->sheet("sheet_1", function ($sheet) use ($data) {
