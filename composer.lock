@@ -614,7 +614,7 @@
         },
         {
             "name": "invigor/crawler",
-            "version": "1.1.11",
+            "version": "1.1.12",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git",
