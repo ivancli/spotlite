@@ -11,12 +11,14 @@ use App\Events\User\Profile\ProfileUpdating;
 use App\Events\User\Profile\ProfileViewed;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
+use App\Models\HistoricalPrice;
 use App\Models\User;
 use App\Validators\User\Profile\InitUpdateValidator;
 use App\Validators\User\Profile\UpdateValidator;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
@@ -170,14 +172,21 @@ class ProfileController extends Controller
                                 $clonedSite->preference->update($clonedSitePreferenceData);
                                 $clonedSite->preference->save();
 
-                                foreach ($site->historicalPrices as $historicalPrice) {
-                                    $clonedHistoricalPrice = $historicalPrice->replicate();
-                                    $clonedHistoricalPrice->site_id = $clonedSite->getKey();
-                                    $clonedHistoricalPrice->crawler_id = $clonedSite->crawler->getKey();
-                                    $clonedHistoricalPrice->save();
-                                    $clonedHistoricalPrice->created_at = $historicalPrice->created_at;
-                                    $clonedHistoricalPrice->save();
+                                $clonedHistoricalPrices = DB::select("
+SELECT hp1.* FROM historical_prices hp1 JOIN 
+(SELECT DATE_FORMAT(created_at, '%Y%m%d') date_date, MAX(price_id) price_id, MAX(created_at) max_date, site_id FROM historical_prices GROUP BY date_date, site_id) hp2
+ON(hp1.price_id=hp2.price_id)
+WHERE hp1.site_id=:site_id AND created_at >= NOW()- INTERVAL 1 QUARTER", [':site_id' => $site->getKey()]);
+
+                                foreach ($clonedHistoricalPrices as $key => $clonedHistoricalPrice) {
+                                    unset($clonedHistoricalPrices[$key]->price_id);
+                                    $clonedHistoricalPrices[$key]->site_id = $clonedSite->getKey();
+                                    $clonedHistoricalPrices[$key]->crawler_id = $clonedSite->crawler->getKey();
+
+                                    $clonedHistoricalPrices[$key] = (array)$clonedHistoricalPrices[$key];
                                 }
+
+                                DB::table('historical_prices')->insert($clonedHistoricalPrices);
 
                                 /*generating SITE CHARTS*/
                                 $firstNonHiddenDashboard = auth()->user()->nonHiddenDashboards()->first();

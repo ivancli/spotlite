@@ -15,6 +15,6 @@ class HistoricalPrice extends Model
 {
     protected $primaryKey = "price_id";
     protected $fillable = [
-        "crawler_id", "site_id", "price"
+        "crawler_id", "site_id", "price", "created_at", "updated_at"
     ];
 }

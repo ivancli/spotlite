@@ -17,7 +17,7 @@ class Site extends Model
 {
     protected $primaryKey = "site_id";
     protected $fillable = [
-        "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "status", "my_price", "comment", "site_order"
+        "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "status", "my_price", "comment", "site_order", "created_at", "updated_at"
     ];
     protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt'];
 
