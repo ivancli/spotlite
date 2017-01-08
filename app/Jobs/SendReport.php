@@ -11,6 +11,8 @@ namespace App\Jobs;
 
 use App\Contracts\Repository\Product\Report\ReportTaskContract;
 use App\Events\Products\Report\ReportSent;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\ReportTask;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -45,7 +47,7 @@ class SendReport extends Job implements ShouldQueue
             case "category":
                 $report = $reportTaskRepo->generateCategoryReport($this->reportTask);
                 $category = $this->reportTask->reportable;
-                if (!is_null($category)) {
+                if (is_null($category) || !is_a($category, Category::class)) {
                     return false;
                 }
                 $fileName = date("Y-m-d") . " SpotLite Category Report for {$category->category_name}" . "." . $this->reportTask->file_type;
@@ -55,7 +57,7 @@ class SendReport extends Job implements ShouldQueue
             case "product":
                 $report = $reportTaskRepo->generateProductReport($this->reportTask);
                 $product = $this->reportTask->reportable;
-                if (!is_null($product)) {
+                if (is_null($product) || !is_a($product, Product::class)) {
                     return false;
                 }
                 $subject = "{$product->product_name} Product Report for " . date("Y-m-d");
