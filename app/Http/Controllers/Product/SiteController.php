@@ -180,7 +180,13 @@ class SiteController extends Controller
         if (!is_null($companyURL) && !empty($companyURL)) {
             $siteDomain = parse_url($site->site_url)['host'];
             $myCompanyDomain = parse_url($companyURL)['host'];
-            if ($siteDomain == $myCompanyDomain) {
+
+            list($dummy, $subdomainSplitted) = explode('.', $siteDomain, 2);
+            list($dummy, $domainSplitted) = explode('.', $myCompanyDomain, 2);
+
+            //matching both sub-domain and domain
+            if ($subdomainSplitted == $domainSplitted) {
+//            if ($siteDomain == $myCompanyDomain) { // match exact sub-domain
                 $hasMyPrice = false;
                 foreach ($site->product->sites as $eachSite) {
                     if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {

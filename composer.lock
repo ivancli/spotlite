@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
-            "version": "v2.3.8",
+            "version": "v2.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/almasaeed2010/AdminLTE.git",
-                "reference": "ced14b133daed8c163863a497c43dcf69eea4340"
+                "reference": "2be703222af2edcb87e562d3da2299e4352bff8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/almasaeed2010/AdminLTE/zipball/ced14b133daed8c163863a497c43dcf69eea4340",
-                "reference": "ced14b133daed8c163863a497c43dcf69eea4340",
+                "url": "https://api.github.com/repos/almasaeed2010/AdminLTE/zipball/2be703222af2edcb87e562d3da2299e4352bff8a",
+                "reference": "2be703222af2edcb87e562d3da2299e4352bff8a",
                 "shasum": ""
             },
             "type": "library",
@@ -44,7 +44,7 @@
                 "theme",
                 "web"
             ],
-            "time": "2016-11-04T14:42:55+00:00"
+            "time": "2017-01-08T21:03:57+00:00"
         },
         {
             "name": "campaignmonitor/createsend-php",
@@ -614,11 +614,11 @@
         },
         {
             "name": "invigor/crawler",
-            "version": "1.1.13",
+            "version": "1.1.15",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git",
-                "reference": "69ab454f969a90c1cfb68687011dfe3dd07978ac"
+                "reference": "299279231e78ac1dc9519990844afbd499d0b409"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -648,7 +648,7 @@
                 }
             ],
             "description": "Invigor Crawler Package",
-            "time": "2017-01-05T06:25:50+00:00"
+            "time": "2017-01-09T00:44:12+00:00"
         },
         {
             "name": "invigor/um",
