@@ -44,7 +44,7 @@
                     <a href="#" data-name="{{$category->category_name}}" class="btn-action btn-delete-category"
                        onclick="btnDeleteCategoryOnClick(this); return false;" data-toggle="tooltip"
                        title="delete">
-                        <i class="text-danger glyphicon glyphicon-trash"></i>
+                        <i class="glyphicon glyphicon-trash"></i>
                     </a>
                     {!! Form::close() !!}
                 </th>
