@@ -133,19 +133,21 @@
     <script type="text/javascript">
         $(function () {
             $('a[data-toggle="tab"][href="#manage-subscription"]').on('shown.bs.tab', function (e) {
-                showLoading();
-                $.ajax({
-                    "url": "{{route('subscription.index')}}",
-                    "method": "get",
-                    "success": function (html) {
-                        hideLoading();
-                        $(".manage-subscription-container").html(html);
-                    },
-                    "error": function (xhr, status, error) {
-                        hideLoading();
-                        describeServerRespondedError(xhr.status);
-                    }
-                });
+                if ($(".manage-subscription-container").html().trim() == "") {
+                    showLoading();
+                    $.ajax({
+                        "url": "{{route('subscription.index')}}",
+                        "method": "get",
+                        "success": function (html) {
+                            hideLoading();
+                            $(".manage-subscription-container").html(html);
+                        },
+                        "error": function (xhr, status, error) {
+                            hideLoading();
+                            describeServerRespondedError(xhr.status);
+                        }
+                    });
+                }
             })
         })
 
