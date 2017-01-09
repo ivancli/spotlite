@@ -130,7 +130,7 @@
         <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
            onclick="btnDeleteSiteOnClick(this); return false;"
            data-toggle="tooltip" title="delete">
-            <i class="glyphicon glyphicon-trash"></i>
+            <i class="text-danger glyphicon glyphicon-trash"></i>
         </a>
         {!! Form::close() !!}
     </td>

@@ -43,7 +43,7 @@
             <a href="#" class="btn-action" data-name="{{$product->product_name}}"
                onclick="btnDeleteProductOnClick(this); return false;"
                data-toggle="tooltip" title="delete">
-                <i class="glyphicon glyphicon-trash"></i>
+                <i class="text-danger glyphicon glyphicon-trash"></i>
             </a>
             {!! Form::close() !!}
         </th>
