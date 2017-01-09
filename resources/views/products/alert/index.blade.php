@@ -285,7 +285,7 @@
                                                     $("<i>").addClass("glyphicon glyphicon-pencil")
                                             ),
                                             "&nbsp;&nbsp;",
-                                            $("<a>").addClass("text-danger").attr({
+                                            $("<a>").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],
                                                 "data-name": data.alert_owner_type == 'site' ? data.alert_owner.domain : data.alert_owner.product_name,

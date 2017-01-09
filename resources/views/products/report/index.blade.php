@@ -230,7 +230,7 @@
                                                     $("<i>").addClass("glyphicon glyphicon-pencil")
                                             ),
                                             "&nbsp;&nbsp;",
-                                            $("<a>").addClass("text-danger").attr({
+                                            $("<a>").attr({
                                                 "href": "#",
                                                 "data-url": data.urls['delete'],
                                                 "data-name": data.report_task_owner_type == "product" ? data.report_task_owner.product_name : data.report_task_owner.category_name,
@@ -367,7 +367,7 @@
                                                 "data-delete-url": data.urls.delete,
                                                 "onclick": "deleteReport(this, function(){tblReport.ajax.reload();}); return false;"
                                             }).append(
-                                                    $("<i>").addClass("glyphicon glyphicon-trash text-danger")
+                                                    $("<i>").addClass("glyphicon glyphicon-trash")
                                             )
                                     )
                             ).html();
