@@ -32,5 +32,5 @@ interface CrawlerContract
 
     public function crawlPage($option, CrawlerInterface $crawlerClass);
 
-    public function parserPrice($xpath, $content, ParserInterface $parserClass);
+    public function parserPrice($xpath, $content, ParserInterface $parserClass, CurrencyFormatterInterface $currencyFormatterClass = null);
 }

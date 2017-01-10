@@ -423,7 +423,10 @@ class SiteController extends Controller
                 $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
             }
 
-            if (!is_null($domain)) {
+            $currencyFormatterClass = null;
+            if (!is_null($domain->currency_formatter_class)) {
+                $currencyFormatterClass = app()->make('Invigor\Crawler\Repositories\CurrencyFormatters\\' . $domain->currency_formatter_class);
+            }
                 $options = array(
                     "url" => $request->get('site_url'),
                 );
@@ -432,7 +435,7 @@ class SiteController extends Controller
                     for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
                         $xpath = $domain->preference->toArray()["xpath_{$xpathIndex}"];
                         if ($xpath != null || (!is_null($domain->crawler_class) || !is_null($domain->parser_class))) {
-                            $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass);
+                            $result = $this->crawlerRepo->parserPrice($xpath, $content, $parserClass, $currencyFormatterClass);
                             if (isset($result['status']) && $result['status'] == true) {
                                 $price = $result['price'];
                                 break;
