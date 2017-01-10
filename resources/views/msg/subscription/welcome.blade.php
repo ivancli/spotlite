@@ -52,9 +52,8 @@
                             <option value="Computer">Computer</option>
                             <option value="Construction">Construction</option>
                             <option value="Consulting">Consulting</option>
-                            <option value="Consumer Products">Consumer Products</option>
+                            <option value="Consumer Electronics">Consumer Electronics</option>
                             <option value="Education">Education</option>
-                            <option value="Electronics">Electronics</option>
                             <option value="Employment">Employment</option>
                             <option value="Energy">Energy</option>
                             <option value="Entertainment & Recreation">Entertainment & Recreation</option>
