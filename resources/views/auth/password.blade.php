@@ -14,7 +14,7 @@
             </a>
         </div>
         <div class="login-box-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">Enter your email to reset password</p>
             @if(isset($errors))
                 <ul class="text-danger">
                     @foreach ($errors->all('<li>:message</li>') as $message)
