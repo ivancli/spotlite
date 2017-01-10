@@ -62,7 +62,9 @@ class PasswordController extends Controller
             }
         }
 
-        $this->validateSendResetLinkEmail($request);
+        $this->validate($request, ['email' => 'required|email|exists:users,email'], array(
+            "email.exists" => "This email address is not registered on SpotLite."
+        ));
 
         $mailingAgentRepo = $this->mailingAgentRepo;
 
@@ -85,7 +87,6 @@ class PasswordController extends Controller
             /*TODO implement this if necessary*/
             return false;
         }
-
     }
 
     protected function getSendResetLinkEmailSuccessResponse($response)

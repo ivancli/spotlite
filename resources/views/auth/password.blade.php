@@ -1,10 +1,6 @@
 @extends('layouts.adminlte_auth')
 @section('title', 'Account Login')
 
-@section('head_scripts')
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-@stop
-
 @section('content')
 
     <div class="login-box">
@@ -70,10 +66,11 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
-                        alertP('Email Sent', 'An email with reset password link has been sent to provided email address.', function () {
+                        alertP('Email Sent', 'An email with the reset password link has been sent to the email address provided', function () {
                             window.location.href = "{{route('login.get')}}";
                         });
                     } else {
+                        grecaptcha.reset();
                         var $errorContainer = $(".errors-container");
                         $errorContainer.empty();
                         $.each(response.errors, function (index, error) {
@@ -85,6 +82,7 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
+                    grecaptcha.reset();
                     if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
                         var $errorContainer = $(".errors-container");
                         $errorContainer.empty();
