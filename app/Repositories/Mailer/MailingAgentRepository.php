@@ -482,8 +482,8 @@ class MailingAgentRepository implements MailingAgentContract
                 'href^="sms"' => 'href^="sms"TestValue',
                 'owa' => 'owaTestValue',
                 'firstname' => $user->first_name,
-                'token' => $token,
                 'email' => $user->email,
+                'reset_link' => route('password.reset.get', $token) . "?email={$user->email}",
             ),
         );
         $result = $wrap->send($message);
