@@ -183,8 +183,8 @@ class ProfileController extends Controller
                                             }
                                         }
                                         if ($hasMyPrice == false) {
-                                            $site->my_price = 'y';
-                                            $site->save();
+                                            $clonedSite->my_price = 'y';
+                                            $clonedSite->save();
                                         }
                                     }
                                 }

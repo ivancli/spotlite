@@ -2,7 +2,7 @@
 @section('title', 'User Details')
 @section('header_title', 'User Details')
 @section('breadcrumbs')
-{{--    {!! Breadcrumbs::render('show_user', $user) !!}--}}
+    {{--    {!! Breadcrumbs::render('show_user', $user) !!}--}}
 @stop
 @section('content')
     <div class="row">
@@ -56,6 +56,52 @@
                                         ,
                                     @endif
                                 @endforeach
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Categories</th>
+                            <td>
+                                <p>Number of categories: {{$user->categories()->count()}}</p>
+                                <p>
+                                    <strong>
+                                        @foreach($user->categories as $index=>$category)
+                                            {{$category->category_name}}
+                                            @if($index!=$user->categories()->count() - 1)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    </strong>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Products</th>
+                            <td>
+                                <p>Number of products: {{$user->products()->count()}}</p>
+                                <p>
+                                    <strong>
+                                        @foreach($user->products as $index=>$product)
+                                            {{$product->product_name}}
+                                            @if($index!=$user->products()->count() - 1)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    </strong>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Product Page URLs</th>
+                            <td>
+                                <p>Number of product page URLs: {{$user->sites()->count()}}</p>
+                                <p>
+                                    @foreach($user->sites as $index=>$site)
+                                        <a target="_blank" href="{{$site->site_url}}">{{$site->site_url}}</a>
+                                        @if($index!=$user->sites()->count() - 1)
+                                            <br>
+                                        @endif
+                                    @endforeach
+                                </p>
                             </td>
                         </tr>
                         </tbody>
