@@ -160,6 +160,12 @@ class CrawlerRepository implements CrawlerContract
                 }
             } else {
                 /*TODO handle error, cannot find xpath*/
+
+                dispatch((new SendMail('errors.email.crawler', array(), array(
+                    "email" => config('error_notifier.email'),
+                    "subject" => 'Crawler Issue on SpotLite: site - ' . $site->getKey() . " return status {$site->status}",
+                )))->onQueue("mailing"));
+
                 if ($xpathIndex == 1) {
                     $site->statusNullXpath();
                 }
