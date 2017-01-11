@@ -380,6 +380,14 @@
                             "data-toggle": "tooltip",
                             "data-placement": "left"
                         })
+                    } else {
+                        if(data.product.user.isStaff == false && data.product.user.subscriptionCriteria != null){
+                            $(row).attr({
+                                "title": "crawling frequency " + data.product.user.subscriptionCriteria.frequency +" (hour).",
+                                "data-toggle": "tooltip",
+                                "data-placement": "left"
+                            })
+                        }
                     }
 
 
