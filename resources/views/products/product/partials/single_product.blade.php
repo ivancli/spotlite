@@ -9,7 +9,7 @@
         </th>
         <th class="product-th">
             <a class="text-muted product-name-link" href="#" onclick="return false;">{{$product->product_name}}</a>
-            {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'onsubmit' => 'submitEditProductName(this); return false;', 'style'=>'display: none;')) !!}
+            {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'onsubmit' => 'submitEditProductName(this); return false;')) !!}
             <div class="input-group sl-input-group">
                 <input type="text" name="product_name" placeholder="Product Name"
                        class="form-control sl-form-control input-lg product-name"

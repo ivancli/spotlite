@@ -66,7 +66,7 @@ $(function () {
                             "padding": "20px"
                         }).append(
                             $("<a>").addClass("tour-step-backdrop tour-tour-element tour-tour-0-element").attr({
-                                "href": "http://app.spotlite.dev/product"
+                                "href": "/product"
                             }).css({
                                 "background-color": "#7ed0c0",
                                 "height": "100%",
@@ -141,7 +141,7 @@ $(function () {
                             "padding": "15px"
                         }).append(
                             $("<a>").addClass("dropdown-toggle lnk-drop-down-need-help tour-step-backdrop tour-tour-element tour-tour-13-element").attr({
-                                "href": "http://app.spotlite.dev/product",
+                                "href": "/product",
                                 "data-toggle": "dropdown",
                                 "aria-expanded": "false"
                             }).css({

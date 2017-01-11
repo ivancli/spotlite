@@ -152,8 +152,11 @@
         $(function () {
 
             productDrake{{$category->getKey()}} = dragula([$("#category-{{$category->getKey()}}").get(0)], {
-                moves: function (el, container, handle) {
-                    return $(handle).hasClass("btn-product-dragger") || $(handle).closest(".btn-product-dragger").length > 0;
+//                moves: function (el, container, handle) {
+//                    return $(handle).hasClass("btn-product-dragger") || $(handle).closest(".btn-product-dragger").length > 0;
+//                }
+                invalid: function (el, handle) {
+                    return !$(handle).hasClass("btn-product-dragger") && $(handle).closest(".btn-product-dragger").length == 0;
                 }
             }).on('drop', function (el, target, source, sibling) {
                 updateProductOrder({{$category->getKey()}});

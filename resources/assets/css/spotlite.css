@@ -280,7 +280,7 @@ td.shrink, th.shrink {
     z-index: 99999;
     width: 62px; /* Viewport Width */
     height: 62px; /* Viewport Height (~ 199.42px) */
-    background: transparent url('http://app.spotlite.dev/images/spinner_sprite_62x62.png') 0 0 no-repeat; /* Our sprite as viewport background */
+    background: transparent url('http://login.spotlite.com.au/images/spinner_sprite_62x62.png') 0 0 no-repeat; /* Our sprite as viewport background */
     animation: spinner 1s steps(19) infinite; /* The Animation */
     -moz-animation: spinner 1s steps(19) infinite;
     -webkit-animation: spinner 1s steps(19) infinite;

@@ -365,9 +365,6 @@
                     }
                 ],
                 "rowCallback": function (row, data, index) {
-                    console.info('row', row)
-                    console.info('data', data)
-                    console.info('index', index)
                     if (data.product_id == null) {
                         $(row).addClass("danger").attr({
                             "title": "This site is not associated to any products.",

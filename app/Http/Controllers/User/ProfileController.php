@@ -136,6 +136,14 @@ class ProfileController extends Controller
         $user->update($input);
         event(new ProfileUpdated($user));
 
+
+
+        /*set my price*/
+        $companyURL = auth()->user()->company_url;
+        if (!is_null($companyURL) && !empty($companyURL)) {
+            $myCompanyDomain = parse_url($companyURL)['host'];
+        }
+
         $sampleUser = $this->userRepo->sampleUser();
         if (auth()->user()->getKey() != $sampleUser->getKey()) {
             $industry = $input['industry'];
@@ -159,6 +167,27 @@ class ProfileController extends Controller
                                 $clonedSite->product_id = $clonedProduct->getKey();
                                 $clonedSite->save();
                                 $clonedSite = $clonedSite->fresh(['crawler']);
+
+                                if (isset($myCompanyDomain)) {
+                                    $siteDomain = parse_url($clonedSite->site_url)['host'];
+
+                                    list($dummy, $subdomainSplitted) = explode('.', $siteDomain, 2);
+                                    list($dummy, $domainSplitted) = explode('.', $myCompanyDomain, 2);
+
+                                    //matching both sub-domain and domain
+                                    if ($subdomainSplitted == $domainSplitted) {
+                                        $hasMyPrice = false;
+                                        foreach ($clonedSite->product->sites as $eachSite) {
+                                            if (!is_null($eachSite->my_price) && $eachSite->my_price == 'y') {
+                                                $hasMyPrice = true;
+                                            }
+                                        }
+                                        if ($hasMyPrice == false) {
+                                            $site->my_price = 'y';
+                                            $site->save();
+                                        }
+                                    }
+                                }
 
                                 $clonedCrawlerData = $site->crawler->toArray();
                                 $clonedCrawlerData['site_id'] = $clonedSite->getKey();
