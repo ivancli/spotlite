@@ -11,6 +11,7 @@ namespace App\Console\Commands;
 
 use App\Contracts\Repository\Crawler\CrawlerContract;
 use App\Jobs\CrawlSite;
+use App\Jobs\SendMail;
 use App\Models\AppPreference;
 use Illuminate\Console\Command;
 
