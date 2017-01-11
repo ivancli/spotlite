@@ -422,11 +422,12 @@ class SiteController extends Controller
             if (!is_null($domain->parser_class)) {
                 $parserClass = app()->make('Invigor\Crawler\Repositories\Parsers\\' . $domain->parser_class);
             }
-
             $currencyFormatterClass = null;
             if (!is_null($domain->currency_formatter_class)) {
                 $currencyFormatterClass = app()->make('Invigor\Crawler\Repositories\CurrencyFormatters\\' . $domain->currency_formatter_class);
             }
+
+            if (!is_null($domain)) {
                 $options = array(
                     "url" => $request->get('site_url'),
                 );
