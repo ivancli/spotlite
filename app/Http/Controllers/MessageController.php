@@ -30,7 +30,8 @@ class MessageController extends Controller
         }
         $sampleUser = $this->userRepo->sampleUser();
 
-        $sampleData = $sampleUser->categories->pluck(['category_name'])->all();
+        //sample data order by category names ascending
+        $sampleData = $sampleUser->categories()->orderBy('category_name', 'asc')->get()->pluck(['category_name'])->all();
 
         if ($raw == 0) {
             return view('msg.subscription.welcome')->with(compact(['apiSubscription', 'sampleData']));
