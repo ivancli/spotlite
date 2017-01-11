@@ -6,6 +6,7 @@ use App\Events\Products\Crawler\CrawlerFinishing;
 use App\Events\Products\Crawler\CrawlerLoadingHTML;
 use App\Events\Products\Crawler\CrawlerRunning;
 use App\Events\Products\Crawler\CrawlerSavingPrice;
+use App\Jobs\SendMail;
 use App\Models\Crawler;
 use App\Models\HistoricalPrice;
 use Illuminate\Support\Facades\Cache;
@@ -137,6 +138,12 @@ class CrawlerRepository implements CrawlerContract
                     $crawler->resetStatus();
                     return true;
                 } else {
+
+                    dispatch((new SendMail('errors.email.crawler', array(), array(
+                        "email" => config('error_notifier.email'),
+                        "subject" => 'Crawler Issue on SpotLite: site - ' . $site->getKey() . " return status {$site->status}",
+                    )))->onQueue("mailing"));
+
                     $status = false;
                     if (isset($result['error'])) {
                         if ($site->status == "no_price") {
