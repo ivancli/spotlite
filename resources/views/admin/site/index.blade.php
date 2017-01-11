@@ -2,7 +2,7 @@
 @section('title', 'Crawler - Site Management')
 @section('header_title', 'Crawler - Site Management')
 @section('breadcrumbs')
-{{--    {!! Breadcrumbs::render('admin_site') !!}--}}
+    {{--    {!! Breadcrumbs::render('admin_site') !!}--}}
 @stop
 @section('content')
     <div class="row">
@@ -364,6 +364,26 @@
                         }
                     }
                 ],
+                "rowCallback": function (row, data, index) {
+                    console.info('row', row)
+                    console.info('data', data)
+                    console.info('index', index)
+                    if (data.product_id == null) {
+                        $(row).addClass("danger").attr({
+                            "title": "This site is not associated to any products.",
+                            "data-toggle": "tooltip",
+                            "data-placement": "left"
+                        })
+                    } else if (data.product.user == null || (data.product.user.isStaff == false && (data.product.user.subscription == null || data.product.user.cancelled_at != null ))) {
+                        $(row).addClass("danger").attr({
+                            "title": "The owner of the site does not have a valid subscription.",
+                            "data-toggle": "tooltip",
+                            "data-placement": "left"
+                        })
+                    }
+
+
+                },
                 "drawCallback": function () {
                     $("[data-toggle=popover]").popover();
                 }
@@ -486,7 +506,7 @@
             $.ajax({
                 "url": $(el).attr("data-url"),
                 "method": "get",
-                "success": function(html){
+                "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -503,7 +523,7 @@
                         $(this).remove();
                     });
                 },
-                "error": function(xhr, status, error){
+                "error": function (xhr, status, error) {
                     hideLoading();
                     describeServerRespondedError(xhr.status);
                 }
@@ -515,7 +535,7 @@
             $.ajax({
                 "url": $(el).attr("data-url"),
                 "method": "get",
-                "success": function(html){
+                "success": function (html) {
                     hideLoading();
                     var $modal = $(html);
                     $modal.modal();
@@ -532,7 +552,7 @@
                         $(this).remove();
                     });
                 },
-                "error": function(xhr, status, error){
+                "error": function (xhr, status, error) {
                     hideLoading();
                     describeServerRespondedError(xhr.status);
                 }

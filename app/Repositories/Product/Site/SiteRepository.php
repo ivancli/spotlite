@@ -82,7 +82,7 @@ class SiteRepository implements SiteContract
 
     public function getDataTablesSites(QueryFilter $queryFilter)
     {
-        $sites = $this->site->with("crawler")->with("preference")->filter($queryFilter)->get();
+        $sites = $this->site->with("crawler")->with('product.user')->with("preference")->filter($queryFilter)->get();
         $output = new \stdClass();
         $output->draw = $this->request->has('draw') ? intval($this->request->get('draw')) : 0;
         $output->recordTotal = $this->getSiteCount();
