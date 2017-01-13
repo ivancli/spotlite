@@ -122,6 +122,7 @@
                     {
                         "class": "break-word",
                         "name": "site_xpath",
+                        "sortable": false,
                         "data": function (data) {
                             return $("<div>").append(
                                     $("<div>").addClass("xpath-wrapper").css("min-width", "100px").append(
