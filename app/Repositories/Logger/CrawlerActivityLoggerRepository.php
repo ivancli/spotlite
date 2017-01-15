@@ -82,7 +82,6 @@ class CrawlerActivityLoggerRepository implements CrawlerActivityLoggerContract
         $message = array(
             "crawler_id" => $crawler->getKey(),
             "url" => $crawler->site->site_url,
-            "xpath" => $crawler->site->site_xpath
         );
 
         $fields = array(
