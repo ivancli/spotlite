@@ -545,7 +545,6 @@ class SpotLiteRoleSeeder extends Seeder
         $superAdmin->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
         $tier_1->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
         $tier_2->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
-        $crawlerMaintainer->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
 
 
         //ADMIN
