@@ -286,6 +286,17 @@ td.shrink, th.shrink {
     -webkit-animation: spinner 1s steps(19) infinite;
 }
 
+.spinner-text {
+    position: fixed;
+    top: 50%;
+    text-align: center;
+    width: 100%;
+    margin-top: 40px;
+    color: white;
+    z-index: 99999;
+    font-size: 20px;
+}
+
 @keyframes spinner {
     100% {
         background-position: 0 -1178px;

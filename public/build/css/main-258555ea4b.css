@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-841d65729b.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-258555ea4b.css */
 @media print {
   *,
   *:before,
@@ -15422,6 +15422,17 @@ td.shrink, th.shrink {
     animation: spinner 1s steps(19) infinite; /* The Animation */
     -moz-animation: spinner 1s steps(19) infinite;
     -webkit-animation: spinner 1s steps(19) infinite;
+}
+
+.spinner-text {
+    position: fixed;
+    top: 50%;
+    text-align: center;
+    width: 100%;
+    margin-top: 40px;
+    color: white;
+    z-index: 99999;
+    font-size: 20px;
 }
 
 @keyframes spinner {

@@ -10390,7 +10390,7 @@ function showLoading(text) {
         );
         $spinner.find(".spinner-backdrop").hide();
         $spinner.find(".spinner-core").hide();
-        $spinner.find(".spinner-text")
+        $spinner.find(".spinner-text").hide();
         $("body").append($spinner);
         $(".spinner-backdrop, .spinner-core, .spinner-text").fadeIn();
     }
