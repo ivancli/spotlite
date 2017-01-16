@@ -23,10 +23,21 @@ class SpotLiteRoleSeeder extends Seeder
         $tier_2->display_name = "Tier 2 Staff";
         $tier_2->save();
 
+        $crawlerMaintainer = new \Invigor\UM\UMRole();
+        $crawlerMaintainer->name = "crawler_maintainer";
+        $crawlerMaintainer->display_name = "Crawler Manager";
+        $crawlerMaintainer->save();
+
+
         $client = new \Invigor\UM\UMRole();
         $client->name = "client";
         $client->display_name = "Client";
         $client->save();
+
+        $unlimitedClient = new \Invigor\UM\UMRole();
+        $unlimitedClient->name = "unlimited_client";
+        $unlimitedClient->display_name = "Unlimited Client";
+        $unlimitedClient->save();
 
 
         /* parent permissions */
@@ -139,8 +150,14 @@ class SpotLiteRoleSeeder extends Seeder
         //attach permissions
         $superAdmin->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
         $tier_1->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
-        $tier_2->attachPermissions(array($manageUser, $manageGroup, $manageRole, $managePermission));
-
+        $tier_2->attachPermissions(
+            array(
+                $readUser, $createUser, $updateUser,
+                $readGroup, $createGroup, $updateGroup,
+                $readRole, $createRole,
+                $readPermission, $createPermission
+            )
+        );
 
         /**
          * client permission
@@ -523,9 +540,12 @@ class SpotLiteRoleSeeder extends Seeder
         $deleteProductReportTask->save();
 
         $client->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
+        $unlimitedClient->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
+
         $superAdmin->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
         $tier_1->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
         $tier_2->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
+        $crawlerMaintainer->attachPermissions(array($manageDashboard, $manageDashboardWidget, $manageCategory, $manageProduct, $manageSite, $manageChart, $manageAlert, $manageReport, $manageReportTask));
 
 
         //ADMIN
@@ -624,6 +644,8 @@ class SpotLiteRoleSeeder extends Seeder
 
         $superAdmin->attachPermissions(array($manageAppPreference, $manageCrawler, $manageAdminSite, $manageAdminDomain, $readCrawlerLog, $readUserActivityLog));
         $tier_1->attachPermissions(array($manageCrawler, $manageAdminSite, $manageAdminDomain, $readCrawlerLog, $readUserActivityLog));
-        $tier_2->attachPermissions(array($updateAdminSiteStatus, $updateAdminSitePreference, $readCrawlerLog, $readUserActivityLog));
+        $tier_2->attachPermissions(array($testAdminSite, $readAdminSite, $updateAdminSiteStatus, $updateAdminSitePreference, $readAdminDomain, $updateAdminDomainPreference, $readCrawlerLog));
+        $crawlerMaintainer->attachPermissions(array($testAdminSite, $readAdminSite, $updateAdminSiteStatus, $updateAdminSitePreference, $readAdminDomain, $updateAdminDomainPreference, $readCrawlerLog));
+
     }
 }

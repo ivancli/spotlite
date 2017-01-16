@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if(!auth()->user()->isStaff)
+                        @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
                             <div class="upgrade-for-add-item-controls" style="display: none;">
                             <span class="add-item-text">
                                 You have reached the product limit of

@@ -15,7 +15,7 @@ class Subscription extends Model
 {
     protected $primaryKey = "subscription_id";
     protected $fillable = [
-        'api_product_id', 'api_custom_id', 'api_subscription_id', 'api_onboarding_subscription_id', 'expiry_date', 'cancelled_at',
+        'api_product_id', 'api_custom_id', 'api_subscription_id', 'expiry_date', 'cancelled_at',
     ];
     public $timestamps = false;
 

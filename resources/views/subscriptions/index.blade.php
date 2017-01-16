@@ -68,17 +68,6 @@
         @endif
         <div class="row">
             <div class="col-sm-12 text-right">
-                {{--                            @if(is_null($onboardingSubscription) || $onboardingSubscription->product()->initial_charge_in_cents < $onboardingProduct->initial_charge_in_cents)--}}
-                {{--@if(is_null($onboardingSubscription))--}}
-                {{--<a href="{{route('onboarding.index')}}" class="btn btn-primary btn-flat">--}}
-                {{--                                    @if(is_null($onboardingSubscription))--}}
-                {{--Purchase Onboarding Service--}}
-                {{--@else--}}
-                {{--Upgrade Onboarding Service--}}
-                {{--@endif--}}
-                {{--</a>--}}
-                {{--&nbsp;--}}
-                {{--@endif--}}
                 <a href="{{$updatePaymentLink}}" class="btn btn-primary btn-flat">
                     UPDATE PAYMENT DETAILS
                 </a>

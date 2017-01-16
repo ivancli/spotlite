@@ -259,7 +259,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\User\User\UserContract', 'App\Repositories\User\User\UserRepository');
         $this->app->bind('App\Contracts\Repository\Crawler\CrawlerContract', 'App\Repositories\Crawler\CrawlerRepository');
         $this->app->bind('App\Contracts\Repository\Subscription\SubscriptionContract', 'App\Repositories\Subscription\ChargifySubscriptionRepository');
-        $this->app->bind('App\Contracts\Repository\Subscription\OnboardingContract', 'App\Repositories\Subscription\ChargifyOnboardingRepository');
         $this->app->bind('App\Contracts\Repository\Product\Report\ReportContract', 'App\Repositories\Product\Report\ReportRepository');
         $this->app->bind('App\Contracts\Repository\Product\Report\ReportTaskContract', 'App\Repositories\Product\Report\ReportTaskRepository');
         $this->app->bind('App\Contracts\Repository\Product\Alert\AlertContract', 'App\Repositories\Product\Alert\AlertRepository');

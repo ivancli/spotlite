@@ -69,7 +69,7 @@
 
                     <div class="row m-b-10 text-muted font-weight-bold">
                         <div class="col-md-8 line-height-30">
-                            @if(!auth()->user()->isStaff && !is_null(auth()->user()->subscription))
+                            @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
                                 @if(!is_null(auth()->user()->apiSubscription->product()))
                                     {{auth()->user()->apiSubscription->product()->name}} Plan:
                                 @else
@@ -174,7 +174,7 @@
     <script type="text/javascript">
         var start = 0;
         var length = 5;
-        var initLength = 10;
+        var initLength = 5;
         var theEnd = false;
         /**
          * drag and drop source
@@ -506,7 +506,7 @@
         }
 
         function updateUserProductCredit() {
-            if (!user.isStaff) {
+            if (user.needSubscription) {
                 $.ajax({
                     "url": "/product/product/usage",
                     "method": "get",

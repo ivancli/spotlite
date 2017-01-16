@@ -91,7 +91,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfSites()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -112,7 +112,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfProducts()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -133,7 +133,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateNumberOfCategories()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -144,8 +144,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
+        } elseif (isset($result->Message)) {
+            return $result->Message;
         } else {
             return $result->response;
         }
@@ -154,7 +156,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddCategoryDate()
     {
         $user = auth()->user();
-        if ($user->isStaff && !$user->hasRole("tier_2")) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -165,8 +167,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
+        } elseif (isset($result->Message)) {
+            return $result->Message;
         } else {
             return $result->response;
         }
@@ -175,7 +179,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddProductDate()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -196,7 +200,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastAddSiteDate()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -217,7 +221,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastNominatedMyPriceDate()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -238,7 +242,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastSetupAlertDate()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -259,7 +263,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastSetupReportDate()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -279,7 +283,7 @@ class MailingAgentRepository implements MailingAgentContract
 
     public function syncUserSubscription(User $user)
     {
-        if (!$user->isStaff && !is_null($user->subscription)) {
+        if ($user->needSubscription && !is_null($user->subscription)) {
             $subscription = $user->apiSubscription;
             if ($subscription != false) {
                 $criteria = $user->subscriptionCriteria();
@@ -355,7 +359,7 @@ class MailingAgentRepository implements MailingAgentContract
     public function updateLastConfiguredDashboardDate()
     {
         $user = auth()->user();
-        if ($user->isStaff) {
+        if (!$user->needSubscription) {
             return true;
         }
         $result = $this->editSubscriber($user->email, array(
@@ -375,7 +379,7 @@ class MailingAgentRepository implements MailingAgentContract
 
     public function updateNextLevelSubscriptionPlan(User $user)
     {
-        if (!$user->isStaff && !is_null($user->subscription) && !is_null($user->apiSubscription)) {
+        if ($user->needSubscription && !is_null($user->subscription) && !is_null($user->apiSubscription)) {
             $subscription = $user->apiSubscription;
 
             /*somehow unable to use dependency injection in this repo*/

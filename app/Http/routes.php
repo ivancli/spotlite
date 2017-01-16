@@ -153,8 +153,6 @@ Route::group(['middleware' => ['auth']], function () {
         'create', 'show'
     ]]);
 
-    Route::resource('onboarding', 'Subscription\OnboardingController');
-
 
     Route::get('msg/subscription/cancelled/{id}/{raw?}', 'MessageController@cancelledSubscription')->name("msg.subscription.cancelled");
 

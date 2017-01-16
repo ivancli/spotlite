@@ -212,13 +212,6 @@ Breadcrumbs::register('subscription_edit', function ($breadcrumbs, $subscription
     $breadcrumbs->parent('subscription_index');
     $breadcrumbs->push('Change My Plan', route('subscription.edit', $subscription->getKey()));
 });
-/**
- * Onboarding
- */
-Breadcrumbs::register('onboarding_index', function ($breadcrumbs) {
-    $breadcrumbs->parent('subscription_index');
-    $breadcrumbs->push('Onboarding Service', route('onboarding.index'));
-});
 
 /**
  * Products

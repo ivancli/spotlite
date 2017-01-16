@@ -34,7 +34,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'preferences', 'apiSubscription', 'apiOnboardingSubscription', 'isStaff', 'firstAvailableDashboard'
+        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription'
     ];
 
     public function subscription()
@@ -102,7 +102,8 @@ class User extends Authenticatable
         return $this->hasManyThrough('App\Models\Report', 'App\Models\Product', 'user_id', 'report_owner_id', 'user_id')->where('report_owner_type', 'product');
     }
 
-    public function categoryAlerts(){
+    public function categoryAlerts()
+    {
         return $this->hasManyThrough('App\Models\Alert', 'App\Models\Category', 'user_id', 'alert_owner_id', 'user_id')->where('alert_owner_type', 'category');
     }
 
@@ -123,20 +124,9 @@ class User extends Authenticatable
 
     public function getApiSubscriptionAttribute()
     {
-        if (!$this->isStaff && !is_null($this->subscription) && $this->subscription->isValid()) {
+        if ($this->needSubscription && !is_null($this->subscription) && $this->subscription->isValid()) {
             return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_subscription', config('cache.ttl'), function () {
                 return Chargify::subscription()->get($this->subscription->api_subscription_id);
-            });
-        } else {
-            return null;
-        }
-    }
-
-    public function getApiOnboardingSubscriptionAttribute()
-    {
-        if (!$this->isStaff && !is_null($this->subscription) && !is_null($this->subscription->api_onboarding_subscription_id)) {
-            return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_onboarding_subscription', config('cache.ttl'), function () {
-                return Chargify::subscription()->get($this->subscription->api_onboarding_subscription_id);
             });
         } else {
             return null;
@@ -152,13 +142,23 @@ class User extends Authenticatable
 
     public function getIsStaffAttribute()
     {
-        return $this->hasRole(['super_admin', 'tier_1', 'tier_2']);
+        return $this->hasRole(['super_admin', 'tier_1', 'tier_2', 'crawler_maintainer']);
+    }
+
+    public function getIsUnlimitedClientAttribute()
+    {
+        return $this->hasRole(['unlimited_client']);
     }
 
     public function getFirstAvailableDashboardAttribute()
     {
         $dashboard = $this->dashboards()->orderBy('dashboard_order', 'asc')->first();
         return $dashboard;
+    }
+
+    public function getNeedSubscriptionAttribute()
+    {
+        return !$this->isStaff && !$this->isUnlimitedClient;
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ class User extends Authenticatable
 
     public function subscriptionCriteria()
     {
-        if(!is_null($this->apiSubscription)){
+        if (!is_null($this->apiSubscription)) {
             $product = Chargify::product()->get($this->apiSubscription->product_id);
             if (!is_null($product->description)) {
                 $criteria = json_decode($product->description);
@@ -192,7 +192,7 @@ class User extends Authenticatable
      */
     public function canAddProduct()
     {
-        if ($this->isStaff) {
+        if (!$this->needSubscription) {
             return true;
         }
         $criteria = $this->subscriptionCriteria();
@@ -213,7 +213,7 @@ class User extends Authenticatable
      */
     public function canAddSite($productId)
     {
-        if ($this->isStaff) {
+        if (!$this->needSubscription) {
             return true;
         }
         $criteria = $this->subscriptionCriteria();

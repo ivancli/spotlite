@@ -18,7 +18,7 @@
             <li class="active"><a href="#user-settings" data-toggle="tab" aria-expanded="false">Edit Profile</a></li>
             <li><a href="#user-password" data-toggle="tab" aria-expanded="false">Reset Password</a></li>
             <li><a href="#display-settings" data-toggle="tab" aria-expanded="true">Display Settings</a></li>
-            @if(!auth()->user()->isStaff)
+            @if(auth()->user()->needSubscription)
                 <li><a href="#manage-subscription" data-toggle="tab" aria-expanded="true">Manage My Subscription</a>
                 </li>
             @endif

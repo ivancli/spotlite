@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Subscription;
 
 use App\Contracts\Repository\Mailer\MailingAgentContract;
-use App\Contracts\Repository\Subscription\OnboardingContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Events\Subscription\SubscriptionCancelled;
 use App\Events\Subscription\SubscriptionCancelling;
@@ -29,13 +28,11 @@ use Invigor\Chargify\Chargify;
 class SubscriptionController extends Controller
 {
     protected $subscriptionRepo;
-    protected $onboardingRepo;
     protected $mailingAgentRepo;
 
-    public function __construct(SubscriptionContract $subscriptionContract, MailingAgentContract $mailingAgentContract, OnboardingContract $onboardingContract)
+    public function __construct(SubscriptionContract $subscriptionContract, MailingAgentContract $mailingAgentContract)
     {
         $this->subscriptionRepo = $subscriptionContract;
-        $this->onboardingRepo = $onboardingContract;
         $this->mailingAgentRepo = $mailingAgentContract;
         /*TODO need to handle middleware for each function*/
     }
@@ -47,7 +44,7 @@ class SubscriptionController extends Controller
     public function viewProducts()
     {
         $user = auth()->user();
-        if ($user->isStaff || (!is_null($user->subscription) && $user->subscription->isValid())) {
+        if (!$user->needSubscription || (!is_null($user->subscription) && $user->subscription->isValid())) {
             return redirect()->route('dashboard.index');
         }
 
@@ -66,16 +63,10 @@ class SubscriptionController extends Controller
         $sub = $user->subscription;
         if (!is_null($sub)) {
             $subscription = $user->apiSubscription;
-            $onboardingSubscription = $user->apiOnboardingSubscription;
             if ($subscription != false) {
                 $portalLink = Chargify::customer()->getLink($subscription->customer_id);
                 $subscriptionTransactions = Chargify::transaction()->allBySubscription($subscription->id);
-                if (!is_null($onboardingSubscription)) {
-                    $onboardingTransactions = Chargify::transaction()->allBySubscription($onboardingSubscription->id);
-                    $transactions = array_merge($subscriptionTransactions, $onboardingTransactions);
-                } else {
-                    $transactions = $subscriptionTransactions;
-                }
+                $transactions = $subscriptionTransactions;
 
                 $transactions = collect($transactions);
                 $transactions = $transactions->sortBy('created_at');
@@ -83,10 +74,8 @@ class SubscriptionController extends Controller
 
                 $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($subscription->id);
 
-                $onboardingProduct = $this->onboardingRepo->getByProductFamily($subscription->product()->product_family_id);
-
                 event(new SubscriptionManagementViewed());
-                return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions', 'onboardingSubscription', 'onboardingProduct']));
+                return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions']));
             } else {
                 abort(403);
                 return false;

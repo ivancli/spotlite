@@ -3,7 +3,7 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            @if(auth()->check() && (auth()->user()->isStaff || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())))
+            @if(auth()->check() && (!auth()->user()->needSubscription || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())))
                 <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
@@ -22,13 +22,15 @@
                                     </span>
                                     @if(auth()->user()->nonHiddenDashboards()->count() > 1)
                                         @if($index==0)
-                                            <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                            <span class="pull-right-container btn-reorder-dashboard"
+                                                  data-order="{{$index}}"
                                                   data-dashboard-id="{{$dashboard->getKey()}}"
                                                   onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
                                                 <i class="fa fa-arrow-down"></i>
                                             </span>
                                         @else
-                                            <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                            <span class="pull-right-container btn-reorder-dashboard"
+                                                  data-order="{{$index}}"
                                                   data-dashboard-id="{{$dashboard->getKey()}}"
                                                   onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
                                                 <i class="fa fa-arrow-up"></i>
@@ -66,13 +68,15 @@
                     </a>
                 </li>
             @endif
-            @if(auth()->check() && auth()->user()->hasRole(['super_admin', 'tier_1']))
-                <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
-                    <a href="{{route("admin.app_preference.index")}}">
-                        <i class="fa fa-gears"></i>
-                        <span>APP PREFERENCES</span>
-                    </a>
-                </li>
+            @if(auth()->check() && auth()->user()->isStaff)
+                @if(auth()->user()->can('manage_app_preference'))
+                    <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
+                        <a href="{{route("admin.app_preference.index")}}">
+                            <i class="fa fa-gears"></i>
+                            <span>APP PREFERENCES</span>
+                        </a>
+                    </li>
+                @endif
                 <li class="treeview {{Style::set_active_and(array('admin', 'site'))}} {{Style::set_active_and(array('admin', 'domain'))}}">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
@@ -82,71 +86,81 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{Style::set_active_and(array('admin', 'domain'))}}">
-                            <a href="{{route('admin.domain.index')}}">
-                                <i class="fa fa-circle-o"></i> Domains
-                            </a>
-                        </li>
-                        <li class="{{Style::set_active_and(array('admin', 'site'))}}">
-                            <a href="{{route('admin.site.index')}}">
-                                <i class="fa fa-circle-o"></i> Sites
-                            </a>
-                        </li>
+                        @if(auth()->user()->can(['manage_admin_domain', 'read_admin_domain', 'create_admin_domain', 'update_admin_domain_preference', 'delete_admin_domain']))
+                            <li class="{{Style::set_active_and(array('admin', 'domain'))}}">
+                                <a href="{{route('admin.domain.index')}}">
+                                    <i class="fa fa-circle-o"></i> Domains
+                                </a>
+                            </li>
+                        @endif
+                        @if(auth()->user()->can(['read_admin_site', 'create_admin_site', 'delete_admin_site', 'update_admin_site_status', 'update_admin_site_preference', 'test_admin_site', 'manage_admin_site']))
+                            <li class="{{Style::set_active_and(array('admin', 'site'))}}">
+                                <a href="{{route('admin.site.index')}}">
+                                    <i class="fa fa-circle-o"></i> Sites
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </li>
-                <li class="treeview {{Style::set_active_starts_with('um.')}}">
-                    <a href="#">
-                        <i class="fa fa-users"></i>
-                        <span>USER MANAGEMENT</span>
-                        <span class="pull-right-container">
+                @if(auth()->user()->can('manage_user'))
+                    <li class="treeview {{Style::set_active_starts_with('um.')}}">
+                        <a href="#">
+                            <i class="fa fa-users"></i>
+                            <span>USER MANAGEMENT</span>
+                            <span class="pull-right-container">
                           <i class="fa fa-caret-down pull-right"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{{Style::set_active_starts_with('um.user')}}">
-                            <a href="{{route('um.user.index')}}">
-                                <i class="fa fa-user"></i>
-                                <span>Users</span>
-                            </a>
-                        </li>
-                        <li class="{{Style::set_active_starts_with('um.group')}}">
-                            <a href="{{route('um.group.index')}}">
-                                <i class="fa fa-users"></i>
-                                <span>Groups</span>
-                            </a>
-                        </li>
-                        <li class="{{Style::set_active_starts_with('um.role')}}">
-                            <a href="{{route('um.role.index')}}">
-                                <i class="fa fa-tags"></i>
-                                <span>Roles</span>
-                            </a>
-                        </li>
-                        <li class="{{Style::set_active_starts_with('um.permission')}}">
-                            <a href="{{route('um.permission.index')}}">
-                                <i class="fa fa-key"></i>
-                                <span>Permissions</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{Style::set_active_starts_with('um.user')}}">
+                                <a href="{{route('um.user.index')}}">
+                                    <i class="fa fa-user"></i>
+                                    <span>Users</span>
+                                </a>
+                            </li>
+                            <li class="{{Style::set_active_starts_with('um.group')}}">
+                                <a href="{{route('um.group.index')}}">
+                                    <i class="fa fa-users"></i>
+                                    <span>Groups</span>
+                                </a>
+                            </li>
+                            <li class="{{Style::set_active_starts_with('um.role')}}">
+                                <a href="{{route('um.role.index')}}">
+                                    <i class="fa fa-tags"></i>
+                                    <span>Roles</span>
+                                </a>
+                            </li>
+                            <li class="{{Style::set_active_starts_with('um.permission')}}">
+                                <a href="{{route('um.permission.index')}}">
+                                    <i class="fa fa-key"></i>
+                                    <span>Permissions</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 <li class="treeview {{Style::set_active_starts_with('log.')}}">
                     <a href="#">
                         <i class="fa fa-file-text-o"></i>
                         <span>SYSTEM LOG MANAGEMENT</span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{Style::set_active_starts_with('log.crawler_activity')}}">
-                            <a href="{{route('log.crawler_activity.index')}}">
-                                <i class="fa fa-gear"></i>
-                                <span>Crawler Logs</span>
-                            </a>
-                        </li>
-                        <li class="{{Style::set_active_starts_with('log.user_activity')}}">
-                            <a href="{{route('log.user_activity.index')}}">
-                                <i class="fa fa-map-o"></i>
-                                <span>User Activity Logs</span>
-                            </a>
-                        </li>
+                        @if(auth()->user()->can('read_crawler_log'))
+                            <li class="{{Style::set_active_starts_with('log.crawler_activity')}}">
+                                <a href="{{route('log.crawler_activity.index')}}">
+                                    <i class="fa fa-gear"></i>
+                                    <span>Crawler Logs</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(auth()->user()->can('read_user_activity_log'))
+                            <li class="{{Style::set_active_starts_with('log.user_activity')}}">
+                                <a href="{{route('log.user_activity.index')}}">
+                                    <i class="fa fa-map-o"></i>
+                                    <span>User Activity Logs</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </li>
             @endif

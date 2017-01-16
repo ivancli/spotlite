@@ -109,7 +109,8 @@ class SiteController extends Controller
      */
     public function store(StoreValidator $storeValidator, Request $request)
     {
-        if (!auth()->user()->isStaff) {
+        $user = auth()->user();
+        if ($user->needSubscription) {
             $criteria = auth()->user()->subscriptionCriteria();
             if (isset($criteria->site) && $criteria->site != 0) {
                 $productId = $request->get('product_id');
