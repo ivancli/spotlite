@@ -237,7 +237,7 @@
                                                 "onclick": "deleteReportTask(this)",
                                                 "data-report-type": data.report_task_owner_type
                                             }).append(
-                                                    $("<i>").addClass("glyphicon glyphicon-trash")
+                                                    $("<i>").addClass("text-muted glyphicon glyphicon-trash")
                                             )
                                     )
                             ).html();
@@ -367,7 +367,7 @@
                                                 "data-delete-url": data.urls.delete,
                                                 "onclick": "deleteReport(this, function(){tblReport.ajax.reload();}); return false;"
                                             }).append(
-                                                    $("<i>").addClass("glyphicon glyphicon-trash")
+                                                    $("<i>").addClass("text-muted glyphicon glyphicon-trash")
                                             )
                                     )
                             ).html();

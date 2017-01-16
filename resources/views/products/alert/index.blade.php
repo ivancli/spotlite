@@ -292,7 +292,7 @@
                                                 "onclick": "deleteAlert(this); return false",
                                                 "data-alert-type": data.alert_owner_type
                                             }).append(
-                                                    $("<i>").addClass("glyphicon glyphicon-trash")
+                                                    $("<i>").addClass("text-muted glyphicon glyphicon-trash")
                                             )
                                     )
                             ).html();
