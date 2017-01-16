@@ -10377,19 +10377,22 @@ function randomString(length, chars) {
     return result;
 }
 
-function showLoading() {
+function showLoading(text) {
     if ($(".spinner").length == 0) {
         var $spinner = $("<div>").addClass("spinner").append(
             $("<div>").addClass("spinner-backdrop"),
-            $("<div>").addClass("spinner-core")
-            // $("<img>").attr({
-            //     "src": "/images/spinner.gif"
-            // }).addClass("spinner-img")
+            $("<div>").addClass("spinner-core"),
+            $("<div>").addClass("spinner-text").text(function () {
+                if (typeof text != 'undefined' && text.length > 0) {
+                    return text;
+                }
+            })
         );
         $spinner.find(".spinner-backdrop").hide();
         $spinner.find(".spinner-core").hide();
+        $spinner.find(".spinner-text")
         $("body").append($spinner);
-        $(".spinner-backdrop, .spinner-core").fadeIn();
+        $(".spinner-backdrop, .spinner-core, .spinner-text").fadeIn();
     }
 }
 

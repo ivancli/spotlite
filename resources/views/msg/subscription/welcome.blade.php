@@ -190,7 +190,7 @@
 
         function submitInitUpdate() {
             cleanErrorMessage();
-            showLoading();
+            showLoading("Please wait while we load your Dashboard...");
             $.ajax({
                 "url": $("#init-update-form").attr("action"),
                 "method": "put",
