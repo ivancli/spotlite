@@ -6,7 +6,7 @@
     <div class="login-box">
         <div class="login-logo">
             <a href="{{route('dashboard.index')}}">
-                <img src="{{asset('build/images/logo.png')}}" alt="" width="250">
+                <img src="{{asset('build/images/logo_transparent_white_text.png')}}" alt="" width="250">
             </a>
         </div>
         <div class="login-box-body">
@@ -23,7 +23,7 @@
             {!! Form::open(array('route' => 'password.post', 'method' => 'post', "id" => "frm-password", 'onsubmit' => 'submitForgotPassword(); return false;')) !!}
 
             <div class="form-group has-feedback">
-                {!! Form::email('email', null, array('class' => 'form-control', 'placeholder' => 'Email')) !!}
+                {!! Form::email('email', null, array('class' => 'form-control', 'placeholder' => 'Email', 'autocomplete' => 'off')) !!}
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="row m-b-20">
@@ -33,7 +33,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-6 col-sm-push-6 text-right">
-                    {!! Form::submit('Forgot', ["class"=>"btn btn-default btn-block btn-flat", "href"=>"#"]) !!}
+                    {!! Form::submit('FORGOT', ["class"=>"btn btn-default btn-block btn-flat", "href"=>"#"]) !!}
                 </div>
                 <div class="col-sm-6 col-sm-pull-6">
                     <div style="padding-top: 5px; padding-bottom: 5px;">
@@ -78,7 +78,7 @@
                         var $errorContainer = $(".errors-container");
                         $errorContainer.empty();
                         $.each(xhr.responseJSON, function (key, error) {
-                            $.each(error, function(index, message){
+                            $.each(error, function (index, message) {
                                 $errorContainer.append(
                                         $("<li>").text(message)
                                 );

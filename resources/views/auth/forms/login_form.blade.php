@@ -1,5 +1,5 @@
 <div class="form-group has-feedback">
-    {!! Form::email('email', null, array('class' => 'form-control', 'placeholder' => 'Email')) !!}
+    {!! Form::email('email', null, array('class' => 'form-control', 'placeholder' => 'Email', 'autocomplete' => 'off')) !!}
     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 </div>
 <div class="form-group has-feedback">
@@ -16,6 +16,6 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+        <button type="submit" class="btn btn-primary btn-block btn-flat">SIGN IN</button>
     </div>
 </div>
