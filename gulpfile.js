@@ -27,6 +27,7 @@ elixir(function (mix) {
         'public/fonts',
         'public/images',
         'public/videos',
+        'public/packages',
         'public/build'
     ]);
     mix.styles([
@@ -151,6 +152,9 @@ elixir(function (mix) {
     mix.copy('vendor/driftyco/ionicons/fonts', 'public/fonts/');
     mix.copy('resources/assets/fonts', 'public/fonts/');
 
+    /* copy packages */
+    mix.copy('resources/assets/packages', 'public/packages');
+
     /* versioning */
     mix.version([
         'public/css/main.css', 'public/css/tour.css', 'public/css/email.css', 'public/css/email_import.css', 'public/css/email_brand.css',
@@ -161,4 +165,5 @@ elixir(function (mix) {
     mix.copy('public/images', 'public/build/images');
     mix.copy('public/videos', 'public/build/videos');
     mix.copy('public/others', 'public/build/others');
+    mix.copy('public/packages', 'public/build/packages');
 });

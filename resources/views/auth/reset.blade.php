@@ -53,19 +53,24 @@
                         alertP('Reset Password', 'Your password has been updated.', function () {
                             window.location.href = "{{route('dashboard.index')}}";
                         });
-                    } else {
-                        var $errorContainer = $(".errors-container");
-                        $errorContainer.empty();
-                        $.each(response.errors, function (index, error) {
-                            $errorContainer.append(
-                                    $("<li>").text(error)
-                            );
-                        });
                     }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var $errorContainer = $(".errors-container");
+                        $errorContainer.empty();
+                        console.info(xhr.responseJSON)
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $.each(error, function(index, message){
+                                $errorContainer.append(
+                                        $("<li>").text(message)
+                                );
+                            })
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }

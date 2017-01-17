@@ -68,4 +68,10 @@ class TermAndConditionController extends Controller
         }
         return view('legal.term_and_condition.edit')->with(compact(['termAndCondition']));
     }
+
+    public function update($id)
+    {
+
+        dd($this->request->all());
+    }
 }

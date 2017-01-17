@@ -7,12 +7,18 @@ namespace App\Validators;
  * Date: 11/09/2016
  * Time: 2:05 PM
  */
-use App\Exceptions\ValidationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Validation\Factory as IlluminateValidator;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Validator;
 
 abstract class ValidatorAbstract
 {
     protected $validator;
+
+    protected $validatesRequestErrorBag;
 
     public function __construct(IlluminateValidator $validator)
     {
@@ -34,10 +40,11 @@ abstract class ValidatorAbstract
         $validation = $this->validator->make($data, $rules, $messages);
         if ($validation->fails()) {
             if ($throw) {
-                throw new ValidationException($validation->messages());
+                $this->throwValidationException($validation);
             } else {
                 return $validation->messages();
             }
+
         }
         return true;
     }
@@ -53,5 +60,38 @@ abstract class ValidatorAbstract
     protected function getMessages()
     {
         return [];
+    }
+
+    protected function throwValidationException($validator)
+    {
+        throw new ValidationException($validator, $this->buildFailedValidationResponse($this->formatValidationErrors($validator)));
+    }
+
+
+    protected function buildFailedValidationResponse(array $errors)
+    {
+        $request = request();
+        if (($request->ajax() && !$request->pjax()) || $request->wantsJson()) {
+            return new JsonResponse($errors, 422);
+        }
+
+        return redirect()->to($this->getRedirectUrl())
+            ->withInput($request->input())
+            ->withErrors($errors, $this->errorBag());
+    }
+
+    protected function getRedirectUrl()
+    {
+        return app(UrlGenerator::class)->previous();
+    }
+
+    protected function errorBag()
+    {
+        return $this->validatesRequestErrorBag ?: 'default';
+    }
+
+    protected function formatValidationErrors(Validator $validator)
+    {
+        return $validator->errors()->getMessages();
     }
 }

@@ -166,18 +166,23 @@
                             window.location.href = "{{route('login.get')}}";
                         });
                     } else {
-                        var $errorContainer = $(".errors-container");
-                        $errorContainer.empty();
-                        $.each(response.errors, function (index, error) {
-                            $errorContainer.append(
-                                    $("<li>").text(error)
-                            );
-                        });
+                        grecaptcha.reset();
                     }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    grecaptcha.reset();
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var $errorContainer = $(".errors-container");
+                        $errorContainer.empty();
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $errorContainer.append(
+                                    $("<li>").text(error)
+                            );
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }

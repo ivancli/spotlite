@@ -74,21 +74,7 @@ class ProfileController extends Controller
      */
     public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        try {
-            $updateValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $updateValidator->validate($request->all());
 
         $user = User::findOrFail($id);
         event(new ProfileUpdating($user));
@@ -135,7 +121,6 @@ class ProfileController extends Controller
         $input = array_except($request->all(), ['email']);
         $user->update($input);
         event(new ProfileUpdated($user));
-
 
 
         /*set my price*/

@@ -69,15 +69,6 @@
                         alertP('Email Sent', 'An email with the reset password link has been sent to the email address provided', function () {
                             window.location.href = "{{route('login.get')}}";
                         });
-                    } else {
-                        grecaptcha.reset();
-                        var $errorContainer = $(".errors-container");
-                        $errorContainer.empty();
-                        $.each(response.errors, function (index, error) {
-                            $errorContainer.append(
-                                    $("<li>").text(error)
-                            );
-                        });
                     }
                 },
                 "error": function (xhr, status, error) {
@@ -87,9 +78,11 @@
                         var $errorContainer = $(".errors-container");
                         $errorContainer.empty();
                         $.each(xhr.responseJSON, function (key, error) {
-                            $errorContainer.append(
-                                    $("<li>").text(error)
-                            );
+                            $.each(error, function(index, message){
+                                $errorContainer.append(
+                                        $("<li>").text(message)
+                                );
+                            })
                         });
                     } else {
                         describeServerRespondedError(xhr.status);

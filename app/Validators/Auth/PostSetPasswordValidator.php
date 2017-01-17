@@ -24,13 +24,4 @@ class PostSetPasswordValidator extends ValidatorAbstract
             'password' => 'required|min:6|confirmed',
         );
     }
-
-    protected function getMessages()
-    {
-        return array(
-            "password.required" => "Please enter a password",
-            "password.min" => "Password requires minimum 6 characters",
-            "password.confirm" => "Password does NOT matched with Confirm Password",
-        );
-    }
 }
