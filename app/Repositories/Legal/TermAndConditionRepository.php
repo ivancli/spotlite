@@ -19,6 +19,15 @@ class TermAndConditionRepository implements TermAndConditionContract
         $this->termAndCondition = $termAndCondition;
     }
 
+    /**
+     * Load all terms and conditions
+     * @return mixed
+     */
+    public function all()
+    {
+        return $this->termAndCondition->all();
+    }
+
     public function get($term_and_condition_id)
     {
         return $this->termAndCondition->findOrFail($term_and_condition_id);

@@ -11,6 +11,7 @@ class TermAndCondition extends Model
     protected $fillable = [
         'content', 'active'
     ];
+    protected $appends = ["urls"];
 
     public function setActive()
     {
@@ -26,5 +27,16 @@ class TermAndCondition extends Model
     {
         $this->active = 'n';
         $this->save();
+    }
+
+    public function getUrlsAttribute()
+    {
+        $key = $this->getKey();
+        return array(
+            "show" => route("term_and_condition.show", $key),
+            "edit" => route("term_and_condition.edit", $key),
+            "update" => route("term_and_condition.update", $key),
+            "delete" => route("term_and_condition.destroy", $key),
+        );
     }
 }

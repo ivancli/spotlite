@@ -19,6 +19,11 @@ class PrivacyPolicyController extends Controller
         $this->privacyPolicyRepo = $privacyPolicyContract;
     }
 
+    public function index()
+    {
+
+    }
+
     public function show($id)
     {
         if ($id == 0) {

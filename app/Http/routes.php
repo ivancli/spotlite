@@ -198,12 +198,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 
 
-    /*TODO remove these routes before pushing to production*/
-    Route::get('notes', function () {
-        return view('debug.note');
-    });
-
-
+    Route::resource('privacy_policy', 'Legal\PrivacyPolicyController', ['except' => ['show']]);
+    Route::resource('term_and_condition', 'Legal\TermAndConditionController', ['except' => ['show']]);
 });
 
 /**
@@ -229,8 +225,8 @@ Route::post('password', 'Auth\PasswordController@postEmail')->name('password.pos
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset')->name('password.reset.get');
 Route::post('password/reset', 'Auth\PasswordController@postReset')->name('password.reset.post');
 
-Route::resource('privacy_policy', 'Legal\PrivacyPolicyController', ['only' => 'show']);
-Route::resource('term_and_condition', 'Legal\TermAndConditionController', ['only' => 'show']);
+Route::get('privacy_policy/{id}', 'Legal\PrivacyPolicyController@show')->name('privacy_policy.show');
+Route::get('term_and_condition/{id}', 'Legal\TermAndConditionController@show')->name('term_and_condition.show');
 
 
 Route::match(['get', 'post', 'put', 'delete'], 'subscription/webhook', 'Subscription\SubscriptionController@webhookUpdate')->name('subscription.webhook_update');
