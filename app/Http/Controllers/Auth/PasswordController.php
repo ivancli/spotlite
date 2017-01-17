@@ -6,7 +6,9 @@ use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Libraries\CommonFunctions;
+use App\Validators\Auth\PostEmailValidator;
 use App\Validators\Auth\PostSetPasswordValidator;
+use App\Validators\Captcha\ReCaptchaValidator;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -38,33 +40,10 @@ class PasswordController extends Controller
         $this->mailingAgentRepo = $mailingAgentContract;
     }
 
-    public function postEmail(Request $request)
+    public function postEmail(ReCaptchaValidator $captchaValidator, PostEmailValidator $postEmailValidator, Request $request)
     {
-        $response = $this->sendCurl(config('google_captcha.verification_url'), array(
-            'method' => 'post',
-            'fields' => array(
-                'secret' => config('google_captcha.secret_key'),
-                'response' => $request->get('g-recaptcha-response')
-            ),
-        ));
-        $response = json_decode($response);
-        if ($response == false || !isset($response->success) || $response->success != true) {
-            $status = false;
-            $errors = array("Please verify that you are not a robot.");
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return false;
-            }
-        }
-
-        $this->validate($request, ['email' => 'required|email|exists:users,email'], array(
-            "email.exists" => "This email address is not registered on SpotLite."
-        ));
+        $captchaValidator->validate($request->all());
+        $postEmailValidator->validate($request->all());
 
         $mailingAgentRepo = $this->mailingAgentRepo;
 
@@ -137,7 +116,10 @@ class PasswordController extends Controller
         $status = false;
         if (request()->ajax()) {
             if (request()->wantsJson()) {
-                return response()->json(compact(['status', 'response']));
+                $password = array(
+                    trans($response)
+                );
+                return response()->json(compact(['status', 'password']), 422);
             } else {
                 return compact(['status', 'response']);
             }
@@ -170,21 +152,7 @@ class PasswordController extends Controller
 
         $request = request();
 
-        try {
-            $postSetPasswordValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $postSetPasswordValidator->validate($request->all());
 
         $input = $request->all();
         $user = auth()->user();

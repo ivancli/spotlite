@@ -22,13 +22,15 @@
                                     </span>
                                     @if(auth()->user()->nonHiddenDashboards()->count() > 1)
                                         @if($index==0)
-                                            <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                            <span class="pull-right-container btn-reorder-dashboard"
+                                                  data-order="{{$index}}"
                                                   data-dashboard-id="{{$dashboard->getKey()}}"
                                                   onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
                                                 <i class="fa fa-arrow-down"></i>
                                             </span>
                                         @else
-                                            <span class="pull-right-container btn-reorder-dashboard" data-order="{{$index}}"
+                                            <span class="pull-right-container btn-reorder-dashboard"
+                                                  data-order="{{$index}}"
                                                   data-dashboard-id="{{$dashboard->getKey()}}"
                                                   onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
                                                 <i class="fa fa-arrow-up"></i>
@@ -133,6 +135,9 @@
                     <a href="#">
                         <i class="fa fa-file-text-o"></i>
                         <span>SYSTEM LOG MANAGEMENT</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-caret-down pull-right"></i>
+                        </span>
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{Style::set_active_starts_with('log.crawler_activity')}}">
@@ -149,6 +154,31 @@
                         </li>
                     </ul>
                 </li>
+                @if(auth()->user()->can(['manage_terms_and_conditions', 'manage_privacy_policies']))
+                    <li class="treeview {{Style::set_active_starts_with('term_and_condition')}} {{Style::set_active_starts_with('privacy_policy')}}">
+                        <a href="#">
+                            <i class="fa fa-file-archive-o"></i>
+                            <span>MANAGE LEGALS</span>
+                            <span class="pull-right-container">
+                          <i class="fa fa-caret-down pull-right"></i>
+                        </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{Style::set_active_starts_with('term_and_condition')}}">
+                                <a href="{{route('term_and_condition.index')}}">
+                                    <i class="fa fa-square"></i>
+                                    <span>Terms and Conditions</span>
+                                </a>
+                            </li>
+                            <li class="{{Style::set_active_starts_with('privacy_policy')}}">
+                                <a href="{{route('privacy_policy.index')}}">
+                                    <i class="fa fa-square"></i>
+                                    <span>Privacy Policies</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
             @endif
         </ul>
     </section>

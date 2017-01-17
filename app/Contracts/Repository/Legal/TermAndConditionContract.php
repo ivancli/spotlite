@@ -8,6 +8,13 @@ namespace App\Contracts\Repository\Legal;
  */
 interface TermAndConditionContract
 {
+
+    /**
+     * Load all terms and conditions
+     * @return mixed
+     */
+    public function all();
+
     public function get($term_and_condition_id);
 
     public function getActive();

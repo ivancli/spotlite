@@ -123,22 +123,22 @@
             if (response.status == true) {
                 gaUpdateUserProfile();
                 alertP("Update Profile", "Profile has been updated.");
-            } else {
-                if (typeof response.errors != 'undefined') {
-                    var $errorContainer = $("#user-settings").find(".errors-container");
-                    clearErrorMessgae();
-                    $.each(response.errors, function (index, error) {
-                        $errorContainer.append(
-                                $("<li>").text(error)
-                        );
-                    });
-                } else {
-                    alertP("Oops! Something went wrong.", "Unable to update profile, please try again later.");
-                }
             }
-        }, function () {
+        }, function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.status == 422) {
+                var $errorContainer = $("#user-settings").find(".errors-container");
+                clearErrorMessgae();
+                $.each(xhr.responseJSON, function (index, error) {
+                    $.each(error, function(index, message){
+                        $errorContainer.append(
+                                $("<li>").text(message)
+                        );
+                    })
+                });
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         })
     }
 
