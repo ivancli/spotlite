@@ -11,7 +11,7 @@
             <a class="text-muted product-name-link" href="#" onclick="return false;">{{$product->product_name}}</a>
             {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'style' => "display :none;", 'onsubmit' => 'submitEditProductName(this); return false;')) !!}
             <div class="input-group sl-input-group">
-                <input type="text" name="product_name" placeholder="Product Name"
+                <input type="text" name="product_name" placeholder="Product Name" autocomplete="off"
                        class="form-control sl-form-control input-lg product-name"
                        onkeyup="cancelEditProductName(this, event)" onblur="txtProductOnBlur(this)"
                        value="{{$product->product_name}}">
@@ -143,7 +143,7 @@
                                             <form action="{{route('site.store')}}" method="post"
                                                   class="frm-store-site"
                                                   onsubmit="getPricesCreate(this); return false;">
-                                                <input type="text"
+                                                <input type="text" autocomplete="off"
                                                        {{--placeholder="e.g. http://www.company.com.au/productpage/price"--}}
                                                        name="site_url"
                                                        class="txt-site-url form-control txt-item">

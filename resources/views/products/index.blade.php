@@ -24,7 +24,7 @@
                 <i class="fa fa-search text-muted"></i>
             </div>
         </div>
-        <input type="text" class="form-control general-search-input"
+        <input type="text" class="form-control general-search-input" autocomplete="off"
                placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
 
         <div class="btn-clear-search" onclick="clearProductSearch(this)">
@@ -132,7 +132,7 @@
                                             <form action="{{route('category.store')}}" method="post"
                                                   class="frm-store-category"
                                                   onsubmit="btnAddCategoryOnClick(this); return false;">
-                                                <input type="text" id="txt-category-name"
+                                                <input type="text" id="txt-category-name" autocomplete="off"
                                                        class="form-control txt-item" name="category_name">
                                             </form>
                                         </div>

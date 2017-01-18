@@ -14,7 +14,7 @@
                        onclick="return false;">{{$category->category_name}}</a>
                     {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style' => 'display: none;')) !!}
                     <div class="input-group sl-input-group">
-                        <input type="text" name="category_name" placeholder="Category Name"
+                        <input type="text" name="category_name" placeholder="Category Name" autocomplete="off"
                                class="form-control sl-form-control input-lg category-name"
                                onkeyup="cancelEditCategoryName(this, event)" onblur="txtCategoryOnBlur(this);"
                                value="{{$category->category_name}}">
@@ -88,7 +88,7 @@
                                     <form action="{{route('product.store')}}" method="post"
                                           class="frm-store-product"
                                           onsubmit="btnAddProductOnClick(this); return false;">
-                                        <input type="text" name="product_name"
+                                        <input type="text" name="product_name" autocomplete="off"
                                                class="form-control txt-item txt-product-name">
                                     </form>
                                 </div>
