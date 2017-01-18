@@ -18,6 +18,11 @@ class TermAndConditionController extends Controller
 
     public function __construct(Request $request, TermAndConditionContract $termAndConditionContract)
     {
+        $this->middleware('permission:read_terms_and_conditions', ['only' => ['index']]);
+        $this->middleware('permission:create_terms_and_conditions', ['only' => ['create', 'store']]);
+        $this->middleware('permission:update_terms_and_conditions', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_terms_and_conditions', ['only' => ['destroy']]);
+
         $this->request = $request;
         $this->termAndConditionRepo = $termAndConditionContract;
     }

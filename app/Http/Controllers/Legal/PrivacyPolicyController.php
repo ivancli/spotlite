@@ -18,10 +18,15 @@ class PrivacyPolicyController extends Controller
 
     public function __construct(Request $request, PrivacyPolicyContract $privacyPolicyContract)
     {
+        $this->middleware('permission:read_privacy_policies', ['only' => ['index']]);
+        $this->middleware('permission:create_privacy_policies', ['only' => ['create', 'store']]);
+        $this->middleware('permission:update_privacy_policies', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete_privacy_policies', ['only' => ['destroy']]);
+
         $this->request = $request;
         $this->privacyPolicyRepo = $privacyPolicyContract;
     }
-    
+
     public function index()
     {
         if ($this->request->ajax()) {
