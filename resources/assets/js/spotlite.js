@@ -10,7 +10,8 @@ $(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+        },
+        cache: false
     });
 
     // if (localStorage.getItem("sidebar-is-collapsed-" + user.user_id) == 1) {

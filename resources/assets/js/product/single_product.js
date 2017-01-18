@@ -83,7 +83,7 @@ function getPricesCreate(el) {
     showLoading();
     $.ajax({
         "url": "/site/prices",
-        "method": "get",
+        "method": "post",
         "data": {
             "site_url": $txtSiteURL.val()
         },
@@ -172,24 +172,38 @@ function getPricesCreate(el) {
                         },
                         "error": function (xhr, status, error) {
                             hideLoading();
-                            describeServerRespondedError(xhr.status);
+                            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                                var errorMsg = "";
+                                $.each(xhr.responseJSON, function (key, error) {
+                                    $.each(error, function (index, message) {
+                                        errorMsg += message + " ";
+                                    })
+                                });
+                                alertP("Oops! Something went wrong.", errorMsg);
+                            } else {
+                                describeServerRespondedError(xhr.status);
+                            }
                         }
                     });
                 }
             } else {
                 hideLoading();
-                var errorMsg = "";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to add Product Page URL, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -209,7 +223,17 @@ function addSite(data, callback) {
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -340,18 +364,22 @@ function submitEditProductName(el) {
                 $(el).hide();
                 $(el).closest(".product-wrapper").find(".btn-edit-product.editing").removeClass("editing").show();
             } else {
-                var errorMsg = "Unable to update product. ";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to update product name, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     });
 }

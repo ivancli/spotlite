@@ -19,6 +19,7 @@ use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\AlertEmail;
 use App\Repositories\Product\Category\CategoryRepository;
+use App\Validators\Product\Alert\UpdateAlertValidator;
 use App\Validators\Product\Alert\UpdateProductAlertValidator;
 use App\Validators\Product\Alert\UpdateSiteAlertValidator;
 use Illuminate\Http\Request;
@@ -69,9 +70,11 @@ class AlertController extends Controller
         return view('products.alert.notification_popup')->with(compact(['categories']));
     }
 
-    public function updateNotification(Request $request)
+    public function updateNotification(UpdateAlertValidator $updateAlertValidator, Request $request)
     {
         /*TODO email is not save correctly*/
+
+        $updateAlertValidator->validate($request->all());
 
         $user = auth()->user();
 

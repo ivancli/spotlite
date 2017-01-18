@@ -43,7 +43,17 @@ function btnDeleteSiteOnClick(el) {
                         },
                         "error": function (xhr, status, error) {
                             hideLoading();
-                            describeServerRespondedError(xhr.status);
+                            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                                var errorMsg = "";
+                                $.each(xhr.responseJSON, function (key, error) {
+                                    $.each(error, function (index, message) {
+                                        errorMsg += message + " ";
+                                    })
+                                });
+                                alertP("Oops! Something went wrong.", errorMsg);
+                            } else {
+                                describeServerRespondedError(xhr.status);
+                            }
                         }
                     })
                 }
@@ -55,21 +65,6 @@ function btnDeleteSiteOnClick(el) {
             }
         });
 }
-
-// function toggleEditSiteURL(el) {
-//     var $tr = $(el).closest(".site-wrapper");
-//     if ($(el).hasClass("editing")) {
-//         $(el).removeClass("editing");
-//         $tr.find(".site-url-link").show();
-//         $tr.find(".frm-edit-site-url").hide();
-//     } else {
-//         $tr.find(".site-url-link").hide();
-//         $tr.find(".frm-edit-site-url").show();
-//         $tr.find(".frm-edit-site-url .txt-site-url").focus();
-//         $(el).addClass("editing");
-//     }
-// }
-
 
 function toggleEditSiteURL(el) {
     var $tr = $(el).closest(".site-wrapper");
@@ -102,7 +97,7 @@ function getPricesEdit(el) {
     showLoading();
     $.ajax({
         "url": "/site/prices",
-        "method": "get",
+        "method": "post",
         "data": {
             "site_url": $txtSiteURL.val(),
             "site_id": siteID
@@ -125,15 +120,7 @@ function getPricesEdit(el) {
                                 updateProductEmptyMessage();
                             });
                         } else {
-                            if (typeof response.errors != 'undefined') {
-                                var errorMessage = "";
-                                $.each(response.errors, function (index, error) {
-                                    errorMessage += error + " ";
-                                });
-                                alertP("Oops! Something went wrong.", errorMessage);
-                            } else {
-                                alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
-                            }
+                            alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
                         }
                     })
                 }
@@ -158,32 +145,28 @@ function getPricesEdit(el) {
                                     updateProductEmptyMessage();
                                 });
                             } else {
-                                if (typeof response.errors != 'undefined') {
-                                    var errorMessage = "";
-                                    $.each(response.errors, function (index, error) {
-                                        errorMessage += error + " ";
-                                    });
-                                    alertP("Oops! Something went wrong.", errorMessage);
-                                } else {
-                                    alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
-                                }
+                                alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
                             }
                         });
                     });
                 }
             } else {
-                var errorMsg = "";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to update Product Page URL, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -203,7 +186,17 @@ function editSite(data, callback) {
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -344,7 +337,7 @@ function submitToggleMyPrice(el) {
                 }
             }
         },
-        "error": function () {
+        "error": function (xhr, status, error) {
             hideLoading();
             describeServerRespondedError(xhr.status);
         }

@@ -37,4 +37,30 @@ class TermAndConditionRepository implements TermAndConditionContract
     {
         return $this->termAndCondition->where('active', 'y')->first();
     }
+
+    /**
+     * create new term and condition
+     * @param $data
+     * @return mixed
+     */
+    public function store($data)
+    {
+        return TermAndCondition::create($data);
+    }
+
+    public function deactivateAll()
+    {
+        $termsAndConditions = TermAndCondition::where('active', 'y')->get();
+        foreach ($termsAndConditions as $termAndCondition) {
+            $termAndCondition->active = 'n';
+            $termAndCondition->save();
+        }
+    }
+
+    public function destroy($term_and_condition_id)
+    {
+        $termAndCondition = $this->get($term_and_condition_id);
+        $termAndCondition->delete();
+        return true;
+    }
 }

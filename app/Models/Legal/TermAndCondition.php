@@ -37,6 +37,7 @@ class TermAndCondition extends Model
             "edit" => route("term_and_condition.edit", $key),
             "update" => route("term_and_condition.update", $key),
             "delete" => route("term_and_condition.destroy", $key),
+            "activeness" => route('term_and_condition.activeness', $key),
         );
     }
 }

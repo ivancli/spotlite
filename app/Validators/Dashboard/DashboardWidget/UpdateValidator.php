@@ -26,13 +26,4 @@ class UpdateValidator extends ValidatorAbstract
             "dashboard_widget_name" => "required|max:255"
         );
     }
-
-    protected function getMessages()
-    {
-        return array(
-            "dashboard_widget_type_id.required" => "Chart type is required.",
-            "dashboard_widget_name.required" => "Chart name is required.",
-            "dashboard_widget_name.max" => "Chart name accept maximum 255 characters.",
-        );
-    }
 }

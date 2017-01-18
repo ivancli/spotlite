@@ -26,11 +26,4 @@ class UpdateValidator extends ValidatorAbstract
             "site_url" => "required",
         );
     }
-
-    protected function getMessages()
-    {
-        return array(
-            "site_url" => "URL of the product page is required.",
-        );
-    }
 }

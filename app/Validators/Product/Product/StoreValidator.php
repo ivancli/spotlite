@@ -25,13 +25,4 @@ class StoreValidator extends ValidatorAbstract
             "category_id" => "required"
         );
     }
-
-    protected function getMessages()
-    {
-        return array(
-            "category_id.required" => "Category is required.",
-            "product_name.required" => "Product name is required.",
-            "product_name.max" => "Product name accepts maximum 255 characters."
-        );
-    }
 }

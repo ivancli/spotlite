@@ -7,6 +7,15 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+
+                    <div class="box-tools pull-right">
+                        <a href="{{route('term_and_condition.create')}}" class="btn btn-default btn-sm btn-flat">
+                            Create Term and Condition
+                        </a>
+                    </div>
+                </div>
                 <div class="box-body">
                     <table id="tbl-terms-and-conditions" class="table table-bordered table-hover table-striped">
                         <thead>
@@ -68,14 +77,16 @@
                                     termAndCondition.content.length / 1000 + " kb",
                                     function () {
                                         return $("<div>").append(
-                                                $("<div>").addClass("text-center").append(
+                                                $("<div>").addClass("text-center btn-active").append(
                                                         $("<a>").attr({
                                                             "href": "#",
-                                                            "onclick": "toggleActiveTermsAndConditions(this); return false;"
+                                                            "onclick": "toggleActiveTermsAndConditions(this); return false;",
+                                                            "data-active": termAndCondition.active,
+                                                            "data-url": termAndCondition.urls.activeness
                                                         }).append(
                                                                 $("<i>").addClass("fa fa-check-circle-o").addClass(function () {
                                                                     if (termAndCondition.active == 'y') {
-                                                                        return "text-primary";
+                                                                        return "text-primary ";
                                                                     } else {
                                                                         return "text-muted";
                                                                     }
@@ -104,7 +115,15 @@
                                                         $("<a>").addClass("text-muted").attr({
                                                             "href": termAndCondition.urls.edit
                                                         }).append(
-                                                                $("<i>").addClass("fa fa-pencil-square-o")
+                                                                $("<i>").addClass("glyphicon glyphicon-pencil")
+                                                        ),
+                                                        "&nbsp;&nbsp;",
+                                                        $("<a>").addClass("text-muted").attr({
+                                                            "href": "#",
+                                                            "onclick": "deleteTermAndCondition(this);return false;",
+                                                            "data-url": termAndCondition.urls.delete
+                                                        }).append(
+                                                                $("<i>").addClass("glyphicon glyphicon-trash")
                                                         )
                                                 )
                                         ).html();
@@ -136,6 +155,88 @@
                     describeServerRespondedError(xhr.status);
                 }
             })
+        }
+
+        function toggleActiveTermsAndConditions(el) {
+            $.ajax({
+                "url": $(el).attr("data-url"),
+                "method": "put",
+                "data": {
+                    "active": $(el).attr("data-active") == "y" ? "n" : "y"
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    if (response.status == true) {
+                        $(el).attr("data-active", response.termAndCondition.active);
+                        if (response.termAndCondition.active == 'y') {
+                            $("#tbl-terms-and-conditions").find(".btn-active").find("i").removeClass("text-primary").addClass("text-muted");
+                            $(el).find("i").addClass("text-primary").removeClass("text-muted");
+                        } else {
+                            $(el).find("i").removeClass("text-primary").addClass("text-muted");
+                        }
+                    } else {
+                        alertP("Oops, something went wrong", "Unable to update term and condition activeness, please try again later.");
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var errorMsg = "";
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $.each(error, function (index, message) {
+                                errorMsg += message + " ";
+                            })
+                        });
+                        alertP("Oops! Something went wrong.", errorMsg);
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
+                }
+            })
+        }
+
+        function deleteTermAndCondition(el) {
+            confirmP("Delete Term And Condition", "Are you sure you want to delete this term and condition?", {
+                "affirmative": {
+                    "class": "btn-danger btn-flat",
+                    "text": "DELETE",
+                    "callback": function () {
+                        showLoading();
+                        $.ajax({
+                            "url": $(el).attr("data-url"),
+                            "method": "delete",
+                            "dataType": "json",
+                            "success": function (response) {
+                                hideLoading();
+                                if (response.status == true) {
+                                    $(el).closest("tr").remove();
+                                } else {
+                                    alertP("Oops, something went wrong", "Unable to delete term and condition, please try again later.");
+                                }
+                            },
+                            "error": function (xhr, status, error) {
+                                hideLoading();
+                                if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                                    var errorMsg = "";
+                                    $.each(xhr.responseJSON, function (key, error) {
+                                        $.each(error, function (index, message) {
+                                            errorMsg += message + " ";
+                                        })
+                                    });
+                                    alertP("Oops! Something went wrong.", errorMsg);
+                                } else {
+                                    describeServerRespondedError(xhr.status);
+                                }
+                            }
+                        })
+                    },
+                    "dismiss": true
+                },
+                "negative": {
+                    "class": "btn-default btn-flat",
+                    "text": "CANCEL",
+                    "dismiss": true
+                }
+            });
         }
     </script>
 @stop

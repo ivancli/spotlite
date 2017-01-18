@@ -225,7 +225,19 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var $errorContainer = $("#welcome-errors-container");
+                        $errorContainer.empty();
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $.each(error, function (index, message) {
+                                $errorContainer.append(
+                                        $("<li>").text(error)
+                                );
+                            })
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             });
         }

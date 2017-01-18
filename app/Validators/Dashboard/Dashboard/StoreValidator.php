@@ -27,7 +27,7 @@ class StoreValidator extends ValidatorAbstract
         $validation = $this->validator->make($data, $rules, $messages);
         if ($validation->fails()) {
             if ($throw) {
-                throw new ValidationException($validation->messages());
+                $this->throwValidationException($validation);
             } else {
                 return $validation->messages();
             }
@@ -45,15 +45,6 @@ class StoreValidator extends ValidatorAbstract
     {
         return array(
             "dashboard_name" => "required|max:255|unique:dashboards,dashboard_name,NULL,dashboard_id,user_id,$id",
-        );
-    }
-
-    protected function getMessages()
-    {
-        return array(
-            "dashboard_name.required" => "Name of the new dashboard is required.",
-            "dashboard_name.max" => "Dashboard name accepts maximum 255 characters.",
-            "dashboard_name.unique" => "A dashboard with the same name already exists."
         );
     }
 }

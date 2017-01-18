@@ -8,21 +8,20 @@
         <div class="col-md-12">
             <div class="box box-solid">
                 <div class="box-body">
-                    {!! Form::model($termAndCondition, array('route' => array('term_and_condition.update', $termAndCondition->getKey()), 'method'=>'put', 'onsubmit' => 'submitUpdateTermAndCondition(this); return false;', 'id' => 'frm-edit-term-and-condition')) !!}
-                    <input type="hidden" name="content" id="txt-term-and-condition-content">
-                    <div class="row m-b-20">
-                        <div class="col-sm-12">
-                            <div id="terms-and-conditions-editor">
-                                {!! $termAndCondition->content !!}
+                    <form action="{{route('term_and_condition.store')}}" id="frm-edit-term-and-condition" onsubmit="submitStoreTermAndCondition(this); return false;">
+                        <input type="hidden" name="content" id="txt-term-and-condition-content">
+                        <div class="row m-b-20">
+                            <div class="col-sm-12">
+                                <div id="terms-and-conditions-editor">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 text-right">
-                            <button id="btn-save-terms-and-conditions" class="btn btn-primary btn-flat">SAVE</button>
+                        <div class="row">
+                            <div class="col-sm-12 text-right">
+                                <button id="btn-save-terms-and-conditions" class="btn btn-primary btn-flat">SAVE</button>
+                            </div>
                         </div>
-                    </div>
-                    {!! Form::close() !!}
+                    </form>
                 </div>
             </div>
         </div>
@@ -36,13 +35,13 @@
             CKEDITOR.replace('terms-and-conditions-editor');
         });
 
-        function submitUpdateTermAndCondition(el) {
+        function submitStoreTermAndCondition(el) {
             var content = CKEDITOR.instances['terms-and-conditions-editor'].getData();
             if (content.length > 0) {
                 $("#txt-term-and-condition-content").val(content);
                 $.ajax({
                     "url": $(el).attr("action"),
-                    "method": "put",
+                    "method": "post",
                     "data": $(el).serialize(),
                     "dataType": "json",
                     "success": function (response) {

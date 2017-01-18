@@ -30,15 +30,4 @@ class UpdateCategoryReportValidator extends ValidatorAbstract
         );
     }
 
-    protected function getMessages()
-    {
-        return array(
-            "frequency.required" => "Frequency is required.",
-            "time.required_if" => "Delivery time is required.",
-            "day.required_if" => "Delivery day is required.",
-            "date.required_if" => "Delivery date is required.",
-            "email.required" => "Please provide at least 1 email address to receive report.",
-            "email.*.email" => "Please enter a valid email address."
-        );
-    }
 }

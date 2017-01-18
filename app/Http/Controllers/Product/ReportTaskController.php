@@ -101,22 +101,7 @@ class ReportTaskController extends Controller
      */
     public function updateCategoryReport(Request $request, $category_id)
     {
-        try {
-            $this->updateCategoryReportValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
-
+        $this->updateCategoryReportValidator->validate($request->all());
         if ($request->get('report_task_owner_id') != $category_id) {
             abort(404);
             return false;
@@ -213,22 +198,7 @@ class ReportTaskController extends Controller
 
     public function updateProductReport(Request $request, $product_id)
     {
-        try {
-            $this->updateProductReportValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
-
+        $this->updateProductReportValidator->validate($request->all());
         if ($request->get('report_task_owner_id') != $product_id) {
             abort(404);
             return false;

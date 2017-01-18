@@ -132,21 +132,7 @@ class SiteController extends Controller
             }
         }
 
-        try {
-            $storeValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $storeValidator->validate($request->all());
         event(new SiteStoring());
         $input = $request->all();
         $site = $this->siteRepo->createSite($input);
@@ -309,21 +295,7 @@ class SiteController extends Controller
      */
     public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        try {
-            $updateValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $updateValidator->validate($request->all());
         $site = $this->siteRepo->getSite($id);
         event(new SiteUpdating($site));
 
@@ -397,22 +369,7 @@ class SiteController extends Controller
 
     public function getPrices(GetPriceValidator $getPriceValidator, CrawlerInterface $crawlerClass, ParserInterface $parserClass, Request $request)
     {
-        try {
-            $getPriceValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
-
+        $getPriceValidator->validate($request->all());
         $domainURL = parse_url($request->get('site_url'))['host'];
         $domain = Domain::where("domain_url", $domainURL)->first();
         if (!is_null($domain)) {

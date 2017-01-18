@@ -100,21 +100,7 @@ class ProfileController extends Controller
 
     public function initialUpdate(InitUpdateValidator $initUpdateValidator, Request $request)
     {
-        try {
-            $initUpdateValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $initUpdateValidator->validate($request->all());
 
         $user = auth()->user();
         event(new ProfileUpdating($user));

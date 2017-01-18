@@ -323,7 +323,17 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var errorMsg = "";
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $.each(error, function (index, message) {
+                                errorMsg += message + " ";
+                            })
+                        });
+                        alertP("Oops! Something went wrong.", errorMsg);
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                     if ($.isFunction(failCallback)) {
                         failCallback(xhr, status, error);
                     }

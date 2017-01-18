@@ -23,7 +23,8 @@
         <strong><i>by {{$dashboard->user->first_name}} {{$dashboard->user->last_name}}</i></strong>
         &nbsp; &nbsp; &#124; &nbsp;
         <div class="btn-group cursor-pointer" style="vertical-align: baseline;">
-            <a type="button" class="text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="btn-dropdown-manage-dashboard">
+            <a type="button" class="text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+               id="btn-dropdown-manage-dashboard">
                 <strong>
                     Manage Dashboard <i class="fa fa-cog"></i>
                 </strong>
@@ -223,18 +224,22 @@
                     $(".lnk-dashboard-" + response.dashboard.dashboard_id).text(response.dashboard.dashboard_name);
 
                 } else {
-                    var errorMsg = "";
-                    if (response.errors != null) {
-                        $.each(response.errors, function (index, error) {
-                            errorMsg += error + " ";
-                        })
-                    }
-                    alertP("Oops! Something went wrong.", errorMsg);
+                    alertP("Oops! Something went wrong.", "Unable to update dashboard name, please try again later.");
                 }
             },
             "error": function (xhr, status, error) {
                 hideLoading();
-                describeServerRespondedError(xhr.status);
+                if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                    var errorMsg = "";
+                    $.each(xhr.responseJSON, function (key, error) {
+                        $.each(error, function (index, message) {
+                            errorMsg += message + " ";
+                        })
+                    });
+                    alertP("Oops! Something went wrong.", errorMsg);
+                } else {
+                    describeServerRespondedError(xhr.status);
+                }
             }
         })
     }

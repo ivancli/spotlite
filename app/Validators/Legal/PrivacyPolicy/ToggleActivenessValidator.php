@@ -1,17 +1,17 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Ivan
- * Date: 11/09/2016
- * Time: 7:46 PM
+ * User: ivan.li
+ * Date: 1/18/2017
+ * Time: 3:52 PM
  */
 
-namespace App\Validators\Product\Site;
+namespace App\Validators\Legal\PrivacyPolicy;
 
 
 use App\Validators\ValidatorAbstract;
 
-class StoreValidator extends ValidatorAbstract
+class ToggleActivenessValidator extends ValidatorAbstract
 {
 
     /**
@@ -23,7 +23,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-            "site_url" => "required|url|max:2083",
+            'active' => 'required'
         );
     }
 }

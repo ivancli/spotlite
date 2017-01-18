@@ -79,7 +79,7 @@ Route::group(['middleware' => ['auth']], function () {
             'index', 'edit'
         ]]);
         //site routes
-        Route::get('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
+        Route::post('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
         Route::put("site/{site_id}/my_price", 'Product\SiteController@setMyPrice')->name('site.my_price');
         Route::put('site/order', 'Product\SiteController@updateOrder')->name('site.order');
         Route::resource('site', 'Product\SiteController');
@@ -200,6 +200,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('privacy_policy', 'Legal\PrivacyPolicyController', ['except' => ['show']]);
     Route::resource('term_and_condition', 'Legal\TermAndConditionController', ['except' => ['show']]);
+    Route::put('privacy_policy/activeness/{id}', 'Legal\PrivacyPolicyController@toggleActiveness')->name('privacy_policy.activeness');
+    Route::put('term_and_condition/activeness/{id}', 'Legal\TermAndConditionController@toggleActiveness')->name('term_and_condition.activeness');
 });
 
 /**

@@ -18,4 +18,16 @@ interface TermAndConditionContract
     public function get($term_and_condition_id);
 
     public function getActive();
+
+    /**
+     * create new term and condition
+     * @param $data
+     * @return mixed
+     */
+    public function store($data);
+
+    public function deactivateAll();
+
+    public function destroy($term_and_condition_id);
+
 }
