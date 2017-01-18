@@ -458,7 +458,7 @@ function getPricesCreate(el) {
                     showLoading();
                     $.ajax({
                         "url": "/site/prices",
-                        "method": "get",
+                        "method": "post",
                         "data": {
                             "site_url": $txtSiteURL.val()
                         },
