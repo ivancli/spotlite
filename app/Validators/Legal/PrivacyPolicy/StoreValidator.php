@@ -1,5 +1,5 @@
 <?php
-namespace App\Validators\Legal\TermAndCondition;
+namespace App\Validators\Legal\PrivacyPolicy;
 use App\Validators\ValidatorAbstract;
 
 /**

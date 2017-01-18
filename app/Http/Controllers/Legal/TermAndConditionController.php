@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Legal;
 
 use App\Contracts\Repository\Legal\TermAndConditionContract;
+use App\Validators\Legal\TermAndCondition\StoreValidator;
+use App\Validators\Legal\TermAndCondition\ToggleActivenessValidator;
+use App\Validators\Legal\TermAndCondition\UpdateValidator;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -24,11 +27,7 @@ class TermAndConditionController extends Controller
         if ($this->request->ajax()) {
             $termsAndConditions = $this->termAndConditionRepo->all();
             $status = true;
-            if ($this->request->wantsJson()) {
-                return response()->json(compact(['status', 'termsAndConditions']));
-            } else {
-                return view('legal.term_and_condition.index');
-            }
+            return response()->json(compact(['status', 'termsAndConditions']));
         } else {
             return view('legal.term_and_condition.index');
         }
@@ -59,6 +58,30 @@ class TermAndConditionController extends Controller
         }
     }
 
+    public function create()
+    {
+        return view('legal.term_and_condition.create');
+    }
+
+    public function store(StoreValidator $storeValidator)
+    {
+        $storeValidator->validate($this->request->all());
+        if ($this->request->has('active') && $this->request->get('active') == 'y') {
+            $this->termAndConditionRepo->deactivateAll();
+        }
+        $termAndCondition = $this->termAndConditionRepo->store($this->request->all());
+        $status = true;
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status', 'termAndCondition']));
+            } else {
+                return compact(['status', 'termAndCondition']);
+            }
+        } else {
+            return redirect()->back()->with(compact(['status', 'termAndCondition']));
+        }
+    }
+
     public function edit($id)
     {
         $termAndCondition = $this->termAndConditionRepo->get($id);
@@ -69,9 +92,79 @@ class TermAndConditionController extends Controller
         return view('legal.term_and_condition.edit')->with(compact(['termAndCondition']));
     }
 
-    public function update($id)
+    public function update(UpdateValidator $updateValidator, $id)
     {
+        $termAndCondition = $this->termAndConditionRepo->get($id);
+        if (is_null($termAndCondition)) {
+            abort(404);
+            return false;
+        }
 
-        dd($this->request->all());
+        $updateValidator->validate($this->request->all());
+
+        if ($this->request->has('active') && $this->request->get('active') == 'y') {
+            $this->termAndConditionRepo->deactivateAll();
+        }
+
+        $termAndCondition->update($this->request->all());
+        $status = true;
+
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status', 'termAndCondition']));
+            } else {
+                return compact(['status', 'termAndCondition']);
+            }
+        } else {
+            return redirect()->back()->with(compact(['status', 'termAndCondition']));
+        }
+    }
+
+    public function toggleActiveness(ToggleActivenessValidator $toggleActivenessValidator, $id)
+    {
+        $termAndCondition = $this->termAndConditionRepo->get($id);
+        if (is_null($termAndCondition)) {
+            abort(404);
+            return false;
+        }
+
+        $toggleActivenessValidator->validate($this->request->all());
+
+        if ($this->request->has('active') && $this->request->get('active') == 'y') {
+            $this->termAndConditionRepo->deactivateAll();
+        }
+
+        $termAndCondition->update($this->request->all());
+        $status = true;
+
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status', 'termAndCondition']));
+            } else {
+                return compact(['status', 'termAndCondition']);
+            }
+        } else {
+            return redirect()->back()->with(compact(['status', 'termAndCondition']));
+        }
+    }
+
+    public function destroy($id)
+    {
+        $termAndCondition = $this->termAndConditionRepo->get($id);
+        if (is_null($termAndCondition)) {
+            abort(404);
+            return false;
+        }
+        $status = $this->termAndConditionRepo->destroy($id);
+
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
+                return response()->json(compact(['status']));
+            } else {
+                return compact(['status']);
+            }
+        } else {
+            return redirect()->back()->with(compact(['status']));
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?php
-namespace App\Validators\Legal\TermAndCondition;
+namespace App\Validators\Legal\PrivacyPolicy;
+
 use App\Validators\ValidatorAbstract;
 
 /**
@@ -8,7 +9,7 @@ use App\Validators\ValidatorAbstract;
  * Date: 1/17/2017
  * Time: 3:48 PM
  */
-class StoreValidator extends ValidatorAbstract
+class UpdateValidator extends ValidatorAbstract
 {
 
     /**
@@ -20,7 +21,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-            'content' => 'required',
+            'content' => 'required'
         );
     }
 }

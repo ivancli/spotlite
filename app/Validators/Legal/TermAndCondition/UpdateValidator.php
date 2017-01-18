@@ -1,5 +1,6 @@
 <?php
 namespace App\Validators\Legal\TermAndCondition;
+
 use App\Validators\ValidatorAbstract;
 
 /**
@@ -20,14 +21,7 @@ class UpdateValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-//            "dashboard_widget_type_id" => "required|exists:dashboard_widget_types,dashboard_widget_type_id",
-        );
-    }
-
-    protected function getMessages()
-    {
-        return array(
-//            "dashboard_id.required" => "Dashboard is required.",
+            'content' => 'required'
         );
     }
 }

@@ -178,6 +178,9 @@ return [
             'required' => 'Last name is required.',
             'max' => 'Last name accepts maximum :max characters.',
         ],
+        'active' => [
+            'required' => 'Activeness is required.',
+        ],
     ],
 
     /*

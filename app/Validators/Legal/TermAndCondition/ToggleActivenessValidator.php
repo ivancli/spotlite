@@ -1,14 +1,17 @@
 <?php
-namespace App\Validators\Legal\TermAndCondition;
-use App\Validators\ValidatorAbstract;
-
 /**
  * Created by PhpStorm.
  * User: ivan.li
- * Date: 1/17/2017
- * Time: 3:48 PM
+ * Date: 1/18/2017
+ * Time: 3:52 PM
  */
-class StoreValidator extends ValidatorAbstract
+
+namespace App\Validators\Legal\TermAndCondition;
+
+
+use App\Validators\ValidatorAbstract;
+
+class ToggleActivenessValidator extends ValidatorAbstract
 {
 
     /**
@@ -20,7 +23,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return array(
-            'content' => 'required',
+            'active' => 'required'
         );
     }
 }
