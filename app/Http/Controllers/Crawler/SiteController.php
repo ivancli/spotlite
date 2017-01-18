@@ -83,21 +83,7 @@ class SiteController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $this->storeValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $this->storeValidator->validate($request->all());
 
         $site = $this->siteRepo->createSite($request->all());
         $status = true;

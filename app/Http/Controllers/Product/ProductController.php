@@ -115,21 +115,7 @@ class ProductController extends Controller
             }
         }
 
-        try {
-            $storeValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $storeValidator->validate($request->all());
         event(new ProductStoring());
         $product = $this->productRepo->createProduct($request->all());
         event(new ProductStored($product));
@@ -179,21 +165,7 @@ class ProductController extends Controller
      */
     public function update(UpdateValidator $updateValidator, Request $request, $id)
     {
-        try {
-            $updateValidator->validate($request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $updateValidator->validate($request->all());
         $product = $this->productRepo->getProduct($id);
         event(new ProductUpdating($product));
         $product = $this->productRepo->updateProduct($id, $request->all());

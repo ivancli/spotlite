@@ -66,21 +66,8 @@ class DashboardWidgetController extends Controller
     public function store(StoreValidator $storeValidator)
     {
 
-        try {
-            $storeValidator->validate($this->request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($this->request->ajax()) {
-                if ($this->request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $storeValidator->validate($this->request->all());
+
         if ($this->request->get('timespan') == 'custom') {
             $status = false;
             $errors = array("Cannot add content with custom timespan, please choose different timespan to add to dashboard.");
@@ -169,21 +156,8 @@ class DashboardWidgetController extends Controller
 
     public function update(UpdateValidator $updateValidator, $id)
     {
-        try {
-            $updateValidator->validate($this->request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($this->request->ajax()) {
-                if ($this->request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $updateValidator->validate($this->request->all());
+
         $dashboardWidget = $this->dashboardWidgetRepo->updateWidget($this->request->all(), $id);
 
         $dashboardWidget->clearPreferences();

@@ -24,13 +24,4 @@ class StoreValidator extends ValidatorAbstract
             "site_url" => "required|max:2083|url",
         );
     }
-
-    protected function getMessages()
-    {
-        return array(
-            "site_url.required" => "Please enter: Site URL",
-            "site_url.url" => "Please provide a valid URL.",
-            "site_url.max" => "Site URL accepts maximum 2083 characters."
-        );
-    }
 }

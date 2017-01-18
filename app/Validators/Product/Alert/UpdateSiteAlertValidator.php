@@ -4,6 +4,9 @@ namespace App\Validators\Product\Alert;
 use App\Validators\ValidatorAbstract;
 
 /**
+ * THIS VALIDATOR IS NOT BEING USED
+ *
+ *
  * Created by PhpStorm.
  * User: Ivan
  * Date: 11/09/2016

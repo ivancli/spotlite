@@ -45,22 +45,24 @@
                         }
                         $("#modal-dashboard-store").modal("hide");
                     } else {
-                        if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-dashboard-store .errors-container");
-                            $errorContainer.empty();
-                            $.each(response.errors, function (index, error) {
-                                $errorContainer.append(
-                                        $("<li>").text(error)
-                                );
-                            });
-                        } else {
-                            alertP("Oops! Something went wrong.", "Unable to create dashboard, please try again later.");
-                        }
+                        alertP("Oops! Something went wrong.", "Unable to create dashboard, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var $errorContainer = $(".errors-container");
+                        $errorContainer.empty();
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $.each(error, function (index, message) {
+                                $errorContainer.append(
+                                        $("<li>").text(message)
+                                );
+                            })
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }

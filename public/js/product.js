@@ -1,4 +1,3 @@
-
 function btnDeleteCategoryOnClick(el) {
     deletePopup("Delete Category", "Are you sure you want to delete this Category?",
         "By deleting this category, you will lose the following:",
@@ -104,18 +103,22 @@ function btnAddProductOnClick(el) {
                     });
                 }
             } else {
-                var errorMsg = "";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to add product, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -176,24 +179,26 @@ function submitEditCategoryName(el) {
             if (response.status == true) {
                 gaEditCategory();
                 alertP("Update Category", "Category name has been updated.");
-                console.info("previous", $(el));
-                console.info("now", $(el).closest(".tbl-category").find(".btn-action.editing"));
                 $(el).siblings(".category-name-link").text($(el).find(".category-name").val()).show();
                 $(el).hide();
                 $(el).closest(".tbl-category").find(".btn-edit-category.editing").removeClass("editing").show();
             } else {
-                var errorMsg = "Unable to edit category name. ";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to update category name, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     });
 }
@@ -416,7 +421,7 @@ function getPricesCreate(el) {
     showLoading();
     $.ajax({
         "url": "/site/prices",
-        "method": "get",
+        "method": "post",
         "data": {
             "site_url": $txtSiteURL.val()
         },
@@ -505,24 +510,38 @@ function getPricesCreate(el) {
                         },
                         "error": function (xhr, status, error) {
                             hideLoading();
-                            describeServerRespondedError(xhr.status);
+                            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                                var errorMsg = "";
+                                $.each(xhr.responseJSON, function (key, error) {
+                                    $.each(error, function (index, message) {
+                                        errorMsg += message + " ";
+                                    })
+                                });
+                                alertP("Oops! Something went wrong.", errorMsg);
+                            } else {
+                                describeServerRespondedError(xhr.status);
+                            }
                         }
                     });
                 }
             } else {
                 hideLoading();
-                var errorMsg = "";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to add Product Page URL, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -542,7 +561,17 @@ function addSite(data, callback) {
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -673,18 +702,22 @@ function submitEditProductName(el) {
                 $(el).hide();
                 $(el).closest(".product-wrapper").find(".btn-edit-product.editing").removeClass("editing").show();
             } else {
-                var errorMsg = "Unable to update product. ";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to update product name, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     });
 }
@@ -903,7 +936,17 @@ function btnDeleteSiteOnClick(el) {
                         },
                         "error": function (xhr, status, error) {
                             hideLoading();
-                            describeServerRespondedError(xhr.status);
+                            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                                var errorMsg = "";
+                                $.each(xhr.responseJSON, function (key, error) {
+                                    $.each(error, function (index, message) {
+                                        errorMsg += message + " ";
+                                    })
+                                });
+                                alertP("Oops! Something went wrong.", errorMsg);
+                            } else {
+                                describeServerRespondedError(xhr.status);
+                            }
                         }
                     })
                 }
@@ -915,21 +958,6 @@ function btnDeleteSiteOnClick(el) {
             }
         });
 }
-
-// function toggleEditSiteURL(el) {
-//     var $tr = $(el).closest(".site-wrapper");
-//     if ($(el).hasClass("editing")) {
-//         $(el).removeClass("editing");
-//         $tr.find(".site-url-link").show();
-//         $tr.find(".frm-edit-site-url").hide();
-//     } else {
-//         $tr.find(".site-url-link").hide();
-//         $tr.find(".frm-edit-site-url").show();
-//         $tr.find(".frm-edit-site-url .txt-site-url").focus();
-//         $(el).addClass("editing");
-//     }
-// }
-
 
 function toggleEditSiteURL(el) {
     var $tr = $(el).closest(".site-wrapper");
@@ -962,7 +990,7 @@ function getPricesEdit(el) {
     showLoading();
     $.ajax({
         "url": "/site/prices",
-        "method": "get",
+        "method": "post",
         "data": {
             "site_url": $txtSiteURL.val(),
             "site_id": siteID
@@ -985,15 +1013,7 @@ function getPricesEdit(el) {
                                 updateProductEmptyMessage();
                             });
                         } else {
-                            if (typeof response.errors != 'undefined') {
-                                var errorMessage = "";
-                                $.each(response.errors, function (index, error) {
-                                    errorMessage += error + " ";
-                                });
-                                alertP("Oops! Something went wrong.", errorMessage);
-                            } else {
-                                alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
-                            }
+                            alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
                         }
                     })
                 }
@@ -1018,32 +1038,28 @@ function getPricesEdit(el) {
                                     updateProductEmptyMessage();
                                 });
                             } else {
-                                if (typeof response.errors != 'undefined') {
-                                    var errorMessage = "";
-                                    $.each(response.errors, function (index, error) {
-                                        errorMessage += error + " ";
-                                    });
-                                    alertP("Oops! Something went wrong.", errorMessage);
-                                } else {
-                                    alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
-                                }
+                                alertP("Oops! Something went wrong.", "Unable to edit site, please try again later.");
                             }
                         });
                     });
                 }
             } else {
-                var errorMsg = "";
-                if (response.errors != null) {
-                    $.each(response.errors, function (index, error) {
-                        errorMsg += error + " ";
-                    })
-                }
-                alertP("Oops! Something went wrong.", errorMsg);
+                alertP("Oops! Something went wrong.", 'Unable to update Product Page URL, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -1063,7 +1079,17 @@ function editSite(data, callback) {
         },
         "error": function (xhr, status, error) {
             hideLoading();
-            describeServerRespondedError(xhr.status);
+            if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                var errorMsg = "";
+                $.each(xhr.responseJSON, function (key, error) {
+                    $.each(error, function (index, message) {
+                        errorMsg += message + " ";
+                    })
+                });
+                alertP("Oops! Something went wrong.", errorMsg);
+            } else {
+                describeServerRespondedError(xhr.status);
+            }
         }
     })
 }
@@ -1204,7 +1230,7 @@ function submitToggleMyPrice(el) {
                 }
             }
         },
-        "error": function () {
+        "error": function (xhr, status, error) {
             hideLoading();
             describeServerRespondedError(xhr.status);
         }

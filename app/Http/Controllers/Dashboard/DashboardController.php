@@ -189,21 +189,7 @@ class DashboardController extends Controller
 
     public function store(StoreValidator $storeValidator)
     {
-        try {
-            $storeValidator->validate($this->request->all());
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($this->request->ajax()) {
-                if ($this->request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $storeValidator->validate($this->request->all());
 
         $dashboard = $this->dashboardRepo->storeDashboard($this->request->all());
 
@@ -290,23 +276,9 @@ class DashboardController extends Controller
             return false;
         }
 
-        try {
-            $input = $this->request->all();
-            $input['dashboard_id'] = $id;
-            $updateValidator->validate($input);
-        } catch (ValidationException $e) {
-            $status = false;
-            $errors = $e->getErrors();
-            if ($this->request->ajax()) {
-                if ($this->request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
-                } else {
-                    return compact(['status', 'errors']);
-                }
-            } else {
-                return redirect()->back()->withInput()->withErrors($errors);
-            }
-        }
+        $input = $this->request->all();
+        $input['dashboard_id'] = $id;
+        $updateValidator->validate($input);
 
         if (!isset($input['is_hidden'])) {
             $input['is_hidden'] = null;

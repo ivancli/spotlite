@@ -1,6 +1,6 @@
 <div class="form-group required">
     {!! Form::label('dashboard_name', 'What do you want to call this dashboard?') !!}
-    {!! Form::text('dashboard_name', null, array('class' => 'form-control', 'placeholder' => 'Dashboard Name')) !!}
+    {!! Form::text('dashboard_name', null, array('class' => 'form-control', 'placeholder' => 'Dashboard Name', 'autocomplete' => 'off')) !!}
 </div>
 
 @if(isset($templates) && count($templates) > 0)

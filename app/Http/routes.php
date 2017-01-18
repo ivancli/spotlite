@@ -79,7 +79,7 @@ Route::group(['middleware' => ['auth']], function () {
             'index', 'edit'
         ]]);
         //site routes
-        Route::get('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
+        Route::post('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
         Route::put("site/{site_id}/my_price", 'Product\SiteController@setMyPrice')->name('site.my_price');
         Route::put('site/order', 'Product\SiteController@updateOrder')->name('site.order');
         Route::resource('site', 'Product\SiteController');

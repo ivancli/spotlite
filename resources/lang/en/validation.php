@@ -93,17 +93,91 @@ return [
 
     'custom' => [
         'email' => [
-            'exists' => 'This email address is not registered on SpotLite.'
+            'exists' => 'This email address is not registered on SpotLite.',
+            'email' => 'Email address is required.',
         ],
         'captcha' => [
             'robot' => 'Please verify that you are not a robot.'
         ],
         'password' => [
-            'required' => 'Please enter a password',
+            'required' => 'Please enter a password.',
             'min' => 'Password requires minimum :min characters.',
             'confirmed' => 'Password does NOT matched with Confirm Password.',
             'token' => 'Reset password token is invalid.'
-        ]
+        ],
+        'site_url' => [
+            'required' => 'Please enter a Product Page URL.',
+            'max' => 'Product Page URL accepts maximum :max characters.',
+            'url' => 'Please enter a valid Product Page URL.',
+        ],
+        'dashboard_name' => [
+            'required' => 'Dashboard name is required.',
+            'max' => 'Dashboard name accepts maximum :max characters.',
+            'unique' => 'A dashboard with the same name already exists.',
+        ],
+        'dashboard_id' => [
+            'required' => 'Dashboard is required.',
+            'exists' => 'Dashboard does not exist.',
+        ],
+        'dashboard_widget_type_id' => [
+            'required' => 'Chart type is required.',
+            'exists' => 'Chart type does not exist.',
+        ],
+        'dashboard_widget_name' => [
+            'required' => 'Chart name is required.',
+            'max' => 'Chart name accepts maximum :max characters.',
+        ],
+        'products.*.specificPrice' => [
+            'required_if' => 'Please provide specific price for product alert.',
+        ],
+        'category_name' => [
+            'required' => 'Category name is required.',
+            'max' => 'Category name accepts maximum :max characters.',
+            'unique_per_user' => 'A category with the same name already exists.',
+        ],
+        'category_id' => [
+            'required' => 'Category is required.',
+        ],
+        'product_name' => [
+            'required' => 'Product name is required.',
+            'max' => 'Product name accepts maximum :max characters.',
+        ],
+        'frequency' => [
+            'required' => 'Frequency is required.',
+        ],
+        'time' => [
+            'required_if' => 'Delivery time is required.',
+        ],
+        'day' => [
+            'required_if' => 'Delivery day is required.',
+        ],
+        'date' => [
+            'required_if' => 'Delivery date is required.',
+        ],
+        'email.*' => [
+            'email' => 'Please enter a valid email address.',
+        ],
+        'industry' => [
+            'required' => 'Industry is required.',
+        ],
+        'company_type' => [
+            'required' => 'Company type is required.',
+        ],
+        'company_url' => [
+            'url' => 'Please enter a correct URL for your site (including the http://).',
+            'max' => 'Company URL accepts maximum :max characters.',
+        ],
+        'category' => [
+            'required_if' => 'Please select sample products from the list.',
+        ],
+        'first_name' => [
+            'required' => 'First name is required.',
+            'max' => 'First name accepts maximum :max characters.',
+        ],
+        'last_name' => [
+            'required' => 'Last name is required.',
+            'max' => 'Last name accepts maximum :max characters.',
+        ],
     ],
 
     /*

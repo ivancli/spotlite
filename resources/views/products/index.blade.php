@@ -359,18 +359,22 @@
                             });
                         }
                     } else {
-                        var errorMsg = "";
-                        if (response.errors != null) {
-                            $.each(response.errors, function (index, error) {
-                                errorMsg += error + " ";
-                            })
-                        }
-                        alertP("Oops! Something went wrong.", errorMsg);
+                        alertP("Oops! Something went wrong.", 'Unable to add category, please try again later.');
                     }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
+                        var errorMsg = "";
+                        $.each(xhr.responseJSON, function (key, error) {
+                            $.each(error, function (index, message) {
+                                errorMsg += message + " ";
+                            })
+                        });
+                        alertP("Oops! Something went wrong.", errorMsg);
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }
