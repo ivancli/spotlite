@@ -66,7 +66,7 @@
                 "success": function (response) {
                     hideLoading();
                     if (response.status == true) {
-                        alertP('Email Sent', 'An email with the reset password link has been sent to the email address provided', function () {
+                        alertP('Email Sent', 'An email with the reset password link has been sent to the email address provided.', function () {
                             window.location.href = "{{route('login.get')}}";
                         });
                     }
