@@ -33,7 +33,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-6 col-sm-push-6 text-right">
-                    {!! Form::submit('FORGOT', ["class"=>"btn btn-default btn-block btn-flat", "href"=>"#"]) !!}
+                    {!! Form::submit('RESET', ["class"=>"btn btn-default btn-block btn-flat", "href"=>"#"]) !!}
                 </div>
                 <div class="col-sm-6 col-sm-pull-6">
                     <div style="padding-top: 5px; padding-bottom: 5px;">
