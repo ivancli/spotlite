@@ -398,13 +398,13 @@ class AlertRepository implements AlertContract
 
 
             /* the alert site is my site, no need to compare or notify */
-        } else {
+        } elseif ($alert->comparison_price_type == "specific price") {
             $comparisonPrice = $alert->comparison_price;
         }
-
-        if (is_null($comparisonPrice)) {
+        if ($alert->comparison_price_type != "price changed" && (!isset($comparisonPrice) || is_null($comparisonPrice))) {
             return false;
         }
+
 
         $alertingSites = array();
 
@@ -429,8 +429,13 @@ class AlertRepository implements AlertContract
             if ($alert->comparison_price_type == 'my price' && $mySite->getKey() == $site->getKey()) {
                 continue;
             }
-
-            $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
+            switch ($alert->comparison_price_type) {
+                case "price changed":
+                    $alertUser = true;
+                    break;
+                default:
+                    $alertUser = $this->comparePrices($site->recent_price, $comparisonPrice, $alert->operator);
+            }
 
             if ($alertUser && $site->price_diff != 0) {
                 $alertingSites[] = $site;

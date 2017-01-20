@@ -266,13 +266,13 @@ class SpotLiteRoleSeeder extends Seeder
 
         $updateDashboardPreference = new \Invigor\UM\UMPermission();
         $updateDashboardPreference->name = "update_dashboard_preference";
-        $updateDashboardPreference->display_name = "Delete Dashboard";
+        $updateDashboardPreference->display_name = "Update Dashboard Preference";
         $updateDashboardPreference->parent_id = $manageDashboard->getKey();
         $updateDashboardPreference->save();
 
         $deleteDashboardPreference = new \Invigor\UM\UMPermission();
         $deleteDashboardPreference->name = "delete_dashboard_preference";
-        $deleteDashboardPreference->display_name = "Delete Dashboard";
+        $deleteDashboardPreference->display_name = "Delete Dashboard Preference";
         $deleteDashboardPreference->parent_id = $manageDashboard->getKey();
         $deleteDashboardPreference->save();
 
