@@ -85,12 +85,12 @@ class Category extends Model
 
     public function getProductCountAttribute()
     {
-        return $this->products->count();
+        return $this->products()->count();
     }
 
     public function getSiteCountAttribute()
     {
-        return $this->sites->count();
+        return $this->sites()->count();
     }
 
     public function getUrlsAttribute()
