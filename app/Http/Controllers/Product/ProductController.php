@@ -68,10 +68,9 @@ class ProductController extends Controller
                 return $html;
             }
         } else {
-            $categories = auth()->user()->categories;
             $productCount = $this->productRepo->getProductsCount();
             event(new ProductListViewed());
-            return view('products.index')->with(compact(['categories', 'productCount']));
+            return view('products.index')->with(compact(['productCount']));
         }
     }
 
