@@ -616,11 +616,11 @@
         },
         {
             "name": "invigor/crawler",
-            "version": "1.1.24",
+            "version": "1.1.25",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git",
-                "reference": "a026ecda4f6c67a0ab74fc7a0495ff255eb90864"
+                "reference": "bd307370175e848e54249bd449768200984972ba"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -650,7 +650,7 @@
                 }
             ],
             "description": "Invigor Crawler Package",
-            "time": "2017-01-22T23:02:06+00:00"
+            "time": "2017-01-23T23:59:06+00:00"
         },
         {
             "name": "invigor/um",
@@ -1030,16 +1030,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.32",
+            "version": "1.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "1b5c4a0031697f46e779a9d1b309c2e1b24daeab"
+                "reference": "5c7f98498b12d47f9de90ec9186a90000125777c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/1b5c4a0031697f46e779a9d1b309c2e1b24daeab",
-                "reference": "1b5c4a0031697f46e779a9d1b309c2e1b24daeab",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/5c7f98498b12d47f9de90ec9186a90000125777c",
+                "reference": "5c7f98498b12d47f9de90ec9186a90000125777c",
                 "shasum": ""
             },
             "require": {
@@ -1109,7 +1109,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2016-10-19T20:38:46+00:00"
+            "time": "2017-01-23T10:32:09+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -1301,16 +1301,16 @@
         },
         {
             "name": "mtdowling/cron-expression",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mtdowling/cron-expression.git",
-                "reference": "c9ee7886f5a12902b225a1a12f36bb45f9ab89e5"
+                "reference": "9504fa9ea681b586028adaaa0877db4aecf32bad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mtdowling/cron-expression/zipball/c9ee7886f5a12902b225a1a12f36bb45f9ab89e5",
-                "reference": "c9ee7886f5a12902b225a1a12f36bb45f9ab89e5",
+                "url": "https://api.github.com/repos/mtdowling/cron-expression/zipball/9504fa9ea681b586028adaaa0877db4aecf32bad",
+                "reference": "9504fa9ea681b586028adaaa0877db4aecf32bad",
                 "shasum": ""
             },
             "require": {
@@ -1321,8 +1321,8 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Cron": "src/"
+                "psr-4": {
+                    "Cron\\": "src/Cron/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1341,7 +1341,7 @@
                 "cron",
                 "schedule"
             ],
-            "time": "2016-01-26T21:23:30+00:00"
+            "time": "2017-01-23T04:29:33+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -3550,16 +3550,16 @@
         },
         {
             "name": "phpunit/phpunit-selenium",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giorgiosironi/phpunit-selenium.git",
-                "reference": "2bad798ec0daf20d2854400e3bc5329ee0a7b2d1"
+                "reference": "013037eeea481657d236431634042648797e1da8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giorgiosironi/phpunit-selenium/zipball/2bad798ec0daf20d2854400e3bc5329ee0a7b2d1",
-                "reference": "2bad798ec0daf20d2854400e3bc5329ee0a7b2d1",
+                "url": "https://api.github.com/repos/giorgiosironi/phpunit-selenium/zipball/013037eeea481657d236431634042648797e1da8",
+                "reference": "013037eeea481657d236431634042648797e1da8",
                 "shasum": ""
             },
             "require": {
@@ -3610,7 +3610,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-03-01T10:33:56+00:00"
+            "time": "2017-01-23T22:15:32+00:00"
         },
         {
             "name": "sebastian/comparator",
