@@ -298,22 +298,22 @@
                         $("#chk-add-to-dashboard").prop("checked", false);
                         updateDivAddToDashboardStatus();
                     } else {
-                        if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-site-chart .errors-container");
-                            $errorContainer.empty();
-                            $.each(response.errors, function (index, error) {
-                                $errorContainer.append(
-                                        $("<li>").text(error)
-                                );
-                            });
-                        } else {
-                            alertP("Oops! Something went wrong.", "Unable to add chart to dashboard, please try again later.");
-                        }
+                        alertP("Oops! Something went wrong.", "Unable to add chart to dashboard, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.status == 422) {
+                        var $errorContainer = $("#modal-site-chart .errors-container");
+                        $errorContainer.empty();
+                        $.each(xhr.responseJSON, function (index, error) {
+                            $errorContainer.append(
+                                    $("<li>").text(error)
+                            );
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }

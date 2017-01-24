@@ -5,7 +5,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 <div class="btn-group" style="float: right; margin-top: -4px;margin-right: 5px;">
-                    <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#" style="font-size: 15px; opacity: 0.5;">
+                    <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#"
+                       style="font-size: 15px; opacity: 0.5;">
                         <i class="fa fa-download"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -135,10 +136,12 @@
                                         @endif
                                         <div class="row m-t-20 submit-view-chart">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary btn-flat" onclick="loadCategoryChartData()">
+                                                <button class="btn btn-primary btn-flat"
+                                                        onclick="loadCategoryChartData()">
                                                     GO
                                                 </button>
-                                                <button class="btn btn-default btn-flat" data-dismiss="modal">CANCEL</button>
+                                                <button class="btn btn-default btn-flat" data-dismiss="modal">CANCEL
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -179,10 +182,10 @@
 
             new NLForm($("#frm-category-chart-characteristics").get(0));
             @if(auth()->user()->dashboards->count() > 0)
-            new NLForm($("#frm-dashboard-widget-store").get(0));
+                    new NLForm($("#frm-dashboard-widget-store").get(0));
             @endif
 
-            categoryChart = new Highcharts.Chart({
+                    categoryChart = new Highcharts.Chart({
                 credits: {
                     enabled: false
                 },
@@ -248,22 +251,22 @@
                         $("#chk-add-to-dashboard").prop("checked", false);
                         updateDivAddToDashboardStatus();
                     } else {
-                        if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-category-chart .errors-container");
-                            $errorContainer.empty();
-                            $.each(response.errors, function (index, error) {
-                                $errorContainer.append(
-                                        $("<li>").text(error)
-                                );
-                            });
-                        } else {
-                            alertP("Oops! Something went wrong.", "Unable to add chart to dashboard, please try again later.");
-                        }
+                        alertP("Oops! Something went wrong.", "Unable to add chart to dashboard, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.status == 422) {
+                        var $errorContainer = $("#modal-category-chart .errors-container");
+                        $errorContainer.empty();
+                        $.each(xhr.responseJSON, function (index, error) {
+                            $errorContainer.append(
+                                    $("<li>").text(error)
+                            );
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }

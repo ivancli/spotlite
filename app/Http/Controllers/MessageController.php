@@ -24,7 +24,7 @@ class MessageController extends Controller
     public function welcomeSubscription($raw = 0)
     {
         $user = auth()->user();
-        if (!auth()->user()->isStaff) {
+        if ($user->needSubscription) {
             $subscription = $user->subscription;
             $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
         }

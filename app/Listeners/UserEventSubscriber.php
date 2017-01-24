@@ -40,7 +40,7 @@ class UserEventSubscriber
         }
         $user->save();
 
-        if (!$user->isStaff) {
+        if ($user->needSubscription) {
             $subscriber = $this->mailingAgentRepo->getSubscriber($user->email);
             /*if there is no subscription record in Campaign Monitor, add a new subscription record*/
             if (is_null($subscriber)) {

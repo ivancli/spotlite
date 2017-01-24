@@ -5,7 +5,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 <div class="btn-group" style="float: right; margin-top: -4px;margin-right: 5px;">
-                    <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#" style="font-size: 15px; opacity: 0.5;">
+                    <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#"
+                       style="font-size: 15px; opacity: 0.5;">
                         <i class="fa fa-download"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -211,7 +212,7 @@
                 },
                 legend: {},
                 series: [],
-                exporting:{
+                exporting: {
                     enabled: false
                 }
             });
@@ -246,22 +247,22 @@
                         $("#chk-add-to-dashboard").prop("checked", false);
                         updateDivAddToDashboardStatus();
                     } else {
-                        if (typeof response.errors != 'undefined') {
-                            var $errorContainer = $("#modal-product-chart .errors-container");
-                            $errorContainer.empty();
-                            $.each(response.errors, function (index, error) {
-                                $errorContainer.append(
-                                        $("<li>").text(error)
-                                );
-                            });
-                        } else {
-                            alertP("Oops! Something went wrong.", "Unable to add chart to dashboard, please try again later.");
-                        }
+                        alertP("Oops! Something went wrong.", "Unable to add chart to dashboard, please try again later.");
                     }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+                    if (xhr.status == 422) {
+                        var $errorContainer = $("#modal-product-chart .errors-container");
+                        $errorContainer.empty();
+                        $.each(xhr.responseJSON, function (index, error) {
+                            $errorContainer.append(
+                                    $("<li>").text(error)
+                            );
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             })
         }

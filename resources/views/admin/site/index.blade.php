@@ -372,14 +372,14 @@
                             "data-toggle": "tooltip",
                             "data-placement": "left"
                         })
-                    } else if (data.product.user == null || (data.product.user.isStaff == false && (data.product.user.subscription == null || data.product.user.cancelled_at != null ))) {
+                    } else if (data.product.user == null || (data.product.user.needSubscription == true && (data.product.user.subscription == null || data.product.user.cancelled_at != null ))) {
                         $(row).addClass("danger").attr({
                             "title": "The owner of the site does not have a valid subscription.",
                             "data-toggle": "tooltip",
                             "data-placement": "left"
                         })
                     } else {
-                        if(data.product.user.isStaff == false && data.product.user.subscriptionCriteria != null){
+                        if(data.product.user.needSubscription == true && data.product.user.subscriptionCriteria != null){
                             $(row).attr({
                                 "title": "crawling frequency " + data.product.user.subscriptionCriteria.frequency +" (hour).",
                                 "data-toggle": "tooltip",

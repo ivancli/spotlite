@@ -30,7 +30,7 @@
             </div>
         </div>
     </td>
-    @if(auth()->user()->isStaff || auth()->user()->subscriptionCriteria()->my_price == true)
+    @if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)
         <td align="center">
             <a href="#" class="btn-my-price" style="cursor: default;" onclick="return false;"
                {{--onclick="toggleMyPrice(this); return false;"--}}

@@ -522,7 +522,7 @@ function updateProductEmptyMessage(el) {
 }
 
 function updateUserSiteUsagePerProduct(el) {
-    if (!user.isStaff) {
+    if (user.needSubscription) {
         var $productWrapper = $(el).closest(".product-wrapper");
         $.ajax({
             "url": $productWrapper.attr("data-get-site-usage-per-product-link"),
