@@ -42,6 +42,15 @@ class ChartController extends Controller
 
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
+
+                $user = auth()->user();
+                if ($user->needSubscription && $user->subscriptionCriteria()->historic_pricing > 0) {
+                    $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
+                    if (strtotime($startDateTime) < strtotime($limitedDate)) {
+                        $startDateTime = $limitedDate;
+                    }
+                }
+
                 $category = $this->categoryRepo->getCategory($category_id);
                 $categoryPrices = array();
                 foreach ($category->products as $product) {
@@ -116,6 +125,14 @@ class ChartController extends Controller
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
 
+                $user = auth()->user();
+                if ($user->needSubscription && $user->subscriptionCriteria()->historic_pricing > 0) {
+                    $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
+                    if (strtotime($startDateTime) < strtotime($limitedDate)) {
+                        $startDateTime = $limitedDate;
+                    }
+                }
+
                 $product = $this->productRepo->getProduct($product_id);
 
                 $productPrices = array();
@@ -182,6 +199,14 @@ class ChartController extends Controller
             if ($request->wantsJson()) {
                 $startDateTime = date('Y-m-d H:i:s', intval($request->get('start_date')));
                 $endDateTime = date('Y-m-d H:i:s', intval($request->get('end_date')));
+
+                $user = auth()->user();
+                if ($user->needSubscription && $user->subscriptionCriteria()->historic_pricing > 0) {
+                    $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
+                    if (strtotime($startDateTime) < strtotime($limitedDate)) {
+                        $startDateTime = $limitedDate;
+                    }
+                }
 
                 $site = $this->siteRepo->getSite($site_id);
 

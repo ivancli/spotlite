@@ -2,7 +2,7 @@
 @section('title', 'Subscription')
 @section('header_title', "Change My Plan")
 @section('breadcrumbs')
-{{--    {!! Breadcrumbs::render('subscription_edit', $subscription) !!}--}}
+    {{--    {!! Breadcrumbs::render('subscription_edit', $subscription) !!}--}}
 @stop
 @section('content')
     <div class="row">
@@ -53,9 +53,12 @@
                             if (response.status == true) {
                                 alertP("Updated", "Your subscription plan has been updated.");
                                 $(".plan").find(".button-blue.disabled").removeClass("disabled").attr("onclick", "submitSubscriptionUpdateOnclick(this);return false;");
-                                $(".plan").filter(function () {
+                                $(".plan").find(".pricing-level").removeClass("selected-header");
+                                var $selectedPlan = $(".plan").filter(function () {
                                     return $(this).attr("data-id") == response.subscription.api_product_id;
-                                }).find(".button-blue").addClass("disabled").attr("onclick", "return false;");
+                                });
+                                $selectedPlan.find(".button-blue").addClass("disabled").attr("onclick", "return false;");
+                                $selectedPlan.find(".pricing-level").addClass("selected-header");
                                 updateButtonText();
                             } else {
                                 console.info('response', response);

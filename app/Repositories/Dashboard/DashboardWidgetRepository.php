@@ -116,6 +116,15 @@ class DashboardWidgetRepository implements DashboardWidgetContract
             }
 
             if (isset($startDateTime) && isset($endDateTime)) {
+
+                $user = auth()->user();
+                if ($user->needSubscription && $user->subscriptionCriteria()->historic_pricing > 0) {
+                    $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
+                    if (strtotime($startDateTime) < strtotime($limitedDate)) {
+                        $startDateTime = $limitedDate;
+                    }
+                }
+
                 switch ($chartType) {
                     case "site":
                         $site = $widget->site();

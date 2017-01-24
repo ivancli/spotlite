@@ -5,7 +5,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 <div class="btn-group" style="float: right; margin-top: -4px;margin-right: 5px;">
-                    <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#" style="font-size: 15px; opacity: 0.5;">
+                    <a class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" href="#"
+                       style="font-size: 15px; opacity: 0.5;">
                         <i class="fa fa-download"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -30,8 +31,7 @@
                                     <div class="box-body">
                                         <div class="row m-b-5">
                                             <div class="col-sm-12">
-                                                <form action="" class="nl-form"
-                                                      id="frm-site-chart-characteristics">
+                                                <form action="" class="nl-form" id="frm-site-chart-characteristics">
                                                     <p>
                                                         Generate a chart for
                                                         &nbsp;
@@ -143,60 +143,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{--<div class="row">--}}
-                            {{--<div class="col-sm-12">--}}
-                                {{--@if(auth()->user()->dashboards->count() > 0)--}}
-                                    {{--<div class="row">--}}
-                                        {{--<div class="col-sm-12">--}}
-                                            {{--<div class="box box-solid">--}}
-                                                {{--<div class="box-header with-border">--}}
-                                                    {{--<h3 class="box-title">Add to Dashboard</h3>--}}
-                                                {{--</div>--}}
-                                                {{--<div class="box-body">--}}
-                                                    {{--<div class="row m-b-10">--}}
-                                                        {{--<div class="col-sm-12">--}}
-                                                            {{--<ul class="text-danger errors-container">--}}
-                                                            {{--</ul>--}}
-                                                            {{--{!! Form::open(array('route' => array('dashboard.widget.store'), 'method'=>'post', "onsubmit"=>"return false", "class" => "nl-form", "id"=>"frm-dashboard-widget-store")) !!}--}}
-                                                            {{--<input type="hidden" name="dashboard_widget_type_id"--}}
-                                                                   {{--value="1">--}}
-
-                                                            {{--<p>--}}
-                                                                {{--Name this chart--}}
-                                                                {{--&nbsp;--}}
-                                                                {{--<input type="text" name="dashboard_widget_name"--}}
-                                                                       {{--id="txt-dashboard-widget-name"--}}
-                                                                       {{--placeholder="enter a chart name">--}}
-                                                                {{--&nbsp;--}}
-                                                                {{--and add it to my--}}
-                                                                {{--&nbsp;--}}
-
-                                                                {{--<select id="sel-dashboard-id" name="dashboard_id"--}}
-                                                                        {{--class="form-control form-control-inline">--}}
-                                                                    {{--@foreach(auth()->user()->dashboards as $dashboard)--}}
-                                                                        {{--<option value="{{$dashboard->getKey()}}">{{$dashboard->dashboard_name}}</option>--}}
-                                                                    {{--@endforeach--}}
-                                                                {{--</select>--}}
-                                                            {{--</p>--}}
-                                                            {{--<div class="nl-overlay"></div>--}}
-                                                            {{--{!! Form::close() !!}--}}
-                                                        {{--</div>--}}
-                                                    {{--</div>--}}
-                                                    {{--<div class="row">--}}
-                                                        {{--<div class="col-sm-12">--}}
-                                                            {{--<button class="btn btn-primary btn-flat" id="btn-add-chart">--}}
-                                                                {{--ADD CHART--}}
-                                                            {{--</button>--}}
-                                                        {{--</div>--}}
-                                                    {{--</div>--}}
-                                                {{--</div>--}}
-                                            {{--</div>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--@endif--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
                     </div>
                     <div class="col-lg-7 col-md-6 col-sm-12">
                         <div id="chart-container">
@@ -263,7 +209,7 @@
                     valuePrefix: '$'
                 },
                 series: [],
-                exporting:{
+                exporting: {
                     enabled: false
                 }
             });
