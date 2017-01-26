@@ -89,7 +89,7 @@ class Site extends Model
     {
         $builder = $this->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $this->recent_price);
         $user = auth()->user();
-        if ($user->needSubscription && $user->subscriptionCriteria()->historic_pricing > 0) {
+        if ($user->needSubscription && !is_null($user->subscription) && $user->subscription && $user->subscriptionCriteria()->historic_pricing > 0) {
             $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
             $builder->where('created_at', '>=', $limitedDate);
         }
