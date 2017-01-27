@@ -254,13 +254,20 @@ class AuthController extends Controller
 
         $redirectPath = $this->redirectPath();
         $status = true;
-        
-        return redirect($this->redirectPath());
+
+        if ($request->has('callback')) {
+            return response()->json(compact(['redirectPath', 'status']))->setCallback($request->get('callback'));
+        } else if ($request->wantsJson()) {
+            return response()->json(compact(['redirectPath', 'status']));
+        } else {
+            return compact(['redirectPath', 'status']);
+        }
     }
 
     protected function registerExternalPreview()
     {
         $request = request();
+
         if (!$request->has('_token') || !$this->tokenRepo->verifyToken($request->get('_token'))) {
             $status = false;
             $errors = array(
@@ -289,14 +296,22 @@ class AuthController extends Controller
             }
         }
 
+        $input = $request->all();
+        $input['password'] = bcrypt("secret");
+        $input['set_password'] = 'n';
+
+        Auth::guard($this->getGuard())->login($this->create($input));
+
+
+        $redirectPath = $this->redirectPath();
         $status = true;
 
         if ($request->has('callback')) {
-            return response()->json(compact(['status']))->setCallback($request->get('callback'));
+            return response()->json(compact(['redirectPath', 'status']))->setCallback($request->get('callback'));
         } else if ($request->wantsJson()) {
-            return response()->json(compact(['status']));
+            return response()->json(compact(['redirectPath', 'status']));
         } else {
-            return compact(['status']);
+            return compact(['redirectPath', 'status']);
         }
     }
 }
