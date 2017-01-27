@@ -9,4 +9,6 @@ namespace App\Contracts\Repository\User\User;
 interface UserContract
 {
     public function sampleUser();
+
+    public function updateMySite($myCompanyDomain);
 }

@@ -79,8 +79,21 @@ class ProfileController extends Controller
         $user = User::findOrFail($id);
         event(new ProfileUpdating($user));
         $input = array_except($request->all(), ['email']);
+
+        $updatedMyURL = isset($input['company_url']) ? $input['company_url'] != $user->company_url : false;
+
         $user->update($input);
         event(new ProfileUpdated($user));
+
+        if ($updatedMyURL) {
+            $newSite = $input['company_url'];
+            if (!is_null($newSite) && !empty($newSite)) {
+                $myCompanyDomain = parse_url($newSite)['host'];
+            } else {
+                $myCompanyDomain = null;
+            }
+            $this->userRepo->updateMySite($myCompanyDomain);
+        }
 
         $this->mailingAgentRepo->editSubscriber($user->email, array(
             'Name' => $user->first_name . " " . $user->last_name,
