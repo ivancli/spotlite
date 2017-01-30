@@ -111,6 +111,7 @@ class Product extends Model
             "chart" => route("chart.product.index", $key),
             "report_task" => route("report_task.product.edit", $key),
             "site_usage" => route("product.site.usage", $key),
+            "show_sites" => route("site.product.sites", $key),
         );
     }
 }

@@ -292,7 +292,7 @@ class AppServiceProvider extends ServiceProvider
             ->give('App\Filters\AdminDomainFilters');
 
         /* Category Query Filters */
-        $this->app->when('App\Http\Controllers\Product\ProductController')
+        $this->app->when('App\Http\Controllers\Product\CategoryController')
             ->needs('App\Filters\QueryFilter')
             ->give('App\Filters\CategoryFilters');
         $this->app->when('App\Models\Category')

@@ -32,8 +32,8 @@
                 <i class="fa fa-line-chart"></i>
             </a>
             {{--<a href="#" class="btn-action btn-alert" onclick="showProductAlertForm(this); return false;"--}}
-               {{--data-toggle="tooltip" title="alert">--}}
-                {{--<i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>--}}
+            {{--data-toggle="tooltip" title="alert">--}}
+            {{--<i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>--}}
             {{--</a>--}}
             <a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"
                data-toggle="tooltip" title="report">
@@ -87,7 +87,9 @@
     <tr>
         <td></td>
         <td colspan="3" class="table-container">
-            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in" aria-expanded="true">
+            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in" aria-expanded="true"
+                 data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10"
+            >
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
@@ -106,20 +108,32 @@
                     </thead>
                     <tbody>
                     {{--sites here--}}
-                    @if(!is_null($product->sites))
-                        @if(request()->has('keyword') && !empty(request()->get('keyword'))
-                         && (strpos(strtolower($category->category_name), strtolower(request()->get('keyword'))) === FALSE
-                         && strpos(strtolower($product->product_name), strtolower(request()->get('keyword'))) === FALSE))
-                            @foreach($product->filteredSites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)
-                                @include('products.site.partials.single_site')
-                            @endforeach
-                        @else
-                            @foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)
-                                @include('products.site.partials.single_site')
-                            @endforeach
-                        @endif
-                    @endif
+                    {{--@if(!is_null($product->sites))--}}
+                    {{--@if(request()->has('keyword') && !empty(request()->get('keyword'))--}}
+                    {{--&& (strpos(strtolower($category->category_name), strtolower(request()->get('keyword'))) === FALSE--}}
+                    {{--&& strpos(strtolower($product->product_name), strtolower(request()->get('keyword'))) === FALSE))--}}
+                    {{--@foreach($product->filteredSites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)--}}
+                    {{--@include('products.site.partials.single_site')--}}
+                    {{--@endforeach--}}
+                    {{--@else--}}
+                    {{--@foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)--}}
+                    {{--@include('products.site.partials.single_site')--}}
+                    {{--@endforeach--}}
+                    {{--@endif--}}
+                    {{--@endif--}}
                     {{--sites here--}}
+                    <tr class="spinner-row" style="display: none;">
+                        <td class="text-center" colspan="9">
+                            <div class="spinner-raw loading-sites" style="margin: 0 auto;"></div>
+                        </td>
+                    </tr>
+                    <tr class="load-more-site">
+                        <td class="text-right" colspan="9">
+                            <button class="btn btn-primary btn-xs"
+                                    onclick="loadAndAttachSites('{{$product->getKey()}}')">Load More
+                            </button>
+                        </td>
+                    </tr>
                     <tr class="add-site-row">
                         <td colspan="9" class="add-item-cell">
 
@@ -133,7 +147,9 @@
                                 <div class="add-item-label add-site-label">
                                     <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
                                     <div class="site-label-text-container">
-                                        <div>ADD THE PRODUCT PAGE URL FOR THE PRICE YOU WANT TO TRACK. E.G. http://www.company.com.au/productpage/price</div>
+                                        <div>ADD THE PRODUCT PAGE URL FOR THE PRICE YOU WANT TO TRACK. E.G.
+                                            http://www.company.com.au/productpage/price
+                                        </div>
                                         {{--<div>For example http://www.company.com.au/productpage/price</div>--}}
                                     </div>
                                 </div>
@@ -198,7 +214,66 @@
                 updateSiteOrder({{$product->getKey()}});
             });
 
-            updateProductEmptyMessage();
+            loadAndAttachSites('{{$product->getKey()}}');
         });
+
+        function loadAndAttachSites(product_id) {
+            loadSites(product_id, function (response) {
+                $("#product-" + product_id + " .tbl-site tbody .spinner-row").before(response.html);
+                updateProductEmptyMessage();
+            });
+        }
+
+        function loadSites(product_id, successCallback, failCallback) {
+            showLoadingSites(product_id);
+            var $productWrapper = $("#product-" + product_id);
+            $.ajax({
+                "url": $productWrapper.attr("data-sites-url"),
+                "data": {
+                    "start": $productWrapper.attr("data-start"),
+                    "length": $productWrapper.attr("data-length"),
+                    "keyword": $(".general-search-input").val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoadingSites(product_id);
+                    if (response.status == true) {
+                        $productWrapper.attr("data-end", response.recordFiltered < $productWrapper.attr("data-length"));
+                        $productWrapper.attr("data-start", parseInt($productWrapper.attr("data-start")) + response.recordFiltered);
+                        if (response.recordFiltered < $productWrapper.attr("data-length")) {
+                            $productWrapper.find(".load-more-site").remove();
+                        }
+                        if ($.isFunction(successCallback)) {
+                            successCallback(response);
+                        }
+                    } else {
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP("Oops! Something went wrong.", "unable to load products, please try again later.");
+                        }
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoadingSites(product_id);
+                    describeServerRespondedError(xhr.status);
+                    if ($.isFunction(failCallback)) {
+                        failCallback(xhr, status, error);
+                    }
+                }
+            })
+        }
+
+        function showLoadingSites(product_id) {
+            $("#product-" + product_id).find(".spinner-row").show();
+        }
+
+        function hideLoadingSites(product_id) {
+            $("#product-" + product_id).find(".spinner-row").hide();
+        }
     </script>
 </table>

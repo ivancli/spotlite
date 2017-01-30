@@ -127,18 +127,15 @@
                 <td></td>
                 <td colspan="3" class="table-container">
                     <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
-                         aria-expanded="true">
-                        @if($category->products()->count() > 0)
-                            @if(request()->has('keyword') && !empty(request()->get('keyword')) && strpos(strtolower($category->category_name), strtolower(request()->get('keyword'))) === FALSE)
-                                @foreach($category->filteredProducts()->orderBy('product_order')->orderBy('product_id')->get() as $product)
-                                    @include('products.product.partials.single_product')
-                                @endforeach
-                            @else
-                                @foreach($category->products()->orderBy('product_order')->orderBy('product_id')->get() as $product)
-                                    @include('products.product.partials.single_product')
-                                @endforeach
-                            @endif
-                        @endif
+                         data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
+                         data-end="false" aria-expanded="true">
+                        <div class="row">
+                            <div class="col-sm-12 text-center">
+                                <div class="spinner-raw loading-products" style="margin: 0 auto; display: none;">
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -173,7 +170,61 @@
                     return this.down && productDrake{{$category->getKey()}}.dragging;
                 }
             });
+
+
+            loadProducts('{{$category->getKey()}}', function (response) {
+                $("#category-{{$category->getKey()}}").prepend(response.html);
+            });
         });
+
+        function loadProducts(category_id, successCallback, failCallback) {
+            showLoadingProducts(category_id);
+            var $categoryWrapper = $("#category-" + category_id);
+            $.ajax({
+                "url": $categoryWrapper.attr("data-products-url"),
+                "data": {
+                    "start": $categoryWrapper.attr("data-start"),
+                    "length": $categoryWrapper.attr("data-length"),
+                    "keyword": $(".general-search-input").val()
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    hideLoadingProducts(category_id);
+                    if (response.status == true) {
+                        $categoryWrapper.attr("data-end", response.recordFiltered < $categoryWrapper.attr("data-length"));
+                        $categoryWrapper.attr("data-start", parseInt($categoryWrapper.attr("data-start")) + response.recordFiltered);
+                        if ($.isFunction(successCallback)) {
+                            successCallback(response);
+                        }
+                    } else {
+                        if (typeof response.errors != 'undefined') {
+                            var errorMessage = "";
+                            $.each(response.errors, function (index, error) {
+                                errorMessage += error + " ";
+                            });
+                            alertP("Oops! Something went wrong.", errorMessage);
+                        } else {
+                            alertP("Oops! Something went wrong.", "unable to load products, please try again later.");
+                        }
+                    }
+                },
+                "error": function (xhr, status, error) {
+                    hideLoadingProducts(category_id);
+                    describeServerRespondedError(xhr.status);
+                    if ($.isFunction(failCallback)) {
+                        failCallback(xhr, status, error);
+                    }
+                }
+            })
+        }
+
+        function showLoadingProducts(category_id) {
+            $("#category-" + category_id + " .loading-products").slideDown();
+        }
+
+        function hideLoadingProducts(category_id) {
+            $("#category-" + category_id + " .loading-products").slideUp();
+        }
 
     </script>
 </div>

@@ -4,6 +4,7 @@ namespace App\Repositories\Product\Product;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 /**
  * Created by PhpStorm.
@@ -13,6 +14,13 @@ use App\Models\Product;
  */
 class ProductRepository implements ProductContract
 {
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     public function getProducts()
     {
         $products = Product::all();
@@ -27,6 +35,22 @@ class ProductRepository implements ProductContract
             $product = Product::find($id);
         }
         return $product;
+    }
+
+    public function getProductsByCategory(Category $category)
+    {
+        if ($this->request->has('keyword') && !empty($this->request->get('keyword')) && strpos(strtolower($category->category_name), strtolower($this->request->get('keyword'))) === FALSE) {
+            $productsBuilder = $category->filteredProducts()->orderBy('product_order')->orderBy('product_id');
+        } else {
+            $productsBuilder = $category->products()->orderBy('product_order')->orderBy('product_id');
+        }
+        if ($this->request->has('start')) {
+            $productsBuilder->skip($this->request->get('start'));
+        }
+        if ($this->request->has('length')) {
+            $productsBuilder->take($this->request->get('length'));
+        }
+        return $productsBuilder->get();
     }
 
     public function createProduct($options)

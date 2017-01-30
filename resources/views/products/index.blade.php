@@ -162,6 +162,11 @@
                         <div class="col-sm-12 list-container">
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <div class="spinner-raw loading-categories" style="margin: 0 auto; display: none;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -176,6 +181,7 @@
         var length = 5;
         var initLength = 5;
         var theEnd = false;
+        var categoryLoadingPromise = false;
         /**
          * drag and drop source
          */
@@ -293,41 +299,46 @@
         }
 
         function loadCategories(tStart, tLength, successCallback, failCallback) {
-            showLoading();
-            $.ajax({
-                "url": "{{route("product.index")}}",
-                "method": "get",
-                "data": {
-                    "start": tStart,
-                    "length": tLength,
-                    "keyword": $(".general-search-input").val()
-                },
-                "dataType": "json",
-                "success": function (response) {
-                    hideLoading();
-                    if (response.status == true) {
-                        start += response.recordFiltered;
-                        theEnd = response.recordFiltered < tLength;
-                        if ($.isFunction(successCallback)) {
-                            successCallback(response);
-                        }
-                    } else {
-                        if (typeof response.errors != 'undefined') {
-                            var errorMessage = "";
-                            $.each(response.errors, function (index, error) {
-                                errorMessage += error + " ";
-                            });
-                            alertP("Oops! Something went wrong.", errorMessage);
+            if (categoryLoadingPromise == false) {
+                categoryLoadingPromise = true;
+                showLoadingCategories();
+                $.ajax({
+                    "url": "{{route("category.index")}}",
+                    "method": "get",
+                    "data": {
+                        "start": tStart,
+                        "length": tLength,
+                        "keyword": $(".general-search-input").val()
+                    },
+                    "dataType": "json",
+                    "success": function (response) {
+                        categoryLoadingPromise = false;
+                        hideLoadingCategories();
+                        if (response.status == true) {
+                            start += response.recordFiltered;
+                            theEnd = response.recordFiltered < tLength;
+                            if ($.isFunction(successCallback)) {
+                                successCallback(response);
+                            }
                         } else {
-                            alertP("Oops! Something went wrong.", "unable to load categories, please try again later.");
+                            if (typeof response.errors != 'undefined') {
+                                var errorMessage = "";
+                                $.each(response.errors, function (index, error) {
+                                    errorMessage += error + " ";
+                                });
+                                alertP("Oops! Something went wrong.", errorMessage);
+                            } else {
+                                alertP("Oops! Something went wrong.", "unable to load categories, please try again later.");
+                            }
                         }
+                    },
+                    "error": function (xhr, status, error) {
+                        categoryLoadingPromise = false;
+                        hideLoadingCategories();
+                        describeServerRespondedError(xhr.status);
                     }
-                },
-                "error": function (xhr, status, error) {
-                    hideLoading();
-                    describeServerRespondedError(xhr.status);
-                }
-            })
+                });
+            }
         }
 
 
@@ -589,6 +600,14 @@
                     describeServerRespondedError(xhr.status);
                 }
             });
+        }
+
+        function showLoadingCategories() {
+            $(".loading-categories").slideDown();
+        }
+
+        function hideLoadingCategories() {
+            $(".loading-categories").slideUp();
         }
     </script>
 

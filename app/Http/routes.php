@@ -69,19 +69,19 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('product/order', 'Product\ProductController@updateOrder')->name('product.order');
         Route::get('product/product/usage', 'Product\ProductController@getUserProductCredit')->name('product.product.usage');
         Route::get('product/{product_id}/site/usage/', 'Product\ProductController@getUserSiteCredit')->name('product.site.usage');
+        Route::get('product/category/{category_id}', 'Product\ProductController@indexByCategory')->name('product.category.products');
         Route::resource('product', 'Product\ProductController', ['except' => [
             'edit'
         ]]);
         //category routes
         Route::put('category/order', 'Product\CategoryController@updateOrder')->name('category.order');
         Route::get('category/{category_id}/site/usage', 'Product\CategoryController@getUserSiteCredit')->name('category.site.usage');
-        Route::resource('category', 'Product\CategoryController', ['except' => [
-            'index', 'edit'
-        ]]);
+        Route::resource('category', 'Product\CategoryController', ['except' => ['edit']]);
         //site routes
         Route::post('site/prices', 'Product\SiteController@getPrices')->name('site.prices');
         Route::put("site/{site_id}/my_price", 'Product\SiteController@setMyPrice')->name('site.my_price');
         Route::put('site/order', 'Product\SiteController@updateOrder')->name('site.order');
+        Route::get('site/product/{product_id}', 'Product\SiteController@indexByProduct')->name('site.product.sites');
         Route::resource('site', 'Product\SiteController');
 
         /**

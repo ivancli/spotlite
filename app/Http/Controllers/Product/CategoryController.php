@@ -11,6 +11,7 @@ use App\Events\Products\Category\CategoryStoring;
 use App\Events\Products\Category\CategoryUpdated;
 use App\Events\Products\Category\CategoryUpdating;
 use App\Exceptions\ValidationException;
+use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
 
 use App\Validators\Product\Category\StoreValidator;
@@ -26,17 +27,36 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     protected $categoryRepo;
+    protected $filter;
+    protected $request;
 
-    public function __construct(CategoryContract $categoryContract)
+    public function __construct(CategoryContract $categoryContract, QueryFilter $filter, Request $request)
     {
         $this->middleware('permission:create_category', ['only' => ['create', 'store']]);
-        $this->middleware('permission:read_category', ['only' => ['show']]);
+        $this->middleware('permission:read_category', ['only' => ['show', 'index']]);
         $this->middleware('permission:reorder_category', ['only' => ['updateOrder']]);
         $this->middleware('permission:update_category', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete_category', ['only' => ['destroy']]);
 
-
         $this->categoryRepo = $categoryContract;
+        $this->filter = $filter;
+        $this->request = $request;
+    }
+
+    public function index()
+    {
+        $data = $this->categoryRepo->lazyLoadCategories($this->filter);
+        $html = "";
+        foreach ($data->categories as $category) {
+            $html .= view("products.category.partials.single_category")->with(compact(['category']));
+        }
+        $data->categoriesHTML = $html;
+        $data->status = true;
+        if ($this->request->wantsJson()) {
+            return response()->json($data);
+        } else {
+            return $html;
+        }
     }
 
     /**
@@ -54,12 +74,12 @@ class CategoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreValidator $storeValidator
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator, Request $request)
+    public function store(StoreValidator $storeValidator)
     {
-        $input = $request->all();
+        $input = $this->request->all();
         $input['user_id'] = auth()->user()->getKey();
 
         $storeValidator->validate($input);
@@ -68,8 +88,8 @@ class CategoryController extends Controller
         $category = $this->categoryRepo->createCategory($input);
         $status = true;
         event(new CategoryStored($category));
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'category']));
             } else {
                 return compact(['status', 'category']);
@@ -82,16 +102,16 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request $request
+     * @param
      * @param  int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         $category = $this->categoryRepo->getCategory($id);
         event(new CategorySingleViewed($category));
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['category']));
             } else {
                 return view('products.category.partials.single_category')->with(compact(['category']));
@@ -105,22 +125,22 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateValidator $updateValidator
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\
      * @param  int $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function update(UpdateValidator $updateValidator, Request $request, $id)
+    public function update(UpdateValidator $updateValidator, $id)
     {
-        $input = $request->all();
+        $input = $this->request->all();
         $input['category_id'] = $id;
         $updateValidator->validate($input);
 
-        $category = $this->categoryRepo->updateCategory($id, $request->all());
+        $category = $this->categoryRepo->updateCategory($id, $this->request->all());
         event(new CategoryUpdating($category));
         $status = true;
         event(new CategoryUpdated($category));
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'category']));
             } else {
                 return compact(['status', 'category']);
@@ -131,12 +151,12 @@ class CategoryController extends Controller
 
     }
 
-    public function updateOrder(Request $request)
+    public function updateOrder()
     {
         /*TODO validation here*/
         $status = false;
-        if ($request->has('order')) {
-            $order = $request->get('order');
+        if ($this->request->has('order')) {
+            $order = $this->request->get('order');
             foreach ($order as $key => $ord) {
                 $category = $this->categoryRepo->getCategory($ord['category_id'], false);
                 if (!is_null($category) && intval($ord['category_order']) != 0) {
@@ -147,8 +167,8 @@ class CategoryController extends Controller
             $status = true;
         }
 
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);
@@ -161,19 +181,19 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
+     * @param
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         /*TODO do we need delete event here?*/
         $category = $this->categoryRepo->getCategory($id);
         event(new CategoryDeleting($category));
         $status = $this->categoryRepo->deleteCategory($id);
         event(new CategoryDeleted($category));
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);
@@ -183,13 +203,13 @@ class CategoryController extends Controller
         }
     }
 
-    public function getUserSiteCredit(Request $request, $category_id)
+    public function getUserSiteCredit($category_id)
     {
         $category = $this->categoryRepo->getCategory($category_id);
         $usage = $category->sites()->count();
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['usage', 'status']));
             } else {
                 return compact(['usage', 'status']);

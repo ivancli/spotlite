@@ -297,6 +297,27 @@ td.shrink, th.shrink {
     font-size: 20px;
 }
 
+.spinner-raw{
+    width: 62px;
+    height: 62px;
+    background: transparent url('http://login.spotlite.com.au/images/spinner_sprite_62x62.png') 0 0 no-repeat;
+    animation: spinner 1s steps(19) infinite; /* The Animation */
+    -moz-animation: spinner 1s steps(19) infinite;
+    -webkit-animation: spinner 1s steps(19) infinite;
+}
+
+.spinner-sm {
+    zoom: 0.75;
+    -moz-transform: scale(0.75);
+    -moz-transform-origin: 0 0;
+}
+
+.spinner-xs {
+    zoom: 0.50;
+    -moz-transform: scale(0.50);
+    -moz-transform-origin: 0 0;
+}
+
 @keyframes spinner {
     100% {
         background-position: 0 -1178px;

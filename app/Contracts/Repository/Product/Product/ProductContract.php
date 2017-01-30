@@ -1,5 +1,6 @@
 <?php
 namespace App\Contracts\Repository\Product\Product;
+
 use App\Models\Category;
 
 /**
@@ -13,6 +14,8 @@ interface ProductContract
     public function getProducts();
 
     public function getProduct($id, $fail = true);
+
+    public function getProductsByCategory(Category $category);
 
     public function createProduct($options);
 
