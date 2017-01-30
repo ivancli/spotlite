@@ -148,7 +148,12 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                         "first_name" => "Spot",
                         "last_name" => "Lite",
                         "email" => "admin@spotlite.com.au",
-                        "country" => "AU"
+                        "country" => "AU",
+                        "state" => "New South Wales"
+                    ),
+                    "payment_profile_attributes" => array(
+                        "billing_country" => "AU",
+                        "billing_state" => "NSW",
                     )
                 ));
 
