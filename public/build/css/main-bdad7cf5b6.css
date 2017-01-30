@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-725b40e411.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-bdad7cf5b6.css */
 @media print {
   *,
   *:before,
@@ -16084,6 +16084,10 @@ tr.empty-message-row td {
 
 .delete-popup-subheading, .delete-popup-list {
     font-size: 15px;
+}
+
+.load-more-site{
+    background-color: #fff;
 }
 
 @media (min-width: 991px) {

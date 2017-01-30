@@ -129,7 +129,7 @@
                     </tr>
                     <tr class="load-more-site">
                         <td class="text-right" colspan="9">
-                            <button class="btn btn-primary btn-xs"
+                            <button class="btn btn-default btn-xs"
                                     onclick="loadAndAttachSites('{{$product->getKey()}}')">Load More
                             </button>
                         </td>

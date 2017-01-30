@@ -948,6 +948,10 @@ tr.empty-message-row td {
     font-size: 15px;
 }
 
+.load-more-site{
+    background-color: #fff;
+}
+
 @media (min-width: 991px) {
     .tbl-site th, .tbl-site td {
         font-size: 13px;
