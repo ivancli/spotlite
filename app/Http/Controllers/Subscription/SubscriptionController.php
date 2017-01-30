@@ -205,6 +205,18 @@ class SubscriptionController extends Controller
                                     "Key" => "LastLoginDate",
                                     "Value" => date('Y/m/d')
                                 ),
+                                array(
+                                    "Key" => "SubscriptionCancelledDate",
+                                    "Value" => null
+                                ),
+                                array(
+                                    "Key" => "CancelledBeforeEndofTrial",
+                                    "Value" => null
+                                ),
+                                array(
+                                    "Key" => "CancelledAfterEndofTrial",
+                                    "Value" => null
+                                ),
                             ),
                             'Resubscribe' => true
                         ));
@@ -268,6 +280,14 @@ class SubscriptionController extends Controller
                                         "Key" => "SubscriptionPlan",
                                         "Value" => $product->name
                                     ),
+                                    array(
+                                        "Key" => "CancelledBeforeEndofTrial",
+                                        "Value" => null
+                                    ),
+                                    array(
+                                        "Key" => "CancelledAfterEndofTrial",
+                                        "Value" => null
+                                    ),
                                 )
                             ));
 
@@ -329,6 +349,14 @@ class SubscriptionController extends Controller
                                     ),
                                     array(
                                         "Key" => "SubscriptionCancelledDate",
+                                        "Value" => null
+                                    ),
+                                    array(
+                                        "Key" => "CancelledBeforeEndofTrial",
+                                        "Value" => null
+                                    ),
+                                    array(
+                                        "Key" => "CancelledAfterEndofTrial",
                                         "Value" => null
                                     ),
                                 ),
@@ -508,6 +536,14 @@ class SubscriptionController extends Controller
                             "Key" => "SubscriptionCancelledDate",
                             "Value" => null
                         ),
+                        array(
+                            "Key" => "CancelledBeforeEndofTrial",
+                            "Value" => null
+                        ),
+                        array(
+                            "Key" => "CancelledAfterEndofTrial",
+                            "Value" => null
+                        ),
                     )
                 ));
                 $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
@@ -569,16 +605,16 @@ class SubscriptionController extends Controller
                 $this->mailingAgentRepo->editSubscriber(auth()->user()->email, array(
                     "CustomFields" => array(
                         array(
-                            "Key" => "SubscriptionCancelledDate",
-                            "Value" => date("Y/m/d")
-                        ),
-                        array(
                             "Key" => "MaximumNumberofProducts",
                             "Value" => null
                         ),
                         array(
                             "Key" => "MaximumNumberofSites",
                             "Value" => null
+                        ),
+                        array(
+                            "Key" => "SubscriptionCancelledDate",
+                            "Value" => date("Y/m/d")
                         ),
                         array(
                             "Key" => $trialKey,
