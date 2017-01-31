@@ -105,7 +105,8 @@
                                     <p>
                                         <small class="text-muted">
                                             You might want to use it again in the future so, by keeping your profile,
-                                            you can simply continue using SpotLite once you reactivate your account.
+                                            you can use SpotLite until the end of the billing period and then simply
+                                            reactivate your account to continue using SpotLite in the future.
                                         </small>
                                     </p>
                                     <p class="text-danger">
@@ -126,7 +127,9 @@
                                     <p>
                                         <small class="text-muted">
                                             If you choose to continue using SpotLite in the future, you will need to
-                                            enter all your Categories, Products and Product Page URLs once again.
+                                            re-enter all your Categories, Products and Product Page URLs. Your
+                                            subscription will be cancelled immediately and you will no longer be able to
+                                            access and use SpotLite or any of its features.
                                         </small>
                                     </p>
                                     <p class="text-danger">

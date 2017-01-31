@@ -622,6 +622,9 @@ class SubscriptionController extends Controller
                         )
                     )
                 ));
+                if (!$request->has('keep_profile') || $request->get('keep_profile') != '1') {
+                    $this->mailingAgentRepo->deleteSubscriber(auth()->user()->email);
+                }
                 auth()->user()->clearCache();
                 $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
