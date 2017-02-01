@@ -359,8 +359,11 @@
                         if (response.category != null) {
                             showLoading();
                             loadSingleCategory(response.category.urls.show, function (html) {
+                                var $html = $("<div>").append(html);
+                                $html.find(".collapsible-category-div").addClass("in").attr("aria-expanded", "true");
+                                $html.find(".btn-collapse").removeClass("collapsed").attr("aria-expanded", "true");
                                 hideLoading();
-                                $(".list-container").prepend(html);
+                                $(".list-container").prepend($html.html());
                                 updateCategoryOrder();
                                 updateUserProductCredit();
                             });
