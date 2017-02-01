@@ -68,10 +68,10 @@ class Crawl extends Command
             AppPreference::setCrawlReserved('n');
         } else {
             if (AppPreference::getCrawlReserved() == 'y' && (is_null($lastReservedAt) || intval((strtotime($currentRoundedHours) - strtotime($lastReservedRoundedHours)) / 3600) > 0)) {
-                dispatch((new SendMail('errors.email.crawler', array(), array(
-                    "email" => config('error_notifier.email'),
-                    "subject" => 'Crawler Issue on SpotLite',
-                )))->onQueue("mailing"));
+//                dispatch((new SendMail('errors.email.crawler', array(), array(
+//                    "email" => config('error_notifier.email'),
+//                    "subject" => 'Crawler Issue on SpotLite',
+//                )))->onQueue("mailing"));
             }
         }
     }
