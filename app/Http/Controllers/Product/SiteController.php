@@ -42,9 +42,10 @@ class SiteController extends Controller
     protected $productRepo;
     protected $crawlerRepo;
     protected $alertRepo;
+    protected $request;
 
 
-    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract, AlertContract $alertContract)
+    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract, AlertContract $alertContract, Request $request)
     {
         $this->middleware('permission:create_site', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_site', ['only' => ['show']]);
@@ -59,23 +60,40 @@ class SiteController extends Controller
         $this->productRepo = $productContract;
         $this->crawlerRepo = $crawlerContract;
         $this->alertRepo = $alertContract;
+        $this->request = $request;
+    }
+
+
+    public function indexByProduct($product_id)
+    {
+        $product = $this->productRepo->getProduct($product_id);
+        $sites = $this->siteRepo->getSitesByProduct($product);
+        $html = "";
+        foreach ($sites as $site) {
+            $html .= view('products.site.partials.single_site')->with(compact(['site']));
+        }
+        $status = true;
+        if ($this->request->wantsJson()) {
+            return response()->json(compact(['html', 'status']));
+        } else {
+            return $html;
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         /* TODO there is yet no way to get around with this, unable to get last attached product_site_id */
         $site = $this->siteRepo->getSite($id);
 
         event(new SiteSingleViewed($site));
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['site']));
             } else {
                 return view('products.site.partials.single_site')->with(compact(['site']));
@@ -88,13 +106,12 @@ class SiteController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Request $request)
+    public function create()
     {
-        if ($request->has('product_id')) {
-            $product = $this->productRepo->getProduct($request->get('product_id'));
+        if ($this->request->has('product_id')) {
+            $product = $this->productRepo->getProduct($this->request->get('product_id'));
         }
         event(new SiteCreateViewed());
         return view('products.site.create')->with(compact(['product']));
@@ -104,24 +121,23 @@ class SiteController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreValidator $storeValidator
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator, Request $request)
+    public function store(StoreValidator $storeValidator)
     {
         $user = auth()->user();
         if ($user->needSubscription) {
             $criteria = auth()->user()->subscriptionCriteria();
             if (isset($criteria->site) && $criteria->site != 0) {
-                $productId = $request->get('product_id');
+                $productId = $this->request->get('product_id');
                 $product = $this->productRepo->getProduct($productId);
                 $currentSites = $product->sites()->count();
                 $maxSites = $criteria->site;
                 if ($currentSites >= $maxSites) {
                     $status = false;
                     $errors = array("Please upgrade your subscription plan to add more sites");
-                    if ($request->ajax()) {
-                        if ($request->wantsJson()) {
+                    if ($this->request->ajax()) {
+                        if ($this->request->wantsJson()) {
                             return response()->json(compact(['status', 'errors']));
                         } else {
                             return compact(['status', 'errors']);
@@ -133,25 +149,25 @@ class SiteController extends Controller
             }
         }
 
-        $storeValidator->validate($request->all());
+        $storeValidator->validate($this->request->all());
         event(new SiteStoring());
-        $input = $request->all();
+        $input = $this->request->all();
         $site = $this->siteRepo->createSite($input);
 
         /** if user has chosen a price */
-        if ($request->has('site_id')) {
-            $targetSite = $this->siteRepo->getSite($request->get('site_id'));
-            $this->siteRepo->adoptPreferences($site->getKey(), $request->get('site_id'));
+        if ($this->request->has('site_id')) {
+            $targetSite = $this->siteRepo->getSite($this->request->get('site_id'));
+            $this->siteRepo->adoptPreferences($site->getKey(), $this->request->get('site_id'));
             $site->recent_price = $targetSite->recent_price;
             $site->last_crawled_at = $targetSite->last_crawled_at;
             $site->comment = null;
             $site->save();
             /* adopt the historical prices of the copied site */
-//            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
-        } elseif ($request->has('domain_id')) {
-            $targetDomain = $this->domainRepo->getDomain($request->get('domain_id'));
-            $this->siteRepo->adoptDomainPreferences($site->getKey(), $request->get('domain_id'));
-            $site->recent_price = $request->has('domain_price') ? $request->get('domain_price') : null;
+//            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $this->request->get('site_id'));
+        } elseif ($this->request->has('domain_id')) {
+            $targetDomain = $this->domainRepo->getDomain($this->request->get('domain_id'));
+            $this->siteRepo->adoptDomainPreferences($site->getKey(), $this->request->get('domain_id'));
+            $site->recent_price = $this->request->has('domain_price') ? $this->request->get('domain_price') : null;
             $site->last_crawled_at = null;
             $site->comment = null;
             $site->save();
@@ -190,8 +206,8 @@ class SiteController extends Controller
         event(new SiteStored($site));
 
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'site']));
             } else {
                 return compact(['status', 'site']);
@@ -205,13 +221,12 @@ class SiteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Request $request
      * @param CrawlerInterface $crawlerClass
      * @param ParserInterface $parserClass
      * @param $site_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function edit(Request $request, CrawlerInterface $crawlerClass, ParserInterface $parserClass, $site_id)
+    public function edit(CrawlerInterface $crawlerClass, ParserInterface $parserClass, $site_id)
     {
         $site = $this->siteRepo->getSite($site_id);
         $product = $site->product;
@@ -277,8 +292,8 @@ class SiteController extends Controller
         }
         event(new SiteEditViewed($site));
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'site', 'product', 'sites', 'targetDomain']));
             } else {
                 return view('products.site.edit')->with(compact(['status', 'sites', 'site', 'targetDomain']));
@@ -290,32 +305,31 @@ class SiteController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateValidator $updateValidator
-     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function update(UpdateValidator $updateValidator, Request $request, $id)
+    public function update(UpdateValidator $updateValidator, $id)
     {
-        $updateValidator->validate($request->all());
+        $updateValidator->validate($this->request->all());
         $site = $this->siteRepo->getSite($id);
         event(new SiteUpdating($site));
 
-        $site = $this->siteRepo->updateSite($site->getKey(), array("site_url" => $request->get('site_url'),));
+        $site = $this->siteRepo->updateSite($site->getKey(), array("site_url" => $this->request->get('site_url'),));
 
         /** if user has chosen a price */
-        if ($request->has('site_id')) {
-            $targetSite = $this->siteRepo->getSite($request->get('site_id'));
-            $this->siteRepo->adoptPreferences($site->getKey(), $request->get('site_id'));
+        if ($this->request->has('site_id')) {
+            $targetSite = $this->siteRepo->getSite($this->request->get('site_id'));
+            $this->siteRepo->adoptPreferences($site->getKey(), $this->request->get('site_id'));
             $site->recent_price = $targetSite->recent_price;
             $site->last_crawled_at = $targetSite->last_crawled_at;
             $site->comment = null;
             $site->save();
             /* adopt the historical prices of the copied site */
-//            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $request->get('site_id'));
-        } elseif ($request->has('domain_id')) {
-            $targetDomain = $this->domainRepo->getDomain($request->get('domain_id'));
-            $this->siteRepo->adoptDomainPreferences($id, $request->get('domain_id'));
-            $site->recent_price = $request->has('domain_price') ? $request->get('domain_price') : null;
+//            $this->siteRepo->copySiteHistoricalPrice($site->getKey(), $this->request->get('site_id'));
+        } elseif ($this->request->has('domain_id')) {
+            $targetDomain = $this->domainRepo->getDomain($this->request->get('domain_id'));
+            $this->siteRepo->adoptDomainPreferences($id, $this->request->get('domain_id'));
+            $site->recent_price = $this->request->has('domain_price') ? $this->request->get('domain_price') : null;
             $site->last_crawled_at = null;
             $site->comment = null;
             $site->save();
@@ -323,7 +337,7 @@ class SiteController extends Controller
             $this->siteRepo->clearPreferences($site->getKey());
             $site->recent_price = null;
             $site->last_crawled_at = null;
-            $site->comment = $request->get('comment');
+            $site->comment = $this->request->get('comment');
             $site->save();
         }
         $site->statusWaiting();
@@ -357,8 +371,8 @@ class SiteController extends Controller
 
         event(new SiteUpdated($site));
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'site']));
             } else {
                 return compact(['status']);
@@ -368,10 +382,10 @@ class SiteController extends Controller
         }
     }
 
-    public function getPrices(GetPriceValidator $getPriceValidator, CrawlerInterface $crawlerClass, ParserInterface $parserClass, Request $request)
+    public function getPrices(GetPriceValidator $getPriceValidator, CrawlerInterface $crawlerClass, ParserInterface $parserClass)
     {
-        $getPriceValidator->validate($request->all());
-        $domainURL = parse_url($request->get('site_url'))['host'];
+        $getPriceValidator->validate($this->request->all());
+        $domainURL = parse_url($this->request->get('site_url'))['host'];
         $domain = Domain::where("domain_url", $domainURL)->first();
         if (!is_null($domain)) {
             if (!is_null($domain->crawler_class)) {
@@ -387,7 +401,7 @@ class SiteController extends Controller
 
             if (!is_null($domain)) {
                 $options = array(
-                    "url" => $request->get('site_url'),
+                    "url" => $this->request->get('site_url'),
                 );
                 $content = $this->crawlerRepo->crawlPage($options, $crawlerClass);
                 if (!is_null($content) && strlen($content) != 0) {
@@ -421,8 +435,8 @@ class SiteController extends Controller
             }
         }
 
-        $sites = Site::where("site_url", $request->get('site_url'))->whereNotNull("recent_price")->get();
-//            $sites = $this->siteManager->getSiteByColumn('site_url', $request->get('site_url'));
+        $sites = Site::where("site_url", $this->request->get('site_url'))->whereNotNull("recent_price")->get();
+//            $sites = $this->siteManager->getSiteByColumn('site_url', $this->request->get('site_url'));
         $sitePrices = array();
         foreach ($sites as $key => $site) {
             if (!in_array($site->recent_price, $sitePrices) && (!isset($targetDomain) || $targetDomain['recent_price'] != $site->recent_price)) {
@@ -431,11 +445,11 @@ class SiteController extends Controller
                 unset($sites[$key]);
             }
         }
-        $siteURL = $request->get('site_url');
+        $siteURL = $this->request->get('site_url');
         $status = true;
         event(new SitePricesViewed());
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'sites', 'targetDomain', 'siteURL']));
             } else {
                 return view('products.site.choose_price')->with(compact(['status', 'sites', 'targetDomain', 'siteURL']));
@@ -445,12 +459,12 @@ class SiteController extends Controller
         }
     }
 
-    public function setMyPrice(Request $request, $site_id)
+    public function setMyPrice($site_id)
     {
         /*TODO validate my price from request*/
 
         $site = $this->siteRepo->getSite($site_id);
-        $myPrice = $request->get("my_price");
+        $myPrice = $this->request->get("my_price");
         if ($myPrice == "y") {
             $allSitesOfThisProduct = $site->product->sites;
             foreach ($allSitesOfThisProduct as $allOtherSites) {
@@ -476,8 +490,8 @@ class SiteController extends Controller
         $site->save();
         event(new SiteMyPriceSet($site));
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'site']));
             } else {
                 return compact(['status', 'site']);
@@ -488,15 +502,14 @@ class SiteController extends Controller
     }
 
     /**
-     * @param Request $request
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function updateOrder(Request $request)
+    public function updateOrder()
     {
         /*TODO validation here*/
         $status = false;
-        if ($request->has('order')) {
-            $order = $request->get('order');
+        if ($this->request->has('order')) {
+            $order = $this->request->get('order');
             foreach ($order as $key => $ord) {
                 $site = $this->siteRepo->getSite($ord['site_id']);
                 if (!is_null($site) && intval($ord['site_order']) != 0) {
@@ -507,8 +520,8 @@ class SiteController extends Controller
             $status = true;
         }
 
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);
@@ -522,19 +535,18 @@ class SiteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $site = $this->siteRepo->getSite($id);
         event(new SiteDeleting($site));
         $this->siteRepo->deleteSite($id);
         event(new SiteDeleted($site));
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);

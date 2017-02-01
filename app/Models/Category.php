@@ -37,7 +37,7 @@ class Category extends Model
         if (request()->has('keyword') && !empty(request()->get('keyword'))) {
             $keyword = request()->get('keyword');
             $queryBuilder = $this->products();
-            $filteredQueryBuilder = $queryBuilder->where(function($query) use ($keyword){
+            $filteredQueryBuilder = $queryBuilder->where(function ($query) use ($keyword) {
                 $query->where('product_name', 'LIKE', "%{$keyword}%")->orWhereHas('sites', function ($query) use ($keyword) {
                     $query->where('site_url', 'LIKE', "%{$keyword}%");
                 });
@@ -101,6 +101,7 @@ class Category extends Model
             "chart" => route("chart.category.index", $this->getKey()),
             "report_task" => route("report_task.category.edit", $this->getKey()),
             "site_usage" => route('category.site.usage', $this->getKey()),
+            "show_products" => route('product.category.products', $this->getKey()),
         );
     }
 }

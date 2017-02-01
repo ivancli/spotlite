@@ -834,7 +834,7 @@ function updateProductEmptyMessage(el) {
         }
 
         var $bodyRow = $tblSite.find("tbody > tr").filter(function () {
-            return !$(this).hasClass("empty-message-row") && !$(this).hasClass("add-site-row")
+            return !$(this).hasClass("empty-message-row") && !$(this).hasClass("add-site-row") && !$(this).hasClass("spinner-row") && !$(this).hasClass("load-more-site");
         });
         if ($bodyRow.length == 0) {
             $tblSite.find(".empty-message-row").remove();

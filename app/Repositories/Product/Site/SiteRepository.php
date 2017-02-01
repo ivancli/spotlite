@@ -51,6 +51,23 @@ class SiteRepository implements SiteContract
         return $sites;
     }
 
+    public function getSitesByProduct(Product $product)
+    {
+        if ($this->request->has('keyword') && !empty($this->request->get('keyword')) && (strpos(strtolower($product->category->category_name), strtolower($this->request->get('keyword'))) === FALSE && strpos(strtolower($product->product_name), strtolower($this->request->get('keyword'))) === FALSE)) {
+            $sitesBuilder = $product->filteredSites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc');
+        } else {
+            $sitesBuilder = $product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc');
+        }
+        if ($this->request->has('start')) {
+            $sitesBuilder->skip($this->request->get('start'));
+        }
+        if ($this->request->has('length')) {
+            $sitesBuilder->take($this->request->get('length'));
+        }
+        $sites = $sitesBuilder->get();
+        return $sites;
+    }
+
     public function createSite($options)
     {
         $options['site_url'] = $this->removeGlobalWebTracking($options['site_url']);

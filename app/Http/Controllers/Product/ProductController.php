@@ -30,10 +30,9 @@ class ProductController extends Controller
 {
     protected $productRepo;
     protected $categoryRepo;
+    protected $request;
 
-    protected $filter;
-
-    public function __construct(ProductContract $productContract, CategoryContract $categoryContract, QueryFilter $filter)
+    public function __construct(ProductContract $productContract, CategoryContract $categoryContract, Request $request)
     {
         $this->middleware('permission:create_product', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_product', ['only' => ['show']]);
@@ -43,47 +42,46 @@ class ProductController extends Controller
 
         $this->productRepo = $productContract;
         $this->categoryRepo = $categoryContract;
-        $this->filter = $filter;
+        $this->request = $request;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->ajax()) {
-            $data = $this->categoryRepo->lazyLoadCategories($this->filter);
-            $html = "";
-            foreach ($data->categories as $category) {
-                $html .= view("products.category.partials.single_category")->with(compact(['category']));
-            }
-            $data->categoriesHTML = $html;
-            $data->status = true;
-            if ($request->wantsJson()) {
-                return response()->json($data);
-            } else {
-                return $html;
-            }
+        $productCount = $this->productRepo->getProductsCount();
+        event(new ProductListViewed());
+        return view('products.index')->with(compact(['productCount']));
+    }
+
+    public function indexByCategory($category_id)
+    {
+        $category = $this->categoryRepo->getCategory($category_id);
+        $products = $this->productRepo->getProductsByCategory($category);
+        $html = "";
+        foreach ($products as $product) {
+            $html .= view('products.product.partials.single_product')->with(compact(['product']));
+        }
+        $status = true;
+        if ($this->request->wantsJson()) {
+            return response()->json(compact(['html', 'status']));
         } else {
-            $productCount = $this->productRepo->getProductsCount();
-            event(new ProductListViewed());
-            return view('products.index')->with(compact(['productCount']));
+            return $html;
         }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Request $request)
+    public function create()
     {
-        if ($request->has('category_id')) {
-            $category = $this->categoryRepo->getCategory($request->get('category_id'));
+        if ($this->request->has('category_id')) {
+            $category = $this->categoryRepo->getCategory($this->request->get('category_id'));
         }
         event(new ProductCreateViewed());
         return view('products.product.create')->with(compact(['category']));
@@ -93,18 +91,17 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreValidator $storeValidator
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(StoreValidator $storeValidator, Request $request)
+    public function store(StoreValidator $storeValidator)
     {
         /*TODO add number of products validation here*/
 
         if (!auth()->user()->canAddProduct()) {
             $status = false;
             $errors = array("Please upgrade your subscription plan to add more products");
-            if ($request->ajax()) {
-                if ($request->wantsJson()) {
+            if ($this->request->ajax()) {
+                if ($this->request->wantsJson()) {
                     return response()->json(compact(['status', 'errors']));
                 } else {
                     return compact(['status', 'errors']);
@@ -114,14 +111,14 @@ class ProductController extends Controller
             }
         }
 
-        $storeValidator->validate($request->all());
+        $storeValidator->validate($this->request->all());
         event(new ProductStoring());
-        $product = $this->productRepo->createProduct($request->all());
+        $product = $this->productRepo->createProduct($this->request->all());
         event(new ProductStored($product));
         $status = true;
 
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'product']));
             } else {
                 return compact(['status', 'product']);
@@ -134,17 +131,16 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         $product = $this->productRepo->getProduct($id);
         $status = true;
         event(new ProductSingleViewed($product));
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['product', 'status']));
             } else {
                 return view('products.product.partials.single_product')->with(compact(['product']));
@@ -158,20 +154,19 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateValidator $updateValidator
-     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function update(UpdateValidator $updateValidator, Request $request, $id)
+    public function update(UpdateValidator $updateValidator, $id)
     {
-        $updateValidator->validate($request->all());
+        $updateValidator->validate($this->request->all());
         $product = $this->productRepo->getProduct($id);
         event(new ProductUpdating($product));
-        $product = $this->productRepo->updateProduct($id, $request->all());
+        $product = $this->productRepo->updateProduct($id, $this->request->all());
         event(new ProductUpdated($product));
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status', 'product']));
             } else {
                 return compact(['status', 'product']);
@@ -181,12 +176,12 @@ class ProductController extends Controller
         }
     }
 
-    public function updateOrder(Request $request)
+    public function updateOrder()
     {
         /*TODO validation here*/
         $status = false;
-        if ($request->has('order')) {
-            $order = $request->get('order');
+        if ($this->request->has('order')) {
+            $order = $this->request->get('order');
             foreach ($order as $key => $ord) {
                 $product = $this->productRepo->getProduct($ord['product_id'], false);
                 if (!is_null($product) && intval($ord['product_order']) != 0) {
@@ -197,8 +192,8 @@ class ProductController extends Controller
             $status = true;
         }
 
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);
@@ -211,18 +206,17 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $product = $this->productRepo->getProduct($id);
         event(new ProductDeleting($product));
         $status = $this->productRepo->deleteProduct($id);
         event(new ProductDeleted($product));
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['status']));
             } else {
                 return compact(['status']);
@@ -232,13 +226,13 @@ class ProductController extends Controller
         }
     }
 
-    public function getUserProductCredit(Request $request)
+    public function getUserProductCredit()
     {
         $total = auth()->user()->subscriptionCriteria()->product;
         $usage = auth()->user()->products()->count();
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['total', 'usage', 'status']));
             } else {
                 return compact(['total', 'usage', 'status']);
@@ -248,14 +242,14 @@ class ProductController extends Controller
         }
     }
 
-    public function getUserSiteCredit(Request $request, $product_id)
+    public function getUserSiteCredit($product_id)
     {
         $product = $this->productRepo->getProduct($product_id);
         $total = auth()->user()->subscriptionCriteria()->site;
         $usage = $product->sites()->count();
         $status = true;
-        if ($request->ajax()) {
-            if ($request->wantsJson()) {
+        if ($this->request->ajax()) {
+            if ($this->request->wantsJson()) {
                 return response()->json(compact(['total', 'usage', 'status']));
             } else {
                 return compact(['total', 'usage', 'status']);

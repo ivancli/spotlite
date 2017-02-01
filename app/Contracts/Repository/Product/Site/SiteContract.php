@@ -20,6 +20,8 @@ interface SiteContract
 
     public function getSiteByColumn($column, $value);
 
+    public function getSitesByProduct(Product $product);
+
     public function createSite($options);
 
     public function updateSite($id, $options);
