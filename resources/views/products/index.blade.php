@@ -155,7 +155,7 @@
                     <div class="row m-b-20">
                         <div class="col-sm-12 text-right">
                             <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
-                               id="btn-collapse-all" style="font-size: 12px;">Collapse All</a>
+                               id="btn-collapse-all" style="font-size: 12px;">Expand All</a>
                         </div>
                     </div>
                     <div class="row">
@@ -164,7 +164,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 text-center">
-                            <div class="spinner-raw loading-categories" style="margin: 0 auto; display: none;"></div>
+                            <div class="dotdotdot loading-categories" style="margin: 20px auto; display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -603,11 +603,11 @@
         }
 
         function showLoadingCategories() {
-            $(".loading-categories").slideDown();
+            $(".loading-categories").show();
         }
 
         function hideLoadingCategories() {
-            $(".loading-categories").slideUp();
+            $(".loading-categories").hide();
         }
     </script>
 

@@ -49,9 +49,9 @@
                     {!! Form::close() !!}
                 </th>
                 <th class="text-center vertical-align-middle" style="background-color: #d3d3d3;" width="70">
-                    <a class="text-muted btn-collapse" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
+                    <a class="text-muted btn-collapse collapsed" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
                        role="button"
-                       data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+                       data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                        aria-controls="category-{{$category->getKey()}}">
                         <i class="fa fa-angle-up"></i>
                     </a>
@@ -107,15 +107,15 @@
                         </div>
                         @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
                             <div class="upgrade-for-add-item-controls" style="display: none;">
-                            <span class="add-item-text">
-                                You have reached the product limit of
-                                {{auth()->user()->apiSubscription->product()->name}} plan.
-                                Please
-                                <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
-                                   onclick="event.stopPropagation();">
-                                    upgrade your subscription
-                                </a> to add more products.
-                            </span>
+                                <span class="add-item-text">
+                                    You have reached the product limit of
+                                    {{auth()->user()->apiSubscription->product()->name}} plan.
+                                    Please
+                                    <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                       onclick="event.stopPropagation();">
+                                        upgrade your subscription
+                                    </a> to add more products.
+                                </span>
                             </div>
                         @endif
                     </div>
@@ -126,12 +126,12 @@
             <tr>
                 <td></td>
                 <td colspan="3" class="table-container">
-                    <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
+                    <div id="category-{{$category->getKey()}}" class="collapse collapsible-category-div"
                          data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
-                         data-end="false" aria-expanded="true">
+                         data-end="false" aria-expanded="false">
                         <div class="row">
                             <div class="col-sm-12 text-center">
-                                <div class="spinner-raw loading-products" style="margin: 0 auto; display: none;">
+                                <div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">
 
                                 </div>
                             </div>
@@ -219,11 +219,11 @@
         }
 
         function showLoadingProducts(category_id) {
-            $("#category-" + category_id + " .loading-products").slideDown();
+            $("#category-" + category_id + " .loading-products").show();
         }
 
         function hideLoadingProducts(category_id) {
-            $("#category-" + category_id + " .loading-products").slideUp();
+            $("#category-" + category_id + " .loading-products").hide();
         }
 
     </script>

@@ -107,31 +107,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{--sites here--}}
-                    {{--@if(!is_null($product->sites))--}}
-                    {{--@if(request()->has('keyword') && !empty(request()->get('keyword'))--}}
-                    {{--&& (strpos(strtolower($category->category_name), strtolower(request()->get('keyword'))) === FALSE--}}
-                    {{--&& strpos(strtolower($product->product_name), strtolower(request()->get('keyword'))) === FALSE))--}}
-                    {{--@foreach($product->filteredSites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)--}}
-                    {{--@include('products.site.partials.single_site')--}}
-                    {{--@endforeach--}}
-                    {{--@else--}}
-                    {{--@foreach($product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc')->get() as $site)--}}
-                    {{--@include('products.site.partials.single_site')--}}
-                    {{--@endforeach--}}
-                    {{--@endif--}}
-                    {{--@endif--}}
-                    {{--sites here--}}
                     <tr class="spinner-row" style="display: none;">
                         <td class="text-center" colspan="9">
-                            <div class="spinner-raw loading-sites" style="margin: 0 auto;"></div>
+                            <div class="dotdotdot loading-sites" style="margin: 20px auto;"></div>
                         </td>
                     </tr>
                     <tr class="load-more-site">
-                        <td class="text-right" colspan="9">
-                            <button class="btn btn-default btn-xs"
-                                    onclick="loadAndAttachSites('{{$product->getKey()}}')">Load More
-                            </button>
+                        <td colspan="9">
+                            <a class="text-green" style="cursor: pointer"
+                               onclick="loadAndAttachSites('{{$product->getKey()}}')">LOAD MORE&hellip;
+                            </a>
                         </td>
                     </tr>
                     <tr class="add-site-row">
@@ -181,14 +166,14 @@
                                 </div>
                                 @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
                                     <div class="upgrade-for-add-item-controls" style="display: none;">
-                                    <span class="add-item-text">
-                                        You have reached the product URL limit of
-                                        {{auth()->user()->apiSubscription->product()->name}} plan.
-                                        Please
-                                        <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
-                                           onclick="event.stopPropagation();">upgrade your subscription</a>
-                                        to add more products.
-                                    </span>
+                                        <span class="add-item-text">
+                                            You have reached the product URL limit of
+                                            {{auth()->user()->apiSubscription->product()->name}} plan.
+                                            Please
+                                            <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                               onclick="event.stopPropagation();">upgrade your subscription</a>
+                                            to add more products.
+                                        </span>
                                     </div>
                                 @endif
                             </div>
@@ -208,7 +193,7 @@
              */
             siteDrake{{$product->getKey()}} = dragula([$("#product-{{$product->getKey()}} > table > tbody").get(0)], {
                 moves: function (el, container, handle) {
-                    return !$(handle).hasClass("add-site-row") && $(handle).closest(".add-site-row").length == 0 && !$(handle).hasClass("empty-message-row") && $(handle).closest(".empty-message-row").length == 0;
+                    return !$(handle).hasClass("add-site-row") && $(handle).closest(".add-site-row").length == 0 && !$(handle).hasClass("empty-message-row") && $(handle).closest(".empty-message-row").length == 0 && !$(handle).hasClass("load-more-site") && $(handle).closest(".load-more-site").length == 0;
                 }
             }).on('drop', function (el, target, source, sibling) {
                 updateSiteOrder({{$product->getKey()}});
@@ -227,6 +212,7 @@
         function loadSites(product_id, successCallback, failCallback) {
             showLoadingSites(product_id);
             var $productWrapper = $("#product-" + product_id);
+            $productWrapper.find(".load-more-site").hide();
             $.ajax({
                 "url": $productWrapper.attr("data-sites-url"),
                 "data": {
@@ -238,10 +224,13 @@
                 "success": function (response) {
                     hideLoadingSites(product_id);
                     if (response.status == true) {
-                        $productWrapper.attr("data-end", response.recordFiltered < $productWrapper.attr("data-length"));
-                        $productWrapper.attr("data-start", parseInt($productWrapper.attr("data-start")) + response.recordFiltered);
-                        if (response.recordFiltered < $productWrapper.attr("data-length")) {
+                        var loadedSitesCount = $("<div>").append(response.html).find("tr").length;
+                        $productWrapper.attr("data-end", loadedSitesCount < $productWrapper.attr("data-length") ? "true" : "false");
+                        $productWrapper.attr("data-start", parseInt($productWrapper.attr("data-start")) + loadedSitesCount);
+                        if (loadedSitesCount < $productWrapper.attr("data-length")) {
                             $productWrapper.find(".load-more-site").remove();
+                        } else {
+                            $productWrapper.find(".load-more-site").show();
                         }
                         if ($.isFunction(successCallback)) {
                             successCallback(response);
