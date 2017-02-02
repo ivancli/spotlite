@@ -471,7 +471,6 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             ));
         }
-
     }
 
     public function sendResetPasswordEmail(User $user, $token)

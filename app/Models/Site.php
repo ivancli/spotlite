@@ -88,12 +88,15 @@ class Site extends Model
     public function getPreviousPriceAttribute()
     {
         $builder = $this->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $this->recent_price);
-        $user = $this->product->user;
-        if ($user->needSubscription && !is_null($user->subscription) && $user->subscriptionCriteria()->historic_pricing > 0) {
-            $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
-            $builder->where('created_at', '>=', $limitedDate);
+        if(isset($this->product) && !is_null($this->product)){
+            $user = $this->product->user;
+            if ($user->needSubscription && !is_null($user->subscription) && $user->subscriptionCriteria()->historic_pricing > 0) {
+                $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
+                $builder->where('created_at', '>=', $limitedDate);
+            }
+            return $builder->first();
         }
-        return $builder->first();
+        return null;
     }
 
     public function getDiffPriceAttribute()
