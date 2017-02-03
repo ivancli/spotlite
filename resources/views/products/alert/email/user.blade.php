@@ -524,7 +524,9 @@
                                                     <ul>
                                                         @foreach($product['sites'] as $site)
                                                             <li>
-                                                                <strong>{{parse_url($site['site_url'])['host']}}</strong>
+                                                                <strong>
+                                                                    <a href="{{$site['site_url']}}">{{parse_url($site['site_url'])['host']}}</a>
+                                                                </strong>
                                                             </li>
                                                         @endforeach
                                                     </ul>

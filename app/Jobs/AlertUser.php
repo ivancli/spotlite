@@ -36,9 +36,20 @@ class AlertUser extends Job implements ShouldQueue
      */
     public function handle(AlertContract $alertRepo)
     {
-        $site = $this->crawler->site;
-
         /*disabled*/
+        $this->__handleSiteAlert($this->crawler, $alertRepo);
+
+        $this->__handleProductAlert($this->crawler, $alertRepo);
+
+        $this->__handleCategoryAlert($this->crawler, $alertRepo);
+
+        $this->__handleUserAlert($this->crawler, $alertRepo);
+
+    }
+
+    private function __handleSiteAlert(Crawler $crawler, AlertContract $alertRepo)
+    {
+        $site = $crawler->site;
         /*SITE ALERT*/
         if (!is_null($site->alert) && !$site->alert->lastActiveWithinHour()) {
             $site->alert->last_active_at = date("Y-m-d H:i:s");
@@ -50,119 +61,150 @@ class AlertUser extends Job implements ShouldQueue
                 default:
             }
         }
+    }
 
-
+    private function __handleProductAlert(Crawler $crawler, AlertContract $alertRepo)
+    {
+        $site = $crawler->site;
+        if (is_null($site)) {
+            return false;
+        }
         $product = $site->product;
+        if (is_null($product) || is_null($product->alert)) {
+            return false;
+        }
+        /*CHECK IF ALL SITE UNDER THIS PRODUCT ALL CRAWLED*/
+        $allCrawled = true;
+        $sites = $product->sites;
+        foreach ($sites as $site) {
+            $excludedSites = $product->alert->excludedSites;
+            $excluded = false;
+            foreach ($excludedSites as $excludedSite) {
+                if ($excludedSite->getKey() == $site->getKey()) {
+                    $excluded = true;
+                }
+            }
+            if (!$excluded) {
+                if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
+                    $allCrawled = false;
+                    break;
+                }
+            }
+        }
+        if ($allCrawled == true && !$product->alert->lastActiveWithinHour()) {
+            $product->alert->last_active_at = date("Y-m-d H:i:s");
+            $product->alert->save();
+            switch ($product->alert->alert_owner_type) {
+                case "product":
+                    $alertRepo->triggerProductAlert($product->alert);
+                    break;
+                default:
+            }
+        }
+    }
 
-        /*PRODUCT ALERT*/
-        if (!is_null($product) && !is_null($product->alert)) {
-            /*CHECK IF ALL SITE UNDER THIS PRODUCT ALL CRAWLED*/
-            $allCrawled = true;
-            $sites = $product->sites;
-            foreach ($sites as $site) {
-                $excludedSites = $product->alert->excludedSites;
+    private function __handleCategoryAlert(Crawler $crawler, AlertContract $alertRepo)
+    {
+        $site = $crawler->site;
+        if (is_null($site)) {
+            return false;
+        }
+        $product = $site->product;
+        if (is_null($product)){
+            return false;
+        }
+        $category = $product->category;
+        if (is_null($category) || is_null($category->alert)) {
+            return false;
+        }
+        /*CATEGORY ALERT*/
+        $allProductsCrawled = true;
+        $products = $category->products;
+        foreach ($products as $eachProduct) {
+            foreach ($eachProduct->sites as $eachSite) {
+                $excludedSites = $category->alert->excludedSites;
                 $excluded = false;
                 foreach ($excludedSites as $excludedSite) {
-                    if ($excludedSite->getKey() == $site->getKey()) {
+                    if ($excludedSite->getKey() == $eachSite->getKey()) {
                         $excluded = true;
                     }
                 }
                 if (!$excluded) {
-                    if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
-                        $allCrawled = false;
+                    if ($eachSite->status == "ok" && !$eachSite->crawler->lastCrawlerWithinHour()) {
+                        $allProductsCrawled = false;
                         break;
                     }
-                }
-            }
-            if ($allCrawled == true && !$product->alert->lastActiveWithinHour()) {
-                $product->alert->last_active_at = date("Y-m-d H:i:s");
-                $product->alert->save();
-                switch ($product->alert->alert_owner_type) {
-                    case "product":
-                        $alertRepo->triggerProductAlert($product->alert);
-                        break;
-                    default:
-                }
-            }
-
-            /*CATEGORY ALERT*/
-            $category = $site->product->category;
-            if (!is_null($category->alert)) {
-                if (!is_null($category) && !is_null($category->alert)) {
-                    $allProductsCrawled = true;
-                    $products = $category->products;
-                    foreach ($products as $product) {
-                        foreach ($product->sites as $site) {
-                            $excludedSites = $product->alert->excludedSites;
-                            $excluded = false;
-                            foreach ($excludedSites as $excludedSite) {
-                                if ($excludedSite->getKey() == $site->getKey()) {
-                                    $excluded = true;
-                                }
-                            }
-                            if (!$excluded) {
-                                if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
-                                    $allProductsCrawled = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if ($allProductsCrawled == true && !$category->alert->lastActiveWithinHour()) {
-                        $category->alert->last_active_at = date("Y-m-d H:i:s");
-                        $category->alert->save();
-                        switch ($category->alert->alert_owner_type) {
-                            case "category":
-                                $alertRepo->triggerCategoryAlert($category->alert);
-                                break;
-                            default:
-                        }
-                    }
-                }
-            }
-
-
-            /*USER ALERT*/
-            $user = $category->user;
-            if ($user->alerts()->count() > 0) {
-                $categories = $user->categories;
-                $allCategoriesCrawled = true;
-                foreach ($categories as $category) {
-                    $products = $category->products;
-                    foreach ($products as $product) {
-                        foreach ($product->sites as $site) {
-                            if(!is_null($product->alert)){
-                                $excludedSites = $product->alert->excludedSites;
-                                $excluded = false;
-                                foreach ($excludedSites as $excludedSite) {
-                                    if ($excludedSite->getKey() == $site->getKey()) {
-                                        $excluded = true;
-                                    }
-                                }
-                                if (!$excluded) {
-                                    if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
-                                        $allCategoriesCrawled = false;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if ($allCategoriesCrawled == false) {
-                            break;
-                        }
-                    }
-                    if ($allCategoriesCrawled == false) {
-                        break;
-                    }
-                }
-
-                if ($allCategoriesCrawled == true && !is_null($category->alert) && !$category->alert->lastActiveWithinHour()) {
-                    $alert = $user->alerts()->first();
-                    $alert->last_active_at = date("Y-m-d H:i:s");
-                    $alert->save();
-                    $alertRepo->triggerUserAlert($alert);
                 }
             }
         }
+        if ($allProductsCrawled == true && !$category->alert->lastActiveWithinHour()) {
+            $category->alert->last_active_at = date("Y-m-d H:i:s");
+            $category->alert->save();
+            switch ($category->alert->alert_owner_type) {
+                case "category":
+                    $alertRepo->triggerCategoryAlert($category->alert);
+                    break;
+                default:
+            }
+        }
     }
+
+    private function __handleUserAlert(Crawler $crawler, AlertContract $alertRepo)
+    {
+        $site = $crawler->site;
+        if (is_null($site)) {
+            return false;
+        }
+        $product = $site->product;
+        if (is_null($product)) {
+            return false;
+        }
+        $category = $product->category;
+        if (is_null($category)) {
+            return false;
+        }
+
+        $user = $category->user;
+        if (is_null($user) || $user->alerts()->count() == 0) {
+            return false;
+        }
+
+        $categories = $user->categories;
+        $allCategoriesCrawled = true;
+        foreach ($categories as $eachCategory) {
+            $products = $eachCategory->products;
+            foreach ($products as $eachProduct) {
+                foreach ($eachProduct->sites as $eachSite) {
+                    if (!is_null($eachProduct->alert)) {
+                        $excludedSites = $eachProduct->alert->excludedSites;
+                        $excluded = false;
+                        foreach ($excludedSites as $excludedSite) {
+                            if ($excludedSite->getKey() == $eachSite->getKey()) {
+                                $excluded = true;
+                            }
+                        }
+                        if (!$excluded) {
+                            if ($eachSite->status == "ok" && !$eachSite->crawler->lastCrawlerWithinHour()) {
+                                $allCategoriesCrawled = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if ($allCategoriesCrawled == false) {
+                    break;
+                }
+            }
+            if ($allCategoriesCrawled == false) {
+                break;
+            }
+        }
+        if ($allCategoriesCrawled == true && (is_null($category->alert) || !$category->alert->lastActiveWithinHour())) {
+            $alert = $user->alerts()->first();
+            $alert->last_active_at = date("Y-m-d H:i:s");
+            $alert->save();
+            $alertRepo->triggerUserAlert($alert);
+        }
+    }
+
 }

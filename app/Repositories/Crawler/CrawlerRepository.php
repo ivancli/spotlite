@@ -155,6 +155,8 @@ class CrawlerRepository implements CrawlerContract
                             continue;
                         }
                     }
+
+                    event(new CrawlerFinishing($crawler));
                 }
             } else {
                 /*TODO handle error, cannot find xpath*/
@@ -167,6 +169,7 @@ class CrawlerRepository implements CrawlerContract
 //                    )))->onQueue("mailing"));
                     $site->statusNullXpath();
                 }
+                event(new CrawlerFinishing($crawler));
                 break;
             }
         }

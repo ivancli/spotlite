@@ -504,20 +504,26 @@
                         <div style="Margin-left: 20px;Margin-right: 20px;">
                             <p style="Margin-top: 0;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto"><strong>Hi {{isset($alert->alertable->user) ? $alert->alertable->user->first_name : ''}},</strong></span></p>
                             <p style="Margin-top: 20px;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;">
-                                <span class="font-roboto">The price for {{$alert->alertable->product_name}} is found to be
-                                    @if($alert->operator == "=<")
-                                        equal or below
-                                    @elseif($alert->operator == "<")
-                                        below
-                                    @elseif($alert->operator == "=>")
-                                        equal or above
-                                    @elseif($alert->operator == ">")
-                                        above
-                                    @endif
-                                    @if($alert->comparison_price_type == "my price")
-                                        ${{number_format($mySite->recent_price, 2, '.', ',')}}.
+                                <span class="font-roboto">The price for {{$alert->alertable->product_name}} is found
+                                    @if($alert->comparison_price_type == "price changed")
+                                        to have changed.
+                                    @elseif($alert->comparison_price_type == "my price")
+                                        to have beaten your price.
                                     @else
-                                        ${{number_format($alert->comparison_price, 2, '.', ',')}}.
+                                        @if($alert->operator == "=<")
+                                            to be equal or below
+                                        @elseif($alert->operator == "<")
+                                            to be below
+                                        @elseif($alert->operator == "=>")
+                                            to be equal or above
+                                        @elseif($alert->operator == ">")
+                                            to be above
+                                        @endif
+                                        @if($alert->comparison_price_type == "my price")
+                                            ${{number_format($mySite->recent_price, 2, '.', ',')}}.
+                                        @else
+                                            ${{number_format($alert->comparison_price, 2, '.', ',')}}.
+                                        @endif
                                     @endif
                                 </span></p>
                             <p style="Margin-top: 20px;Margin-bottom: 20px;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto">You can also view this information through your Products page:</span></p>
