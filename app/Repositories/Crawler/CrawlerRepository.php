@@ -10,6 +10,7 @@ use App\Jobs\SendMail;
 use App\Models\Crawler;
 use App\Models\HistoricalPrice;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Invigor\Crawler\Contracts\CrawlerInterface;
 use Invigor\Crawler\Contracts\CurrencyFormatterInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
@@ -81,12 +82,22 @@ class CrawlerRepository implements CrawlerContract
 
     public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass, CurrencyFormatterInterface $currencyFormatterClass = null)
     {
+        Log::info("start logging");
+
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
         /*TODO check once again to prevent duplication*/
         if (!$crawler->lastCrawlerWithinHour()) {
             return false;
         }
         event(new CrawlerRunning($crawler));
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
+
         $crawler->run();
+
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
 
         $site = $crawler->site;
 
@@ -94,7 +105,13 @@ class CrawlerRepository implements CrawlerContract
             return false;
         }
 
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
+
         event(new CrawlerLoadingHTML($crawler));
+
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
 
         /*check cache*/
         $content = Cache::tags(['crawlers'])->remember("{$site->site_url}.content", 60, function () use ($site, $crawlerClass) {
@@ -104,10 +121,16 @@ class CrawlerRepository implements CrawlerContract
             return $this->crawlPage($options, $crawlerClass);
         });
 
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
+
         // page cannot be crawled
         if (is_null($content) || strlen($content) == 0) {
             $site->statusFailHTML();
         }
+
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
 
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
             $xpath = $site->preference->toArray()["xpath_{$xpathIndex}"];
@@ -164,7 +187,14 @@ class CrawlerRepository implements CrawlerContract
                 break;
             }
         }
+        
+        Log::info(memory_get_peak_usage());
+        Log::info(memory_get_usage());
+
         $crawler->resetStatus();
+
+        Log::info("end logging");
+
         return false;
     }
 
