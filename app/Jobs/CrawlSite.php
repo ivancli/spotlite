@@ -16,6 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Invigor\Crawler\Contracts\CrawlerInterface;
 use Invigor\Crawler\Contracts\ParserInterface;
 
@@ -42,6 +43,7 @@ class CrawlSite extends Job implements ShouldQueue
      */
     public function handle(CrawlerContract $crawler)
     {
+        Log::info(memory_get_peak_usage());
         $this->crawler->pick();
         if (isset($this->crawler->site) && isset($this->crawler->site->product) && isset($this->crawler->site->product->user)) {
             $user = $this->crawler->site->product->user;
@@ -51,6 +53,7 @@ class CrawlSite extends Job implements ShouldQueue
                 return false;
             }
         }
+        Log::info(memory_get_peak_usage());
 
         $crawler_class = "DefaultCrawler";
         $parser_class = "XPathParser";
@@ -63,6 +66,7 @@ class CrawlSite extends Job implements ShouldQueue
                 $crawler_class = $domain->crawler_class;
             }
         }
+        Log::info(memory_get_peak_usage());
 
         $crawlerClassFullPath = 'Invigor\Crawler\Repositories\Crawlers\\' . $crawler_class;
 
@@ -77,6 +81,8 @@ class CrawlSite extends Job implements ShouldQueue
         }
         $parserClassFullPath = 'Invigor\Crawler\Repositories\Parsers\\' . $parser_class;
 
+        Log::info(memory_get_peak_usage());
+
         $currency_formatter_class = null;
         if (!is_null($this->crawler->currency_formatter_class)) {
             $currency_formatter_class = $this->crawler->currency_formatter_class;
@@ -88,6 +94,7 @@ class CrawlSite extends Job implements ShouldQueue
             }
         }
 
+        Log::info(memory_get_peak_usage());
 
         $crawlerClass = app()->make($crawlerClassFullPath);
         $parserClass = app()->make($parserClassFullPath);
@@ -98,7 +105,18 @@ class CrawlSite extends Job implements ShouldQueue
             $currencyFormatterClass = app()->make($currencyFormatterClassFullPath);
         }
 
+        Log::info(memory_get_peak_usage());
 
         $crawler->crawl($this->crawler, $crawlerClass, $parserClass, $currencyFormatterClass);
+
+        Log::info(memory_get_peak_usage());
+        /* unset everything to prevent memory leak */
+        unset($user, $crawler_class, $parser_class);
+        if (isset($domain)) {
+            unset($domain);
+        }
+        unset($crawlerClassFullPath, $parserClassFullPath, $crawlerClass, $parserClass, $currency_formatter_class, $currencyFormatterClass);
+        unset($crawler);
+        Log::info(memory_get_peak_usage());
     }
 }

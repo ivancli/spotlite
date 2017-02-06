@@ -140,10 +140,6 @@ class CrawlerRepository implements CrawlerContract
 
                     $status = false;
                     if (isset($result['error'])) {
-//                        dispatch((new SendMail('errors.email.crawler_site', array(), array(
-//                            "email" => config('error_notifier.email'),
-//                            "subject" => 'Crawler Issue on SpotLite: site - ' . $site->getKey() . " return status {$result['error']}",
-//                        )))->onQueue("mailing"));
                         if ($site->status == "no_price") {
                             $site->statusNoPrice();
                             continue;
@@ -162,11 +158,6 @@ class CrawlerRepository implements CrawlerContract
                 /*TODO handle error, cannot find xpath*/
 
                 if ($xpathIndex == 1) {
-
-//                    dispatch((new SendMail('errors.email.crawler_site', array(), array(
-//                        "email" => config('error_notifier.email'),
-//                        "subject" => 'Crawler Issue on SpotLite: site - ' . $site->getKey() . " return status null xpath",
-//                    )))->onQueue("mailing"));
                     $site->statusNullXpath();
                 }
                 event(new CrawlerFinishing($crawler));
