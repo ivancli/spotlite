@@ -43,6 +43,7 @@ class CrawlSite extends Job implements ShouldQueue
      */
     public function handle(CrawlerContract $crawler)
     {
+        Log::info("start logging");
         Log::info(memory_get_peak_usage());
         $this->crawler->pick();
         if (isset($this->crawler->site) && isset($this->crawler->site->product) && isset($this->crawler->site->product->user)) {
@@ -118,5 +119,6 @@ class CrawlSite extends Job implements ShouldQueue
         unset($crawlerClassFullPath, $parserClassFullPath, $crawlerClass, $parserClass, $currency_formatter_class, $currencyFormatterClass);
         unset($crawler);
         Log::info(memory_get_peak_usage());
+        Log::info("end logging");
     }
 }
