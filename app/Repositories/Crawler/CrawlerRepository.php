@@ -10,6 +10,7 @@ use App\Jobs\SendMail;
 use App\Models\Crawler;
 use App\Models\HistoricalPrice;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Invigor\Crawler\Contracts\CrawlerInterface;
 use Invigor\Crawler\Contracts\CurrencyFormatterInterface;
@@ -108,6 +109,8 @@ class CrawlerRepository implements CrawlerContract
             );
             return $this->crawlPage($options, $crawlerClass);
         });
+
+        File::put(storage_path('crawler/' . $site->getKey()), $content);
 
         // page cannot be crawled
         if (is_null($content) || strlen($content) == 0) {
