@@ -94,6 +94,7 @@ class CrawlerRepository implements CrawlerContract
         $site = $crawler->site;
 
         if ($site->status == 'invalid' || $site->status == 'sample') {
+            $crawler->resetStatus();
             return false;
         }
 
@@ -110,6 +111,7 @@ class CrawlerRepository implements CrawlerContract
         // page cannot be crawled
         if (is_null($content) || strlen($content) == 0) {
             $site->statusFailHTML();
+            $crawler->resetStatus();
         }
 
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
