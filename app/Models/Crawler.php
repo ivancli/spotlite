@@ -17,7 +17,7 @@ class Crawler extends Model
 {
     protected $primaryKey = "crawler_id";
     protected $fillable = [
-        "crawler_class", "parser_class", "currency_formatter_class", "status", "site_id", "cookie_id", "active_at"
+        "crawler_class", "parser_class", "currency_formatter_class", "status", "site_id", "cookie_id", "last_active_at"
     ];
     public $timestamps = false;
 
@@ -63,6 +63,9 @@ class Crawler extends Model
 
     public function lastCrawlerWithinHour($hour = 1)
     {
+        if(!is_null($this->site->last_crawled_at)){
+            return false;
+        }
         $hourDiff = (strtotime(date('Y-m-d H:00:00')) - strtotime(date('Y-m-d H:00:00', strtotime($this->site->last_crawled_at)))) / 3600;
         return $hourDiff < $hour;
     }

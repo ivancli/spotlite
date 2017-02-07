@@ -82,10 +82,10 @@ class CrawlerRepository implements CrawlerContract
 
     public function crawl(Crawler $crawler, CrawlerInterface $crawlerClass, ParserInterface $parserClass, CurrencyFormatterInterface $currencyFormatterClass = null)
     {
-        /*TODO check once again to prevent duplication*/
-        if ($crawler->lastCrawlerWithinHour()) {
-            return false;
-        }
+//        /*TODO check once again to prevent duplication*/
+//        if ($crawler->lastCrawlerWithinHour()) {
+//            return false;
+//        }
 
         event(new CrawlerRunning($crawler));
 
