@@ -95,6 +95,7 @@ class CrawlerRepository implements CrawlerContract
 
         if ($site->status == 'invalid' || $site->status == 'sample') {
             $crawler->resetStatus();
+            unset($crawler, $site);
             return false;
         }
 
@@ -112,6 +113,9 @@ class CrawlerRepository implements CrawlerContract
         if (is_null($content) || strlen($content) == 0) {
             $site->statusFailHTML();
             $crawler->resetStatus();
+            unset($crawler, $site);
+            unset($content);
+            return false;
         }
 
         for ($xpathIndex = 1; $xpathIndex < 6; $xpathIndex++) {
@@ -137,6 +141,10 @@ class CrawlerRepository implements CrawlerContract
                     $site->statusOK();
                     event(new CrawlerFinishing($crawler));
                     $crawler->resetStatus();
+
+                    unset($crawler, $site, $historicalPrice);
+                    unset($xpath, $result, $price);
+
                     return true;
                 } else {
 
@@ -144,12 +152,15 @@ class CrawlerRepository implements CrawlerContract
                     if (isset($result['error'])) {
                         if ($site->status == "no_price") {
                             $site->statusNoPrice();
+                            unset($result, $xpath);
                             continue;
                         } elseif ($result['error'] == "incorrect price") {
                             $site->statusFailPrice();
+                            unset($result, $xpath);
                             continue;
                         } elseif ($result['error'] == "incorrect xpath") {
                             $site->statusFailXpath();
+                            unset($result, $xpath);
                             continue;
                         }
                     }
@@ -168,7 +179,9 @@ class CrawlerRepository implements CrawlerContract
         }
 
         $crawler->resetStatus();
+        event(new CrawlerFinishing($crawler));
 
+        unset($crawler, $site);
         return false;
     }
 
