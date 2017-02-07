@@ -110,7 +110,12 @@ class CrawlerRepository implements CrawlerContract
             return $this->crawlPage($options, $crawlerClass);
         });
 
-        File::put(storage_path('crawler/' . $site->getKey()), $content);
+        $file_path = storage_path('crawler/' . $site->getKey());
+        if (File::exists($file_path)) {
+            File::delete($file_path);
+            File::put($file_path, $content);
+        }
+        unset($file_path);
 
         // page cannot be crawled
         if (is_null($content) || strlen($content) == 0) {
