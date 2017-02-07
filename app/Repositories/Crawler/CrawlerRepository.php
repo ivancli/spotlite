@@ -190,6 +190,9 @@ class CrawlerRepository implements CrawlerContract
         $crawlerClass->setOptions($options);
         $crawlerClass->loadHTML();
         $html = $crawlerClass->getHTML();
+
+        unset($crawlerClass);
+
         return $html;
     }
 
@@ -199,16 +202,24 @@ class CrawlerRepository implements CrawlerContract
             "xpath" => $xpath,
         );
         $parserClass->setOptions($options);
+
+        unset($options);
+
         $parserClass->setHTML($content);
         $parserClass->init();
         $result = $parserClass->parseHTML();
+
+        unset($parserClass);
+
         if (!is_null($result) && (is_string($result) || is_numeric($result))) {
             $price = $result;
+            unset($result);
             $price = utf8_decode($price);
             if (!is_null($currencyFormatterClass)) {
                 $currencyFormatterClass->setPriceText($price);
                 $currencyFormatterClass->formatPriceText();
                 $price = $currencyFormatterClass->getPriceText();
+                unset($currencyFormatterClass);
             }
             $price = preg_replace('@[^0-9\.]+@i', '', $price);
             foreach (config("constants.price_describers") as $priceDescriber) {
@@ -226,6 +237,8 @@ class CrawlerRepository implements CrawlerContract
                 return compact('status', 'error');
             }
         } else {
+            unset($result);
+
             /*crawled content is not a price*/
             $status = false;
             $error = "incorrect xpath";
