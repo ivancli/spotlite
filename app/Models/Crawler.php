@@ -63,7 +63,7 @@ class Crawler extends Model
 
     public function lastCrawlerWithinHour($hour = 1)
     {
-        $hourDiff = (strtotime(date('Y-m-d H:00:00', strtotime($this->site->last_crawled_at))) - strtotime(date('Y-m-d H:00:00'))) / 3600;
+        $hourDiff = (strtotime(date('Y-m-d H:00:00')) - strtotime(date('Y-m-d H:00:00', strtotime($this->site->last_crawled_at)))) / 3600;
         return $hourDiff < $hour;
     }
 }
