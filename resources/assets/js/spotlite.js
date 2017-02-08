@@ -53,6 +53,7 @@ $(function () {
         }
 
         if (user.set_password == 'n') {
+            googleConversion();
             showSetPasswordPopup(function () {
                 showLoading();
                 showWelcomePopup(function () {
