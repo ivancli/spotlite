@@ -77,7 +77,7 @@ class AlertUser extends Job implements ShouldQueue
         $allCrawled = true;
         $sites = $product->sites;
         foreach ($sites as $eachSite) {
-            if(!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)){
+            if (!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)) {
                 $allCrawled = false;
                 break;
             }
@@ -113,7 +113,7 @@ class AlertUser extends Job implements ShouldQueue
         $products = $category->products;
         foreach ($products as $eachProduct) {
             foreach ($eachProduct->sites as $eachSite) {
-                if(!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)){
+                if (!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)) {
                     $allProductsCrawled = false;
                     break;
                 }
@@ -150,6 +150,7 @@ class AlertUser extends Job implements ShouldQueue
         if (is_null($user) || $user->alerts()->count() == 0) {
             return false;
         }
+        $targetAlert = $user->alerts->first();
 
         $categories = $user->categories;
         $allCategoriesCrawled = true;
@@ -157,11 +158,9 @@ class AlertUser extends Job implements ShouldQueue
             $products = $eachCategory->products;
             foreach ($products as $eachProduct) {
                 foreach ($eachProduct->sites as $eachSite) {
-                    if (!is_null($eachProduct->alert)) {
-                        if(!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)){
-                            $allCategoriesCrawled = false;
-                            break;
-                        }
+                    if (!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)) {
+                        $allCategoriesCrawled = false;
+                        break;
                     }
                 }
                 if ($allCategoriesCrawled == false) {
@@ -172,7 +171,8 @@ class AlertUser extends Job implements ShouldQueue
                 break;
             }
         }
-        if ($allCategoriesCrawled == true && (is_null($category->alert) || !$category->alert->lastActiveWithinHour())) {
+
+        if ($allCategoriesCrawled == true && !$targetAlert->lastActiveWithinHour()) {
             $alert = $user->alerts()->first();
             $alert->last_active_at = date("Y-m-d H:i:s");
             $alert->save();

@@ -63,7 +63,7 @@ class Crawler extends Model
 
     public function lastActiveWithinHour($hour = 1)
     {
-        if(!is_null($this->last_active_at)){
+        if(is_null($this->last_active_at)){
             return false;
         }
         $hourDiff = (strtotime(date('Y-m-d H:00:00')) - strtotime(date('Y-m-d H:00:00', strtotime($this->last_active_at)))) / 3600;
