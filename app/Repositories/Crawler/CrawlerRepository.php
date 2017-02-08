@@ -111,7 +111,7 @@ class CrawlerRepository implements CrawlerContract
         });
 
         $file_path = storage_path('crawler/' . $site->getKey());
-        if (File::exists($file_path)) {
+        if(File::exists($file_path)){
             File::delete($file_path);
             File::put($file_path, $content);
         }

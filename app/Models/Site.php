@@ -88,7 +88,7 @@ class Site extends Model
     public function getPreviousPriceAttribute()
     {
         $builder = $this->historicalPrices()->orderBy('created_at', 'desc')->where('price', '!=', $this->recent_price);
-        if(isset($this->product) && !is_null($this->product)){
+        if (isset($this->product) && !is_null($this->product)) {
             $user = $this->product->user;
             if ($user->needSubscription && !is_null($user->subscription) && $user->subscriptionCriteria()->historic_pricing > 0) {
                 $limitedDate = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s"))) . "-{$user->subscriptionCriteria()->historic_pricing} month"));
@@ -171,5 +171,14 @@ class Site extends Model
     {
         $this->status = "invalid";
         $this->save();
+    }
+
+    public function lastCrawledWithinHour($hour = 1)
+    {
+        if(!is_null($this->last_crawled_at)){
+            return false;
+        }
+        $hourDiff = (strtotime(date('Y-m-d H:00:00')) - strtotime(date('Y-m-d H:00:00', strtotime($this->last_crawled_at)))) / 3600;
+        return $hourDiff < $hour;
     }
 }

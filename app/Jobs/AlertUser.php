@@ -76,19 +76,10 @@ class AlertUser extends Job implements ShouldQueue
         /*CHECK IF ALL SITE UNDER THIS PRODUCT ALL CRAWLED*/
         $allCrawled = true;
         $sites = $product->sites;
-        foreach ($sites as $site) {
-            $excludedSites = $product->alert->excludedSites;
-            $excluded = false;
-            foreach ($excludedSites as $excludedSite) {
-                if ($excludedSite->getKey() == $site->getKey()) {
-                    $excluded = true;
-                }
-            }
-            if (!$excluded) {
-                if ($site->status == "ok" && !$site->crawler->lastCrawlerWithinHour()) {
-                    $allCrawled = false;
-                    break;
-                }
+        foreach ($sites as $eachSite) {
+            if(!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)){
+                $allCrawled = false;
+                break;
             }
         }
         if ($allCrawled == true && !$product->alert->lastActiveWithinHour()) {
@@ -110,7 +101,7 @@ class AlertUser extends Job implements ShouldQueue
             return false;
         }
         $product = $site->product;
-        if (is_null($product)){
+        if (is_null($product)) {
             return false;
         }
         $category = $product->category;
@@ -122,18 +113,9 @@ class AlertUser extends Job implements ShouldQueue
         $products = $category->products;
         foreach ($products as $eachProduct) {
             foreach ($eachProduct->sites as $eachSite) {
-                $excludedSites = $category->alert->excludedSites;
-                $excluded = false;
-                foreach ($excludedSites as $excludedSite) {
-                    if ($excludedSite->getKey() == $eachSite->getKey()) {
-                        $excluded = true;
-                    }
-                }
-                if (!$excluded) {
-                    if ($eachSite->status == "ok" && !$eachSite->crawler->lastCrawlerWithinHour()) {
-                        $allProductsCrawled = false;
-                        break;
-                    }
+                if(!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)){
+                    $allProductsCrawled = false;
+                    break;
                 }
             }
         }
@@ -176,18 +158,9 @@ class AlertUser extends Job implements ShouldQueue
             foreach ($products as $eachProduct) {
                 foreach ($eachProduct->sites as $eachSite) {
                     if (!is_null($eachProduct->alert)) {
-                        $excludedSites = $eachProduct->alert->excludedSites;
-                        $excluded = false;
-                        foreach ($excludedSites as $excludedSite) {
-                            if ($excludedSite->getKey() == $eachSite->getKey()) {
-                                $excluded = true;
-                            }
-                        }
-                        if (!$excluded) {
-                            if ($eachSite->status == "ok" && !$eachSite->crawler->lastCrawlerWithinHour()) {
-                                $allCategoriesCrawled = false;
-                                break;
-                            }
+                        if(!$eachSite->crawler->lastActiveWithinHour() || !is_null($eachSite->crawler->status)){
+                            $allCategoriesCrawled = false;
+                            break;
                         }
                     }
                 }
