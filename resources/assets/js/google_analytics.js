@@ -211,7 +211,3 @@ function gaResetPassword() {
 function gaLogout() {
     gaSendEvent("Settings", "Logout");
 }
-
-function googleConversion(){
-    $.getScript('//www.googleadservices.com/pagead/conversion.js');
-}
