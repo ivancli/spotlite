@@ -222,14 +222,13 @@ function googleConversion(){
         w.google_conversion_label = "r6VWCJ7InG4QzLKEnwM";
         w.google_remarketing_only = false;
     }
-// DO NOT CHANGE THE CODE BELOW.
     goog_report_conversion = function(url) {
         goog_snippet_vars();
         window.google_conversion_format = "3";
         var opt = new Object();
         opt.onload_callback = function() {
             if (typeof(url) != 'undefined') {
-                window.location = url;
+                // window.location = url;
             }
         }
         var conv_handler = window['google_trackConversion'];
@@ -237,7 +236,6 @@ function googleConversion(){
             conv_handler(opt);
         }
     }
-    /* ]]> */
 
     $.getScript('//www.googleadservices.com/pagead/conversion_async.js', function(){
         goog_report_conversion(window.location.href);
