@@ -56,15 +56,15 @@
 
 
     @if(auth()->user()->set_password = 'n')
-        {{--GOOGLE CONVERSION--}}
-        <script>
+    <!-- Google Code for Credit card info Conversion Page -->
+        <script type="text/javascript">
             /* <![CDATA[ */
-            window.google_conversion_id = 870390092;
-            window.google_conversion_language = "en";
-            window.google_conversion_format = "3";
-            window.google_conversion_color = "ffffff";
-            window.google_conversion_label = "r6VWCJ7InG4QzLKEnwM";
-            window.google_remarketing_only = false;
+            var google_conversion_id = 870390092;
+            var google_conversion_language = "en";
+            var google_conversion_format = "3";
+            var google_conversion_color = "ffffff";
+            var google_conversion_label = "r6VWCJ7InG4QzLKEnwM";
+            var google_remarketing_only = false;
             /* ]]> */
         </script>
         <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
