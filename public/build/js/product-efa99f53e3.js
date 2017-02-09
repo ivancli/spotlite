@@ -1098,7 +1098,7 @@ function showSelectPricePopup(data, callback) {
     showLoading();
     $.ajax({
         "url": "/site/prices",
-        "method": "get",
+        "method": "post",
         "data": data,
         "success": function (html) {
             hideLoading();
