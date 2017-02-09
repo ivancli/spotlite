@@ -11,6 +11,7 @@ use Invigor\UM\Traits\UMUserTrait;
 class User extends Authenticatable
 {
     use UMUserTrait;
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -21,9 +22,6 @@ class User extends Authenticatable
         'title', 'first_name', 'last_name', 'email', 'password', 'verification_code', 'last_login', 'first_login',
         'industry', 'company_type', 'company_name', 'company_url', 'agree_terms', 'set_password',
     ];
-
-    public $timestamps = false;
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -34,7 +32,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription'
+        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription', 'numberOfLogin'
     ];
 
     public function subscription()
@@ -159,6 +157,11 @@ class User extends Authenticatable
     public function getNeedSubscriptionAttribute()
     {
         return !$this->isStaff && !$this->isUnlimitedClient;
+    }
+
+    public function getNumberOfLoginAttribute()
+    {
+        return $this->activityLogs()->where('activity', 'login')->count();
     }
 
 //----------------------------------------------------------------------------------------------------------------------

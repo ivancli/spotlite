@@ -38,26 +38,23 @@
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-sm-12">
-            <p class="text-muted font-size-17">
-                {{--In this area of SpotLite you can set-up all the prices that you want to track. Simply add a category,--}}
-                {{--then a product name. Once you have done this, simply copy and paste the product pages of the brands--}}
-                {{--prices you want to track. To do this go to each of the brand or competitors site, navigate to the--}}
-                {{--product details page or any place that holds the pricing information. Copy and paste the URL into the--}}
-                {{--Add URL box shown below.--}}
-                You can set up all Categories and Products you want to keep an eye on and SpotLite will update the
-                prices for you automatically. Simply add a Category name, then a Product name. Now all you have to do is
-                copy and paste the Product Page URLs of the prices you want to track on the Product Page URL field
-                within each Product section, as shown below.
+    @if(auth()->user()->numberOfLogin <= 3)
+        <div class="row">
+            <div class="col-sm-12">
+                <p class="text-muted font-size-17">
+                    You can set up all Categories and Products you want to keep an eye on and SpotLite will update the
+                    prices for you automatically. Simply add a Category name, then a Product name. Now all you have to do is
+                    copy and paste the Product Page URLs of the prices you want to track on the Product Page URL field
+                    within each Product section, as shown below.
 
-            </p>
-            <p class="text-muted">
-                Note: you can find the Product Page URLs on your competitors' website, usually on the product
-                details page or where the pricing is located within their website
-            </p>
+                </p>
+                <p class="text-muted">
+                    Note: you can find the Product Page URLs on your competitors' website, usually on the product
+                    details page or where the pricing is located within their website
+                </p>
+            </div>
         </div>
-    </div>
+    @endif
 
     <hr class="content-divider-white">
 
