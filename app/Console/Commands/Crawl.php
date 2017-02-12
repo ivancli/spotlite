@@ -53,7 +53,7 @@ class Crawl extends Command
                         if ($user->needSubscription && !is_null($crawler->last_active_at)) {
                             $lastActiveAt = date('Y-m-d H:00:00', strtotime($crawler->last_active_at));
                             $hoursDifference = intval((strtotime($currentRoundedHours) - strtotime($lastActiveAt)) / 3600);
-                            if ($user->subscriptionCriteria()->frequency > $hoursDifference) {
+                            if (is_null($user->subscriptionCriteria()) || $user->subscriptionCriteria()->frequency > $hoursDifference) {
                                 //not the time to crawl yet
                                 continue;
                             }
