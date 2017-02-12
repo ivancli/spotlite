@@ -309,7 +309,7 @@ td.shrink, th.shrink {
 .dotdotdot {
     width: 60px;
     height: 20px;
-    background: transparent url('http://app.spotlite.dev/images/dotdotdot.png') 0 0 no-repeat;
+    background: transparent url('http://login.spotlite.com.au/images/dotdotdot.png') 0 0 no-repeat;
     -webkit-background-size: 60px 480px;
     background-size: 60px 480px;
     animation: dotdotdot 1s steps(24) infinite; /* The Animation */

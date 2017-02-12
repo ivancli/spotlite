@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-f16aeedaeb.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-43b25d3828.css */
 @media print {
   *,
   *:before,
@@ -6766,7 +6766,6 @@ table.dataTable {
 table.dataTable td,
 table.dataTable th {
   -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 table.dataTable td.dataTables_empty,
@@ -8971,7 +8970,7 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
 }
 .fa-border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eeeeee;
+  border: solid 0.08em #eee;
   border-radius: .1em;
 }
 .fa-pull-left {
@@ -9086,7 +9085,7 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
   font-size: 2em;
 }
 .fa-inverse {
-  color: #ffffff;
+  color: #fff;
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
@@ -14418,7 +14417,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
 /*!
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *
- * Version: v2.3.1-dev
+ * Version: v2.4.1
  *
  * Authors: Björn Brala (SWIS.nl), Rodney Rehm, Addy Osmani (patches for FF)
  * Web: http://swisnl.github.io/jQuery-contextMenu/
@@ -14428,7 +14427,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
  * Licensed under
  *   MIT License http://www.opensource.org/licenses/mit-license
  *
- * Date: 2016-10-25T19:12:34.206Z
+ * Date: 2016-12-09T17:38:42.656Z
  */
 @-webkit-keyframes cm-spin {
   0% {
@@ -14470,8 +14469,8 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
   font-style: normal; 
   font-weight: normal;
 
-  src: url("font/context-menu-icons.eot?23gdc");
-  src: url("font/context-menu-icons.eot?23gdc#iefix") format("embedded-opentype"), url("font/context-menu-icons.woff2?23gdc") format("woff2"), url("font/context-menu-icons.woff?23gdc") format("woff"), url("font/context-menu-icons.ttf?23gdc") format("truetype");
+  src: url("font/context-menu-icons.eot?4tjfj");
+  src: url("font/context-menu-icons.eot?4tjfj#iefix") format("embedded-opentype"), url("font/context-menu-icons.woff2?4tjfj") format("woff2"), url("font/context-menu-icons.woff?4tjfj") format("woff"), url("font/context-menu-icons.ttf?4tjfj") format("truetype");
 }
 
 .context-menu-icon-add:before {
@@ -15447,7 +15446,7 @@ td.shrink, th.shrink {
 .dotdotdot {
     width: 60px;
     height: 20px;
-    background: transparent url('http://app.spotlite.dev/images/dotdotdot.png') 0 0 no-repeat;
+    background: transparent url('http://login.spotlite.com.au/images/dotdotdot.png') 0 0 no-repeat;
     -webkit-background-size: 60px 480px;
     background-size: 60px 480px;
     animation: dotdotdot 1s steps(24) infinite; /* The Animation */
