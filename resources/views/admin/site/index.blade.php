@@ -372,7 +372,7 @@
                             "data-toggle": "tooltip",
                             "data-placement": "left"
                         })
-                    } else if (data.product.user == null || (data.product.user.needSubscription == true && (data.product.user.subscription == null || data.product.user.cancelled_at != null ))) {
+                    } else if (data.product.user == null || (data.product.user.needSubscription == true && (data.product.user.subscription == null || data.product.user.subscription.cancelled_at != null ))) {
                         $(row).addClass("danger").attr({
                             "title": "The owner of the site does not have a valid subscription.",
                             "data-toggle": "tooltip",
