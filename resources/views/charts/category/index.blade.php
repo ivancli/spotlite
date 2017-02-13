@@ -220,6 +220,7 @@
             });
 //            categoryChart = $('#chart-container').highcharts({
 //            });
+            loadCategoryChartData();
         }
 
         function submitAddContent(callback) {

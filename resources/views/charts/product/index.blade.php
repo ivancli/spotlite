@@ -216,6 +216,7 @@
                     enabled: false
                 }
             });
+            loadProductChartData()
         }
 
         function submitAddContent(callback) {

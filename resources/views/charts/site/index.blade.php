@@ -213,6 +213,7 @@
                     enabled: false
                 }
             });
+            loadSiteChartData();
         }
 
         function submitAddContent(callback) {
