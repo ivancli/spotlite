@@ -93,7 +93,7 @@
 @yield('scripts')
 
 @include('scripts.notification')
-@if(auth()->user()->set_password = 'n')
+@if(auth()->user()->set_password == 'n')
     <!-- Google Code for Credit card info Conversion Page
 In your html page, add the snippet and call
 goog_report_conversion when someone clicks on the
