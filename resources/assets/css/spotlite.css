@@ -1014,6 +1014,7 @@ tr.add-site-row {
 }
 
 .btn-edit.btn-edit-site .btn-edit-align-middle {
+    width: 50px;
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);

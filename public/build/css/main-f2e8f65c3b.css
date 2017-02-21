@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-da8d5dfe9e.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-f2e8f65c3b.css */
 @media print {
   *,
   *:before,
@@ -16152,6 +16152,7 @@ tr.add-site-row {
 }
 
 .btn-edit.btn-edit-site .btn-edit-align-middle {
+    width: 50px;
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
