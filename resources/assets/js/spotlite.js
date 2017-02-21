@@ -28,12 +28,12 @@ $(function () {
             $.each(localStorage, function (key, value) {
                 /*show login welcome message once per day*/
                 /*removing previous welcome message local storage*/
-                if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.startsWith("met-first-login-welcome-msg-")) {
+                if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.indexOf("met-first-login-welcome-msg-") > -1) {
                     localStorage.removeItem(key);
                 }
                 /*show credit card expiry notification once per day*/
                 /*removing previous credit card expiry message local storage*/
-                if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.startsWith("met-cc-expiry-msg-")) {
+                if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.indexOf("met-cc-expiry-msg-") > -1) {
                     localStorage.removeItem(key);
                 }
             });
@@ -41,12 +41,12 @@ $(function () {
             $.each(getCookies(), function (key, value) {
                 /*show login welcome message once per day*/
                 /*removing previous welcome message local storage*/
-                if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.startsWith("met-first-login-welcome-msg-")) {
+                if (key != "met-first-login-welcome-msg-" + today + "-" + user.user_id && key.indexOf("met-first-login-welcome-msg-") > -1) {
                     removeCookie(key);
                 }
                 /*show credit card expiry notification once per day*/
                 /*removing previous credit card expiry message local storage*/
-                if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.startsWith("met-cc-expiry-msg-")) {
+                if (key != "met-cc-expiry-msg-" + today + "-" + user.user_id && key.indexOf("met-cc-expiry-msg-") > -1) {
                     removeCookie(key);
                 }
             });
