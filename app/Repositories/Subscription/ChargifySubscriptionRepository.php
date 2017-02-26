@@ -53,7 +53,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
             $this->updateCreditCardDetails($subscription);
 
-            $user->clearCache();
+            $user->clearAllCache();
 
             $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id, true);
             if (!is_null($apiSubscription) && $apiSubscription !== false) {

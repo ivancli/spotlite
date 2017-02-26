@@ -85,318 +85,295 @@ class SubscriptionController extends Controller
         }
     }
 
+    public function confirm(Request $request)
+    {
+        if ($request->has('api_product_id')) {
+            // preview subscription
+            $apiProductId = $request->get('api_product_id');
+            $user = auth()->user();
+
+            if ($apiProductId != $user->apiSubscription->product_id) {
+                /*TODO show subscription preview next billing manifest*/
+                $preview = Chargify::subscription()->preview(array(
+                    "product_id" => $apiProductId,
+                    "customer_attributes" => array(
+                        "first_name" => "Spot",
+                        "last_name" => "Lite",
+                        "email" => "admin@spotlite.com.au",
+                        "country" => "AU",
+                        "state" => "New South Wales"
+                    ),
+                    "payment_profile_attributes" => array(
+                        "billing_country" => "AU",
+                        "billing_state" => "NSW",
+                    )
+                ));
+                $subscriptionPreview = $preview->next_billing_manifest;
+            } else {
+                /*TODO show renewal preview*/
+                $subscriptionPreview = Chargify::subscription()->previewRenew($user->apiSubscription->id);
+            }
+
+            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id);
+            $product = Chargify::product()->get($request->get('api_product_id'));
+            $product->criteria = json_decode($product->description);
+            return view('subscriptions.confirm')->with(compact(['product', 'subscriptionPreview', 'updatePaymentLink']));
+        } else {
+            return redirect()->back();
+        }
+    }
+
     public function store(Request $request)
     {
         event(new SubscriptionCreating());
+
         $user = auth()->user();
-        if (!$request->has('api_product_id')) {
-            /* TODO should handle the error in a better way*/
+        /* user does not have subscription */
+        if (is_null($user->apiSubscription)) {
             abort(403);
             return false;
         }
-        $productId = $request->get('api_product_id');
-        $couponCode = $request->get('coupon_code');
-        $product = Chargify::product()->get($productId);
 
-        if (!isset($product->errors)) {
-            if ($product->require_credit_card) {
-                if (!is_null(auth()->user()->subscription)) {
-                    $previousSubscription = auth()->user()->subscription;
-                    $previousAPISubscription = Chargify::subscription()->get($previousSubscription->api_subscription_id);
-                    if (!is_null($previousAPISubscription)) {
-                        $paymentProfile = $previousAPISubscription->paymentProfile();
-                        if (!isset($paymentProfile->errors) && !is_null($paymentProfile)) {
-                            if ($paymentProfile->expiration_year > date("Y") || ($paymentProfile->expiration_year == date("Y") && $paymentProfile->expiration_month >= date('n'))) {
-                                $newSubscription = Chargify::subscription()->create(array(
-                                    "product_id" => $product->id,
-                                    "customer_id" => $previousSubscription->api_customer_id,
-                                    "payment_profile_id" => $paymentProfile->id,
-                                    "coupon_code" => $couponCode,
-                                ));
-                                $user->clearCache();
-//                                $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
-                                if (!isset($newSubscription->errors)) {
-                                    $previousSubscription->api_product_id = $newSubscription->product_id;
-                                    $previousSubscription->api_subscription_id = $newSubscription->id;
-                                    $previousSubscription->api_customer_id = $newSubscription->customer_id;
-                                    $previousSubscription->cancelled_at = null;
-                                    $previousSubscription->save();
-                                    return redirect()->route('account.index');
-                                }
-                            }
-                        }
-                    }
-                }
-                /* redirect to Chargify payment gateway (signup page) */
-                $chargifyLink = array_first($product->public_signup_pages)->url;
-                $verificationCode = str_random(10);
-                $user->verification_code = $verificationCode;
-                $user->save();
-                $reference = array(
-                    "user_id" => $user->getKey(),
-                    "verification_code" => $verificationCode
-                );
-
-                $encryptedReference = rawurlencode(json_encode($reference));
-                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&organization={$user->company_name}&coupon_code={$couponCode}";
-                $user->clearCache();
-                return redirect()->to($chargifyLink);
-            } else {
-                $newSubscription = Chargify::subscription()->create(array(
-                    "product_id" => $product->id,
-                    "customer_attributes" => array(
-                        "first_name" => $user->first_name,
-                        "last_name" => $user->last_name,
-                        "email" => $user->email
-                    )
+        $user->clearAllCache();
+        if (!is_null($user->subscription)) {
+            if ($request->get('api_product_id') != $user->apiSubscription->product_id) {
+                $product = Chargify::product()->get($request->get('api_product_id'));
+                Chargify::subscription()->update($user->apiSubscription->id, array(
+                    "product_handle" => $product->handle
                 ));
-
-                if (!isset($newSubscription->errors)) {
-                    /* clear verification code*/
-                    $user->verification_code = null;
-                    $user->save();
-                    try {
-                        /* update subscription record */
-                        $expiry_datetime = $newSubscription->expires_at;
-                        $sub = new Subscription();
-                        $sub->user_id = $user->getKey();
-                        $sub->api_product_id = $newSubscription->product_id;
-                        $sub->api_customer_id = $newSubscription->customer_id;
-                        $sub->api_subscription_id = $newSubscription->id;
-                        $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
-                        $sub->save();
-
-                        $criteria = auth()->user()->subscriptionCriteria();
-                        $this->mailingAgentRepo->editSubscriber($user->email, array(
-                            "CustomFields" => array(
-                                array(
-                                    "Key" => "SubscribedDate",
-                                    "Value" => date("Y/m/d")
-                                ),
-                                array(
-                                    "Key" => "SubscriptionPlan",
-                                    "Value" => $product->name
-                                ),
-                                array(
-                                    "Key" => "TrialExpiry",
-                                    "Value" => date('Y/m/d', strtotime($newSubscription->trial_ended_at))
-                                ),
-                                array(
-                                    "Key" => "NumberofSites",
-                                    "Value" => 0
-                                ),
-                                array(
-                                    "Key" => "NumberofProducts",
-                                    "Value" => 0
-                                ),
-                                array(
-                                    "Key" => "NumberofCategories",
-                                    "Value" => 0
-                                ),
-                                array(
-                                    "Key" => "MaximumNumberofProducts",
-                                    "Value" => isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
-                                ),
-                                array(
-                                    "Key" => "MaximumNumberofSites",
-                                    "Value" => isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
-                                ),
-                                array(
-                                    "Key" => "LastLoginDate",
-                                    "Value" => date('Y/m/d')
-                                ),
-                                array(
-                                    "Key" => "SubscriptionCancelledDate",
-                                    "Value" => null
-                                ),
-                                array(
-                                    "Key" => "CancelledBeforeEndofTrial",
-                                    "Value" => null
-                                ),
-                                array(
-                                    "Key" => "CancelledAfterEndofTrial",
-                                    "Value" => null
-                                ),
-                            ),
-                            'Resubscribe' => true
-                        ));
-
-                        event(new SubscriptionCompleted($sub));
-                        $user->clearCache();
-                        $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
-                        return redirect()->route('account.index');
-                    } catch (Exception $e) {
-                        /*TODO need to handle exception properly*/
-                        return $user;
-                    }
-                }
             }
-        }
-    }
-
-    public function finalise(Request $request)
-    {
-        if (!$request->has('ref') || !$request->has('id')) {
-            abort(403, "unauthorised access");
-        } else {
-            $reference = $request->get('ref');
-            $reference = json_decode($reference);
-            try {
-                if (property_exists($reference, 'user_id') && property_exists($reference, 'verification_code')) {
-                    $user = User::findOrFail($reference->user_id);
-                    if ($user->verification_code == $reference->verification_code) {
-                        $user->verification_code = null;
-//                        $user->save();
-
-                        $subscription_id = $request->get('id');
-                        $subscription = Chargify::subscription()->get($subscription_id);
-                        $product = $subscription->product();
-                        if (!is_null($user->subscription)) {
-                            $sub = $user->subscription;
-                            $sub->api_product_id = $subscription->product_id;
-                            $sub->api_customer_id = $subscription->customer_id;
-                            $sub->api_subscription_id = $subscription->id;
-                            $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
-                            $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
-                            $sub->save();
-
-                            $this->subscriptionRepo->updateCreditCardDetails($sub);
-
-                            $this->mailingAgentRepo->editSubscriber($user->email, array(
-                                "CustomFields" => array(
-                                    array(
-                                        "Key" => "LastSubscriptionUpdatedDate",
-                                        "Value" => date("Y/m/d")
-                                    ),
-                                    array(
-                                        "Key" => "TrialExpiry",
-                                        "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
-                                    ),
-                                    array(
-                                        "Key" => "SubscriptionCancelledDate",
-                                        "Value" => null
-                                    ),
-                                    array(
-                                        "Key" => "SubscriptionPlan",
-                                        "Value" => $product->name
-                                    ),
-                                    array(
-                                        "Key" => "CancelledBeforeEndofTrial",
-                                        "Value" => null
-                                    ),
-                                    array(
-                                        "Key" => "CancelledAfterEndofTrial",
-                                        "Value" => null
-                                    ),
-                                )
-                            ));
-
-                            event(new SubscriptionUpdated($sub));
-                            $user->clearCache();
-                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
-                            return redirect()->route('account.index');
-//                            }
-                        } else {
-                            /* create subscription record in DB */
-                            $sub = new Subscription();
-                            $sub->user_id = $user->getKey();
-                            $sub->api_product_id = $subscription->product_id;
-                            $sub->api_customer_id = $subscription->customer_id;
-                            $sub->api_subscription_id = $subscription->id;
-                            $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
-                            $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
-                            $sub->save();
-                            $this->subscriptionRepo->updateCreditCardDetails($sub);
-
-                            $criteria = auth()->user()->subscriptionCriteria();
-                            $this->mailingAgentRepo->editSubscriber($user->email, array(
-                                "CustomFields" => array(
-                                    array(
-                                        "Key" => "SubscribedDate",
-                                        "Value" => date("Y/m/d")
-                                    ),
-                                    array(
-                                        "Key" => "SubscriptionPlan",
-                                        "Value" => $product->name
-                                    ),
-                                    array(
-                                        "Key" => "TrialExpiry",
-                                        "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
-                                    ),
-                                    array(
-                                        "Key" => "NumberofSites",
-                                        "Value" => 0
-                                    ),
-                                    array(
-                                        "Key" => "NumberofProducts",
-                                        "Value" => 0
-                                    ),
-                                    array(
-                                        "Key" => "NumberofCategories",
-                                        "Value" => 0
-                                    ),
-                                    array(
-                                        "Key" => "MaximumNumberofProducts",
-                                        "Value" => isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
-                                    ),
-                                    array(
-                                        "Key" => "MaximumNumberofSites",
-                                        "Value" => isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
-                                    ),
-                                    array(
-                                        "Key" => "LastLoginDate",
-                                        "Value" => date('Y/m/d')
-                                    ),
-                                    array(
-                                        "Key" => "SubscriptionCancelledDate",
-                                        "Value" => null
-                                    ),
-                                    array(
-                                        "Key" => "CancelledBeforeEndofTrial",
-                                        "Value" => null
-                                    ),
-                                    array(
-                                        "Key" => "CancelledAfterEndofTrial",
-                                        "Value" => null
-                                    ),
-                                ),
-                                "Resubscribe" => true
-                            ));
-                            event(new SubscriptionCompleted($sub));
-                            $user->clearCache();
-                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
-                            return redirect()->route('dashboard.index');
-                        }
-                    } else {
-                        abort(403, "unauthorised access");
-                        return false;
-                    }
+            /* check if payment profile exists*/
+            if (is_null($user->apiSubscription->credit_card_id)) {
+                // if no payment profile, redirect user to update credit card page
+                return redirect()->to($this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id));
+            } else {
+                // if there is payment profile, try to reactivate subscription
+                $result = Chargify::subscription()->reactivate($user->apiSubscription->id);
+                /* check if reactivation succeed*/
+                if (isset($result->errors)) {
+                    //cannot reactivate subscription, most likely because credit card has insufficient fund or not authorised to process payment.
+                    /* return back to error page*/
+                    /* suggest either change credit card or make sure credit has sufficient fund and try again*/
+                    $subscriptionErrors = $result->errors;
+                    $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id);
+                    return redirect()->back()->withErrors(compact(['subscriptionErrors']));
                 } else {
-                    abort(404, "page not found");
-                    return false;
+                    $user->clearAllCache();
+                    $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
+                    $subscription = $user->subscription;
+                    $subscription->api_product_id = $user->apiSubscription->product()->id;
+                    $subscription->api_subscription_id = $user->apiSubscription->id;
+                    $subscription->api_customer_id = $user->apiSubscription->customer_id;
+                    $subscription->cancelled_at = null;
+                    $subscription->save();
+
+                    /*!!!!!!!!!!!!TODO have a look at finalise method, that's something we need to add here*/
+
+
+                    /*TODO redirect to subscription success msg page*/
+                    $msg = "Thank you for your subscription and here is the subscription details.";
+                    return redirect()->route('account.index')->with(compact(['msg']));
                 }
 
-            } catch (ModelNotFoundException $e) {
-                abort(404, "page not found");
-                return false;
             }
+        } else {
+            $product = Chargify::product()->get($request->get('api_product_id'));
+            $reference = array(
+                "user_id" => $user->getKey()
+            );
+            $encryptedReference = json_encode($reference);
+            /* create subscription in chargify */
+            $fields = array(
+                "product_id" => $product->id,
+                "customer_attributes" => array(
+                    "first_name" => $user->first_name,
+                    "last_name" => $user->last_name,
+                    "email" => $user->email,
+                    "reference" => $encryptedReference
+                ),
+            );
+            $result = Chargify::subscription()->create($fields);
+
+            $msg = "Thank you for your subscription and here is the subscription details.";
+            return redirect()->route('account.index')->with(compact(['msg']));
         }
+
     }
+
+//    public function finalise(Request $request)
+//    {
+//        if (!$request->has('ref') || !$request->has('id')) {
+//            abort(403, "unauthorised access");
+//        } else {
+//            $reference = $request->get('ref');
+//            $reference = json_decode($reference);
+//            try {
+//                if (property_exists($reference, 'user_id') && property_exists($reference, 'verification_code')) {
+//                    $user = User::findOrFail($reference->user_id);
+//                    if ($user->verification_code == $reference->verification_code) {
+//                        $user->verification_code = null;
+////                        $user->save();
+//
+//                        $subscription_id = $request->get('id');
+//                        $subscription = Chargify::subscription()->get($subscription_id);
+//                        $product = $subscription->product();
+//                        if (!is_null($user->subscription)) {
+//                            $sub = $user->subscription;
+//                            $sub->api_product_id = $subscription->product_id;
+//                            $sub->api_customer_id = $subscription->customer_id;
+//                            $sub->api_subscription_id = $subscription->id;
+//                            $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
+//                            $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
+//                            $sub->save();
+//
+//                            $this->subscriptionRepo->updateCreditCardDetails($sub);
+//
+//                            $this->mailingAgentRepo->editSubscriber($user->email, array(
+//                                "CustomFields" => array(
+//                                    array(
+//                                        "Key" => "LastSubscriptionUpdatedDate",
+//                                        "Value" => date("Y/m/d")
+//                                    ),
+//                                    array(
+//                                        "Key" => "TrialExpiry",
+//                                        "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
+//                                    ),
+//                                    array(
+//                                        "Key" => "SubscriptionCancelledDate",
+//                                        "Value" => null
+//                                    ),
+//                                    array(
+//                                        "Key" => "SubscriptionPlan",
+//                                        "Value" => $product->name
+//                                    ),
+//                                    array(
+//                                        "Key" => "CancelledBeforeEndofTrial",
+//                                        "Value" => null
+//                                    ),
+//                                    array(
+//                                        "Key" => "CancelledAfterEndofTrial",
+//                                        "Value" => null
+//                                    ),
+//                                )
+//                            ));
+//
+//                            event(new SubscriptionUpdated($sub));
+//                            $user->clearAllCache();
+//                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
+//                            return redirect()->route('account.index');
+////                            }
+//                        } else {
+//                            /* create subscription record in DB */
+//                            $sub = new Subscription();
+//                            $sub->user_id = $user->getKey();
+//                            $sub->api_product_id = $subscription->product_id;
+//                            $sub->api_customer_id = $subscription->customer_id;
+//                            $sub->api_subscription_id = $subscription->id;
+//                            $sub->expiry_date = is_null($subscription->expires_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->expires_at));
+//                            $sub->cancelled_at = is_null($subscription->canceled_at) ? null : date('Y-m-d H:i:s', strtotime($subscription->canceled_at));
+//                            $sub->save();
+//                            $this->subscriptionRepo->updateCreditCardDetails($sub);
+//
+//                            $criteria = auth()->user()->subscriptionCriteria();
+//                            $this->mailingAgentRepo->editSubscriber($user->email, array(
+//                                "CustomFields" => array(
+//                                    array(
+//                                        "Key" => "SubscribedDate",
+//                                        "Value" => date("Y/m/d")
+//                                    ),
+//                                    array(
+//                                        "Key" => "SubscriptionPlan",
+//                                        "Value" => $product->name
+//                                    ),
+//                                    array(
+//                                        "Key" => "TrialExpiry",
+//                                        "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
+//                                    ),
+//                                    array(
+//                                        "Key" => "NumberofSites",
+//                                        "Value" => 0
+//                                    ),
+//                                    array(
+//                                        "Key" => "NumberofProducts",
+//                                        "Value" => 0
+//                                    ),
+//                                    array(
+//                                        "Key" => "NumberofCategories",
+//                                        "Value" => 0
+//                                    ),
+//                                    array(
+//                                        "Key" => "MaximumNumberofProducts",
+//                                        "Value" => isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
+//                                    ),
+//                                    array(
+//                                        "Key" => "MaximumNumberofSites",
+//                                        "Value" => isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
+//                                    ),
+//                                    array(
+//                                        "Key" => "LastLoginDate",
+//                                        "Value" => date('Y/m/d')
+//                                    ),
+//                                    array(
+//                                        "Key" => "SubscriptionCancelledDate",
+//                                        "Value" => null
+//                                    ),
+//                                    array(
+//                                        "Key" => "CancelledBeforeEndofTrial",
+//                                        "Value" => null
+//                                    ),
+//                                    array(
+//                                        "Key" => "CancelledAfterEndofTrial",
+//                                        "Value" => null
+//                                    ),
+//                                ),
+//                                "Resubscribe" => true
+//                            ));
+//                            event(new SubscriptionCompleted($sub));
+//                            $user->clearAllCache();
+//                            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
+//                            return redirect()->route('dashboard.index');
+//                        }
+//                    } else {
+//                        abort(403, "unauthorised access");
+//                        return false;
+//                    }
+//                } else {
+//                    abort(404, "page not found");
+//                    return false;
+//                }
+//
+//            } catch (ModelNotFoundException $e) {
+//                abort(404, "page not found");
+//                return false;
+//            }
+//        }
+//    }
 
     public function externalUpdate(Request $request)
     {
-//        dd($request->server('HTTP_REFERER'));
-        /*TODO validation here*/
         $ref = json_decode($request->get('ref'));
         $user_id = $ref->user_id;
-
         if (auth()->user()->getKey() != $user_id) {
             abort(403);
         }
+
         $this->subscriptionRepo->syncUserSubscription(auth()->user());
-        auth()->user()->clearCache();
-        $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
-        return redirect()->route('account.index');
+        $user = auth()->user();
+        $user->clearAllCache();
+        Cache::tags(["subscriptions.{$user->apiSubscription->id}"])->flush();
+        $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
+
+
+        //TODO need testing
+        if (!$user->subscription->isValid()) {
+            /*reactivate subscription if subscription state is not trialing or active*/
+            $result = Chargify::subscription()->reactivate($user->apiSubscription->id);
+            $msg = "Thank you for your subscription and here is the subscription details.";
+            return redirect()->route('account.index')->with(compact(['msg']));
+        } else {
+            $msg = "Your account has been updated.";
+            return redirect()->route('account.index')->with(compact(['msg']));
+        }
     }
 
     public function edit($id)
@@ -423,6 +400,9 @@ class SubscriptionController extends Controller
 
         event(new SubscriptionUpdating($subscription));
         $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
+//        if (is_null($apiSubscription->credit_card_id)) {
+//            return redirect()->to($this->subscriptionRepo->generateUpdatePaymentLink($apiSubscription->id));
+//        }
 
         /* validation*/
         $targetProduct = Chargify::product()->get($request->get('api_product_id'));
@@ -481,9 +461,21 @@ class SubscriptionController extends Controller
         }
 
         /*check current subscription has payment method or not*/
-        if (is_null($apiSubscription->payment_type)) {
+        if (is_null($apiSubscription->credit_card_id)) {
+
+            $product = Chargify::product()->get($request->get('api_product_id'));
+            Chargify::subscription()->update($apiSubscription->id, array(
+                "product_handle" => $product->handle
+            ));
+            auth()->user()->clearAllCache();
+            $subscription = auth()->user()->subscription;
+            $subscription->api_product_id = $request->get('api_product_id');
+            $subscription->save();
+            $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
+            $status = true;
+            return compact(['status', 'subscription']);
             //current subscription no payment method
-            return $this->store($request);
+//            return $this->store($request);
         } else {
             //current subscription has payment method
             $fields = array(
@@ -502,7 +494,7 @@ class SubscriptionController extends Controller
                 }
                 $subscription->save();
                 $newSubscription = $result;
-                auth()->user()->clearCache();
+                auth()->user()->clearAllCache();
                 $criteria = auth()->user()->subscriptionCriteria();
                 if ($criteria->my_price == false) {
                     foreach (auth()->user()->sites as $site) {
@@ -558,6 +550,10 @@ class SubscriptionController extends Controller
                 } else {
                     return redirect()->route('msg.subscription.update');
                 }
+            } else {
+                $errors = ["Unable to change subscription plan, please make sure the provided credit card has sufficient fund. Alternatively you can update your card and try again."];
+                $status = false;
+                return compact(['status', 'errors']);
             }
         }
     }
@@ -625,7 +621,7 @@ class SubscriptionController extends Controller
                 if (!$request->has('keep_profile') || $request->get('keep_profile') != '1') {
                     $this->mailingAgentRepo->deleteSubscriber(auth()->user()->email);
                 }
-                auth()->user()->clearCache();
+                auth()->user()->clearAllCache();
                 $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
                 return redirect()->route('msg.subscription.cancelled', $subscription->getkey());
             } else {
@@ -652,7 +648,7 @@ class SubscriptionController extends Controller
         if (in_array($currentHour, $userSyncTime)) {
             $users = User::all();
             foreach ($users as $user) {
-                $user->clearCache();
+                $user->clearAllCache();
                 dispatch((new SyncUser($user))->onQueue("syncing"));
             }
         }

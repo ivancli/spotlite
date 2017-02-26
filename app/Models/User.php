@@ -122,7 +122,7 @@ class User extends Authenticatable
 
     public function getApiSubscriptionAttribute()
     {
-        if ($this->needSubscription && !is_null($this->subscription) && $this->subscription->isValid()) {
+        if ($this->needSubscription && !is_null($this->subscription)) {
             return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_subscription', config('cache.ttl'), function () {
                 return Chargify::subscription()->get($this->subscription->api_subscription_id);
             });
@@ -230,9 +230,13 @@ class User extends Authenticatable
         return true;
     }
 
-    public function clearCache()
+    public function clearAllCache()
     {
+        $this->clearCache();
         Cache::tags(["user_{$this->getKey()}"])->flush();
+        if(!is_null($this->apiSubscription)){
+            Cache::tags(["subscriptions.{$this->apiSubscription->id}"])->flush();
+        }
     }
 }
 

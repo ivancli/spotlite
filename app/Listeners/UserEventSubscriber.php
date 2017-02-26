@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Jobs\LogUserActivity;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Created by PhpStorm.
@@ -32,6 +33,9 @@ class UserEventSubscriber
         dispatch((new LogUserActivity(auth()->user(), "login"))->onQueue("logging"));
 
         $user = $event->user;
+        if (!is_null($user->apiSubscription)) {
+            Cache::tags(["subscriptions.{$user->apiSubscription->id}"])->flush();
+        }
         $user->last_login = date('Y-m-d H:i:s');
         if (is_null($user->is_first_login)) {
             $user->is_first_login = 'y';

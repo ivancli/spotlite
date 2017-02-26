@@ -91,9 +91,6 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
             'signup_link' => 'required',
             'api_product_id' => 'required',
-//            'industry' => 'required',
-//            'company_type' => 'required',
-//            'company_name' => 'required',
             'agree_terms' => 'required',
         ]);
     }
@@ -131,63 +128,48 @@ class AuthController extends Controller
             'Name' => $user->first_name . " " . $user->last_name,
         ));
 
-        /*create sample products*/
-//        $sampleCategory = $this->categoryRepo->createSampleCategory($user);
-//        $sampleProduct = $this->productRepo->createSampleProduct($sampleCategory);
-//        $sampleSites = $this->siteRepo->createSampleSite($sampleProduct);
-
         if (request()->has('api_product_id')) {
             $product = Chargify::product()->get(request('api_product_id'));
-            $requireCreditCard = $product->require_credit_card == true;
             $coupon_code = request()->get('coupon_code');
-            if ($requireCreditCard == true) {
-                /* REQUIRED CREDIT CARD */
-                $reference = array(
-                    "user_id" => $user->getKey(),
-                    "verification_code" => $verificationCode
-                );
-                $encryptedReference = rawurlencode(json_encode($reference));
-                $chargifyLink = $chargifyLink . "?reference=$encryptedReference&first_name={$user->first_name}&last_name={$user->last_name}&email={$user->email}&organization={$user->company_name}&coupon_code={$coupon_code}";
+            $reference = array(
+                "user_id" => $user->getKey(),
+                "verification_code" => $verificationCode
+            );
+            $encryptedReference = json_encode($reference);
+            /* create subscription in chargify */
+            $fields = array(
+                "product_id" => $product->id,
+                "customer_attributes" => array(
+                    "first_name" => $data['first_name'],
+                    "last_name" => $data['last_name'],
+                    "email" => $data['email'],
+                    "reference" => $encryptedReference
+                ),
+                "coupon_code" => $coupon_code
+            );
 
-                $this->redirectTo = $chargifyLink;
-            } else {
-                /* CREDIT CARD NOT REQUIRED */
-
-                /* create subscription in chargify */
-                $fields = array(
-                    "product_id" => $product->id,
-                    "customer_attributes" => array(
-                        "first_name" => $data['first_name'],
-                        "last_name" => $data['last_name'],
-                        "email" => $data['email'],
-                        "organization" => $data['company_name'],
-                    ),
-                    "coupon_code" => $coupon_code
-                );
-
-                $result = Chargify::subscription()->create($fields);
-                if (!isset($result->errors)) {
-                    /* clear verification code*/
-                    $user->verification_code = null;
-                    $user->save();
-                    try {
-                        /* update subscription record */
-                        $subscription = $result;
-                        $expiry_datetime = $subscription->expires_at;
-                        $sub = new Subscription();
-                        $sub->user_id = $user->getKey();
-                        $sub->api_product_id = $subscription->product_id;
-                        $sub->api_customer_id = $subscription->customer_id;
-                        $sub->api_subscription_id = $subscription->id;
-                        $sub->expiry_date = date('Y-m-d H:i:s', strtotime($expiry_datetime));
-                        $sub->save();
-                        $this->redirectTo = route('msg.subscription.welcome');
-                    } catch (Exception $e) {
-                        return $user;
-                    }
+            $result = Chargify::subscription()->create($fields);
+            if (!isset($result->errors)) {
+                /* clear verification code*/
+                $user->verification_code = null;
+                $user->save();
+                try {
+                    /* update subscription record */
+                    $subscription = $result;
+                    $sub = new Subscription();
+                    $sub->user_id = $user->getKey();
+                    $sub->api_product_id = $subscription->product_id;
+                    $sub->api_customer_id = $subscription->customer_id;
+                    $sub->api_subscription_id = $subscription->id;
+                    $sub->save();
+                    $user->clearAllCache();
+                } catch (Exception $e) {
+                    $user->clearAllCache();
+                    return $user;
                 }
             }
         }
+        $user->clearAllCache();
         return $user;
     }
 

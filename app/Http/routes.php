@@ -148,6 +148,7 @@ Route::group(['middleware' => ['auth']], function () {
     //redirect route for chargify sign up page
     Route::get('subscription/finalise', 'Subscription\SubscriptionController@finalise')->name('subscription.finalise');
     Route::get('subscription/update', 'Subscription\SubscriptionController@externalUpdate')->name('subscription.external_update');
+    Route::get('subscription/confirm', 'Subscription\SubscriptionController@confirm')->name('subscription.confirm');
 
     Route::resource('subscription', 'Subscription\SubscriptionController', ['except' => [
         'create', 'show'

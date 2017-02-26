@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Invigor\Chargify\Chargify;
 
 /**
  * Created by PhpStorm.
@@ -31,11 +32,8 @@ class Subscription extends Model
 
     public function isValid()
     {
-        if (!is_null($this->expiry_date)) {
-            return strtotime($this->expiry_date) > time();
-        } else {
-            return is_null($this->cancelled_at) || $this->cancelled_at > time();
-        }
+        $subscription = Chargify::subscription()->get($this->api_subscription_id);
+        return $subscription->state == 'active' || $subscription->state == 'trialing';
     }
 
     public function creditCardExpiringWithinMonthOrExpired($month = 1)

@@ -11,7 +11,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 text-center">
-                    {!! Form::open(array('route' => 'subscription.store', 'id' => 'frm-subscribe', 'method' => 'post', 'onsubmit'=>'$("#txt-coupon-code").val($("#visual-coupon-code").val());showLoading()')) !!}
+                    {!! Form::open(array('route' => 'subscription.confirm', 'id' => 'frm-subscribe', 'method' => 'get', 'onsubmit'=>'$("#txt-coupon-code").val($("#visual-coupon-code").val());showLoading()')) !!}
                     <input type="hidden" name="api_product_id" id="txt-api-product-id">
                     <input type="hidden" name="coupon_code" id="txt-coupon-code">
                     {!! Form::close() !!}
