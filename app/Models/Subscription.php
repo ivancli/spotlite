@@ -14,11 +14,15 @@ use Invigor\Chargify\Chargify;
  */
 class Subscription extends Model
 {
+    public $timestamps = false;
     protected $primaryKey = "subscription_id";
     protected $fillable = [
         'api_product_id', 'api_custom_id', 'api_subscription_id', 'expiry_date', 'cancelled_at',
     ];
-    public $timestamps = false;
+
+    protected $appends = [
+        'isPastDue', 'isCancelled'
+    ];
 
     public function user()
     {
@@ -34,6 +38,18 @@ class Subscription extends Model
     {
         $subscription = Chargify::subscription()->get($this->api_subscription_id);
         return $subscription->state == 'active' || $subscription->state == 'trialing';
+    }
+
+    public function getIsPastDueAttribute()
+    {
+        $subscription = Chargify::subscription()->get($this->api_subscription_id);
+        return $subscription->state == 'past_due';
+    }
+
+    public function getIsCancelledAttribute()
+    {
+        $subscription = Chargify::subscription()->get($this->api_subscription_id);
+        return $subscription->state == 'canceled';
     }
 
     public function creditCardExpiringWithinMonthOrExpired($month = 1)

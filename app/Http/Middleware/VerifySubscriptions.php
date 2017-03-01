@@ -24,7 +24,7 @@ class VerifySubscriptions
     public function handle($request, Closure $next)
     {
         $user = $this->auth->user();
-        if ($this->auth->guest() || ($user->needSubscription && (is_null($user->subscription) || !$user->subscription->isValid()))) {
+        if ($this->auth->guest() || ($user->needSubscription && (is_null($user->subscription) || $user->subscription->isCancelled))) {
             /* TODO replace route with actual value */
             return redirect()->route('subscription.back');
         }

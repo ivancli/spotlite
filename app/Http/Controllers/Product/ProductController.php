@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
+use App\Contracts\Repository\Subscription\SubscriptionContract;
 use App\Events\Products\Product\ProductCreateViewed;
 use App\Events\Products\Product\ProductDeleted;
 use App\Events\Products\Product\ProductDeleting;
@@ -30,9 +31,10 @@ class ProductController extends Controller
 {
     protected $productRepo;
     protected $categoryRepo;
+    protected $subscriptionRepo;
     protected $request;
 
-    public function __construct(ProductContract $productContract, CategoryContract $categoryContract, Request $request)
+    public function __construct(ProductContract $productContract, CategoryContract $categoryContract, SubscriptionContract $subscriptionContract, Request $request)
     {
         $this->middleware('permission:create_product', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_product', ['only' => ['show']]);
@@ -42,6 +44,7 @@ class ProductController extends Controller
 
         $this->productRepo = $productContract;
         $this->categoryRepo = $categoryContract;
+        $this->subscriptionRepo = $subscriptionContract;
         $this->request = $request;
     }
 
@@ -52,9 +55,15 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+        if ($user->isPastDue) {
+            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->subscription->api_subscription_id);
+        }
+
+
         $productCount = $this->productRepo->getProductsCount();
         event(new ProductListViewed());
-        return view('products.index')->with(compact(['productCount']));
+        return view('products.index')->with(compact(['productCount', 'updatePaymentLink']));
     }
 
     public function indexByCategory($category_id)

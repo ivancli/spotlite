@@ -47,9 +47,12 @@ class SubscriptionController extends Controller
         if (!$user->needSubscription || (!is_null($user->subscription) && $user->subscription->isValid())) {
             return redirect()->route('dashboard.index');
         }
-
         $productFamilies = $this->subscriptionRepo->getProductList();
         event(new SubscriptionViewed());
+        if (!is_null($user->apiSubscription) && $user->apiSubscription->state == 'past_due') {
+            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id);
+            return view('subscriptions.subscription_trial_ended')->with(compact(['productFamilies', 'updatePaymentLink']));
+        }
         return view('subscriptions.subscription_plans')->with(compact(['productFamilies']));
     }
 
@@ -352,6 +355,10 @@ class SubscriptionController extends Controller
     public function externalUpdate(Request $request)
     {
         $ref = json_decode($request->get('ref'));
+        if (empty($ref)) {
+            auth()->user()->clearAllCache();
+            return redirect()->route('product.index');
+        }
         $user_id = $ref->user_id;
         if (auth()->user()->getKey() != $user_id) {
             abort(403);
@@ -363,11 +370,11 @@ class SubscriptionController extends Controller
         Cache::tags(["subscriptions.{$user->apiSubscription->id}"])->flush();
         $this->mailingAgentRepo->updateNextLevelSubscriptionPlan($user);
 
-
         //TODO need testing
         if (!$user->subscription->isValid()) {
             /*reactivate subscription if subscription state is not trialing or active*/
             $result = Chargify::subscription()->reactivate($user->apiSubscription->id);
+            $user->clearAllCache();
             $msg = "Thank you for your subscription and here is the subscription details.";
             return redirect()->route('account.index')->with(compact(['msg']));
         } else {
@@ -378,7 +385,6 @@ class SubscriptionController extends Controller
 
     public function edit($id)
     {
-
         $subscription = auth()->user()->subscription;
         /*TODO validate the $subscription*/
 

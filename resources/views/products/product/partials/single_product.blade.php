@@ -9,43 +9,47 @@
         </th>
         <th class="product-th">
             <a class="text-muted product-name-link" href="#" onclick="return false;">{{$product->product_name}}</a>
-            {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'style' => "display :none;", 'onsubmit' => 'submitEditProductName(this); return false;')) !!}
-            <div class="input-group sl-input-group">
-                <input type="text" name="product_name" placeholder="Product Name" autocomplete="off"
-                       class="form-control sl-form-control input-lg product-name"
-                       onkeyup="cancelEditProductName(this, event)" onblur="txtProductOnBlur(this)"
-                       value="{{$product->product_name}}">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default btn-flat btn-lg">
-                        <i class="fa fa-check"></i>
-                    </button>
-                </span>
-            </div>
-            {!! Form::close() !!}
+            @if(!auth()->user()->isPastDue)
+                {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'style' => "display :none;", 'onsubmit' => 'submitEditProductName(this); return false;')) !!}
+                <div class="input-group sl-input-group">
+                    <input type="text" name="product_name" placeholder="Product Name" autocomplete="off"
+                           class="form-control sl-form-control input-lg product-name"
+                           onkeyup="cancelEditProductName(this, event)" onblur="txtProductOnBlur(this)"
+                           value="{{$product->product_name}}">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default btn-flat btn-lg">
+                            <i class="fa fa-check"></i>
+                        </button>
+                    </span>
+                </div>
+                {!! Form::close() !!}
 
-            <span class="btn-edit btn-edit-product" onclick="toggleEditProductName(this)">Edit &nbsp; <i
-                        class="fa fa-pencil-square-o"></i></span>
+                <span class="btn-edit btn-edit-product" onclick="toggleEditProductName(this)">Edit &nbsp; <i
+                            class="fa fa-pencil-square-o"></i></span>
+            @endif
         </th>
         <th class="text-right action-cell product-th">
-            <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
-               data-toggle="tooltip" title="chart">
-                <i class="fa fa-line-chart"></i>
-            </a>
-            {{--<a href="#" class="btn-action btn-alert" onclick="showProductAlertForm(this); return false;"--}}
-            {{--data-toggle="tooltip" title="alert">--}}
-            {{--<i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>--}}
-            {{--</a>--}}
-            <a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"
-               data-toggle="tooltip" title="report">
-                <i class="fa {{!is_null($product->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
-            </a>
-            {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
-            <a href="#" class="btn-action" data-name="{{$product->product_name}}"
-               onclick="btnDeleteProductOnClick(this); return false;"
-               data-toggle="tooltip" title="delete">
-                <i class="glyphicon glyphicon-trash"></i>
-            </a>
-            {!! Form::close() !!}
+            @if(!auth()->user()->isPastDue)
+                <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
+                   data-toggle="tooltip" title="chart">
+                    <i class="fa fa-line-chart"></i>
+                </a>
+                {{--<a href="#" class="btn-action btn-alert" onclick="showProductAlertForm(this); return false;"--}}
+                {{--data-toggle="tooltip" title="alert">--}}
+                {{--<i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>--}}
+                {{--</a>--}}
+                <a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"
+                   data-toggle="tooltip" title="report">
+                    <i class="fa {{!is_null($product->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
+                </a>
+                {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
+                <a href="#" class="btn-action" data-name="{{$product->product_name}}"
+                   onclick="btnDeleteProductOnClick(this); return false;"
+                   data-toggle="tooltip" title="delete">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </a>
+                {!! Form::close() !!}
+            @endif
         </th>
         <th class="text-center vertical-align-middle" style="background-color: #e8e8e8;padding: 0 !important;"
             width="70">
@@ -87,7 +91,7 @@
     <tr>
         <td></td>
         <td colspan="3" class="table-container">
-            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in" aria-expanded="true"
+            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in m-b-20" aria-expanded="true"
                  data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10"
             >
                 <table class="table table-striped table-condensed tbl-site">
@@ -119,66 +123,68 @@
                             </a>
                         </td>
                     </tr>
-                    <tr class="add-site-row">
-                        <td colspan="9" class="add-item-cell">
+                    @if(!auth()->user()->isPastDue)
+                        <tr class="add-site-row">
+                            <td colspan="9" class="add-item-cell">
 
-                            <div class="add-item-block add-site-container"
-                                 @if(auth()->user()->needSubscription && auth()->user()->subscriptionCriteria()->site != 0 && $product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
-                                 onclick="appendUpgradeForCreateSiteBlock(this); event.stopPropagation(); return false;"
-                                 @else
-                                 onclick="appendCreateSiteBlock(this); event.stopPropagation(); return false;"
+                                <div class="add-item-block add-site-container"
+                                     @if(auth()->user()->needSubscription && auth()->user()->subscriptionCriteria()->site != 0 && $product->sites()->count() >= auth()->user()->subscriptionCriteria()->site)
+                                     onclick="appendUpgradeForCreateSiteBlock(this); event.stopPropagation(); return false;"
+                                     @else
+                                     onclick="appendCreateSiteBlock(this); event.stopPropagation(); return false;"
+                                        @endif
+                                >
+                                    <div class="add-item-label add-site-label">
+                                        <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
+                                        <div class="site-label-text-container">
+                                            <div>ADD THE PRODUCT PAGE URL FOR THE PRICE YOU WANT TO TRACK. E.G.
+                                                http://www.company.com.au/productpage/price
+                                            </div>
+                                            {{--<div>For example http://www.company.com.au/productpage/price</div>--}}
+                                        </div>
+                                    </div>
+                                    <div class="add-item-controls">
+                                        <div class="row">
+                                            <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                                <form action="{{route('site.store')}}" method="post"
+                                                      class="frm-store-site"
+                                                      onsubmit="getPricesCreate(this); return false;">
+                                                    <input type="text" autocomplete="off"
+                                                           {{--placeholder="e.g. http://www.company.com.au/productpage/price"--}}
+                                                           name="site_url"
+                                                           class="txt-site-url form-control txt-item">
+                                                </form>
+                                            </div>
+                                            <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
+                                                <button class="btn btn-primary btn-flat"
+                                                        onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
+                                                    ADD PRODUCT PAGE URL
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button class="btn btn-default btn-flat btn-cancel-add-site"
+                                                        id="btn-cancel-add-site-{{$product->getKey()}}"
+                                                        onclick="cancelAddSite(this); event.stopPropagation(); event.preventDefault();">
+                                                    CANCEL
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
+                                        <div class="upgrade-for-add-item-controls" style="display: none;">
+                                            <span class="add-item-text">
+                                                You have reached the product URL limit of
+                                                {{auth()->user()->apiSubscription->product()->name}} plan.
+                                                Please
+                                                <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                                   onclick="event.stopPropagation();">upgrade your subscription</a>
+                                                to add more products.
+                                            </span>
+                                        </div>
                                     @endif
-                            >
-                                <div class="add-item-label add-site-label">
-                                    <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
-                                    <div class="site-label-text-container">
-                                        <div>ADD THE PRODUCT PAGE URL FOR THE PRICE YOU WANT TO TRACK. E.G.
-                                            http://www.company.com.au/productpage/price
-                                        </div>
-                                        {{--<div>For example http://www.company.com.au/productpage/price</div>--}}
-                                    </div>
                                 </div>
-                                <div class="add-item-controls">
-                                    <div class="row">
-                                        <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
-                                            <form action="{{route('site.store')}}" method="post"
-                                                  class="frm-store-site"
-                                                  onsubmit="getPricesCreate(this); return false;">
-                                                <input type="text" autocomplete="off"
-                                                       {{--placeholder="e.g. http://www.company.com.au/productpage/price"--}}
-                                                       name="site_url"
-                                                       class="txt-site-url form-control txt-item">
-                                            </form>
-                                        </div>
-                                        <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                            <button class="btn btn-primary btn-flat"
-                                                    onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
-                                                ADD PRODUCT PAGE URL
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <button class="btn btn-default btn-flat btn-cancel-add-site"
-                                                    id="btn-cancel-add-site-{{$product->getKey()}}"
-                                                    onclick="cancelAddSite(this); event.stopPropagation(); event.preventDefault();">
-                                                CANCEL
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
-                                    <div class="upgrade-for-add-item-controls" style="display: none;">
-                                        <span class="add-item-text">
-                                            You have reached the product URL limit of
-                                            {{auth()->user()->apiSubscription->product()->name}} plan.
-                                            Please
-                                            <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
-                                               onclick="event.stopPropagation();">upgrade your subscription</a>
-                                            to add more products.
-                                        </span>
-                                    </div>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    @endif
                     </tbody>
                 </table>
             </div>

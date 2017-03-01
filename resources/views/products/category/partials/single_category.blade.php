@@ -12,41 +12,46 @@
                 <th class="category-th">
                     <a class="text-muted category-name-link" href="#"
                        onclick="return false;">{{$category->category_name}}</a>
-                    {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style' => 'display: none;')) !!}
-                    <div class="input-group sl-input-group">
-                        <input type="text" name="category_name" placeholder="Category Name" autocomplete="off"
-                               class="form-control sl-form-control input-lg category-name"
-                               onkeyup="cancelEditCategoryName(this, event)" onblur="txtCategoryOnBlur(this);"
-                               value="{{$category->category_name}}">
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-default btn-flat btn-lg">
-                                <i class="fa fa-check"></i>
-                            </button>
-                        </span>
-                    </div>
-                    {!! Form::close() !!}
 
-                    <span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i
-                                class="fa fa-pencil-square-o"></i></span>
+                    @if(!auth()->user()->isPastDue)
+                        {!! Form::model($category, array('route' => array('category.update', $category->getKey()), 'method'=>'delete', 'class'=>'frm-edit-category', 'onsubmit' => 'submitEditCategoryName(this); return false;', 'style' => 'display: none;')) !!}
+                        <div class="input-group sl-input-group">
+                            <input type="text" name="category_name" placeholder="Category Name" autocomplete="off"
+                                   class="form-control sl-form-control input-lg category-name"
+                                   onkeyup="cancelEditCategoryName(this, event)" onblur="txtCategoryOnBlur(this);"
+                                   value="{{$category->category_name}}">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default btn-flat btn-lg">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                            </span>
+                        </div>
+                        {!! Form::close() !!}
+
+                        <span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i
+                                    class="fa fa-pencil-square-o"></i></span>
+                    @endif
                 </th>
 
                 <th class="text-right action-cell category-th">
-                    <a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"
-                       onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
-                        <i class="fa fa-line-chart"></i>
-                    </a>
-                    <a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"
-                       data-toggle="tooltip"
-                       title="report">
-                        <i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
-                    </a>
-                    {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
-                    <a href="#" data-name="{{$category->category_name}}" class="btn-action btn-delete-category"
-                       onclick="btnDeleteCategoryOnClick(this); return false;" data-toggle="tooltip"
-                       title="delete">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                    {!! Form::close() !!}
+                    @if(!auth()->user()->isPastDue)
+                        <a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"
+                           onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
+                            <i class="fa fa-line-chart"></i>
+                        </a>
+                        <a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"
+                           data-toggle="tooltip"
+                           title="report">
+                            <i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
+                        </a>
+                        {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
+                        <a href="#" data-name="{{$category->category_name}}" class="btn-action btn-delete-category"
+                           onclick="btnDeleteCategoryOnClick(this); return false;" data-toggle="tooltip"
+                           title="delete">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </a>
+                        {!! Form::close() !!}
+                    @endif
                 </th>
                 <th class="text-center vertical-align-middle" style="background-color: #d3d3d3;" width="70">
                     <a class="text-muted btn-collapse collapsed" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
@@ -73,54 +78,56 @@
                     </div>
                 </td>
             </tr>
-            <tr>
-                <th></th>
-                <th colspan="3" class="category-th action-cell add-item-cell">
-                    <div class="add-item-block add-product-container"
-                         onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
-                        <div class="add-item-label">
-                            <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
-                            <span class="add-item-text">ADD PRODUCT</span>
-                        </div>
-                        <div class="add-item-controls">
-                            <div class="row">
-                                <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
-                                    <form action="{{route('product.store')}}" method="post"
-                                          class="frm-store-product"
-                                          onsubmit="btnAddProductOnClick(this); return false;">
-                                        <input type="text" name="product_name" autocomplete="off"
-                                               class="form-control txt-item txt-product-name">
-                                    </form>
-                                </div>
-                                <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                    <button class="btn btn-primary btn-flat"
-                                            onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                        ADD PRODUCT
-                                    </button>
-                                    &nbsp;&nbsp;
-                                    <button class="btn btn-default btn-flat btn-cancel-add-product"
-                                            onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
-                                        CANCEL
-                                    </button>
+            @if(!auth()->user()->isPastDue)
+                <tr>
+                    <th></th>
+                    <th colspan="3" class="category-th action-cell add-item-cell">
+                        <div class="add-item-block add-product-container"
+                             onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
+                            <div class="add-item-label">
+                                <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
+                                <span class="add-item-text">ADD PRODUCT</span>
+                            </div>
+                            <div class="add-item-controls">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                        <form action="{{route('product.store')}}" method="post"
+                                              class="frm-store-product"
+                                              onsubmit="btnAddProductOnClick(this); return false;">
+                                            <input type="text" name="product_name" autocomplete="off"
+                                                   class="form-control txt-item txt-product-name">
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
+                                        <button class="btn btn-primary btn-flat"
+                                                onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                            ADD PRODUCT
+                                        </button>
+                                        &nbsp;&nbsp;
+                                        <button class="btn btn-default btn-flat btn-cancel-add-product"
+                                                onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
+                                            CANCEL
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                            @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
+                                <div class="upgrade-for-add-item-controls" style="display: none;">
+                                    <span class="add-item-text">
+                                        You have reached the product limit of
+                                        {{auth()->user()->apiSubscription->product()->name}} plan.
+                                        Please
+                                        <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                           onclick="event.stopPropagation();">
+                                            upgrade your subscription
+                                        </a> to add more products.
+                                    </span>
+                                </div>
+                            @endif
                         </div>
-                        @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
-                            <div class="upgrade-for-add-item-controls" style="display: none;">
-                                <span class="add-item-text">
-                                    You have reached the product limit of
-                                    {{auth()->user()->apiSubscription->product()->name}} plan.
-                                    Please
-                                    <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
-                                       onclick="event.stopPropagation();">
-                                        upgrade your subscription
-                                    </a> to add more products.
-                                </span>
-                            </div>
-                        @endif
-                    </div>
-                </th>
-            </tr>
+                    </th>
+                </tr>
+            @endif
             </thead>
             <tbody>
             <tr>

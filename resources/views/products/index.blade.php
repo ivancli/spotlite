@@ -63,92 +63,105 @@
         <div class="col-md-12">
             <div class="box box-solid">
                 <div class="box-body product-list-page-content">
-
-                    <div class="row m-b-10 text-muted font-weight-bold">
-                        <div class="col-md-8 line-height-30">
-                            @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
-                                @if(!is_null(auth()->user()->apiSubscription->product()))
-                                    {{auth()->user()->apiSubscription->product()->name}} Plan:
-                                @else
-                                    Credit:
-                                @endif
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-
-                                {{--TODO update color based on the ratio--}}
-                                <div class="progress vertical-align-middle"
-                                     style="width: 300px;display: inline-block;margin-bottom: 0;background-color:#dedede;border-radius: 10px; height:15px;">
-                                    <div class="progress-bar progress-bar-success progress-bar-striped"
-                                         id="prog-product-usage"
-                                         role="progressbar"
-                                         aria-valuenow="{{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}"
-                                         aria-valuemin="0" aria-valuemax="100"
-                                         style="width: {{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}%">
-                                    </div>
-                                </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <span id="lbl-product-usage">{{auth()->user()->products()->count()}}</span>
-                                &nbsp;/&nbsp;
-                                <span id="lbl-product-total">{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}</span>
-                                &nbsp;
-                                products
-                            @endif
+                    @if(auth()->user()->isPastDue)
+                        <div class="row m-b-20">
+                            <div class="col-sm-12" style="background-color: #7ed0c0; padding: 15px;">
+                                <table class="table" style="margin: 0; color: white;">
+                                    <tr>
+                                        <td style="border: none !important;">
+                                            <h3 style="margin-top:0;">OH NO! YOUR TRIAL HAS EXPIRED!</h3>
+                                            <p style="font-size: 18px;margin-bottom:0">To re-activate your account and continue to use SpotLite, please add a payment method.</p>
+                                        </td>
+                                        <td class="shrink" style="border: none !important; vertical-align: middle !important;">
+                                            <a href="{{$updatePaymentLink}}" class="btn btn-primary btn-lg">ADD PAYMENT METHOD</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="pull-right">
-                                <a href="#" onclick="showSetUpNotifications(); return false;"
-                                   class="btn btn-purple btn-flat" id="btn-set-up-alerts">
-                                    @if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)
-                                        <i class="fa fa-bell ico-alert-enabled"></i>
-                                        &nbsp;
-                                        MANAGE ALERTS
+                    @else
+                        <div class="row m-b-10 text-muted font-weight-bold">
+                            <div class="col-md-8 line-height-30">
+                                @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
+                                    @if(!is_null(auth()->user()->apiSubscription->product()))
+                                        {{auth()->user()->apiSubscription->product()->name}} Plan:
                                     @else
-                                        <i class="fa fa-bell-o"></i>
-                                        &nbsp;
-                                        SET UP ALERTS
+                                        Credit:
                                     @endif
-                                </a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+
+                                    {{--TODO update color based on the ratio--}}
+                                    <div class="progress vertical-align-middle"
+                                         style="width: 300px;display: inline-block;margin-bottom: 0;background-color:#dedede;border-radius: 10px; height:15px;">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped"
+                                             id="prog-product-usage"
+                                             role="progressbar"
+                                             aria-valuenow="{{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}"
+                                             aria-valuemin="0" aria-valuemax="100"
+                                             style="width: {{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}%">
+                                        </div>
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="lbl-product-usage">{{auth()->user()->products()->count()}}</span>
+                                    &nbsp;/&nbsp;
+                                    <span id="lbl-product-total">{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}</span>
+                                    &nbsp;
+                                    products
+                                @endif
+                            </div>
+                            <div class="col-md-4">
+                                <div class="pull-right">
+                                    <a href="#" onclick="showSetUpNotifications(); return false;"
+                                       class="btn btn-purple btn-flat {{auth()->user()->isPastDue ? 'disabled' : ''}}" id="btn-set-up-alerts">
+                                        @if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)
+                                            <i class="fa fa-bell ico-alert-enabled"></i>
+                                            &nbsp;
+                                            MANAGE ALERTS
+                                        @else
+                                            <i class="fa fa-bell-o"></i>
+                                            &nbsp;
+                                            SET UP ALERTS
+                                        @endif
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row m-b-10">
-                        <div class="col-sm-12">
-                            {{--<a href="#" class="btn btn-primary btn-xs btn-add-category btn-flat"--}}
-                            {{--onclick="appendCreateCategoryBlock();">--}}
-                            {{--<i class="fa fa-plus"></i> Add Category--}}
-                            {{--</a>--}}
-                            <div class="add-item-block add-category-container"
-                                 onclick="appendCreateCategoryBlock(this); event.stopPropagation(); return false;">
-                                <div class="add-item-label">
-                                    <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
-                                    <span class="add-item-text">ADD CATEGORY</span>
-                                </div>
-                                <div class="add-item-controls">
-                                    <div class="row">
-                                        <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
-                                            <form action="{{route('category.store')}}" method="post"
-                                                  class="frm-store-category"
-                                                  onsubmit="btnAddCategoryOnClick(this); return false;">
-                                                <input type="text" id="txt-category-name" autocomplete="off"
-                                                       class="form-control txt-item" name="category_name">
-                                            </form>
-                                        </div>
-                                        <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                            <button class="btn btn-primary btn-flat"
-                                                    onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                                ADD CATEGORY
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
-                                                    onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
-                                                CANCEL
-                                            </button>
+                        <div class="row m-b-10">
+                            <div class="col-sm-12">
+                                <div class="add-item-block add-category-container"
+                                     onclick="appendCreateCategoryBlock(this); event.stopPropagation(); return false;">
+                                    <div class="add-item-label">
+                                        <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
+                                        <span class="add-item-text">ADD CATEGORY</span>
+                                    </div>
+                                    <div class="add-item-controls">
+                                        <div class="row">
+                                            <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                                <form action="{{route('category.store')}}" method="post"
+                                                      class="frm-store-category"
+                                                      onsubmit="btnAddCategoryOnClick(this); return false;">
+                                                    <input type="text" id="txt-category-name" autocomplete="off"
+                                                           class="form-control txt-item" name="category_name">
+                                                </form>
+                                            </div>
+                                            <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
+                                                <button class="btn btn-primary btn-flat"
+                                                        onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                                    ADD CATEGORY
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
+                                                        onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
+                                                    CANCEL
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="row m-b-20">
                         <div class="col-sm-12 text-right">
                             <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"

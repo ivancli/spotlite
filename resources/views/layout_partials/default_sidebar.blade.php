@@ -3,50 +3,50 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
-            @if(auth()->check() && (!auth()->user()->needSubscription || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())))
-                @if(auth()->user()->can(['manage_dashboard', 'manage_dashboard_widget']))
-                    <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
-                        <a href="#">
-                            <i class="fa fa-dashboard"></i>
-                            <span>DASHBOARDS</span>
-                            <span class="pull-right-container">
-                          <i class="fa fa-caret-down pull-right"></i>
+            @if(auth()->user()->can(['manage_dashboard', 'manage_dashboard_widget']))
+                <li class="treeview {{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i>
+                        <span>DASHBOARDS</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-caret-down pull-right"></i>
                         </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            @foreach(auth()->user()->nonHiddenDashboards as $index=>$dashboard)
-                                <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
-                                    <a href="{{route('dashboard.show', $dashboard->getKey())}}" class="lnk-dashboard">
-                                        <i class="fa fa-circle-o"></i>
-                                        <span class="lnk-dashboard-{{$dashboard->getKey()}}">
+                    </a>
+                    <ul class="treeview-menu">
+                        @foreach(auth()->user()->nonHiddenDashboards as $index=>$dashboard)
+                            <li class="{{Style::set_active_and(array('dashboard', $dashboard->getKey()))}}">
+                                <a href="{{route('dashboard.show', $dashboard->getKey())}}" class="lnk-dashboard">
+                                    <i class="fa fa-circle-o"></i>
+                                    <span class="lnk-dashboard-{{$dashboard->getKey()}}">
                                         {{$dashboard->dashboard_name}}
                                     </span>
-                                        @if(auth()->user()->nonHiddenDashboards()->count() > 1)
-                                            @if($index==0)
-                                                <span class="pull-right-container btn-reorder-dashboard"
-                                                      data-order="{{$index}}"
-                                                      data-dashboard-id="{{$dashboard->getKey()}}"
-                                                      onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
+                                    @if(auth()->user()->nonHiddenDashboards()->count() > 1)
+                                        @if($index==0)
+                                            <span class="pull-right-container btn-reorder-dashboard"
+                                                  data-order="{{$index}}"
+                                                  data-dashboard-id="{{$dashboard->getKey()}}"
+                                                  onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
                                                 <i class="fa fa-arrow-down"></i>
                                             </span>
-                                            @else
-                                                <span class="pull-right-container btn-reorder-dashboard"
-                                                      data-order="{{$index}}"
-                                                      data-dashboard-id="{{$dashboard->getKey()}}"
-                                                      onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
+                                        @else
+                                            <span class="pull-right-container btn-reorder-dashboard"
+                                                  data-order="{{$index}}"
+                                                  data-dashboard-id="{{$dashboard->getKey()}}"
+                                                  onclick="swapDashboard(this); event.preventDefault(); event.stopPropagation(); return false;">
                                                 <i class="fa fa-arrow-up"></i>
                                             </span>
-                                            @endif
                                         @endif
-                                    </a>
-                                </li>
-                            @endforeach
-                            <script type="text/javascript">
-                            </script>
-                        </ul>
-                    </li>
-                @endif
-                @if(auth()->user()->can('manage_dashboard'))
+                                    @endif
+                                </a>
+                            </li>
+                        @endforeach
+                        <script type="text/javascript">
+                        </script>
+                    </ul>
+                </li>
+            @endif
+            @if(auth()->user()->can('manage_dashboard'))
+                @if(auth()->check() && (!auth()->user()->needSubscription || (!is_null(auth()->user()->subscription) && auth()->user()->subscription->isValid())))
                     <li>
                         <a href="#" onclick="showAddDashboardForm(this); return false;" id="btn-add-new-dashboard">
                             <i class="fa fa-plus"></i>
@@ -54,14 +54,16 @@
                         </a>
                     </li>
                 @endif
-                @if(auth()->user()->can('manage_product'))
-                    <li class="{{Style::set_active_starts_with('product')}} lnk-product">
-                        <a href="{{url('product')}}">
-                            <i class="fa fa-tag"></i>
-                            <span>PRODUCTS</span>
-                        </a>
-                    </li>
-                @endif
+            @endif
+            @if(auth()->user()->can('manage_product'))
+                <li class="{{Style::set_active_starts_with('product')}} lnk-product">
+                    <a href="{{url('product')}}">
+                        <i class="fa fa-tag"></i>
+                        <span>PRODUCTS</span>
+                    </a>
+                </li>
+            @endif
+            @if(!auth()->user()->isPastDue)
                 @if(auth()->user()->can('manage_alert'))
                     <li class="{{Style::set_active('alert')}} lnk-alert">
                         <a href="{{url('alert')}}">
@@ -92,7 +94,7 @@
                         <i class="fa fa-files-o"></i>
                         <span>CRAWLER MANAGEMENT</span>
                         <span class="pull-right-container">
-                          <i class="fa fa-caret-down pull-right"></i>
+                            <i class="fa fa-caret-down pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
@@ -118,8 +120,8 @@
                             <i class="fa fa-users"></i>
                             <span>USER MANAGEMENT</span>
                             <span class="pull-right-container">
-                          <i class="fa fa-caret-down pull-right"></i>
-                        </span>
+                                <i class="fa fa-caret-down pull-right"></i>
+                            </span>
                         </a>
                         <ul class="treeview-menu">
                             <li class="{{Style::set_active_starts_with('um.user')}}">
@@ -154,7 +156,7 @@
                         <i class="fa fa-file-text-o"></i>
                         <span>SYSTEM LOG MANAGEMENT</span>
                         <span class="pull-right-container">
-                          <i class="fa fa-caret-down pull-right"></i>
+                            <i class="fa fa-caret-down pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
@@ -182,8 +184,8 @@
                             <i class="fa fa-file-archive-o"></i>
                             <span>MANAGE LEGALS</span>
                             <span class="pull-right-container">
-                          <i class="fa fa-caret-down pull-right"></i>
-                        </span>
+                                <i class="fa fa-caret-down pull-right"></i>
+                            </span>
                         </a>
                         <ul class="treeview-menu">
                             <li class="{{Style::set_active_starts_with('term_and_condition')}}">

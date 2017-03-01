@@ -28,11 +28,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'verification_code',
+        'password', 'remember_token', 'verification_code'
     ];
 
     protected $appends = [
-        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription', 'numberOfLogin'
+        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription', 'numberOfLogin', 'isPastDue', 'isCancelled'
     ];
 
     public function subscription()
@@ -164,6 +164,16 @@ class User extends Authenticatable
         return $this->activityLogs()->where('activity', 'login')->count();
     }
 
+    public function getIsPastDueAttribute()
+    {
+        return !is_null($this->subscription) && $this->subscription->isPastDue;
+    }
+
+    public function getIsCancelledAttribute()
+    {
+        return !is_null($this->subscription) && $this->subscription->isCancelled;
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     public function preference($key)
@@ -234,9 +244,11 @@ class User extends Authenticatable
     {
         $this->clearCache();
         Cache::tags(["user_{$this->getKey()}"])->flush();
-        if(!is_null($this->apiSubscription)){
+        Cache::tags(['users', "user_" . $this->getKey()])->flush();
+        if (!is_null($this->apiSubscription)) {
             Cache::tags(["subscriptions.{$this->apiSubscription->id}"])->flush();
         }
+        Cache::tags(['chargify', 'subscriptions', 'subscription', "subscriptions.{$this->apiSubscription->id}"])->flush();
     }
 }
 

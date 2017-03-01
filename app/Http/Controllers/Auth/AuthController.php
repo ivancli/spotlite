@@ -75,6 +75,16 @@ class AuthController extends Controller
         $this->tokenRepo = $tokenContract;
     }
 
+    public function showRegistrationForm()
+    {
+        $productFamilies = $this->subscriptionRepo->getProductList();
+        if (property_exists($this, 'registerView')) {
+            return view($this->registerView)->with(compact(['productFamilies']));
+        }
+
+        return view('auth.register')->with(compact(['productFamilies']));
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -143,7 +153,9 @@ class AuthController extends Controller
                     "first_name" => $data['first_name'],
                     "last_name" => $data['last_name'],
                     "email" => $data['email'],
-                    "reference" => $encryptedReference
+                    "reference" => $encryptedReference,
+                    "country" => "AU",
+                    "state" => "NSW",
                 ),
                 "coupon_code" => $coupon_code
             );
@@ -163,6 +175,63 @@ class AuthController extends Controller
                     $sub->api_subscription_id = $subscription->id;
                     $sub->save();
                     $user->clearAllCache();
+
+                    $criteria = json_decode($product->description);
+
+                    $this->mailingAgentRepo->editSubscriber($user->email, array(
+                        "CustomFields" => array(
+                            array(
+                                "Key" => "SubscribedDate",
+                                "Value" => date("Y/m/d")
+                            ),
+                            array(
+                                "Key" => "SubscriptionPlan",
+                                "Value" => $product->name
+                            ),
+                            array(
+                                "Key" => "TrialExpiry",
+                                "Value" => date('Y/m/d', strtotime($subscription->trial_ended_at))
+                            ),
+                            array(
+                                "Key" => "NumberofSites",
+                                "Value" => 0
+                            ),
+                            array(
+                                "Key" => "NumberofProducts",
+                                "Value" => 0
+                            ),
+                            array(
+                                "Key" => "NumberofCategories",
+                                "Value" => 0
+                            ),
+                            array(
+                                "Key" => "MaximumNumberofProducts",
+                                "Value" => isset($criteria->product) && $criteria->product != 0 ? $criteria->product : null
+                            ),
+                            array(
+                                "Key" => "MaximumNumberofSites",
+                                "Value" => isset($criteria->site) && $criteria->site != 0 ? $criteria->site : null
+                            ),
+                            array(
+                                "Key" => "LastLoginDate",
+                                "Value" => date('Y/m/d')
+                            ),
+                            array(
+                                "Key" => "SubscriptionCancelledDate",
+                                "Value" => null
+                            ),
+                            array(
+                                "Key" => "CancelledBeforeEndofTrial",
+                                "Value" => null
+                            ),
+                            array(
+                                "Key" => "CancelledAfterEndofTrial",
+                                "Value" => null
+                            ),
+                        )
+                    ));
+
+
                 } catch (Exception $e) {
                     $user->clearAllCache();
                     return $user;
@@ -171,16 +240,6 @@ class AuthController extends Controller
         }
         $user->clearAllCache();
         return $user;
-    }
-
-    public function showRegistrationForm()
-    {
-        $productFamilies = $this->subscriptionRepo->getProductList();
-        if (property_exists($this, 'registerView')) {
-            return view($this->registerView)->with(compact(['productFamilies']));
-        }
-
-        return view('auth.register')->with(compact(['productFamilies']));
     }
 
     protected function externalValidator(array $data)

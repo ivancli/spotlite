@@ -10,10 +10,10 @@
                        class="form-control sl-form-control input-lg dashboard-name"
                        value="{{$dashboard->dashboard_name}}">
                 <span class="input-group-btn">
-                <button type="submit" class="btn btn-default btn-flat btn-lg">
-                    <i class="fa fa-check"></i>
-                </button>
-            </span>
+                    <button type="submit" class="btn btn-default btn-flat btn-lg">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </span>
             </div>
         </form>
     </div>
@@ -21,21 +21,23 @@
     <div class="display-inline-block text-muted font-size-14">Created on
         the {{date(auth()->user()->preferences['DATE_FORMAT'], strtotime($dashboard->created_at))}}
         <strong><i>by {{$dashboard->user->first_name}} {{$dashboard->user->last_name}}</i></strong>
-        &nbsp; &nbsp; &#124; &nbsp;
-        <div class="btn-group cursor-pointer" style="vertical-align: baseline;">
-            <a type="button" class="text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
-               id="btn-dropdown-manage-dashboard">
-                <strong>
-                    Manage Dashboard <i class="fa fa-cog"></i>
-                </strong>
-            </a>
-            <ul class="dropdown-menu pull-right" role="menu">
-                <li><a href="#" onclick="addWidget(); return false;">Add Chart to Dashboard</a></li>
-                <li><a href="#" onclick="editDashboardName(); return false;">Rename Dashboard</a></li>
-                <li><a href="#" onclick="deleteDashboard(this); return false;"
-                       data-url="{{$dashboard->urls['delete']}}">Delete Dashboard</a></li>
-            </ul>
-        </div>
+        @if(!auth()->user()->isPastDue)
+            &nbsp; &nbsp; &#124; &nbsp;
+            <div class="btn-group cursor-pointer" style="vertical-align: baseline;">
+                <a type="button" class="text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                   id="btn-dropdown-manage-dashboard">
+                    <strong>
+                        Manage Dashboard <i class="fa fa-cog"></i>
+                    </strong>
+                </a>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li><a href="#" onclick="addWidget(); return false;">Add Chart to Dashboard</a></li>
+                    <li><a href="#" onclick="editDashboardName(); return false;">Rename Dashboard</a></li>
+                    <li><a href="#" onclick="deleteDashboard(this); return false;"
+                           data-url="{{$dashboard->urls['delete']}}">Delete Dashboard</a></li>
+                </ul>
+            </div>
+        @endif
     </div>
 @stop
 
@@ -141,9 +143,11 @@
             </div>
         @endforeach
     @endif
-    <div class="col-lg-3 col-md-4 widget-container widget-placeholder-container">
-        @include('dashboard.widget.templates.default_placeholder')
-    </div>
+    @if(!auth()->user()->isPastDue)
+        <div class="col-lg-3 col-md-4 widget-container widget-placeholder-container">
+            @include('dashboard.widget.templates.default_placeholder')
+        </div>
+    @endif
 </div>
 
 

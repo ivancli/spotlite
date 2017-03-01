@@ -13,7 +13,6 @@
 
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['subs']], function () {
-
         Route::get('/', 'Dashboard\DashboardController@index')->name("dashboard.index");
         Route::get('dashboard/manage', 'Dashboard\DashboardController@manage')->name('dashboard.manage');
         Route::put('dashboard/order', 'Dashboard\DashboardController@updateOrder')->name('dashboard.order.update');

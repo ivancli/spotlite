@@ -10,25 +10,26 @@
            data-content="{{$site->site_url}}">
             {{parse_url($site->site_url)['host']}}
         </a>
-
-        <div class="frm-edit-site-url input-group sl-input-group" style="display: none;">
-            <input type="text" name="site_url" placeholder="Site URL" autocomplete="off"
-                   class="form-control sl-form-control txt-site-url"
-                   onkeyup="cancelEditSiteURL(this, event)" onblur="cancelEditSiteURL(this)"
-                   value="{{$site->site_url}}">
-            <span class="input-group-btn">
+        @if(!auth()->user()->isPastDue)
+            <div class="frm-edit-site-url input-group sl-input-group" style="display: none;">
+                <input type="text" name="site_url" placeholder="Site URL" autocomplete="off"
+                       class="form-control sl-form-control txt-site-url"
+                       onkeyup="cancelEditSiteURL(this, event)" onblur="cancelEditSiteURL(this)"
+                       value="{{$site->site_url}}">
+                <span class="input-group-btn">
                     <button type="submit" class="btn btn-default btn-flat" data-url="{{$site->urls['update']}}"
                             onclick="getPricesEdit(this); return false;">
                         <i class="fa fa-check"></i>
                     </button>
                 </span>
-        </div>
-        <div class="btn-edit btn-edit-site pull-right">
-            <div onclick="toggleEditSiteURL(this)" class="btn-edit-align-middle">
-                Edit &nbsp;
-                <i class="fa fa-pencil-square-o"></i>
             </div>
-        </div>
+            <div class="btn-edit btn-edit-site pull-right">
+                <div onclick="toggleEditSiteURL(this)" class="btn-edit-align-middle">
+                    Edit &nbsp;
+                    <i class="fa fa-pencil-square-o"></i>
+                </div>
+            </div>
+        @endif
     </td>
     @if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)
         <td align="center">
@@ -122,17 +123,19 @@
         </div>
     </td>
     <td class="text-right action-cell">
-        <a href="#" class="btn-action" onclick="showSiteChart('{{$site->urls['chart']}}'); return false;"
-           data-toggle="tooltip" title="chart">
-            <i class="fa fa-line-chart"></i>
-        </a>
-        {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
-        <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
-           onclick="btnDeleteSiteOnClick(this); return false;"
-           data-toggle="tooltip" title="delete">
-            <i class="glyphicon glyphicon-trash"></i>
-        </a>
-        {!! Form::close() !!}
+        @if(!auth()->user()->isPastDue)
+            <a href="#" class="btn-action" onclick="showSiteChart('{{$site->urls['chart']}}'); return false;"
+               data-toggle="tooltip" title="chart">
+                <i class="fa fa-line-chart"></i>
+            </a>
+            {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
+            <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
+               onclick="btnDeleteSiteOnClick(this); return false;"
+               data-toggle="tooltip" title="delete">
+                <i class="glyphicon glyphicon-trash"></i>
+            </a>
+            {!! Form::close() !!}
+        @endif
     </td>
     <script type="text/javascript">
         $(function () {
