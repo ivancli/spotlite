@@ -32,7 +32,8 @@
         "mpdf/mpdf": "~5.7.3",
         "facebook/webdriver": "^1.1",
         "invigor/chargify": "dev-master",
-        "campaignmonitor/createsend-php": "~5.0.0"
+        "campaignmonitor/createsend-php": "~5.0.0",
+        "geoip2/geoip2": "~2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

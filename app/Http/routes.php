@@ -255,3 +255,13 @@ Route::get('sign_up_for_beta_testing', 'SupportController@signUpForBetaTesting')
 
 Route::get('unsubscribe/{page}', 'UnsubscribeController@create')->name('unsubscribe.create');
 Route::post('unsubscribe', 'UnsubscribeController@store')->name('unsubscribe.store');
+
+
+/**
+ * APIs
+ */
+
+Route::get('api/geo/country/{ip_address?}', 'API\GeoController@countryByIP')->name('api.geo.country');
+Route::get('api/geo/state/{ip_address?}', 'API\GeoController@stateByIP')->name('api.geo.country');
+Route::get('api/geo/city/{ip_address?}', 'API\GeoController@cityByIP')->name('api.geo.city');
+Route::get('api/geo/all/{ip_address?}', 'API\GeoController@allByIP')->name('api.geo.all');

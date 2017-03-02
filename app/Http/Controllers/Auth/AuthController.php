@@ -154,8 +154,8 @@ class AuthController extends Controller
                     "last_name" => $data['last_name'],
                     "email" => $data['email'],
                     "reference" => $encryptedReference,
-                    "country" => "AU",
-                    "state" => "NSW",
+                    "country" => array_has($data, 'country') ? $data['country'] : "AU",
+                    "state" => array_has($data, 'state') ? $data['state'] : 'NSW',
                 ),
                 "coupon_code" => $coupon_code
             );
