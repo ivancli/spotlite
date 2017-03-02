@@ -49,5 +49,6 @@ return [
         "R",
         "Special Price:",
         "Special Price",
+        "Price with rebate:",
     ]
 ];
