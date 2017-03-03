@@ -66,7 +66,7 @@
 
                     if (xhr.status == 422) {
                         var $errorContainer = $(".set-password-form-container").find(".errors-container");
-                        clearErrorMessgae();
+                        $errorContainer.empty();
                         $.each(xhr.responseJSON, function (index, error) {
                             $.each(error, function(index, message){
                                 $errorContainer.append(
