@@ -24,23 +24,30 @@
                 </div>
                 {!! Form::close() !!}
 
-                <span class="btn-edit btn-edit-product" onclick="toggleEditProductName(this)">Edit &nbsp; <i
-                            class="fa fa-pencil-square-o"></i></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="btn-edit text-muted" id="product-{{$product->getKey()}}-info">
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                </span>
+                {{--<span class="btn-edit btn-edit-product" onclick="toggleEditProductName(this)">Edit &nbsp; <i--}}
+                {{--class="fa fa-pencil-square-o"></i></span>--}}
             @endif
         </th>
         <th class="text-right action-cell product-th">
             @if(!auth()->user()->isPastDue)
-                <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
-                   data-toggle="tooltip" title="chart">
-                    <i class="fa fa-line-chart"></i>
-                </a>
+                {{--<a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"--}}
+                {{--data-toggle="tooltip" title="chart">--}}
+                {{--<i class="fa fa-line-chart"></i>--}}
+                {{--</a>--}}
                 {{--<a href="#" class="btn-action btn-alert" onclick="showProductAlertForm(this); return false;"--}}
                 {{--data-toggle="tooltip" title="alert">--}}
                 {{--<i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>--}}
                 {{--</a>--}}
-                <a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"
-                   data-toggle="tooltip" title="report">
-                    <i class="fa {{!is_null($product->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
+                {{--<a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"--}}
+                {{--data-toggle="tooltip" title="report">--}}
+                {{--<i class="fa {{!is_null($product->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>--}}
+                {{--</a>--}}
+                <a href="#" class="btn-action btn-edit-product" onclick="toggleEditProductName(this)">
+                    <i class="glyphicon glyphicon-pencil"></i>
                 </a>
                 {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
                 <a href="#" class="btn-action" data-name="{{$product->product_name}}"
@@ -61,31 +68,31 @@
             </a>
         </th>
     </tr>
-    <tr>
-        <td></td>
-        <td colspan="3">
-            <div class="text-light">
-                Created
-                @if(!is_null($product->created_at))
-                    on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}
-                @endif
-                <strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>
-            </div>
-            @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
-                <div class="text-light">
-                    <small>
-                        <strong class="text-muted">
-                            <span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>
-                            /
-                            <span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>
-                        </strong>
-                        &nbsp;
-                        Product URLs Tracked
-                    </small>
-                </div>
-            @endif
-        </td>
-    </tr>
+    {{--<tr>--}}
+        {{--<td></td>--}}
+        {{--<td colspan="3">--}}
+            {{--<div class="text-light">--}}
+                {{--Created--}}
+                {{--@if(!is_null($product->created_at))--}}
+                    {{--on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}--}}
+                {{--@endif--}}
+                {{--<strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>--}}
+            {{--</div>--}}
+            {{--@if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)--}}
+                {{--<div class="text-light">--}}
+                    {{--<small>--}}
+                        {{--<strong class="text-muted">--}}
+                            {{--<span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>--}}
+                            {{--/--}}
+                            {{--<span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>--}}
+                        {{--</strong>--}}
+                        {{--&nbsp;--}}
+                        {{--Product URLs Tracked--}}
+                    {{--</small>--}}
+                {{--</div>--}}
+            {{--@endif--}}
+        {{--</td>--}}
+    {{--</tr>--}}
     </thead>
     <tbody>
     <tr>
@@ -97,16 +104,16 @@
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th width="15%">Site</th>
-                        @if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)
-                            <th class="text-center" width="10%">My Site</th>
-                        @endif
-                        <th width="10%" class="text-right">Current Price</th>
-                        <th width="10%" class="text-right">Previous Price</th>
-                        <th width="10%" class="hidden-xs text-right">Change</th>
-                        <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
-                        <th>Updated</th>
-                        <th>Tracked Since</th>
+                        <th width="15%">Site Name</th>
+                        {{--@if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)--}}
+                            {{--<th class="text-center" width="10%">My Site</th>--}}
+                        {{--@endif--}}
+                        <th class="text-right">Current Price</th>
+                        <th class="text-right">Previous Price</th>
+                        <th class="hidden-xs text-right">Change</th>
+                        <th class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
+                        {{--<th>Updated</th>--}}
+                        {{--<th>Tracked Since</th>--}}
                         <th width="100px"></th>
                     </tr>
                     </thead>
@@ -206,6 +213,33 @@
             });
 
             loadAndAttachSites('{{$product->getKey()}}');
+
+
+            $("#product-{{$product->getKey()}}-info").popover({
+                content: function () {
+                    return $("<div>").append(
+                            $("<strong>").text("Brand"),
+                            ": Penfolds",
+                            $("<br>"),
+                            $("<strong>").text("SKU"),
+                            ": Bin 128 2014",
+                            $("<strong>").text("Colour"),
+                            ": Red",
+                            $("<br>"),
+                            $("<strong>").text("Size"),
+                            ": 6 Bottle Case",
+                            $("<br>"),
+                            $("<strong>").text("Purchse Cost"),
+                            ": $129",
+                            $("<br>"),
+                            "Created by {{auth()->user()->first_name . ' ' . auth()->user()->last_name}} on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}"
+                    ).html()
+                },
+                html: true,
+                trigger: "hover"
+            })
+
+
         });
 
         function loadAndAttachSites(product_id) {

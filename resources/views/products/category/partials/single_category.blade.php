@@ -27,22 +27,24 @@
                             </span>
                         </div>
                         {!! Form::close() !!}
-
-                        <span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i
-                                    class="fa fa-pencil-square-o"></i></span>
+                        {{--<span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i--}}
+                                    {{--class="fa fa-pencil-square-o"></i></span>--}}
                     @endif
                 </th>
 
                 <th class="text-right action-cell category-th">
                     @if(!auth()->user()->isPastDue)
-                        <a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"
-                           onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
-                            <i class="fa fa-line-chart"></i>
-                        </a>
-                        <a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"
-                           data-toggle="tooltip"
-                           title="report">
-                            <i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
+                        {{--<a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"--}}
+                           {{--onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">--}}
+                            {{--<i class="fa fa-line-chart"></i>--}}
+                        {{--</a>--}}
+                        {{--<a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"--}}
+                           {{--data-toggle="tooltip"--}}
+                           {{--title="report">--}}
+                            {{--<i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>--}}
+                        {{--</a>--}}
+                        <a href="#" class="btn-action btn-edit-category" onclick="toggleEditCategoryName(this)">
+                            <i class="glyphicon glyphicon-pencil"></i>
                         </a>
                         {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
                         <a href="#" data-name="{{$category->category_name}}" class="btn-action btn-delete-category"
