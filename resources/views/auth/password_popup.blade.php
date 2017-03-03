@@ -63,7 +63,20 @@
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();
-                    describeServerRespondedError(xhr.status);
+
+                    if (xhr.status == 422) {
+                        var $errorContainer = $(".set-password-form-container").find(".errors-container");
+                        clearErrorMessgae();
+                        $.each(xhr.responseJSON, function (index, error) {
+                            $.each(error, function(index, message){
+                                $errorContainer.append(
+                                        $("<li>").text(message)
+                                );
+                            })
+                        });
+                    } else {
+                        describeServerRespondedError(xhr.status);
+                    }
                 }
             });
         }
