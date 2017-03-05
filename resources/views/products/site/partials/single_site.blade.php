@@ -4,12 +4,33 @@
     data-site-product-show-url="{{$site->product->urls['show']}}"
     data-site-update-my-price-url="{{$site->urls['update_my_price']}}">
     <td class="site-url vertical-align-middle">
-        <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-toggle="popover"
-           data-container="body"
-           data-trigger="hover"
-           data-content="{{$site->site_url}}">
+        <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link">
             {{parse_url($site->site_url)['host']}}
         </a>
+        <script>
+            $(function () {
+                $("[data-site-id='{{$site->getKey()}}'] .site-url-link").popover({
+                    "trigger": "hover",
+                    "content": function () {
+                        return $("<div>").append(
+                                $("<div>").css({
+                                    'word-wrap': 'break-word',
+                                    'word-break': 'break-all',
+                                    'width': '90%'
+                                }).append(
+                                        "{{$site->site_url}}"
+                                )
+                        ).html()
+                    },
+                    "html": true
+                })
+            })
+        </script>
+        <style>
+            .site-url .popover-content {
+                min-width: 300px;
+            }
+        </style>
         @if(!auth()->user()->isPastDue)
             <div class="frm-edit-site-url input-group sl-input-group" style="display: none;">
                 <input type="text" name="site_url" placeholder="Site URL" autocomplete="off"
@@ -24,22 +45,22 @@
                 </span>
             </div>
             {{--<div class="btn-edit btn-edit-site pull-right">--}}
-                {{--<div onclick="toggleEditSiteURL(this)" class="btn-edit-align-middle">--}}
-                    {{--Edit &nbsp;--}}
-                    {{--<i class="fa fa-pencil-square-o"></i>--}}
-                {{--</div>--}}
+            {{--<div onclick="toggleEditSiteURL(this)" class="btn-edit-align-middle">--}}
+            {{--Edit &nbsp;--}}
+            {{--<i class="fa fa-pencil-square-o"></i>--}}
+            {{--</div>--}}
             {{--</div>--}}
         @endif
     </td>
     {{--@if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)--}}
-        {{--<td align="center">--}}
-            {{--<a href="#" class="btn-my-price" style="cursor: default;" onclick="return false;"--}}
-               {{--onclick="toggleMyPrice(this); return false;"--}}
-               {{--data-product-alert-on-my-price="{{is_null($site->product->alertOnMyPrice()) ? "" : "y"}}"--}}
-               {{--data-site-alerts-on-my-price="{{$site->product->siteAlertsOnMyPrice()->count()}}">--}}
-                {{--<i class="fa fa-check-circle-o {{$site->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>--}}
-            {{--</a>--}}
-        {{--</td>--}}
+    {{--<td align="center">--}}
+    {{--<a href="#" class="btn-my-price" style="cursor: default;" onclick="return false;"--}}
+    {{--onclick="toggleMyPrice(this); return false;"--}}
+    {{--data-product-alert-on-my-price="{{is_null($site->product->alertOnMyPrice()) ? "" : "y"}}"--}}
+    {{--data-site-alerts-on-my-price="{{$site->product->siteAlertsOnMyPrice()->count()}}">--}}
+    {{--<i class="fa fa-check-circle-o {{$site->my_price == "y" ? "text-primary" : "text-muted-further"}}"></i>--}}
+    {{--</a>--}}
+    {{--</td>--}}
     {{--@endif--}}
     <td>
         @if($site->status == 'invalid')
@@ -104,31 +125,31 @@
         @endif
     </td>
     {{--<td>--}}
-        {{--@if(!is_null($site->last_crawled_at))--}}
-            {{--<span title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}"--}}
-                  {{--data-toggle="tooltip">--}}
-                {{--{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->last_crawled_at))}}--}}
-                {{--<span class="hidden-xs hidden-sm">{{date(auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}</span>--}}
-            {{--</span>--}}
-        {{--@else--}}
-            {{--<div class="p-l-15">--}}
-                {{--<strong><i class="fa fa-minus"></i></strong>--}}
-            {{--</div>--}}
-        {{--@endif--}}
+    {{--@if(!is_null($site->last_crawled_at))--}}
+    {{--<span title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}"--}}
+    {{--data-toggle="tooltip">--}}
+    {{--{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->last_crawled_at))}}--}}
+    {{--<span class="hidden-xs hidden-sm">{{date(auth()->user()->preference('TIME_FORMAT'), strtotime($site->last_crawled_at))}}</span>--}}
+    {{--</span>--}}
+    {{--@else--}}
+    {{--<div class="p-l-15">--}}
+    {{--<strong><i class="fa fa-minus"></i></strong>--}}
+    {{--</div>--}}
+    {{--@endif--}}
     {{--</td>--}}
     {{--<td>--}}
-        {{--<div title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->created_at))}}"--}}
-             {{--data-toggle="tooltip">--}}
-            {{--{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->created_at))}}--}}
-        {{--</div>--}}
+    {{--<div title="{{date(auth()->user()->preference('DATE_FORMAT') . " " . auth()->user()->preference('TIME_FORMAT'), strtotime($site->created_at))}}"--}}
+    {{--data-toggle="tooltip">--}}
+    {{--{{date(auth()->user()->preference('DATE_FORMAT'), strtotime($site->created_at))}}--}}
+    {{--</div>--}}
     {{--</td>--}}
     <td class="text-right action-cell">
         @if(!auth()->user()->isPastDue)
             {{--<a href="#" class="btn-action" onclick="showSiteChart('{{$site->urls['chart']}}'); return false;"--}}
-               {{--data-toggle="tooltip" title="chart">--}}
-                {{--<i class="fa fa-line-chart"></i>--}}
+            {{--data-toggle="tooltip" title="chart">--}}
+            {{--<i class="fa fa-line-chart"></i>--}}
             {{--</a>--}}
-            <a href="#" class="btn-action btn-edit-align-middle"  onclick="toggleEditSiteURL(this)">
+            <a href="#" class="btn-action btn-edit-align-middle" onclick="toggleEditSiteURL(this)">
                 <i class="glyphicon glyphicon-pencil"></i>
             </a>
             {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
