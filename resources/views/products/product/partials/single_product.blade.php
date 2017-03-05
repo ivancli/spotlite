@@ -69,29 +69,29 @@
         </th>
     </tr>
     {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td colspan="3">--}}
-            {{--<div class="text-light">--}}
-                {{--Created--}}
-                {{--@if(!is_null($product->created_at))--}}
-                    {{--on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}--}}
-                {{--@endif--}}
-                {{--<strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>--}}
-            {{--</div>--}}
-            {{--@if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)--}}
-                {{--<div class="text-light">--}}
-                    {{--<small>--}}
-                        {{--<strong class="text-muted">--}}
-                            {{--<span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>--}}
-                            {{--/--}}
-                            {{--<span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>--}}
-                        {{--</strong>--}}
-                        {{--&nbsp;--}}
-                        {{--Product URLs Tracked--}}
-                    {{--</small>--}}
-                {{--</div>--}}
-            {{--@endif--}}
-        {{--</td>--}}
+    {{--<td></td>--}}
+    {{--<td colspan="3">--}}
+    {{--<div class="text-light">--}}
+    {{--Created--}}
+    {{--@if(!is_null($product->created_at))--}}
+    {{--on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}--}}
+    {{--@endif--}}
+    {{--<strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>--}}
+    {{--</div>--}}
+    {{--@if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)--}}
+    {{--<div class="text-light">--}}
+    {{--<small>--}}
+    {{--<strong class="text-muted">--}}
+    {{--<span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>--}}
+    {{--/--}}
+    {{--<span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>--}}
+    {{--</strong>--}}
+    {{--&nbsp;--}}
+    {{--Product URLs Tracked--}}
+    {{--</small>--}}
+    {{--</div>--}}
+    {{--@endif--}}
+    {{--</td>--}}
     {{--</tr>--}}
     </thead>
     <tbody>
@@ -106,7 +106,7 @@
                     <tr>
                         <th width="15%">Site Name</th>
                         {{--@if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)--}}
-                            {{--<th class="text-center" width="10%">My Site</th>--}}
+                        {{--<th class="text-center" width="10%">My Site</th>--}}
                         {{--@endif--}}
                         <th class="text-right">Current Price</th>
                         <th class="text-right">Previous Price</th>
@@ -233,7 +233,9 @@
                             $("<strong>").text("Purchase Cost"),
                             ": $129",
                             $("<br>"),
-                            "Created by {{auth()->user()->first_name . ' ' . auth()->user()->last_name}} on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}"
+                            $("<div>").css("font-size", "12px").append(
+                                    "Created by {{auth()->user()->first_name . ' ' . auth()->user()->last_name}} on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}"
+                            )
                     ).html()
                 },
                 html: true,
