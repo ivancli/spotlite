@@ -108,9 +108,9 @@
                         {{--@if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)--}}
                         {{--<th class="text-center" width="10%">My Site</th>--}}
                         {{--@endif--}}
-                        <th class="text-right">Current Price</th>
-                        <th class="text-right">Previous Price</th>
-                        <th class="hidden-xs text-right">Change</th>
+                        <th class="text-right" width="15%">Current Price</th>
+                        <th class="text-right" width="15%">Previous Price</th>
+                        <th class="hidden-xs text-right" width="15%">Change</th>
                         <th class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
                         {{--<th>Updated</th>--}}
                         {{--<th>Tracked Since</th>--}}

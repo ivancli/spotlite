@@ -4,7 +4,7 @@
     data-site-product-show-url="{{$site->product->urls['show']}}"
     data-site-update-my-price-url="{{$site->urls['update_my_price']}}">
     <td class="site-url vertical-align-middle">
-        <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link">
+        <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-url="{{$site->site_url}}">
             {{parse_url($site->site_url)['host']}}
         </a>
         <script>
@@ -34,9 +34,7 @@
         @if(!auth()->user()->isPastDue)
             <div class="frm-edit-site-url input-group sl-input-group" style="display: none;">
                 <input type="text" name="site_url" placeholder="Site URL" autocomplete="off"
-                       class="form-control sl-form-control txt-site-url"
-                       onkeyup="cancelEditSiteURL(this, event)" onblur="cancelEditSiteURL(this)"
-                       value="{{$site->site_url}}">
+                       class="form-control sl-form-control txt-site-url" onkeyup="cancelEditSiteURL(this, event)" onblur="cancelEditSiteURL(this)" value="{{$site->site_url}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default btn-flat" data-url="{{$site->urls['update']}}"
                             onclick="getPricesEdit(this); return false;">
