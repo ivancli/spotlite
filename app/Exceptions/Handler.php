@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
             $errors = array("Session timeout, please refresh and try again.");
             if ($request->ajax()) {
                 if ($request->wantsJson()) {
-                    return response()->json(compact(['status', 'errors']));
+                    return response()->json(compact(['status', 'errors']), 422);
                 } else {
                     return compact(['status', 'errors']);
                 }
