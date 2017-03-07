@@ -235,6 +235,10 @@
                             $("<br>"),
                             $("<div>").css("font-size", "12px").append(
                                     "Created by {{auth()->user()->first_name . ' ' . auth()->user()->last_name}} on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}"
+                            ),
+                            $("<br>"),
+                            $("<div>").css("font-size", "12px").append(
+                                    "5/10 Product URLs Tracked"
                             )
                     ).html()
                 },
