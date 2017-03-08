@@ -127,8 +127,10 @@
                             </div>
                         </div>
 
-                        <div class="row m-b-10">
-                            <div class="col-sm-12">
+                    @endif
+                    <div class="row m-b-10">
+                        <div class="col-sm-12">
+                            @if(!auth()->user()->isPastDue)
                                 <div class="add-item-block add-category-container"
                                      onclick="appendCreateCategoryBlock(this); event.stopPropagation(); return false;">
                                     <div class="add-item-label">
@@ -137,35 +139,33 @@
                                     </div>
                                     <div class="add-item-controls">
                                         <div class="row">
-                                            <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                            <div class="col-sm-12">
                                                 <form action="{{route('category.store')}}" method="post"
-                                                      class="frm-store-category"
+                                                      class="frm-store-category" style="display:inline-block"
                                                       onsubmit="btnAddCategoryOnClick(this); return false;">
                                                     <input type="text" id="txt-category-name" autocomplete="off"
                                                            class="form-control txt-item" name="category_name">
                                                 </form>
-                                            </div>
-                                            <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                                <button class="btn btn-primary btn-flat"
-                                                        onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                                    ADD CATEGORY
-                                                </button>
-                                                &nbsp;&nbsp;
-                                                <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
-                                                        onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
-                                                    CANCEL
-                                                </button>
+                                                <div style="display: inline-block;">
+                                                    <button class="btn btn-primary btn-flat"
+                                                            onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                                        ADD CATEGORY
+                                                    </button>
+                                                    &nbsp;&nbsp;
+                                                    <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
+                                                            onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
+                                                        CANCEL
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            @endif
+                            <div class="pull-right" style="width:auto; padding-top: 30px;">
+                                <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
+                                   id="btn-collapse-all" style="font-size: 12px;">Expand All</a>
                             </div>
-                        </div>
-                    @endif
-                    <div class="row m-b-20">
-                        <div class="col-sm-12 text-right">
-                            <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
-                               id="btn-collapse-all" style="font-size: 12px;">Expand All</a>
                         </div>
                     </div>
                     <div class="row">

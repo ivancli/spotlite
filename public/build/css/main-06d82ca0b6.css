@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-f2e8f65c3b.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-06d82ca0b6.css */
 @media print {
   *,
   *:before,
@@ -15853,8 +15853,11 @@ h3.box-title {
     margin-bottom: 10px;
     color: #777;
     font-weight: bold;
-    height: 65px;
+    height: 67px;
     cursor: pointer;
+    width: 550px;
+    max-width: 100%;
+    display: inline-block;
 }
 
 .add-item-block .add-item-label, .add-item-block .upgrade-for-add-item-controls {

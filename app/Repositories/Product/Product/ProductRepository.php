@@ -57,6 +57,15 @@ class ProductRepository implements ProductContract
     {
         $options['user_id'] = auth()->user()->getKey();
         $product = Product::create($options);
+        if (isset($options['meta'])) {
+            $meta = $product->meta;
+            $meta->brand = isset($options['meta']['brand']) ? $options['meta']['brand'] : null;
+            $meta->sku = isset($options['meta']['sku']) ? $options['meta']['sku'] : null;
+            $meta->colour = isset($options['meta']['colour']) ? $options['meta']['colour'] : null;
+            $meta->size = isset($options['meta']['size']) ? $options['meta']['size'] : null;
+            $meta->supplier = isset($options['meta']['supplier']) ? $options['meta']['supplier'] : null;
+            $meta->cost_price = isset($options['meta']['cost_price']) ? $options['meta']['cost_price'] : null;
+        }
         return $product;
     }
 

@@ -218,27 +218,42 @@
             $("#product-{{$product->getKey()}}-info").popover({
                 content: function () {
                     return $("<div>").append(
+                            @if(!is_null($product->meta->brand))
                             $("<strong>").text("Brand"),
-                            ": Penfolds",
+                            ": {{$product->meta->brand}}",
                             $("<br>"),
+                            @endif
+                            @if(!is_null($product->meta->sku))
                             $("<strong>").text("SKU"),
-                            ": Bin 128 2014",
+                            ": {{$product->meta->sku}}",
                             $("<br>"),
+                            @endif
+                            @if(!is_null($product->meta->colour))
                             $("<strong>").text("Colour"),
-                            ": Red",
+                            ": {{$product->meta->colour}}",
                             $("<br>"),
+                            @endif
+                            @if(!is_null($product->meta->size))
                             $("<strong>").text("Size"),
-                            ": 6 Bottle Case",
+                            ": {{$product->meta->size}}",
                             $("<br>"),
-                            $("<strong>").text("Purchase Cost"),
-                            ": $129",
+                            @endif
+                            @if(!is_null($product->meta->cost_price))
+                            $("<strong>").text("Cost Price"),
+                            ": {{is_null($product->meta->cost_price) ? '' : '$'.$product->meta->cost_price}}",
                             $("<br>"),
+                            @endif
                             $("<div>").css("font-size", "12px").append(
                                     "Created by {{auth()->user()->first_name . ' ' . auth()->user()->last_name}} on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}"
-                            ),
-                            $("<div>").css("font-size", "12px").append(
-                                    "5/10 Product URLs Tracked"
                             )
+                            @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
+                            ,
+                            $("<div>").css("font-size", "12px").append(
+                                    "{{$product->sites()->count()}}/{{auth()->user()->subscriptionCriteria()->site}} Product URLs Tracked"
+                            )
+                            @endif
+
+
                     ).html()
                 },
                 html: true,

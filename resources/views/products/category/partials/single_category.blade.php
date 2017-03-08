@@ -28,20 +28,20 @@
                         </div>
                         {!! Form::close() !!}
                         {{--<span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i--}}
-                                    {{--class="fa fa-pencil-square-o"></i></span>--}}
+                        {{--class="fa fa-pencil-square-o"></i></span>--}}
                     @endif
                 </th>
 
                 <th class="text-right action-cell category-th">
                     @if(!auth()->user()->isPastDue)
                         {{--<a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"--}}
-                           {{--onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">--}}
-                            {{--<i class="fa fa-line-chart"></i>--}}
+                        {{--onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">--}}
+                        {{--<i class="fa fa-line-chart"></i>--}}
                         {{--</a>--}}
                         {{--<a href="#" class="btn-action btn-report" onclick="showCategoryReportTaskForm(this); return false;"--}}
-                           {{--data-toggle="tooltip"--}}
-                           {{--title="report">--}}
-                            {{--<i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>--}}
+                        {{--data-toggle="tooltip"--}}
+                        {{--title="report">--}}
+                        {{--<i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>--}}
                         {{--</a>--}}
                         <a href="#" class="btn-action btn-edit-category" onclick="toggleEditCategoryName(this)">
                             <i class="glyphicon glyphicon-pencil"></i>
@@ -91,26 +91,22 @@
                                 <span class="add-item-text">ADD PRODUCT</span>
                             </div>
                             <div class="add-item-controls">
-                                <div class="row">
-                                    <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
-                                        <form action="{{route('product.store')}}" method="post"
-                                              class="frm-store-product"
-                                              onsubmit="btnAddProductOnClick(this); return false;">
-                                            <input type="text" name="product_name" autocomplete="off"
-                                                   class="form-control txt-item txt-product-name">
-                                        </form>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                        <button class="btn btn-primary btn-flat"
-                                                onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                            ADD PRODUCT
-                                        </button>
-                                        &nbsp;&nbsp;
-                                        <button class="btn btn-default btn-flat btn-cancel-add-product"
-                                                onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
-                                            CANCEL
-                                        </button>
-                                    </div>
+                                <form action="{{route('product.store')}}" method="post"
+                                      class="frm-store-product" style="display: inline-block;"
+                                      onsubmit="btnAddProductOnClick(this); return false;">
+                                    <input type="text" name="product_name" autocomplete="off"
+                                           class="form-control txt-item txt-product-name">
+                                </form>
+                                <div style="display:inline-block">
+                                    <button class="btn btn-primary btn-flat"
+                                            onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                        ADD PRODUCT
+                                    </button>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-default btn-flat btn-cancel-add-product"
+                                            onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
+                                        CANCEL
+                                    </button>
                                 </div>
                             </div>
                             @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
