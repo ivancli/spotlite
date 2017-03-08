@@ -19,7 +19,21 @@ class AccountController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('user.account.index')->with(compact(['user']));
+        $computedDomains = $user->sites->pluck('domain');
+        $userDomains = $user->domains;
+        $domains = array();
+        foreach ($computedDomains as $computedDomain) {
+            $userDomain = $userDomains->filter(function ($userDomain, $key) use ($computedDomain) {
+                return $userDomain->domain == $computedDomain;
+            })->first();
+
+            if (!is_null($userDomain)) {
+                $domains[$computedDomain] = $userDomain->name;
+            } else {
+                $domains[$computedDomain] = null;
+            }
+        }
+        return view('user.account.index')->with(compact(['user', 'domains', 'userDomains']));
     }
 
     public function show($id)

@@ -70,10 +70,17 @@ class User extends Authenticatable
         return $this->morphMany('App\Models\Alert', 'alert_owner', null, null, 'user_id');
     }
 
+    public function domains()
+    {
+        return $this->hasMany('App\Models\UserDomain', 'user_id', 'user_id')->orderBy('domain', 'asc');
+    }
+
+
     public function nonHiddenDashboards()
     {
         return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->where("is_hidden", "!=", "y")->orderBy("dashboard_order", "asc");
     }
+
 
     /**
      * -----------------------------------------------------------------------------------------------------------------

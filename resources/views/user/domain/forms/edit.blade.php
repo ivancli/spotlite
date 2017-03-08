@@ -1,0 +1,38 @@
+<ul class="text-danger errors-container">
+</ul>
+{!! Form::open(array('route' => 'user-domain.store', 'method'=>'post', "id"=>"frm-update-user-domain", "onsubmit"=>"return false;", "class" => "form-horizontal sl-form-horizontal")) !!}
+@foreach($domains as $domain=>$name)
+    <div class="form-group">
+        <label for="{{$domain}}" class="control-label col-md-3">{{$domain}}</label>
+        <div class="col-md-9">
+            <input type="hidden" name="domains[]" value="{{$domain}}">
+            <input type="text" name="names[]" class="form-control" id="{{$domain}}" value="{{$name}}">
+        </div>
+    </div>
+@endforeach
+
+<div class="text-right">
+    {!! Form::submit('UPDATE', ["class"=>"btn btn-primary btn-flat", "href"=>"#", "onclick"=>"submitUpdateUserDomains();"]) !!}
+</div>
+
+{!! Form::close() !!}
+<script>
+    function submitUpdateUserDomains() {
+        var $form = $("#frm-update-user-domain");
+        $.ajax({
+            "url": $form.attr("action"),
+            "method": $form.attr("method"),
+            "data": $form.serialize(),
+            "dataType": "json",
+            "success": function (response) {
+                if (response.status == true) {
+                    alertP("Update Site Names", "Site names have been updated.");
+                }
+            },
+            "error": function (xhr, status, error) {
+                hideLoading();
+                describeServerRespondedError(xhr.status);
+            }
+        })
+    }
+</script>

@@ -16,6 +16,7 @@
         <!-- Tabs within a box -->
         <ul class="nav nav-tabs ui-sortable-handle">
             <li class="active"><a href="#user-settings" data-toggle="tab" aria-expanded="false">Edit Profile</a></li>
+            <li><a href="#user-domains" data-toggle="tab" aria-expanded="false">Site Names</a></li>
             <li><a href="#user-password" data-toggle="tab" aria-expanded="false">Reset Password</a></li>
             <li><a href="#display-settings" data-toggle="tab" aria-expanded="true">Display Settings</a></li>
             @if(auth()->user()->needSubscription)
@@ -29,6 +30,15 @@
                     <div class="col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10">
                         <div class="p-10">
                             @include('user.profile.forms.edit')
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="user-domains">
+                <div class="row">
+                    <div class="col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10">
+                        <div class="p-10">
+                            @include('user.domain.forms.edit')
                         </div>
                     </div>
                 </div>

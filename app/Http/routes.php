@@ -38,6 +38,8 @@ Route::group(['middleware' => ['auth']], function () {
             'create', 'store', 'destroy', 'edit'
         ]]);
 
+        Route::resource('user-domain', 'User\UserDomainController');
+
 
         /**
          * Group Related Routes

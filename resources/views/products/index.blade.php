@@ -38,6 +38,8 @@
 @stop
 
 @section('content')
+    {{dump(auth()->user()->domains)}}
+
     @if(auth()->user()->numberOfLogin <= 3)
         <div class="row">
             <div class="col-sm-12">

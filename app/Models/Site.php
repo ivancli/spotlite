@@ -19,7 +19,7 @@ class Site extends Model
     protected $fillable = [
         "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "status", "my_price", "comment", "site_order", "created_at", "updated_at"
     ];
-    protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt'];
+    protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt', 'userDomainName'];
 
     public function preference()
     {
@@ -125,6 +125,17 @@ class Site extends Model
         return parse_url($this->site_url)['host'];
     }
 
+    public function getUserDomainNameAttribute()
+    {
+        $user = $this->product->user;
+        $userDomain = $user->domains()->where('domain', $this->domain)->first();
+        if (!is_null($userDomain)) {
+            return $userDomain->name;
+        } else {
+            return null;
+        }
+    }
+
     public function statusOK()
     {
         $this->status = "ok";
@@ -175,7 +186,7 @@ class Site extends Model
 
     public function lastCrawledWithinHour($hour = 1)
     {
-        if(!is_null($this->last_crawled_at)){
+        if (!is_null($this->last_crawled_at)) {
             return false;
         }
         $hourDiff = (strtotime(date('Y-m-d H:00:00')) - strtotime(date('Y-m-d H:00:00', strtotime($this->last_crawled_at)))) / 3600;

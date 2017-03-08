@@ -8,7 +8,11 @@
            data-container="body"
            data-trigger="hover"
            data-content="{{$site->site_url}}">
-            {{parse_url($site->site_url)['host']}}
+            @if(!is_null($site->userDomainName))
+                {{$site->userDomainName}}
+            @else
+                {{$site->domain}}
+            @endif
         </a>
         @if(!auth()->user()->isPastDue)
             <div class="frm-edit-site-url input-group sl-input-group" style="display: none;">
