@@ -127,13 +127,14 @@ class Site extends Model
 
     public function getUserDomainNameAttribute()
     {
-        $user = $this->product->user;
-        $userDomain = $user->domains()->where('domain', $this->domain)->first();
-        if (!is_null($userDomain)) {
-            return $userDomain->name;
-        } else {
-            return null;
+        if (!is_null($this->product)) {
+            $user = $this->product->user;
+            $userDomain = $user->domains()->where('domain', $this->domain)->first();
+            if (!is_null($userDomain)) {
+                return $userDomain->name;
+            }
         }
+        return null;
     }
 
     public function statusOK()
