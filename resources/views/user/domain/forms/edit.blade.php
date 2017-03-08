@@ -1,19 +1,25 @@
 <ul class="text-danger errors-container">
 </ul>
 {!! Form::open(array('route' => 'user-domain.store', 'method'=>'post', "id"=>"frm-update-user-domain", "onsubmit"=>"return false;", "class" => "form-horizontal sl-form-horizontal")) !!}
-@foreach($domains as $domain=>$name)
-    <div class="form-group">
-        <label for="{{$domain}}" class="control-label col-md-3">{{$domain}}</label>
-        <div class="col-md-9">
-            <input type="hidden" name="domains[]" value="{{$domain}}">
-            <input type="text" name="names[]" class="form-control" id="{{$domain}}" value="{{$name}}">
+@if(count($domains) > 0)
+    @foreach($domains as $domain=>$name)
+        <div class="form-group">
+            <label for="{{$domain}}" class="control-label col-md-3">{{$domain}}</label>
+            <div class="col-md-9">
+                <input type="hidden" name="domains[]" value="{{$domain}}">
+                <input type="text" name="names[]" class="form-control" id="{{$domain}}" value="{{$name}}">
+            </div>
         </div>
-    </div>
-@endforeach
+    @endforeach
 
-<div class="text-right">
-    {!! Form::submit('UPDATE', ["class"=>"btn btn-primary btn-flat", "href"=>"#", "onclick"=>"submitUpdateUserDomains();"]) !!}
-</div>
+    <div class="text-right">
+        {!! Form::submit('UPDATE', ["class"=>"btn btn-primary btn-flat", "href"=>"#", "onclick"=>"submitUpdateUserDomains();"]) !!}
+    </div>
+@else
+    <div class="text-center">
+        No sites available, please add Product Page URLs in <a href="{{route('product.index')}}">Products Page</a>.
+    </div>
+@endif
 
 {!! Form::close() !!}
 <script>
