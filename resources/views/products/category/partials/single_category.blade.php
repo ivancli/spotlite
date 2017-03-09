@@ -6,10 +6,10 @@
         <table class="table table-condensed tbl-category">
             <thead>
             <tr>
-                <th class="shrink category-th">
+                <th class="shrink category-th vertical-align-middle">
                     <a class="btn-collapse btn-category-dragger"><i class="fa fa-tag "></i></a>
                 </th>
-                <th class="category-th">
+                <th class="category-th  vertical-align-middle">
                     <a class="text-muted category-name-link" href="#"
                        onclick="return false;">{{$category->category_name}}</a>
 
@@ -32,7 +32,7 @@
                     @endif
                 </th>
 
-                <th class="text-right action-cell category-th">
+                <th class="text-right action-cell category-th vertical-align-middle">
                     @if(!auth()->user()->isPastDue)
                         {{--<a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"--}}
                         {{--onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">--}}
@@ -43,7 +43,7 @@
                         {{--title="report">--}}
                         {{--<i class="fa {{!is_null($category->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>--}}
                         {{--</a>--}}
-                        <a href="#" class="btn-action btn-edit-category" onclick="toggleEditCategoryName(this)">
+                        <a href="#" class="btn-action btn-edit-category" onclick="toggleEditCategoryName(this); event.preventDefault(); return false;">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </a>
                         {!! Form::model($category, array('route' => array('category.destroy', $category->getKey()), 'method'=>'delete', 'class'=>'frm-delete-category', 'onsubmit' => 'return false;')) !!}
@@ -91,16 +91,51 @@
                                 <span class="add-item-text">ADD PRODUCT</span>
                             </div>
                             <div class="add-item-controls">
-                                <form action="{{route('product.store')}}" method="post"
-                                      class="frm-store-product" style="display: inline-block;"
+                                <form action="{{route('product.store')}}" method="post" class="form-horizontal sl-form-horizontal frm-store-product"
                                       onsubmit="btnAddProductOnClick(this); return false;">
-                                    <input type="text" name="product_name" autocomplete="off"
-                                           class="form-control txt-item txt-product-name">
+                                    <input type="text" name="product_name" autocomplete="off" placeholder="Enter product name" class="form-control txt-item txt-product-name">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Brand</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control txt-product-meta txt-product-meta-brand">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Supplier</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-supplier">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">SKU</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-sku">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Cost price</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-cost-price">
+                                        </div>
+                                    </div>
                                 </form>
-                                <div style="display:inline-block">
+                                <style>
+                                    .txt-product-meta {
+                                        border: none;
+                                        border-bottom: 1px solid #73d0c0;
+                                        -webkit-box-shadow: none;
+                                        -moz-box-shadow: none;
+                                        box-shadow: none;
+                                        font-size: 15px !important;
+                                        font-weight: normal;
+                                        padding-left: 0px;
+                                        padding-right: 0px;
+                                    }
+                                </style>
+                                <div class="text-right" style="margin-top: 10px;">
                                     <button class="btn btn-primary btn-flat"
                                             onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                        ADD PRODUCT
+                                        CONFIRM
                                     </button>
                                     &nbsp;&nbsp;
                                     <button class="btn btn-default btn-flat btn-cancel-add-product"

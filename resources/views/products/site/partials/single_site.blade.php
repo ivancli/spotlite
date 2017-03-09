@@ -2,7 +2,9 @@
     data-site-edit-url="{{$site->urls['edit']}}"
     data-site-alert-url="{{$site->urls['alert']}}"
     data-site-product-show-url="{{$site->product->urls['show']}}"
-    data-site-update-my-price-url="{{$site->urls['update_my_price']}}">
+    data-site-update-my-price-url="{{$site->urls['update_my_price']}}"
+    data-my-site="{{$site->my_price}}"
+>
     <td class="site-url vertical-align-middle">
         <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-url="{{$site->site_url}}">
             {{parse_url($site->site_url)['host']}}
@@ -147,7 +149,7 @@
             {{--data-toggle="tooltip" title="chart">--}}
             {{--<i class="fa fa-line-chart"></i>--}}
             {{--</a>--}}
-            <a href="#" class="btn-action btn-edit-align-middle" onclick="toggleEditSiteURL(this)">
+            <a href="#" class="btn-action btn-edit-align-middle" onclick="toggleEditSiteURL(this); event.preventDefault(); return false;">
                 <i class="glyphicon glyphicon-pencil"></i>
             </a>
             {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}

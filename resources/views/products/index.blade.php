@@ -18,23 +18,23 @@
 @stop
 
 @section('breadcrumbs')
-    <div class="search-input">
-        <div class="ico-search">
-            <div class="search-icon">
-                <i class="fa fa-search text-muted"></i>
-            </div>
-        </div>
-        <input type="text" class="form-control general-search-input" autocomplete="off"
-               placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
+    {{--<div class="search-input">--}}
+        {{--<div class="ico-search">--}}
+            {{--<div class="search-icon">--}}
+                {{--<i class="fa fa-search text-muted"></i>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+        {{--<input type="text" class="form-control general-search-input" autocomplete="off"--}}
+               {{--placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">--}}
 
-        <div class="btn-clear-search" onclick="clearProductSearch(this)">
-            <div class="clear-icon">
-                <a href="#">
-                    <i class="fa fa-times text-muted"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+        {{--<div class="btn-clear-search" onclick="clearProductSearch(this)">--}}
+            {{--<div class="clear-icon">--}}
+                {{--<a href="#">--}}
+                    {{--<i class="fa fa-times text-muted"></i>--}}
+                {{--</a>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 @stop
 
 @section('content')
@@ -146,10 +146,10 @@
                                                     <input type="text" id="txt-category-name" autocomplete="off"
                                                            class="form-control txt-item" name="category_name">
                                                 </form>
-                                                <div style="display: inline-block;">
+                                                <div style="display: inline-block; vertical-align:top;">
                                                     <button class="btn btn-primary btn-flat"
                                                             onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                                        ADD CATEGORY
+                                                        CONFIRM
                                                     </button>
                                                     &nbsp;&nbsp;
                                                     <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
