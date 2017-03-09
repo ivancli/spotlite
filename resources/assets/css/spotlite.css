@@ -280,7 +280,7 @@ td.shrink, th.shrink {
     z-index: 99999;
     width: 62px; /* Viewport Width */
     height: 62px; /* Viewport Height (~ 199.42px) */
-    background: transparent url('http://login.spotlite.com.au/images/spinner_sprite_62x62.png') 0 0 no-repeat; /* Our sprite as viewport background */
+    background: transparent url('//login.spotlite.com.au/images/spinner_sprite_62x62.png') 0 0 no-repeat; /* Our sprite as viewport background */
     animation: spinner 1s steps(19) infinite; /* The Animation */
     -moz-animation: spinner 1s steps(19) infinite;
     -webkit-animation: spinner 1s steps(19) infinite;
@@ -300,7 +300,7 @@ td.shrink, th.shrink {
 .spinner-raw {
     width: 62px;
     height: 62px;
-    background: transparent url('http://login.spotlite.com.au/images/spinner_sprite_62x62.png') 0 0 no-repeat;
+    background: transparent url('//login.spotlite.com.au/images/spinner_sprite_62x62.png') 0 0 no-repeat;
     animation: spinner 1s steps(19) infinite; /* The Animation */
     -moz-animation: spinner 1s steps(19) infinite;
     -webkit-animation: spinner 1s steps(19) infinite;
@@ -309,7 +309,7 @@ td.shrink, th.shrink {
 .dotdotdot {
     width: 60px;
     height: 20px;
-    background: transparent url('http://login.spotlite.com.au/images/dotdotdot.png') 0 0 no-repeat;
+    background: transparent url('//login.spotlite.com.au/images/dotdotdot.png') 0 0 no-repeat;
     -webkit-background-size: 60px 480px;
     background-size: 60px 480px;
     animation: dotdotdot 1s steps(24) infinite; /* The Animation */
