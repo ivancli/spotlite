@@ -43,7 +43,8 @@ class Subscription extends Model
     public function getIsPastDueAttribute()
     {
         $subscription = Chargify::subscription()->get($this->api_subscription_id);
-        return $subscription->state == 'past_due';
+
+        return !is_null($subscription) && $subscription->state == 'past_due';
     }
 
     public function getIsCancelledAttribute()
