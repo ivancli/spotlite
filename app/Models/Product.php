@@ -17,12 +17,16 @@ class Product extends Model
 {
     protected $primaryKey = "product_id";
     protected $fillable = [
-        "product_name", "category_id", "user_id", "group_id", "product_order", "report_task_id"
+        "product_name", "category_id", "user_id", "group_id", "product_order", "report_task_id",
     ];
 
-    protected $with = ['meta'];
+    protected $with = [
+        'meta'
+    ];
 
-    protected $appends = ["urls", "siteCount"];
+    protected $appends = [
+        "urls", "siteCount"
+    ];
 
     public function user()
     {
@@ -37,6 +41,12 @@ class Product extends Model
     public function sites()
     {
         return $this->hasMany('App\Models\Site', 'product_id', 'product_id');
+    }
+
+    public function cheapestSites()
+    {
+        $minPrice = $this->sites()->min('recent_price');
+        return $this->sites()->whereNotNull('recent_price')->where("recent_price", $minPrice);
     }
 
     public function meta()

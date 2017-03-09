@@ -58,6 +58,33 @@
                 <span class="btn-edit text-muted product-info" id="product-{{$product->getKey()}}-info">
                     <i class="glyphicon glyphicon-info-sign"></i>
                 </span>
+                &nbsp;
+                &nbsp;
+                @if($product->cheapestSites->count() > 0)
+                    <div style="display:inline-block; font-weight: normal;" class="hidden-xs hidden-sm text-muted">
+                        Cheapest: <span style="font-weight: bold;">{{$product->cheapestSites->first()->domain}}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        Current Price: <span style="font-weight: bold;">{{"$" . number_format($product->cheapestSites->first()->recent_price, 2, '.', ',')}}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        Price Change:
+                        <span style="font-weight: bold;">
+                            @if(!is_null($product->cheapestSites->first()->diffPrice))
+                                @if(round($product->cheapestSites->first()->diffPrice, 2, PHP_ROUND_HALF_UP) != 0)
+                                    <i class="glyphicon {{$product->cheapestSites->first()->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
+                                    ${{number_format(abs($product->cheapestSites->first()->diffPrice), 2, '.', ',')}}
+                                @else
+                                    <div class="p-r-10">
+                                        <strong><i class="fa fa-minus"></i></strong>
+                                    </div>
+                                @endif
+                            @else
+                                <div class="p-r-10">
+                                    <strong><i class="fa fa-minus"></i></strong>
+                                </div>
+                            @endif
+                        </span>
+                    </div>
+                @endif
             @endif
         </th>
         <th class="text-right action-cell product-th" style="padding-bottom: 20px;padding-top: 20px;">
@@ -191,10 +218,6 @@
             });
 
             loadAndAttachSites('{{$product->getKey()}}');
-
-
-
-
             $("#product-{{$product->getKey()}}-info").popover({
                 content: function () {
                     return $("<div>")
@@ -254,8 +277,6 @@
                 html: true,
                 trigger: "hover"
             })
-
-
         });
 
         function loadAndAttachSites(product_id) {

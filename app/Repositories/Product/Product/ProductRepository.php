@@ -50,6 +50,7 @@ class ProductRepository implements ProductContract
         if ($this->request->has('length')) {
             $productsBuilder->take($this->request->get('length'));
         }
+        $productsBuilder->with('cheapestSites');
         return $productsBuilder->get();
     }
 
@@ -59,12 +60,12 @@ class ProductRepository implements ProductContract
         $product = Product::create($options);
         if (isset($options['meta'])) {
             $meta = $product->meta;
-            $meta->brand = isset($options['meta']['brand']) && !empty($options['meta']['brand'])? $options['meta']['brand'] : null;
-            $meta->sku = isset($options['meta']['sku']) && !empty($options['meta']['sku'])? $options['meta']['sku'] : null;
-            $meta->colour = isset($options['meta']['colour']) && !empty($options['meta']['colour'])? $options['meta']['colour'] : null;
-            $meta->size = isset($options['meta']['size']) && !empty($options['meta']['size'])? $options['meta']['size'] : null;
-            $meta->supplier = isset($options['meta']['supplier']) && !empty($options['meta']['supplier'])? $options['meta']['supplier'] : null;
-            $meta->cost_price = isset($options['meta']['cost_price']) && !empty($options['meta']['cost_price'])? $options['meta']['cost_price'] : null;
+            $meta->brand = isset($options['meta']['brand']) && !empty($options['meta']['brand']) ? $options['meta']['brand'] : null;
+            $meta->sku = isset($options['meta']['sku']) && !empty($options['meta']['sku']) ? $options['meta']['sku'] : null;
+            $meta->colour = isset($options['meta']['colour']) && !empty($options['meta']['colour']) ? $options['meta']['colour'] : null;
+            $meta->size = isset($options['meta']['size']) && !empty($options['meta']['size']) ? $options['meta']['size'] : null;
+            $meta->supplier = isset($options['meta']['supplier']) && !empty($options['meta']['supplier']) ? $options['meta']['supplier'] : null;
+            $meta->cost_price = isset($options['meta']['cost_price']) && !empty($options['meta']['cost_price']) ? $options['meta']['cost_price'] : null;
             $meta->save();
         }
         return $product;
@@ -76,12 +77,12 @@ class ProductRepository implements ProductContract
         $product->update($options);
         if (isset($options['meta'])) {
             $meta = $product->meta;
-            $meta->brand = isset($options['meta']['brand']) && !empty($options['meta']['brand'])? $options['meta']['brand'] : null;
-            $meta->sku = isset($options['meta']['sku']) && !empty($options['meta']['sku'])? $options['meta']['sku'] : null;
-            $meta->colour = isset($options['meta']['colour']) && !empty($options['meta']['colour'])? $options['meta']['colour'] : null;
-            $meta->size = isset($options['meta']['size']) && !empty($options['meta']['size'])? $options['meta']['size'] : null;
-            $meta->supplier = isset($options['meta']['supplier']) && !empty($options['meta']['supplier'])? $options['meta']['supplier'] : null;
-            $meta->cost_price = isset($options['meta']['cost_price']) && !empty($options['meta']['cost_price'])? $options['meta']['cost_price'] : null;
+            $meta->brand = isset($options['meta']['brand']) && !empty($options['meta']['brand']) ? $options['meta']['brand'] : null;
+            $meta->sku = isset($options['meta']['sku']) && !empty($options['meta']['sku']) ? $options['meta']['sku'] : null;
+            $meta->colour = isset($options['meta']['colour']) && !empty($options['meta']['colour']) ? $options['meta']['colour'] : null;
+            $meta->size = isset($options['meta']['size']) && !empty($options['meta']['size']) ? $options['meta']['size'] : null;
+            $meta->supplier = isset($options['meta']['supplier']) && !empty($options['meta']['supplier']) ? $options['meta']['supplier'] : null;
+            $meta->cost_price = isset($options['meta']['cost_price']) && !empty($options['meta']['cost_price']) ? $options['meta']['cost_price'] : null;
             $meta->save();
         }
         return $product;
