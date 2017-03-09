@@ -50,7 +50,7 @@ class Subscription extends Model
     public function getIsCancelledAttribute()
     {
         $subscription = Chargify::subscription()->get($this->api_subscription_id);
-        return $subscription->state == 'canceled';
+        return !is_null($subscription) && $subscription->state == 'canceled';
     }
 
     public function creditCardExpiringWithinMonthOrExpired($month = 1)
