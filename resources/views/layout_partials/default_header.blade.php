@@ -144,7 +144,7 @@
                 @if(request()->route()->getName() == "product.index")
                     <form class="navbar-form navbar-left" role="search" onsubmit="return false;">
                         <div class="form-group">
-                            <input type="text" class="form-control general-search-input" id="navbar-search-input" placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
+                            <input type="text" class="form-control general-search-input" id="navbar-search-input" placeholder="SEARCH">
                         </div>
                     </form>
                 @endif

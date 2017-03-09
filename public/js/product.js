@@ -707,7 +707,7 @@ function submitEditProductName(el) {
             hideLoading();
             if (response.status == true) {
                 gaEditProduct();
-                alertP("Update Product", "Product name has been updated.");
+                alertP("Update Product", "Product details have been updated.");
                 $productWrapper.attr("data-product-meta-brand", $form.find(".txt-product-meta-brand").val());
                 $productWrapper.attr("data-product-meta-supplier", $form.find(".txt-product-meta-supplier").val());
                 $productWrapper.attr("data-product-meta-sku", $form.find(".txt-product-meta-sku").val());
@@ -719,7 +719,7 @@ function submitEditProductName(el) {
                     $productWrapper.find('.product-info').show();
                 });
             } else {
-                alertP("Oops! Something went wrong.", 'Unable to update product name, please try again later.');
+                alertP("Oops! Something went wrong.", 'Unable to update product details, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
