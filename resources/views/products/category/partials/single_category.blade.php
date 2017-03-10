@@ -64,10 +64,23 @@
                     </a>
                 </th>
             </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td></td>
+                <td colspan="3" class="table-container">
+                    <div id="category-{{$category->getKey()}}" class="collapse collapsible-category-div"
+                         data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
+                         data-end="false" aria-expanded="false">
+                        <div class="row">
+                            <div class="col-sm-12 text-center">
+                                <div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">
+
+                                </div>
+                            </div>
+                        </div>
+
             @if(!auth()->user()->isPastDue)
-                <tr>
-                    <th></th>
-                    <th colspan="3" class="category-th action-cell add-item-cell">
                         <div class="add-item-block add-product-container"
                              onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
                             <div class="add-item-label">
@@ -142,24 +155,7 @@
                                 </div>
                             @endif
                         </div>
-                    </th>
-                </tr>
-            @endif
-            </thead>
-            <tbody>
-            <tr>
-                <td></td>
-                <td colspan="3" class="table-container">
-                    <div id="category-{{$category->getKey()}}" class="collapse collapsible-category-div"
-                         data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
-                         data-end="false" aria-expanded="false">
-                        <div class="row">
-                            <div class="col-sm-12 text-center">
-                                <div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">
-
-                                </div>
-                            </div>
-                        </div>
+        @endif
                     </div>
                 </td>
             </tr>
