@@ -18,9 +18,9 @@ $(function () {
     //     $("body").addClass("sidebar-collapse");
     // }
 
-    if (getLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id) == 1) {
-        $("body").addClass("sidebar-collapse");
-    }
+    // if (getLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id) == 1) {
+    //     $("body").addClass("sidebar-collapse");
+    // }
 
     if (typeof user != 'undefined' && (user.needSubscription == false || (user.subscription != null && user.subscription.cancelled_at == null))) {
         /* clean up unused cookie/localStorage */
@@ -148,13 +148,13 @@ function showCreditCardExpiry() {
     });
 }
 
-function saveSidebarStatus() {
-    if ($("body").hasClass("sidebar-collapse")) {
-        removeLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id);
-    } else {
-        setLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id, 1);
-    }
-}
+// function saveSidebarStatus() {
+//     if ($("body").hasClass("sidebar-collapse")) {
+//         removeLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id);
+//     } else {
+//         setLocalStorageOrCookie("sidebar-is-collapsed-" + user.user_id, 1);
+//     }
+// }
 
 function tourOrCreditCard() {
     /*if bootstrap tour is available in this page*/
