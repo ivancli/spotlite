@@ -64,22 +64,6 @@
                     </a>
                 </th>
             </tr>
-            <tr>
-                <th></th>
-                <td colspan="3" class="category-th">
-                    <div class="text-light">
-                        Created
-                        @if(!is_null($category->created_at))
-                            on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($category->created_at))}}
-                        @endif
-                        <strong class="text-muted"><i>by {{$category->user->first_name}} {{$category->user->last_name}}</i></strong>
-                    </div>
-                    <div class="text-light">
-                        Product URLs Tracked:
-                        <strong><span class="lbl-site-usage text-muted">{{$category->sites()->count()}}</span></strong>
-                    </div>
-                </td>
-            </tr>
             @if(!auth()->user()->isPastDue)
                 <tr>
                     <th></th>
