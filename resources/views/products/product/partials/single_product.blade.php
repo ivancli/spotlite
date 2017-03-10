@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="add-item-controls">
                                         <form action="{{route('site.store')}}" method="post"
-                                              class="frm-store-site" style="display: inline-block"
+                                              class="frm-store-site" style="display: inline-block; width: 175px;"
                                               onsubmit="getPricesCreate(this); return false;">
                                             <input type="text" autocomplete="off" name="site_url" class="txt-site-url form-control txt-item">
                                         </form>

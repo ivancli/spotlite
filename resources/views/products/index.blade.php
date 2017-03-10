@@ -141,7 +141,7 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <form action="{{route('category.store')}}" method="post"
-                                                      class="frm-store-category" style="display:inline-block"
+                                                      class="frm-store-category" style="display:inline-block; width: 175px;"
                                                       onsubmit="btnAddCategoryOnClick(this); return false;">
                                                     <input type="text" id="txt-category-name" autocomplete="off"
                                                            class="form-control txt-item" name="category_name">
