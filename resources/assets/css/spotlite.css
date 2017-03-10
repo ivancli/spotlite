@@ -750,7 +750,6 @@ h3.box-title {
     cursor: pointer;
     width: 415px;
     max-width: 100%;
-    display: inline-block;
 }
 
 .add-item-block.add-product-container {

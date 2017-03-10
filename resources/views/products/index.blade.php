@@ -19,21 +19,21 @@
 
 @section('breadcrumbs')
     {{--<div class="search-input">--}}
-        {{--<div class="ico-search">--}}
-            {{--<div class="search-icon">--}}
-                {{--<i class="fa fa-search text-muted"></i>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<input type="text" class="form-control general-search-input" autocomplete="off"--}}
-               {{--placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">--}}
+    {{--<div class="ico-search">--}}
+    {{--<div class="search-icon">--}}
+    {{--<i class="fa fa-search text-muted"></i>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--<input type="text" class="form-control general-search-input" autocomplete="off"--}}
+    {{--placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">--}}
 
-        {{--<div class="btn-clear-search" onclick="clearProductSearch(this)">--}}
-            {{--<div class="clear-icon">--}}
-                {{--<a href="#">--}}
-                    {{--<i class="fa fa-times text-muted"></i>--}}
-                {{--</a>--}}
-            {{--</div>--}}
-        {{--</div>--}}
+    {{--<div class="btn-clear-search" onclick="clearProductSearch(this)">--}}
+    {{--<div class="clear-icon">--}}
+    {{--<a href="#">--}}
+    {{--<i class="fa fa-times text-muted"></i>--}}
+    {{--</a>--}}
+    {{--</div>--}}
+    {{--</div>--}}
     {{--</div>--}}
 @stop
 
@@ -129,7 +129,7 @@
 
                     @endif
                     <div class="row m-b-10">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" style="position:relative">
                             @if(!auth()->user()->isPastDue)
                                 <div class="add-item-block add-category-container"
                                      onclick="appendCreateCategoryBlock(this); event.stopPropagation(); return false;">
@@ -162,7 +162,7 @@
                                     </div>
                                 </div>
                             @endif
-                            <div class="pull-right" style="width:auto; padding-top: 30px;">
+                            <div style="width: auto;padding-top: 30px;position: absolute;right: 15px;top: 0;">
                                 <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
                                    id="btn-collapse-all" style="font-size: 12px;">Expand All</a>
                             </div>
