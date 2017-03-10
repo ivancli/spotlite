@@ -4,8 +4,8 @@
 @if(count($domains) > 0)
     @foreach($domains as $domain=>$name)
         <div class="form-group">
-            <label for="{{$domain}}" class="control-label col-md-3">{{$domain}}</label>
-            <div class="col-md-9">
+            <label for="{{$domain}}" class="control-label col-md-5">{{$domain}}</label>
+            <div class="col-md-7">
                 <input type="hidden" name="domains[]" value="{{$domain}}">
                 <input type="text" name="names[]" class="form-control" id="{{$domain}}" value="{{$name}}">
             </div>
