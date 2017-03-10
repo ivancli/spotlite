@@ -545,7 +545,7 @@ table.tbl-site.table-striped > tbody > tr:nth-child(even) {
 
 .product-th.action-cell {
     padding-right: 25px;
-    width: 100px;
+    width: 150px;
 }
 
 .category-th.action-cell {

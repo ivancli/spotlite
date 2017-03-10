@@ -145,12 +145,12 @@
     {{--</td>--}}
     <td class="text-right action-cell">
         @if(!auth()->user()->isPastDue)
-            {{--<a href="#" class="btn-action" onclick="showSiteChart('{{$site->urls['chart']}}'); return false;"--}}
-            {{--data-toggle="tooltip" title="chart">--}}
-            {{--<i class="fa fa-line-chart"></i>--}}
-            {{--</a>--}}
             <a href="#" class="btn-action btn-edit-align-middle" onclick="toggleEditSiteURL(this); event.preventDefault(); return false;">
                 <i class="glyphicon glyphicon-pencil"></i>
+            </a>
+            <a href="#" class="btn-action" onclick="showSiteChart('{{$site->urls['chart']}}'); return false;"
+               data-toggle="tooltip" title="chart">
+                <i class="fa fa-line-chart"></i>
             </a>
             {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
             <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"

@@ -92,6 +92,14 @@
                 <a href="#" class="btn-action btn-edit-product" onclick="toggleEditProductName(this); event.preventDefault(); return false;">
                     <i class="glyphicon glyphicon-pencil"></i>
                 </a>
+                <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
+                   data-toggle="tooltip" title="chart">
+                    <i class="fa fa-line-chart"></i>
+                </a>
+                <a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"
+                   data-toggle="tooltip" title="report">
+                    <i class="fa {{!is_null($product->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
+                </a>
                 {!! Form::model($product, array('route' => array('product.destroy', $product->getKey()), 'method'=>'delete', 'class'=>'frm-delete-product', 'onsubmit' => 'return false;')) !!}
                 <a href="#" class="btn-action" data-name="{{$product->product_name}}"
                    onclick="btnDeleteProductOnClick(this); return false;"

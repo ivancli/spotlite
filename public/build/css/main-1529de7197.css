@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-8216fe9c70.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-1529de7197.css */
 @media print {
   *,
   *:before,
@@ -15683,7 +15683,7 @@ table.tbl-site.table-striped > tbody > tr:nth-child(even) {
 
 .product-th.action-cell {
     padding-right: 25px;
-    width: 100px;
+    width: 150px;
 }
 
 .category-th.action-cell {
