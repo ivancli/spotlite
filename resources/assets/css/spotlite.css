@@ -1148,8 +1148,15 @@ ul.treeview-menu li a {
     padding: 5px;
 }
 
-.skin-black-light .main-header .navbar-toggle {
-    color: #fff;
+.skin-black-light .main-header .navbar .navbar-nav > li > a {
+    border-right: 1px solid #8cdacb;
+}
+
+.skin-black-light .main-header .navbar-brand {
+    border-right: 1px solid #8cdacb;
+}
+.skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav > li > a, .skin-black-light .main-header .navbar .navbar-right > li > a{
+    border-left: 1px solid #8cdacb;
 }
 
 @media (min-width: 992px) {
