@@ -525,7 +525,7 @@
                                                         @foreach($product['sites'] as $site)
                                                             <li>
                                                                 <strong>
-                                                                    <a href="{{$site['site_url']}}">{{parse_url($site['site_url'])['host']}}</a>
+                                                                    <a href="{{$site['site_url']}}">{{!isset($site['userDomainName']) || is_null($site['userDomainName']) ? $site['domain'] : $site['userDomainName']}}</a>
                                                                 </strong>
                                                             </li>
                                                         @endforeach

@@ -37,7 +37,7 @@
         <tr>
             <td>{{$data->category->category_name}}</td>
             <td>{{$data->product_name}}</td>
-            <td><a href="{{$site->site_url}}">{{$site->site_url}}</a></td>
+            <td><a href="{{$site->site_url}}">{{is_null($site->userDomainName) ? $site->domain : $site->userDomainName}}</a></td>
             @if(!is_null($site->recent_price))
                 <td>
                     {{$site->recent_price}}
