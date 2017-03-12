@@ -168,7 +168,8 @@ class ChartController extends Controller
                 foreach ($productPrices as $siteId => $siteLevelPrices) {
                     $data[$siteId] = array();
                     $data[$siteId]["average"] = array();
-                    $data[$siteId]["name"] = parse_url($this->siteRepo->getSite($siteId)->site_url)['host'];
+                    $site = $this->siteRepo->getSite($siteId);
+                    $data[$siteId]["name"] = is_null($site->userDomainName) ? $site->domain : $site->userDomainName;
                     foreach ($siteLevelPrices as $dateStamp => $dateLevelPrices) {
                         $data[$siteId]["average"][] = array(
                             strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)
@@ -236,7 +237,7 @@ class ChartController extends Controller
 
                 $data[$site_id] = array();
                 $data[$site_id]["average"] = array();
-                $data[$site_id]["name"] = parse_url($site->site_url)['host'];
+                $data[$site_id]["name"] = is_null($site->userDomainName) ? $site->domain : $site->userDomainName;
                 foreach ($sitePrices as $dateStamp => $dateLevelPrices) {
                     $data[$site_id]["average"][] = array(
                         strtotime($dateStamp) * 1000, array_sum($dateLevelPrices) / count($dateLevelPrices)

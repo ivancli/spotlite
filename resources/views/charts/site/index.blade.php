@@ -16,7 +16,7 @@
                         <li><a href="#" onclick="exportChart('svg'); return false;">Download SVG</a></li>
                     </ul>
                 </div>
-                <h4 class="modal-title">{{parse_url($site->site_url)['host']}}</h4>
+                <h4 class="modal-title">{{is_null($site->userDomainName) ? $site->domain : $site->userDomainName}}</h4>
             </div>
             <div class="modal-body" style="background-color: #f5f5f5;">
                 <div class="row">
@@ -184,7 +184,7 @@
                     renderTo: 'chart-container'
                 },
                 title: {
-                    text: '{{parse_url($site->site_url)['host']}}'
+                    text: '{{is_null($site->userDomainName) ? $site->domain : $site->userDomainName}}'
                 },
                 subtitle: {
                     text: '{!! addslashes(htmlentities($site->product->product_name)) !!}'
