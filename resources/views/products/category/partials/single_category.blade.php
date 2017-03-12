@@ -190,8 +190,8 @@
             $.ajax({
                 "url": $categoryWrapper.attr("data-products-url"),
                 "data": {
-                    "start": $categoryWrapper.attr("data-start"),
-                    "length": $categoryWrapper.attr("data-length"),
+//                    "start": $categoryWrapper.attr("data-start"),
+//                    "length": $categoryWrapper.attr("data-length"),
                     "keyword": $(".general-search-input").val()
                 },
                 "dataType": "json",
