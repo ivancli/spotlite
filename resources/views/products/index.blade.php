@@ -143,8 +143,7 @@
                                                       onsubmit="btnAddCategoryOnClick(this); return false;">
                                                     <input type="text" id="txt-category-name" autocomplete="off"
                                                            class="form-control txt-item" name="category_name">
-                                                </form>
-                                            </div>
+                                                </form></div>
                                             <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
                                                 <button class="btn btn-primary btn-flat"
                                                         onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">

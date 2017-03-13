@@ -66,6 +66,11 @@ Route::group(['middleware' => ['auth']], function () {
         /**
          * Product Related Routes
          */
+
+
+        //product import
+        Route::resource('product_import', 'Product\ImportProductController');
+
         //product routes
         Route::put('product/order', 'Product\ProductController@updateOrder')->name('product.order');
         Route::get('product/product/usage', 'Product\ProductController@getUserProductCredit')->name('product.product.usage');
@@ -74,6 +79,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('product', 'Product\ProductController', ['except' => [
             'edit'
         ]]);
+
         //category routes
         Route::put('category/order', 'Product\CategoryController@updateOrder')->name('category.order');
         Route::get('category/{category_id}/site/usage', 'Product\CategoryController@getUserSiteCredit')->name('category.site.usage');
