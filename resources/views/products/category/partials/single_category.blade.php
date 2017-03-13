@@ -1,4 +1,4 @@
-<div class="row category-wrapper" data-category-id="{{$category->getKey()}}" draggable="true"
+<div class="row category-wrapper" data-category-id="{{$category->getKey()}}"
      data-report-task-link="{{$category->urls['report_task']}}"
      data-get-site-usage-link="{{$category->urls['site_usage']}}"
 >
