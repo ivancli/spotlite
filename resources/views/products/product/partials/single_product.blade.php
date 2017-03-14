@@ -61,7 +61,7 @@
                 &nbsp;
                 &nbsp;
                 @if($product->cheapestSites->count() > 0)
-                    <div style="display:inline-block; font-weight: normal;" class="hidden-xs hidden-sm text-muted">
+                    <div style="display:inline-block; font-weight: normal; font-size: 11px;" class="hidden-xs hidden-sm text-muted">
                         Cheapest: <span style="font-weight: bold;">{{$product->cheapestSites->first()->domain}}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         Current Price: <span style="font-weight: bold;">{{"$" . number_format($product->cheapestSites->first()->recent_price, 2, '.', ',')}}</span>
@@ -73,14 +73,10 @@
                                     <i class="glyphicon {{$product->cheapestSites->first()->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
                                     ${{number_format(abs($product->cheapestSites->first()->diffPrice), 2, '.', ',')}}
                                 @else
-                                    <div class="p-r-10">
-                                        <strong><i class="fa fa-minus"></i></strong>
-                                    </div>
+                                    <strong><i class="fa fa-minus"></i></strong>
                                 @endif
                             @else
-                                <div class="p-r-10">
-                                    <strong><i class="fa fa-minus"></i></strong>
-                                </div>
+                                <strong><i class="fa fa-minus"></i></strong>
                             @endif
                         </span>
                     </div>
