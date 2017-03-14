@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-1529de7197.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-99fa93b945.css */
 @media print {
   *,
   *:before,
@@ -16092,6 +16092,10 @@ input.product-name {
     top: 10px;
 }
 
+.skin-black-light .main-header .navbar-toggle {
+    color: #fff;
+}
+
 section.content {
     padding-left: 50px;
     padding-right: 50px;
@@ -16293,7 +16297,8 @@ ul.treeview-menu li a {
 .skin-black-light .main-header .navbar-brand {
     border-right: 1px solid #8cdacb;
 }
-.skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav > li > a, .skin-black-light .main-header .navbar .navbar-right > li > a{
+
+.skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav > li > a, .skin-black-light .main-header .navbar .navbar-right > li > a {
     border-left: 1px solid #8cdacb;
 }
 
