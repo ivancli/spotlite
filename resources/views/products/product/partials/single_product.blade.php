@@ -92,7 +92,7 @@
         <td></td>
         <td colspan="3" class="table-container">
             <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in m-b-20" aria-expanded="true"
-                 data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10"
+                 data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10" data-order="recent_price" data-sequence="asc"
             >
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
@@ -192,19 +192,7 @@
     </tr>
     </tbody>
     <script type="text/javascript">
-        var siteDrake{{$product->getKey()}} = null;
         $(function () {
-            /**
-             * drag and drop
-             */
-            siteDrake{{$product->getKey()}} = dragula([$("#product-{{$product->getKey()}} > table > tbody").get(0)], {
-                moves: function (el, container, handle) {
-                    return !$(handle).hasClass("add-site-row") && $(handle).closest(".add-site-row").length == 0 && !$(handle).hasClass("empty-message-row") && $(handle).closest(".empty-message-row").length == 0 && !$(handle).hasClass("load-more-site") && $(handle).closest(".load-more-site").length == 0;
-                }
-            }).on('drop', function (el, target, source, sibling) {
-                updateSiteOrder({{$product->getKey()}});
-            });
-
             loadAndAttachSites('{{$product->getKey()}}');
         });
 
@@ -224,6 +212,8 @@
                 "data": {
                     "start": $productWrapper.attr("data-start"),
                     "length": $productWrapper.attr("data-length"),
+                    "order": $productWrapper.attr("data-order"),
+                    "sequence": $productWrapper.attr("data-sequence"),
                     "keyword": $(".general-search-input").val()
                 },
                 "dataType": "json",

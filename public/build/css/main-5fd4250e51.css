@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-d489595703.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-5fd4250e51.css */
 @media print {
   *,
   *:before,
@@ -15738,10 +15738,6 @@ td.add-item-cell, th.add-item-cell {
 
 th.category-th.action-cell.add-item-cell {
     padding-right: 20px !important;
-}
-
-.site-wrapper {
-    cursor: move;
 }
 
 .site-wrapper td.site-url .tooltip-inner,
