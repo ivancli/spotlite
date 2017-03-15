@@ -273,7 +273,7 @@
                                     @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
                                     ,
                                     $("<div>").css("font-size", "12px").append(
-                                            "{{$product->sites()->count()}}/{{auth()->user()->subscriptionCriteria()->site}} Product URLs Tracked"
+                                            "Product URLs Tracked {{$product->sites()->count()}}/{{auth()->user()->subscriptionCriteria()->site}}"
                                     )
                                     @endif
                              ).html()
