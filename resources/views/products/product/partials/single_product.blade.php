@@ -94,6 +94,25 @@
             <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in m-b-20" aria-expanded="true"
                  data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10" data-order="recent_price" data-sequence="asc"
             >
+                <style>
+                    .tbl-site th {
+                        cursor: pointer;
+                    }
+
+                    .tbl-site th.sorting.sorting-asc:after {
+                        content: "\f160";
+                        font: normal normal normal 14px/1 FontAwesome;
+                        color: #a3a3a3;
+                        padding-left: 5px;
+                    }
+
+                    .tbl-site th.sorting.sorting-desc:after {
+                        content: "\f161";
+                        font: normal normal normal 14px/1 FontAwesome;
+                        color: #a3a3a3;
+                        padding-left: 5px;
+                    }
+                </style>
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
@@ -101,12 +120,12 @@
                         @if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)
                             <th class="text-center" width="10%">My Site</th>
                         @endif
-                        <th width="10%" class="text-right">Current Price</th>
-                        <th width="10%" class="text-right">Previous Price</th>
-                        <th width="10%" class="hidden-xs text-right">Change</th>
-                        <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
-                        <th>Updated</th>
-                        <th>Tracked Since</th>
+                        <th width="10%" class="text-right sorting sorting-asc" data-col="recent_price">Current Price</th>
+                        <th width="10%" class="text-right" data-col="previousPrice">Previous Price</th>
+                        <th width="10%" class="hidden-xs text-right" data-col="diffPrice">Change</th>
+                        <th width="10%" class="hidden-xs" data-col="priceLastChangedAt" style="padding-left: 20px;">Last Changed</th>
+                        <th data-col="last_crawled_at">Updated</th>
+                        <th data-col="created_at">Tracked Since</th>
                         <th width="100px"></th>
                     </tr>
                     </thead>
@@ -193,6 +212,46 @@
     </tbody>
     <script type="text/javascript">
         $(function () {
+            $("#product-{{$product->getKey()}} .tbl-site thead th").on("click", function () {
+                /* TODO check class and update wrapper attribute */
+                var $th = $(this);
+                var $sortingAttributeContainer = $th.closest(".collapsible-product-div");
+                if ($th.hasClass("sorting")) {
+                    if ($th.hasClass("sorting-asc")) {
+                        $th.removeClass("sorting-asc").addClass("sorting-desc");
+                        $sortingAttributeContainer.attr({
+                            "data-order": $th.attr("data-col"),
+                            "data-sequence": "desc"
+                        });
+                    } else {
+                        $th.removeClass("sorting-desc").addClass("sorting-asc");
+                        $sortingAttributeContainer.attr({
+                            "data-order": $th.attr("data-col"),
+                            "data-sequence": "asc"
+                        });
+                    }
+                } else {
+                    $th.closest("tr").find("th").removeClass("sorting").removeClass("sorting-asc").removeClass("sorting-desc");
+                    $th.addClass("sorting sorting-asc");
+                    $sortingAttributeContainer.attr({
+                        "data-order": $th.attr("data-col"),
+                        "data-sequence": "asc"
+                    });
+                }
+
+                $sortingAttributeContainer.attr("data-start", 0);
+
+                var product_id = $(this).closest(".product-wrapper").attr("data-product-id");
+
+                $(this).closest(".tbl-site").find(".site-wrapper").remove();
+                showLoadingSites(product_id);
+                loadSites(product_id, function (response) {
+                    $("#product-" + product_id + " .tbl-site tbody .spinner-row").before(response.html);
+                    updateProductEmptyMessage();
+                });
+            });
+
+
             loadAndAttachSites('{{$product->getKey()}}');
         });
 

@@ -74,8 +74,6 @@ class SiteRepository implements SiteContract
             }
         }
 
-        dd($sites);
-
         return $sites;
     }
 
