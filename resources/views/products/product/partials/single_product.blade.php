@@ -127,7 +127,7 @@
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th width="15%">Site Name</th>
+                        <th width="20%">Site Name</th>
                         <th class="text-right" width="15%">Current Price</th>
                         <th class="text-right" width="15%">Previous Price</th>
                         <th class="hidden-xs text-right" width="15%">Change</th>
