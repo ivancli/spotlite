@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-9750b79c90.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-932fb5e635.css */
 @media print {
   *,
   *:before,
@@ -15964,7 +15964,7 @@ input.product-name {
 }
 
 .box-body.product-list-page-content {
-    padding: 40px;
+    padding: 20px;
     background-color: #FAFAFA;
 }
 
@@ -16103,7 +16103,7 @@ section.content {
 }
 
 section.content-header {
-    padding-top: 50px;
+    padding-top: 10px;
     padding-left: 50px;
     padding-right: 50px;
 }

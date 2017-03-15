@@ -18,23 +18,6 @@
 @stop
 
 @section('breadcrumbs')
-    {{--<div class="search-input">--}}
-    {{--<div class="ico-search">--}}
-    {{--<div class="search-icon">--}}
-    {{--<i class="fa fa-search text-muted"></i>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<input type="text" class="form-control general-search-input" autocomplete="off"--}}
-    {{--placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">--}}
-
-    {{--<div class="btn-clear-search" onclick="clearProductSearch(this)">--}}
-    {{--<div class="clear-icon">--}}
-    {{--<a href="#">--}}
-    {{--<i class="fa fa-times text-muted"></i>--}}
-    {{--</a>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
 @stop
 
 @section('content')
@@ -55,8 +38,6 @@
             </div>
         </div>
     @endif
-
-    <hr class="content-divider-white">
 
     {{--@include('products.partials.banner_stats')--}}
     <div class="row">

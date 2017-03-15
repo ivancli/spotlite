@@ -826,7 +826,7 @@ input.product-name {
 }
 
 .box-body.product-list-page-content {
-    padding: 40px;
+    padding: 20px;
     background-color: #FAFAFA;
 }
 
@@ -965,7 +965,7 @@ section.content {
 }
 
 section.content-header {
-    padding-top: 50px;
+    padding-top: 10px;
     padding-left: 50px;
     padding-right: 50px;
 }
