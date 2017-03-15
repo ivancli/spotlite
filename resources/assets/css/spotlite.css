@@ -1028,6 +1028,7 @@ tr.site-wrapper td.site-url {
 tr.site-wrapper[data-my-site='y'] td:not(.action-cell),
 tr.site-wrapper[data-my-site='y'] td:not(.action-cell) a {
     color: #43bda5;
+    font-weight: bold;
 }
 
 /*td.site-url a {*/
@@ -1415,4 +1416,14 @@ ______________________________________________________________
         -webkit-background-size: 240px 24px;
         background-size: 240px 24px;
     }
+}
+
+@media (min-width: 1300px) {
+    .container {
+        width: 1300px;
+    }
+}
+
+.text-increase {
+    color: #4cb14e !important;
 }

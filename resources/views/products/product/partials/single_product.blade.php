@@ -70,7 +70,7 @@
                         <span style="font-weight: bold;">
                             @if(!is_null($product->cheapestSites->first()->diffPrice))
                                 @if(round($product->cheapestSites->first()->diffPrice, 2, PHP_ROUND_HALF_UP) != 0)
-                                    <i class="glyphicon {{$product->cheapestSites->first()->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
+                                    <i class="glyphicon {{$product->cheapestSites->first()->diffPrice > 0 ? "glyphicon-triangle-top text-increase" : "glyphicon-triangle-bottom text-danger"}}"></i>
                                     ${{number_format(abs($product->cheapestSites->first()->diffPrice), 2, '.', ',')}}
                                 @else
                                     <strong><i class="fa fa-minus"></i></strong>

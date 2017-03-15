@@ -100,7 +100,7 @@
         <div class="text-right">
             @if(!is_null($site->diffPrice))
                 @if(round($site->diffPrice, 2, PHP_ROUND_HALF_UP) != 0)
-                    <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-success" : "glyphicon-triangle-bottom text-danger"}}"></i>
+                    <i class="glyphicon {{$site->diffPrice > 0 ? "glyphicon-triangle-top text-increase" : "glyphicon-triangle-bottom text-danger"}}"></i>
                     ${{number_format(abs($site->diffPrice), 2, '.', ',')}}
                 @else
                     <div class="p-r-10">
