@@ -5,7 +5,7 @@
        data-product-meta-brand="{{$product->meta->brand}}"
        data-product-meta-supplier="{{$product->meta->supplier}}"
        data-product-meta-sku="{{$product->meta->sku}}"
-       data-product-meta-cost-price="{{$product->meta->cost_price}}"
+       data-product-meta-cost-price="${{number_format($product->meta->cost_price)}}"
 >
     <thead>
     <tr>
