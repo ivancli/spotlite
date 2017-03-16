@@ -62,7 +62,14 @@
                 &nbsp;
                 @if($product->cheapestSites->count() > 0)
                     <div style="display:inline-block; font-weight: normal; font-size: 11px;" class="hidden-xs hidden-sm text-muted">
-                        Cheapest: <span style="font-weight: bold;">{{$product->cheapestSites->first()->domain}}</span>
+                        Cheapest:
+                        <span style="font-weight: bold;">
+                            @if(!is_null($product->cheapestSites->first()->userDomainName))
+                                {{$product->cheapestSites->first()->userDomainName}}
+                            @else
+                                {{$product->cheapestSites->first()->domain}}
+                            @endif
+                        </span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         Current Price: <span style="font-weight: bold;">{{"$" . number_format($product->cheapestSites->first()->recent_price, 2, '.', ',')}}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
