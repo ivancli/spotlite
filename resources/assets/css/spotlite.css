@@ -602,10 +602,6 @@ th.category-th.action-cell.add-item-cell {
     padding-right: 20px !important;
 }
 
-.site-wrapper {
-    cursor: move;
-}
-
 .site-wrapper td.site-url .tooltip-inner,
 .site-wrapper td.site-url .popover-content {
     word-break: break-all;

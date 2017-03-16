@@ -65,6 +65,15 @@ class SiteRepository implements SiteContract
             $sitesBuilder->take($this->request->get('length'));
         }
         $sites = $sitesBuilder->get();
+
+        if ($this->request->has('order') && !empty($this->request->get('order'))) {
+            if ($this->request->has('sequence') && $this->request->get('sequence') == 'desc') {
+                $sites = $sites->sortByDesc($this->request->get('order'));
+            } else {
+                $sites = $sites->sortBy($this->request->get('order'));
+            }
+        }
+
         return $sites;
     }
 
