@@ -20,6 +20,7 @@ use App\Models\DeletedRecordModels\DeletedSite;
 use App\Models\Domain;
 use App\Models\Group;
 use App\Models\HistoricalPrice;
+use App\Models\ProductMeta;
 use App\Models\Site;
 use App\Models\SitePreference;
 use App\Models\Subscription;
@@ -160,6 +161,10 @@ class AppServiceProvider extends ServiceProvider
                 "content" => $group->toJson()
             ));
             return true;
+        });
+
+        Product::created(function ($product) {
+            $product->meta()->save(new ProductMeta);
         });
 
         Product::deleting(function ($product) {

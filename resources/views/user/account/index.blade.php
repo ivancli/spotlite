@@ -142,6 +142,7 @@
 @section('scripts')
     <script type="text/javascript">
         $(function () {
+
             $('a[data-toggle="tab"][href="#manage-subscription"]').on('shown.bs.tab', function (e) {
                 if ($(".manage-subscription-container").html().trim() == "") {
                     showLoading();
@@ -159,7 +160,20 @@
                     });
                 }
             })
-        })
+
+            $(window).on("hashchange", function () {
+                if (window.location.hash) {
+                    $('a[data-toggle="tab"]').filter(function () {
+                        return $(this).attr("href") == window.location.hash;
+                    }).tab("show");
+                }
+            });
+            if (window.location.hash) {
+                $('a[data-toggle="tab"]').filter(function () {
+                    return $(this).attr("href") == window.location.hash;
+                }).tab("show");
+            }
+        });
 
         function submitForgotPassword() {
             showLoading();

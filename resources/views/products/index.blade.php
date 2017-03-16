@@ -18,23 +18,6 @@
 @stop
 
 @section('breadcrumbs')
-    <div class="search-input">
-        <div class="ico-search">
-            <div class="search-icon">
-                <i class="fa fa-search text-muted"></i>
-            </div>
-        </div>
-        <input type="text" class="form-control general-search-input" autocomplete="off"
-               placeholder="ENTER THE CATEGORY OR PRODUCT YOU'D LIKE TO SEARCH">
-
-        <div class="btn-clear-search" onclick="clearProductSearch(this)">
-            <div class="clear-icon">
-                <a href="#">
-                    <i class="fa fa-times text-muted"></i>
-                </a>
-            </div>
-        </div>
-    </div>
 @stop
 
 @section('content')
@@ -55,8 +38,6 @@
             </div>
         </div>
     @endif
-
-    <hr class="content-divider-white">
 
     {{--@include('products.partials.banner_stats')--}}
     <div class="row">
@@ -127,8 +108,10 @@
                             </div>
                         </div>
 
-                        <div class="row m-b-10">
-                            <div class="col-sm-12">
+                    @endif
+                    <div class="row m-b-10">
+                        <div class="col-sm-12" style="position:relative">
+                            @if(!auth()->user()->isPastDue)
                                 <div class="add-item-block add-category-container"
                                      onclick="appendCreateCategoryBlock(this); event.stopPropagation(); return false;">
                                     <div class="add-item-label">
@@ -137,35 +120,33 @@
                                     </div>
                                     <div class="add-item-controls">
                                         <div class="row">
-                                            <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
+                                            <div class="col-sm-12">
                                                 <form action="{{route('category.store')}}" method="post"
-                                                      class="frm-store-category"
+                                                      class="frm-store-category" style="display:inline-block; width: 175px;"
                                                       onsubmit="btnAddCategoryOnClick(this); return false;">
                                                     <input type="text" id="txt-category-name" autocomplete="off"
                                                            class="form-control txt-item" name="category_name">
                                                 </form>
-                                            </div>
-                                            <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                                <button class="btn btn-primary btn-flat"
-                                                        onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                                    ADD CATEGORY
-                                                </button>
-                                                &nbsp;&nbsp;
-                                                <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
-                                                        onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
-                                                    CANCEL
-                                                </button>
+                                                <div style="display: inline-block; vertical-align:top;">
+                                                    <button class="btn btn-primary btn-flat"
+                                                            onclick="btnAddCategoryOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                                        CONFIRM
+                                                    </button>
+                                                    &nbsp;&nbsp;
+                                                    <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
+                                                            onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
+                                                        CANCEL
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            @endif
+                            <div style="width: auto;padding-top: 30px;position: absolute;right: 15px;top: 0;">
+                                <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
+                                   id="btn-collapse-all" style="font-size: 12px;">Expand All</a>
                             </div>
-                        </div>
-                    @endif
-                    <div class="row m-b-20">
-                        <div class="col-sm-12 text-right">
-                            <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
-                               id="btn-collapse-all" style="font-size: 12px;">Expand All</a>
                         </div>
                     </div>
                     <div class="row">
