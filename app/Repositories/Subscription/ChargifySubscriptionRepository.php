@@ -28,11 +28,6 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         $this->mailingAgentRepo = $mailingAgentContract;
     }
 
-    private function generateToken($str)
-    {
-        return substr(sha1($str), 0, 10);
-    }
-
     public function generateUpdatePaymentLink($subscription_id)
     {
         $message = "update_payment--$subscription_id--" . config("chargify.api_share_key");
@@ -172,5 +167,26 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             $productFamilies = $productFamilies->sortBy('product.price_in_cents')->values();
             return $productFamilies;
         });
+    }
+
+    /**
+     * validating a coupon code based on its product family id
+     * @param $coupon_code
+     * @param $product_family_id
+     * @return mixed
+     */
+    public function validateCoupon($coupon_code, $product_family_id)
+    {
+        $coupon = Chargify::coupon()->validate($coupon_code, $product_family_id);
+        if (!isset($coupon->errors) && is_null($coupon->archived_at)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function generateToken($str)
+    {
+        return substr(sha1($str), 0, 10);
     }
 }

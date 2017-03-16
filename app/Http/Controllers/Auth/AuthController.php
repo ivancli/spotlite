@@ -140,7 +140,7 @@ class AuthController extends Controller
 
         if (request()->has('api_product_id')) {
             $product = Chargify::product()->get(request('api_product_id'));
-            $coupon_code = request()->get('coupon_code');
+            $coupon_code = isset($data['coupon']) ? $data['coupon'] : '';
             $reference = array(
                 "user_id" => $user->getKey(),
                 "verification_code" => $verificationCode
