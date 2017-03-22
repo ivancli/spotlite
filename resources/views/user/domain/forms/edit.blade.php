@@ -1,3 +1,5 @@
+<p>Adding a Site Name to the list below will replace the corresponding domain name in the Products screen as well as all charts, reports and alerts.</p>
+<p class="m-b-20">For example, you can use 'SpotLite Australia' instead of 'www.spotlite.com.au'.</p>
 <ul class="text-danger errors-container">
 </ul>
 {!! Form::open(array('route' => 'user-domain.store', 'method'=>'post', "id"=>"frm-update-user-domain", "onsubmit"=>"return false;", "class" => "form-horizontal sl-form-horizontal")) !!}
