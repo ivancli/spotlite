@@ -145,7 +145,7 @@
                             @endif
                             <div style="width: auto;padding-top: 30px;position: absolute;right: 15px;top: 0;">
                                 <a href="#" onclick="toggleCollapseCategories(this); return false;" class="text-muted"
-                                   id="btn-collapse-all" style="font-size: 12px;">Expand All</a>
+                                   id="btn-collapse-all" style="font-size: 12px;">Collapse All</a>
                             </div>
                         </div>
                     </div>
