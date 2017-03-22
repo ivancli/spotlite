@@ -59,7 +59,6 @@
                     <i class="glyphicon glyphicon-info-sign"></i>
                 </span>
                 &nbsp;
-                &nbsp;
                 @if($product->cheapestSites->count() > 0)
                     <div style="display:inline-block; font-weight: normal; font-size: 11px;" class="hidden-xs hidden-sm text-muted">
                         Cheapest:
@@ -116,7 +115,7 @@
             <div style="background-color:#e8e8e8; height: 65px;padding-top: 10px; padding-bottom: 10px;">
                 <a class="text-muted btn-collapse" style="font-size: 30px;" href="#product-{{$product->getKey()}}"
                    role="button"
-                   data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+                   data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                    aria-controls="product-{{$product->getKey()}}">
                     <i class="fa fa-angle-up"></i>
                 </a>
@@ -128,7 +127,7 @@
     <tr>
         <td></td>
         <td colspan="3" class="table-container">
-            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in m-b-20" aria-expanded="true"
+            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse m-b-20" aria-expanded="false"
                  data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10" data-order="recent_price" data-sequence="asc"
             >
                 <style>

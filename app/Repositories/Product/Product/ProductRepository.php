@@ -50,7 +50,6 @@ class ProductRepository implements ProductContract
         if ($this->request->has('length')) {
             $productsBuilder->take($this->request->get('length'));
         }
-        $productsBuilder->with('cheapestSites');
         return $productsBuilder->get();
     }
 

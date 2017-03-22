@@ -56,7 +56,7 @@
                     @endif
                 </th>
                 <th class="text-center vertical-align-middle" style="background-color: #d3d3d3;" width="70">
-                    <a class="text-muted btn-collapse collapsed" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
+                    <a class="text-muted btn-collapse" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
                        role="button"
                        data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                        aria-controls="category-{{$category->getKey()}}">
@@ -69,9 +69,9 @@
             <tr>
                 <td></td>
                 <td colspan="3" class="table-container">
-                    <div id="category-{{$category->getKey()}}" class="collapse collapsible-category-div"
+                    <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
                          data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
-                         data-end="false" aria-expanded="false">
+                         data-end="false" aria-expanded="true">
                         <div class="row">
                             <div class="col-sm-12 text-center">
                                 <div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">
