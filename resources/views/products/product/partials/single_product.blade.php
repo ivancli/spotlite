@@ -133,6 +133,20 @@
                 <style>
                     .tbl-site th {
                         cursor: pointer;
+                        position: relative;
+                    }
+
+                    .tbl-site th.sortable{
+                        padding-right: 30px;
+
+                    }
+
+                    .tbl-site th.sortable:not(.sorting)::after {
+                        content: "\f0dc";
+                        font: normal normal normal 14px/1 FontAwesome;
+                        color: #a3a3a3;
+                        padding-left: 5px;
+                        position: absolute;
                     }
 
                     .tbl-site th.sorting.sorting-asc:after {
@@ -140,6 +154,7 @@
                         font: normal normal normal 14px/1 FontAwesome;
                         color: #a3a3a3;
                         padding-left: 5px;
+                        position: absolute;
                     }
 
                     .tbl-site th.sorting.sorting-desc:after {
@@ -147,17 +162,22 @@
                         font: normal normal normal 14px/1 FontAwesome;
                         color: #a3a3a3;
                         padding-left: 5px;
+                        position: absolute;
+                    }
+
+                    .tbl-site tbody td{
+                        padding-right: 30px !important;
                     }
                 </style>
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th width="20%">Site Name</th>
-                        <th class="text-right sorting sorting-asc" data-col="recent_price" width="15%">Current Price</th>
-                        <th class="text-right" data-col="previousPrice" width="15%">Previous Price</th>
-                        <th class="hidden-xs text-right" data-col="diffPrice" width="15%">Change</th>
-                        <th class="hidden-xs" data-col="priceLastChangedAt" style="padding-left: 20px;">Last Changed</th>
-                        <th width="100px"></th>
+                        <th class="sortable" width="20%">Site Name</th>
+                        <th class="text-right sortable sorting sorting-asc" data-col="recent_price" width="15%">Current Price</th>
+                        <th class="text-right sortable" data-col="previousPrice" width="15%">Previous Price</th>
+                        <th class="hidden-xs sortable text-right" data-col="diffPrice" width="15%">Change</th>
+                        <th class="hidden-xs sortable" data-col="priceLastChangedAt" style="padding-left: 20px;">Last Changed</th>
+                        <th width="150px"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -234,7 +254,7 @@
     </tbody>
     <script type="text/javascript">
         $(function () {
-            $("#product-{{$product->getKey()}} .tbl-site thead th").on("click", function () {
+            $("#product-{{$product->getKey()}} .tbl-site thead th.sortable").on("click", function () {
                 /* TODO check class and update wrapper attribute */
                 var $th = $(this);
                 var $sortingAttributeContainer = $th.closest(".collapsible-product-div");
