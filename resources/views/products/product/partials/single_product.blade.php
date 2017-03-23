@@ -113,7 +113,7 @@
         </th>
         <th class="text-center product-th" width="70" style="padding:0 !important">
             <div style="background-color:#e8e8e8; height: 65px;padding-top: 10px; padding-bottom: 10px;">
-                <a class="text-muted btn-collapse" style="font-size: 30px;" href="#product-{{$product->getKey()}}"
+                <a class="text-muted btn-collapse collapsed" style="font-size: 30px;" href="#product-{{$product->getKey()}}"
                    role="button"
                    data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                    aria-controls="product-{{$product->getKey()}}">
