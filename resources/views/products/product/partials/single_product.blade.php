@@ -384,7 +384,7 @@
                         $productWrapper.attr("data-end", loadedSitesCount < $productWrapper.attr("data-length") ? "true" : "false");
                         $productWrapper.attr("data-start", parseInt($productWrapper.attr("data-start")) + loadedSitesCount);
                         if (loadedSitesCount < $productWrapper.attr("data-length")) {
-                            $productWrapper.find(".load-more-site").remove();
+                            $productWrapper.find(".load-more-site").hide();
                         } else {
                             $productWrapper.find(".load-more-site").show();
                         }
