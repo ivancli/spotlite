@@ -144,7 +144,7 @@
                     .tbl-site th.sortable:not(.sorting)::after {
                         content: "\f0dc";
                         font: normal normal normal 14px/1 FontAwesome;
-                        color: #a3a3a3;
+                        color: #dcdcdc;
                         padding-left: 5px;
                         position: absolute;
                     }
