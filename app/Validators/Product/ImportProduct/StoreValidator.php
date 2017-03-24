@@ -21,7 +21,7 @@ class StoreValidator extends ValidatorAbstract
     protected function getRules($id = null)
     {
         return [
-            'file' => 'required|file',
+            'file' => 'required|file|mimes:csv,txt,xlsx',
         ];
     }
 }

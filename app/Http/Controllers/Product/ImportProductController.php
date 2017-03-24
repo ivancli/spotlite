@@ -56,48 +56,49 @@ class ImportProductController extends Controller
         $errors = [];
 
         /*TODO data collection and validation*/
-        //import products
-        Excel::selectSheets('Import Products')->load($file->getPathname(), function ($reader) use (&$products, &$errors) {
-            $data = $reader->all();
-            foreach ($data as $index => $product) {
-                $rowNumber = $index + 2;
-                if (!isset($product->product_name) || is_null($product->product_name)) {
-                    $errors[] = "Product name is missing in 'Import Products' row #{$rowNumber}";
-                }
-                if (!isset($product->category_name) || is_null($product->category_name)) {
-                    $errors[] = "Category name is missing in 'Import Products' row #{$rowNumber}";
-                }
-                $productData = $product->all();
-                $productData['sites'] = [];
-                $products [] = $productData;
-            }
-        });
-
-        $products = collect($products);
-        $product_names = $products->pluck('product_name')->all();
-
-        //import sites
-        Excel::selectSheets('Import Sites')->load($file->getPathname(), function ($reader) use (&$products, $product_names, &$errors) {
-            $data = $reader->all();
-            foreach ($data as $index => $site) {
-                $rowNumber = $index + 2;
-                if (!isset($site->product_name) || is_null($site->product_name)) {
-                    $errors[] = "Product name is missing in 'Import Sites' row #{$rowNumber}";
-                } elseif (!in_array($site->product_name, $product_names)) {
-                    $errors[] = "Product '{$site->product_name}' in 'Import Sites' row #{$rowNumber} does not exist in 'Import Products'";
-                }
-                $products->each(function ($product, $index) use ($products, $site) {
-                    if ($product['product_name'] == $site->product_name) {
-                        $product['sites'][] = $site->all();
-                        $products->put($index, $product);
+        if ($this->request->get('import_type') == 'product') {
+            //import products
+            $result = Excel::load($file->getPathname(), function ($reader) use (&$products, &$errors) {
+                $data = $reader->all();
+                foreach ($data as $index => $product) {
+                    $rowNumber = $index + 2;
+                    if (!isset($product->product_name) || is_null($product->product_name)) {
+                        $errors[] = "Product name is missing in 'Import Products' row #{$rowNumber}";
                     }
-                });
+                    if (!isset($product->category_name) || is_null($product->category_name)) {
+                        $errors[] = "Category name is missing in 'Import Products' row #{$rowNumber}";
+                    }
+                    $productData = $product->all();
+                    $products [] = $productData;
+                }
+            });
 
-            }
-        });
+            $products = collect($products);
+            $product_names = $products->pluck('product_name')->all();
+        } elseif ($this->request->get('import_type') == 'site') {
+            //import sites
+            Excel::selectSheets('Import Sites')->load($file->getPathname(), function ($reader) use (&$products, $product_names, &$errors) {
+                $data = $reader->all();
+                foreach ($data as $index => $site) {
+                    $rowNumber = $index + 2;
+                    if (!isset($site->product_name) || is_null($site->product_name)) {
+                        $errors[] = "Product name is missing in 'Import Sites' row #{$rowNumber}";
+                    } elseif (!in_array($site->product_name, $product_names)) {
+                        $errors[] = "Product '{$site->product_name}' in 'Import Sites' row #{$rowNumber} does not exist in 'Import Products'";
+                    }
+                    $products->each(function ($product, $index) use ($products, $site) {
+                        if ($product['product_name'] == $site->product_name) {
+                            $product['sites'][] = $site->all();
+                            $products->put($index, $product);
+                        }
+                    });
+
+                }
+            });
+        }
 
         if (count($errors) > 0) {
-            return compact(['errors']);
+            return response(compact(['errors']), 422);
         }
         /*VALIDATION FINISHED*/
         $categoryNames = $user->categories->pluck('category_name')->all();
@@ -138,20 +139,20 @@ class ImportProductController extends Controller
                     /*TODO handle meta after merging with SPOT-336*/
                 }
             }
-            foreach ($product['sites'] as $site) {
-                $existingProduct->sites()->save(new Site([
-                    'site_url' => $site['url']
-                ]));
-                $siteCounter++;
-            }
+//            foreach ($product['sites'] as $site) {
+//                $existingProduct->sites()->save(new Site([
+//                    'site_url' => $site['url']
+//                ]));
+//                $siteCounter++;
+//            }
         });
-        $status = true;
-
-        /*IMPORT PRODUCTS*/
-
-
-        /*IMPORT SITES*/
+//        $status = true;
+//
+//        /*IMPORT PRODUCTS*/
         return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
+//
+//
+//        /*IMPORT SITES*/
     }
 
     /**

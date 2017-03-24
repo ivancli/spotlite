@@ -27,6 +27,7 @@ elixir(function (mix) {
         'public/fonts',
         'public/images',
         'public/videos',
+        'public/csvs',
         'public/packages',
         'public/build'
     ]);
@@ -151,6 +152,7 @@ elixir(function (mix) {
     mix.copy("node_modules/font-awesome/fonts", "public/fonts/");
     mix.copy('vendor/driftyco/ionicons/fonts', 'public/fonts/');
     mix.copy('resources/assets/fonts', 'public/fonts/');
+    mix.copy('resources/assets/csvs', 'public/csvs');
 
     /* copy packages */
     mix.copy('resources/assets/packages', 'public/packages');
@@ -166,4 +168,5 @@ elixir(function (mix) {
     mix.copy('public/videos', 'public/build/videos');
     mix.copy('public/others', 'public/build/others');
     mix.copy('public/packages', 'public/build/packages');
+    mix.copy('public/csvs', 'public/build/csvs');
 });
