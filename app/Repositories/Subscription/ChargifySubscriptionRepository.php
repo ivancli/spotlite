@@ -124,6 +124,10 @@ class ChargifySubscriptionRepository implements SubscriptionContract
             $families = Chargify::productFamily()->all();
             $productFamilies = array();
             foreach ($families as $index => $family) {
+                //remove starter family
+                if ($family->id == 780243) {
+                    continue;
+                }
                 $apiProducts = Chargify::product()->allByProductFamily($family->id);
                 if (isset($apiProducts->errors) || count($apiProducts) == 0) {
                     continue;
