@@ -254,8 +254,8 @@ class User extends Authenticatable
         Cache::tags(['users', "user_" . $this->getKey()])->flush();
         if (!is_null($this->apiSubscription)) {
             Cache::tags(["subscriptions.{$this->apiSubscription->id}"])->flush();
+            Cache::tags(['chargify', 'subscriptions', 'subscription', "subscriptions.{$this->apiSubscription->id}"])->flush();
         }
-        Cache::tags(['chargify', 'subscriptions', 'subscription', "subscriptions.{$this->apiSubscription->id}"])->flush();
     }
 }
 
