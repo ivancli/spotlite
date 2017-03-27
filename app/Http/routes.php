@@ -74,6 +74,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('product', 'Product\ProductController', ['except' => [
             'edit'
         ]]);
+
+        Route::get('positioning', 'Product\PositioningController')->name('positioning.index');
+
+
         //category routes
         Route::put('category/order', 'Product\CategoryController@updateOrder')->name('category.order');
         Route::get('category/{category_id}/site/usage', 'Product\CategoryController@getUserSiteCredit')->name('category.site.usage');

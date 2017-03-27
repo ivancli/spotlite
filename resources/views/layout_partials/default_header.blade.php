@@ -23,6 +23,11 @@
                             <i class="fa fa-tag"></i>&nbsp;PRODUCTS
                         </a>
                     </li>
+                    <li class="{{Style::set_active_starts_with('positioning')}}">
+                        <a href="{{route('positioning.index')}}">
+                            <i class="fa fa-tag"></i>&nbsp;POSITIONING
+                        </a>
+                    </li>
                     <li class="{{Style::set_active('alert')}}">
                         <a href="{{route('alert.index')}}">
                             <i class="fa fa-bell-o"></i>&nbsp;ALERTS
