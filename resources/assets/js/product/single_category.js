@@ -80,12 +80,12 @@ function btnAddProductOnClick(el) {
         "method": "post",
         "data": {
             "category_id": $(el).closest(".category-wrapper").attr('data-category-id'),
-            "product_name": $categoryWrapper.find(".txt-product-name").val(),
+            "product_name": $categoryWrapper.find(".frm-store-product").find(".txt-product-name").val(),
             "meta": {
-                "brand": $categoryWrapper.find(".txt-product-meta-brand").val(),
-                "supplier": $categoryWrapper.find(".txt-product-meta-supplier").val(),
-                "sku": $categoryWrapper.find(".txt-product-meta-sku").val(),
-                "cost_price": $categoryWrapper.find(".txt-product-meta-cost-price").val()
+                "brand": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-brand").val(),
+                "supplier": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-supplier").val(),
+                "sku": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-sku").val(),
+                "cost_price": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-cost-price").val()
             }
         },
         "dataType": "json",
