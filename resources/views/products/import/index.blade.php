@@ -2,7 +2,7 @@
     <div class="col-md-6">
         <div class="row">
             <div class="col-sm-12">
-                <p>Please download <a href="{{asset('build/csvs/import_product_template.csv')}}">import products template</a> in order to import in correct format.</p>
+                <p>Please download <a href="{{asset('build/csvs/import_products_template.csv')}}">import products template</a> in order to import in correct format.</p>
             </div>
             <div class="col-sm-12">
                 <div class="row">
@@ -23,7 +23,7 @@
                         </ul>
                     </div>
                 </div>
-                <form action="{{route('product_import.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal sl-form-horizontal" onsubmit="submitProductImport(this); return false">
+                <form action="{{route('product_import.product.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal sl-form-horizontal" onsubmit="submitProductImport(this); return false">
                     {!! csrf_field() !!}
                     {{--TODO options here--}}
                     <input type="hidden" name="import_type" value="product">

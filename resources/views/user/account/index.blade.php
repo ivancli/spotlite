@@ -16,7 +16,7 @@
         <!-- Tabs within a box -->
         <ul class="nav nav-tabs ui-sortable-handle">
             <li class="active"><a href="#user-settings" data-toggle="tab" aria-expanded="false">Edit Profile</a></li>
-            <li><a href="#import-products" data-toggle="tab" aria-expanded="false">Import Products</a></li>
+            <li><a href="#import-products" data-toggle="tab" aria-expanded="false">Bulk Import</a></li>
             <li><a href="#user-domains" data-toggle="tab" aria-expanded="false">Site Names</a></li>
             <li><a href="#user-password" data-toggle="tab" aria-expanded="false">Reset Password</a></li>
             <li><a href="#display-settings" data-toggle="tab" aria-expanded="true">Display Settings</a></li>

@@ -69,7 +69,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
         //product import
-        Route::resource('product_import', 'Product\ImportProductController');
+        Route::post('product_import/product', 'Product\ImportProductController@storeProducts')->name('product_import.product.store');
 
         //product routes
         Route::put('product/order', 'Product\ProductController@updateOrder')->name('product.order');

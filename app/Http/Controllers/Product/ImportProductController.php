@@ -46,7 +46,7 @@ class ImportProductController extends Controller
      * @param StoreValidator $storeValidator
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function store(StoreValidator $storeValidator)
+    public function storeProducts(StoreValidator $storeValidator)
     {
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
@@ -56,46 +56,24 @@ class ImportProductController extends Controller
         $errors = [];
 
         /*TODO data collection and validation*/
-        if ($this->request->get('import_type') == 'product') {
-            //import products
-            $result = Excel::load($file->getPathname(), function ($reader) use (&$products, &$errors) {
-                $data = $reader->all();
-                foreach ($data as $index => $product) {
-                    $rowNumber = $index + 2;
-                    if (!isset($product->product_name) || is_null($product->product_name)) {
-                        $errors[] = "Product name is missing in 'Import Products' row #{$rowNumber}";
-                    }
-                    if (!isset($product->category_name) || is_null($product->category_name)) {
-                        $errors[] = "Category name is missing in 'Import Products' row #{$rowNumber}";
-                    }
-                    $productData = $product->all();
-                    $products [] = $productData;
+        //import products
+        $result = Excel::load($file->getPathname(), function ($reader) use (&$products, &$errors) {
+            $data = $reader->all();
+            foreach ($data as $index => $product) {
+                $rowNumber = $index + 2;
+                if (!isset($product->product_name) || is_null($product->product_name)) {
+                    $errors[] = "Product name is missing in 'Import Products' row #{$rowNumber}";
                 }
-            });
-
-            $products = collect($products);
-            $product_names = $products->pluck('product_name')->all();
-        } elseif ($this->request->get('import_type') == 'site') {
-            //import sites
-            Excel::selectSheets('Import Sites')->load($file->getPathname(), function ($reader) use (&$products, $product_names, &$errors) {
-                $data = $reader->all();
-                foreach ($data as $index => $site) {
-                    $rowNumber = $index + 2;
-                    if (!isset($site->product_name) || is_null($site->product_name)) {
-                        $errors[] = "Product name is missing in 'Import Sites' row #{$rowNumber}";
-                    } elseif (!in_array($site->product_name, $product_names)) {
-                        $errors[] = "Product '{$site->product_name}' in 'Import Sites' row #{$rowNumber} does not exist in 'Import Products'";
-                    }
-                    $products->each(function ($product, $index) use ($products, $site) {
-                        if ($product['product_name'] == $site->product_name) {
-                            $product['sites'][] = $site->all();
-                            $products->put($index, $product);
-                        }
-                    });
-
+                if (!isset($product->category_name) || is_null($product->category_name)) {
+                    $errors[] = "Category name is missing in 'Import Products' row #{$rowNumber}";
                 }
-            });
-        }
+                $productData = $product->all();
+                $products [] = $productData;
+            }
+        });
+
+        $products = collect($products);
+        $product_names = $products->pluck('product_name')->all();
 
         if (count($errors) > 0) {
             return response(compact(['errors']), 422);
@@ -112,7 +90,8 @@ class ImportProductController extends Controller
         $products->each(function ($product, $index) use ($user, $categoryNames, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
             $rowNumber = $index + 2;
             /*IMPORT CATEGORIES*/
-            if (!in_array($product['category_name'], $categoryNames)) {
+            $category = $user->categories()->where('category_name', $product['category_name'])->first();
+            if (is_null($category)) {
                 if ($this->request->has('no_new_categories') && $this->request->get('no_new_categories') == 'on') {
                     $warnings[] = "Category name in 'Import Products' row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
@@ -122,8 +101,6 @@ class ImportProductController extends Controller
                     )));
                     $categoryCounter++;
                 }
-            } else {
-                $category = $user->categories()->where('category_name', $product['category_name'])->first();
             }
             $existingProduct = $category->products()->where('product_name', $product['product_name'])->first();
             if (is_null($existingProduct)) {
@@ -146,13 +123,44 @@ class ImportProductController extends Controller
 //                $siteCounter++;
 //            }
         });
-//        $status = true;
+        $status = true;
 //
 //        /*IMPORT PRODUCTS*/
         return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
 //
 //
 //        /*IMPORT SITES*/
+    }
+
+    public function storeSite(StoreValidator $storeValidator)
+    {
+
+        $storeValidator->validate($this->request->all());
+        $user = auth()->user();
+        $file = $this->request->file('file');
+
+        $products = [];
+        $errors = [];
+
+        //import sites
+        Excel::selectSheets('Import Sites')->load($file->getPathname(), function ($reader) use (&$products, $product_names, &$errors) {
+            $data = $reader->all();
+            foreach ($data as $index => $site) {
+                $rowNumber = $index + 2;
+                if (!isset($site->product_name) || is_null($site->product_name)) {
+                    $errors[] = "Product name is missing in 'Import Sites' row #{$rowNumber}";
+                } elseif (!in_array($site->product_name, $product_names)) {
+                    $errors[] = "Product '{$site->product_name}' in 'Import Sites' row #{$rowNumber} does not exist in 'Import Products'";
+                }
+                $products->each(function ($product, $index) use ($products, $site) {
+                    if ($product['product_name'] == $site->product_name) {
+                        $product['sites'][] = $site->all();
+                        $products->put($index, $product);
+                    }
+                });
+
+            }
+        });
     }
 
     /**
