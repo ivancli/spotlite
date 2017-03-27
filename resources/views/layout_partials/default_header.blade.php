@@ -25,7 +25,7 @@
                     </li>
                     <li class="{{Style::set_active_starts_with('positioning')}}">
                         <a href="{{route('positioning.index')}}">
-                            <i class="fa fa-tag"></i>&nbsp;POSITIONING
+                            <i class="fa fa-street-view"></i>&nbsp;POSITIONING
                         </a>
                     </li>
                     <li class="{{Style::set_active('alert')}}">
@@ -43,12 +43,13 @@
                             <li class="{{Style::set_active_and(array('admin', 'app_preference'))}}">
                                 <a href="{{route("admin.app_preference.index")}}">
                                     <i class="fa fa-gears"></i>
+                                    <span class="hidden-lg hidden-md hidden-sm">App Preferences</span>
                                 </a>
                             </li>
                         @endif
                         <li class="dropdown {{Style::set_active_and(array('admin', 'site'))}} {{Style::set_active_and(array('admin', 'domain'))}}">
                             <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-files-o"></i>&nbsp;<i class="fa fa-caret-down"></i>
+                                <i class="fa fa-files-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Crawler</span>&nbsp;<i class="fa fa-caret-down"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 @if(auth()->user()->can(['manage_admin_domain', 'read_admin_domain', 'create_admin_domain', 'update_admin_domain_preference', 'delete_admin_domain']))
@@ -70,7 +71,7 @@
                         @if(auth()->user()->can('manage_user'))
                             <li class="dropdown {{Style::set_active_starts_with('um.')}}">
                                 <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-users"></i>&nbsp;<i class="fa fa-caret-down"></i>
+                                    <i class="fa fa-users"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Users</span>&nbsp;<i class="fa fa-caret-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="{{Style::set_active_starts_with('um.user')}}">
@@ -102,7 +103,7 @@
                         @endif
                         <li class="dropdown {{Style::set_active_starts_with('log.')}}">
                             <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-file-text-o"></i>&nbsp;<i class="fa fa-caret-down"></i>
+                                <i class="fa fa-file-text-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">System Logs</span>&nbsp;<i class="fa fa-caret-down"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 @if(auth()->user()->can('read_crawler_log'))
@@ -126,7 +127,7 @@
                         @if(auth()->user()->can(['manage_terms_and_conditions', 'manage_privacy_policies']))
                             <li class="dropdown {{Style::set_active_starts_with('term_and_condition')}} {{Style::set_active_starts_with('privacy_policy')}}">
                                 <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-file-archive-o"></i>&nbsp;<i class="fa fa-caret-down"></i>
+                                    <i class="fa fa-file-archive-o"></i>&nbsp;<span class="hidden-lg hidden-md hidden-sm">Manage Legals</span>&nbsp;<i class="fa fa-caret-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="{{Style::set_active_starts_with('term_and_condition')}}">

@@ -75,7 +75,7 @@ Route::group(['middleware' => ['auth']], function () {
             'edit'
         ]]);
 
-        Route::get('positioning', 'Product\PositioningController')->name('positioning.index');
+        Route::get('positioning', 'Product\PositioningController@index')->name('positioning.index');
 
 
         //category routes

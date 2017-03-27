@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Product', 'user_id', 'user_id');
     }
 
+    public function productMetas()
+    {
+        return $this->hasManyThrough('App\Models\ProductMeta', 'App\Models\Product', 'user_id', 'product_id', 'user_id');
+    }
+
     public function dashboards()
     {
         return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->orderBy("dashboard_order", "asc");
