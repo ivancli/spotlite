@@ -76,6 +76,7 @@ Route::group(['middleware' => ['auth']], function () {
         ]]);
 
         Route::get('positioning', 'Product\PositioningController@index')->name('positioning.index');
+        Route::post('positioning/show', 'Product\PositioningController@show')->name('positioning.show');
 
 
         //category routes
