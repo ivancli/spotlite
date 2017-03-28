@@ -117,7 +117,7 @@ class PositioningController extends Controller
                     $productBuilder = $productBuilder->orderBy('ABS(reference.recent_price - cheapestSite.recent_price)');
                 } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
 
-                } else {
+                } else{
                     $productBuilder = $productBuilder->orderBy($orderColumn, $orderSequence);
                 }
             }

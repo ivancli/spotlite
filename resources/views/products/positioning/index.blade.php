@@ -24,7 +24,8 @@
     <div class="row">
         <div class="col-sm-12">
             <p class="text-muted font-size-17">
-                The Positioning screen provides a powerful yet easy to use way of quickly seeing how your prices compare to the competitors across all categories and products.
+                The Positioning screen provides a powerful yet easy to use way of quickly seeing how your prices compare
+                to the competitors across all categories and products.
             </p>
         </div>
     </div>
@@ -44,10 +45,12 @@
                 <div class="box-body positioning-table-content">
                     <div class="row m-b-20">
                         <div class="col-sm-12">
-                            <form action="{{route('positioning.show')}}" id="frm-positioning" method="post" class="form-inline sl-form-inline" onsubmit="showProducts(this); return false;">
+                            <form action="{{route('positioning.show')}}" id="frm-positioning" method="post"
+                                  class="form-inline sl-form-inline" onsubmit="showProducts(this); return false;">
                                 <div class="col-sm-12">
                                     <label for="sel-reference" class="control-label">Reference site</label>&nbsp;
-                                    <select name="reference" id="sel-reference" class="form-control form-control-inline">
+                                    <select name="reference" id="sel-reference"
+                                            class="form-control form-control-inline">
                                         <option value=""></option>
                                         @foreach($domains as $domain)
                                             <option value="{{$domain}}"
@@ -62,8 +65,10 @@
                                     <label for="sel-position" class="control-label">Competitive position</label>&nbsp;
                                     <select name="position" id="sel-position" class="form-control form-control-inline">
                                         <option value="">all products</option>
-                                        <option value="not_cheapest">products where reference site is not cheapest</option>
-                                        <option value="most_expensive">products where reference site is most expensive</option>
+                                        <option value="not_cheapest">products where reference site is not cheapest
+                                        </option>
+                                        <option value="most_expensive">products where reference site is most expensive
+                                        </option>
                                         <option value="cheapest">products where reference site is cheapest</option>
                                     </select>
                                 </div>
@@ -77,8 +82,10 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-12">
-                                    <label for="sel-exclude-competitors" class="control-label">Exclude competitors</label>&nbsp;
-                                    <select name="exc_competitors[]" id="sel-exclude-competitors" multiple="multiple" class="form-control form-control-inline">
+                                    <label for="sel-exclude-competitors" class="control-label">Exclude
+                                        competitors</label>&nbsp;
+                                    <select name="exc_competitors[]" id="sel-exclude-competitors" multiple="multiple"
+                                            class="form-control form-control-inline">
                                         @foreach($domains as $domain)
                                             <option value="{{$domain}}">{{$domain}}</option>
                                         @endforeach
@@ -206,7 +213,7 @@
                         }
                     },
                     {
-                        "name": 'cheapest_site_url',
+                        "name": 'cheapestSite.site_url',
                         "data": function (data) {
                             if (typeof data.cheapest_site_url != 'undefined') {
                                 return data.cheapest_site_url;
@@ -215,7 +222,7 @@
                         }
                     },
                     {
-                        "name": 'cheapest_recent_price',
+                        "name": 'cheapestSite.recent_price',
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined') {
                                 if (data.cheapest_recent_price != null) {
