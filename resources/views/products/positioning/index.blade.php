@@ -230,7 +230,7 @@
                         "data": function (data) {
 
                             if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined') {
-                                return Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price));
+                                return '$' + (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))).formatMoney(2, '.', ',');
                             }
                             return 'n/a'
                         }
@@ -239,7 +239,7 @@
                         "name": 'percent_diff_ref_cheapest',
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined') {
-                                return (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))) / parseFloat(data.reference_recent_price);
+                                return ((Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))) / parseFloat(data.reference_recent_price) * 100).formatMoney(2, '.', ',');
                             }
                             return 'n/a'
                         }
