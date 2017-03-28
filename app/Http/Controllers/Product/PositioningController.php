@@ -132,6 +132,11 @@ class PositioningController extends Controller
             $productBuilder = $productBuilder->take($this->request->get('length'));
         }
         $products = $productBuilder->get();
+
+        /*TODO for prototype remove this pls*/
+        foreach($products as $product){
+            $product->reference_recent_price = rand(1, 1000);
+        }
         $draw = $this->request->get('draw');
         $data = $products;
 

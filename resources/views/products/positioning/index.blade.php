@@ -202,7 +202,7 @@
 //                            } else {
 //                                return 'n/a'
 //                            }
-                            return "$" + (Math.random()*100).formatMoney(2, '.', ',');
+                            return "$" + (Math.random() * 100).formatMoney(2, '.', ',');
                         }
                     },
                     {
@@ -229,12 +229,8 @@
                         "name": 'diff_ref_cheapest',
                         "data": function (data) {
 
-                            if (typeof data.cheapestSites != 'undefined' && data.cheapestSites.length > 0) {
-                                if (data.cheapestSites[0].recent_price != null) {
-                                    if (typeof data.recent_price != 'undefined' && data.recent_price != null) {
-                                        return Math.abs(parseFloat(data.recent_price) - parseFloat(data.cheapestSites[0].recent_price));
-                                    }
-                                }
+                            if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined') {
+                                return Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price));
                             }
                             return 'n/a'
                         }
@@ -242,13 +238,8 @@
                     {
                         "name": 'percent_diff_ref_cheapest',
                         "data": function (data) {
-
-                            if (typeof data.cheapestSites != 'undefined' && data.cheapestSites.length > 0) {
-                                if (data.cheapestSites[0].recent_price != null) {
-                                    if (typeof data.recent_price != 'undefined' && data.recent_price != null) {
-                                        return (Math.abs(parseFloat(data.recent_price) - parseFloat(data.cheapestSites[0].recent_price))) / parseFloat(data.recent_price);
-                                    }
-                                }
+                            if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined') {
+                                return (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))) / parseFloat(data.reference_recent_price);
                             }
                             return 'n/a'
                         }
