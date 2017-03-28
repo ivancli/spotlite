@@ -98,14 +98,17 @@ class PositioningController extends Controller
 
         if ($this->request->has('search') && is_array($this->request->get('search')) && !empty(array_get($this->request->get('search'), 'value'))) {
             $keyword = array_get($this->request->get('search'), 'value');
-            $productBuilder->where('product_name', 'LIKE', "%{$keyword}%")
-                ->orWhere('category_name', 'LIKE', "%{$keyword}%");
-//            if ($this->request->has('reference')) {
-//                $productBuilder->orWhere('reference.site_url', 'LIKE', "%{$keyword}%");
-//            }
-            $productBuilder->orWhere('cheapestSite.site_url', 'LIKE', "%{$keyword}%")
-                ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
-                ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%");
+            $productBuilder->where(function($query) use($keyword){
+                $query->where('product_name', 'LIKE', "%{$keyword}%")
+                    ->orWhere('category_name', 'LIKE', "%{$keyword}%");
+//                if ($this->request->has('reference')) {
+//                    $query->orWhere('reference.site_url', 'LIKE', "%{$keyword}%");
+//                }
+                $query->orWhere('cheapestSite.site_url', 'LIKE', "%{$keyword}%")
+                    ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
+                    ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%");
+            });
+
         }
 
         if ($this->request->has('order')) {
