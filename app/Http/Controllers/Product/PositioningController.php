@@ -61,7 +61,7 @@ class PositioningController extends Controller
 
         if ($this->request->has('reference')) {
             $referenceDomain = $this->request->get('reference');
-            $referenceQuery = DB::raw('(SELECT * FROM sites WHERE site_url LIKE "' . addslashes(urlencode($referenceDomain)) . '" LIMIT 1) AS reference');
+            $referenceQuery = DB::raw('(SELECT * FROM sites WHERE site_url LIKE "' . addslashes(urlencode($referenceDomain)) . '") AS reference');
 
 //            $referenceQuery = DB::table('sites as reference');
 //            $referenceQuery->where('reference.site_url', 'LIKE', "%{$referenceDomain}%");
@@ -100,12 +100,12 @@ class PositioningController extends Controller
             $keyword = array_get($this->request->get('search'), 'value');
             $productBuilder->where('product_name', 'LIKE', "%{$keyword}%")
                 ->orWhere('category_name', 'LIKE', "%{$keyword}%");
-            if ($this->request->has('reference')) {
-                $productBuilder->orWhere('reference.site_url', 'LIKE', "%{$keyword}%");
-            }
-            $productBuilder->orWhere('cheapestSites.site_url', 'LIKE', "%{$keyword}%")
-                ->orWhere('cheapestSites.recent_price', 'LIKE', "%{$keyword}%")
-                ->orWhere('cheapestSites.recent_price', 'LIKE', "%{$keyword}%");
+//            if ($this->request->has('reference')) {
+//                $productBuilder->orWhere('reference.site_url', 'LIKE', "%{$keyword}%");
+//            }
+            $productBuilder->orWhere('cheapestSite.site_url', 'LIKE', "%{$keyword}%")
+                ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
+                ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%");
         }
 
         if ($this->request->has('order')) {
@@ -114,7 +114,7 @@ class PositioningController extends Controller
             $orderSequence = array_get($order, 'dir');
             if ($orderColumn) {
                 if ($orderColumn == 'diff_ref_cheapest') {
-                    $productBuilder = $productBuilder->orderBy('ABS(reference.recent_price - cheapestSites.recent_price)');
+                    $productBuilder = $productBuilder->orderBy('ABS(reference.recent_price - cheapestSite.recent_price)');
                 } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
 
                 } else {
@@ -134,6 +134,7 @@ class PositioningController extends Controller
         $products = $productBuilder->get();
         $draw = $this->request->get('draw');
         $data = $products;
+
 
         return compact(['data', 'draw', 'recordTotal', 'recordsFiltered']);
     }

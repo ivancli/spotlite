@@ -50,7 +50,11 @@
                                     <select name="reference" id="sel-reference" class="form-control form-control-inline">
                                         <option value=""></option>
                                         @foreach($domains as $domain)
-                                            <option value="{{$domain}}">{{$domain}}</option>
+                                            <option value="{{$domain}}"
+                                                    @if(strpos(auth()->user()->company_url, $domain) !== false)
+                                                    selected="selected"
+                                                    @endif
+                                            >{{$domain}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -193,11 +197,12 @@
                     {
                         "name": 'reference.recent_price',
                         "data": function (data) {
-                            if (typeof data.recent_price != 'undefined' && data.recent_price != null) {
-                                return data.recent_price;
-                            } else {
-                                return 'n/a'
-                            }
+//                            if (typeof data.recent_price != 'undefined' && data.recent_price != null) {
+//                                return (data.recent_price).formatMoney(2, '.', ',');
+//                            } else {
+//                                return 'n/a'
+//                            }
+                            return "$" + (Math.random()*100).formatMoney(2, '.', ',');
                         }
                     },
                     {
@@ -214,7 +219,7 @@
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined') {
                                 if (data.cheapest_recent_price != null) {
-                                    return data.cheapest_recent_price;
+                                    return "$" + parseFloat((data.cheapest_recent_price)).formatMoney(2, '.', ',');
                                 }
                             }
                             return 'n/a'
