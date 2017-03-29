@@ -52,12 +52,12 @@
                                     <select name="reference" id="sel-reference"
                                             class="form-control form-control-inline">
                                         <option value=""></option>
-                                        @foreach($domains as $domain)
+                                        @foreach($domains as $domain=>$domainName)
                                             <option value="{{$domain}}"
                                                     @if(strpos(auth()->user()->company_url, $domain) !== false)
                                                     selected="selected"
                                                     @endif
-                                            >{{$domain}}</option>
+                                            >{{$domainName}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -86,9 +86,6 @@
                                         competitors</label>&nbsp;
                                     <select name="exc_competitors[]" id="sel-exclude-competitors" multiple="multiple"
                                             class="form-control form-control-inline">
-                                        @foreach($domains as $domain)
-                                            <option value="{{$domain}}">{{$domain}}</option>
-                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-12">
@@ -145,9 +142,14 @@
 @section('scripts')
     <script>
         var tblProducts = null;
+        var domains = {!! json_encode($domains) !!};
 
         $(function () {
+            populateExcludeCompetitors();
             $("select").select2();
+            $("#sel-reference").on("change", function () {
+                populateExcludeCompetitors();
+            });
 
             tblProducts = $("#tbl-products").DataTable({
                 "pagingType": "full_numbers",
@@ -204,25 +206,47 @@
                     {
                         "name": 'reference.recent_price',
                         "data": function (data) {
-//                            if (typeof data.recent_price != 'undefined' && data.recent_price != null) {
-//                                return (data.recent_price).formatMoney(2, '.', ',');
-//                            } else {
-//                                return 'n/a'
-//                            }
-                            return "$" + (Math.random() * 100).formatMoney(2, '.', ',');
+                            if (typeof data.reference_recent_price != 'undefined' && data.reference_recent_price != null) {
+                                return "$" + parseFloat(data.reference_recent_price).formatMoney(2, '.', ',');
+                            } else {
+                                return 'n/a'
+                            }
                         }
                     },
                     {
-                        "name": 'cheapestSite.site_url',
+                        "name": 'diff_cheapest',
                         "data": function (data) {
-                            if (typeof data.cheapest_site_url != 'undefined') {
-                                return data.cheapest_site_url;
+
+                            if (typeof data.cheapest_site_url != 'undefined' && data.cheapest_site_url != null) {
+                                console.info(data);
+                                var site_urls = data.cheapest_site_url.split('$ $');
+                                console.info('site_urls', site_urls);
+                                var $container = $("<div>");
+                                $.each(site_urls, function (index, site_url) {
+                                    $container.append(
+                                        $("<div>").append(
+                                            $("<a>").attr({
+                                                "href": site_url,
+                                                "target": "_blank"
+                                            }).text(function () {
+                                                var siteUrlText = site_url;
+                                                $.each(domains, function (domain, domainName) {
+                                                    if (site_url.indexOf(domain) > -1) {
+                                                        siteUrlText = domainName
+                                                    }
+                                                });
+                                                return siteUrlText;
+                                            })
+                                        )
+                                    )
+                                });
+                                return $container.html();
                             }
                             return 'n/a'
                         }
                     },
                     {
-                        "name": 'cheapestSite.recent_price',
+                        "name": 'percent_diff_cheapest',
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined') {
                                 if (data.cheapest_recent_price != null) {
@@ -257,6 +281,24 @@
                 }
             });
         });
+
+        function populateExcludeCompetitors() {
+            var $selExclude = $("#sel-exclude-competitors");
+            var excludeValue = $selExclude.val();
+            $selExclude.empty();
+            var reference = $("#sel-reference").val();
+            $.each(domains, function (domain, domainName) {
+                if (domain != reference) {
+                    $selExclude.append(
+                        $("<option>").attr({
+                            "value": domain
+                        }).text(domainName)
+                    )
+                }
+            });
+            $selExclude.select2();
+            $selExclude.val(excludeValue).trigger('change');
+        }
 
         function showProducts(el) {
             tblProducts.ajax.reload();

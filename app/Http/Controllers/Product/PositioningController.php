@@ -27,7 +27,18 @@ class PositioningController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $domains = $user->sites->sortBy('site_url')->pluck('domain')->unique();
+        $domains = [];
+        foreach ($user->sites as $site) {
+            if (!is_null($site->userDomainName) && !isset($domains[$site->domain])) {
+                $domains[$site->domain] = $site->userDomainName;
+            } elseif (!isset($domains[$site->domain])) {
+                $domains[$site->domain] = $site->domain;
+            }
+        }
+        $domains = array_sort($domains, function ($value) {
+            return $value;
+        });
+
         $categories = $user->categories;
         $productMetas = $user->productMetas;
         $brands = $productMetas->sortBy('brand')->pluck('brand')->unique();
@@ -46,13 +57,13 @@ class PositioningController extends Controller
         $productBuilder = DB::table('products AS products')->where('products.user_id', '=', $user->getKey());
 
         $select = [
-            'cheapestSite.site_url as cheapest_site_url',
+            'cheapestSite.site_urls as cheapest_site_url',
             'cheapestSite.recent_price as cheapest_recent_price',
             'products.*',
             'categories.*',
         ];
 
-        $cheapestSiteQuery = DB::raw('(SELECT a.* FROM sites a JOIN (SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) b ON(a.recent_price=b.recent_price AND a.product_id=b.product_id)) AS cheapestSite');
+        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) GROUP BY product_id) AS cheapestSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
@@ -61,7 +72,7 @@ class PositioningController extends Controller
 
         if ($this->request->has('reference')) {
             $referenceDomain = $this->request->get('reference');
-            $referenceQuery = DB::raw('(SELECT * FROM sites WHERE site_url LIKE "' . addslashes(urlencode($referenceDomain)) . '") AS reference');
+            $referenceQuery = DB::raw('(SELECT * FROM sites WHERE site_url LIKE "%' . addslashes(urlencode($referenceDomain)) . '%") AS reference');
 
 //            $referenceQuery = DB::table('sites as reference');
 //            $referenceQuery->where('reference.site_url', 'LIKE', "%{$referenceDomain}%");
@@ -71,6 +82,9 @@ class PositioningController extends Controller
             });
             $select[] = 'reference.site_url as reference_site_url';
             $select[] = 'reference.recent_price as reference_recent_price';
+            $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price) as diff_cheapest');
+            $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price as percent_diff_cheapest');
+
         }
 
         if ($this->request->has('category')) {
@@ -98,18 +112,23 @@ class PositioningController extends Controller
 
         if ($this->request->has('search') && is_array($this->request->get('search')) && !empty(array_get($this->request->get('search'), 'value'))) {
             $keyword = array_get($this->request->get('search'), 'value');
-            $productBuilder->where(function($query) use($keyword){
+            $productBuilder->where(function ($query) use ($keyword) {
                 $query->where('product_name', 'LIKE', "%{$keyword}%")
                     ->orWhere('category_name', 'LIKE', "%{$keyword}%");
-//                if ($this->request->has('reference')) {
-//                    $query->orWhere('reference.site_url', 'LIKE', "%{$keyword}%");
-//                }
-                $query->orWhere('cheapestSite.site_url', 'LIKE', "%{$keyword}%")
+                if ($this->request->has('reference')) {
+                    $query->orWhere('reference.recent_price', 'LIKE', "%{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'), 'LIKE', "%{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price'), 'LIKE', "%{$keyword}%");
+                }
+                $query->orWhere('cheapestSite.site_urls', 'LIKE', "%{$keyword}%")
                     ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
                     ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%");
             });
 
         }
+        $productBuilder->select($select);
+        $recordTotal = $user->products()->count();
+        $recordsFiltered = $productBuilder->count();
 
         if ($this->request->has('order')) {
             $order = array_first($this->request->get('order'));
@@ -117,17 +136,15 @@ class PositioningController extends Controller
             $orderSequence = array_get($order, 'dir');
             if ($orderColumn) {
                 if ($orderColumn == 'diff_ref_cheapest') {
-                    $productBuilder = $productBuilder->orderBy('ABS(reference.recent_price - cheapestSite.recent_price)');
+                    $productBuilder = $productBuilder->orderBy('diff_cheapest', $orderSequence);
                 } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
-
-                } else{
+                    $productBuilder = $productBuilder->orderBy('percent_diff_cheapest', $orderSequence);
+                } else {
                     $productBuilder = $productBuilder->orderBy($orderColumn, $orderSequence);
                 }
             }
         }
-        $productBuilder->select($select);
-        $recordTotal = $user->products()->count();
-        $recordsFiltered = $productBuilder->count();
+
         if ($this->request->has('start')) {
             $productBuilder = $productBuilder->skip($this->request->get('start'));
         }
@@ -137,12 +154,11 @@ class PositioningController extends Controller
         $products = $productBuilder->get();
 
         /*TODO for prototype remove this pls*/
-        foreach($products as $product){
-            $product->reference_recent_price = rand(1, 1000);
-        }
+//        foreach ($products as $product) {
+//            $product->reference_recent_price = rand(1, 1000);
+//        }
         $draw = $this->request->get('draw');
         $data = $products;
-
 
         return compact(['data', 'draw', 'recordTotal', 'recordsFiltered']);
     }
