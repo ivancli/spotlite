@@ -170,6 +170,7 @@
                         d.category = $("#sel-category").val();
                         d.brand = $("#sel-brand").val();
                         d.supplier = $("#sel-supplier").val();
+                        d.exclude = $("#sel-exclude-competitors").val();
 
                         $.each(d.order, function (index, order) {
                             if (typeof d.columns[d.order[index].column] != "undefined") {

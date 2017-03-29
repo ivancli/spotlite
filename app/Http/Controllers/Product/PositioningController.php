@@ -65,8 +65,20 @@ class PositioningController extends Controller
             'categories.*',
         ];
 
-        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) GROUP BY product_id) AS cheapestSite');
-        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) GROUP BY product_id) AS expensiveSite');
+        $query = "";
+        if ($this->request->has('exclude') && is_array($this->request->get('exclude'))) {
+            $query = " WHERE ";
+            foreach ($this->request->get('exclude') as $index => $exclude) {
+                if ($index != 0) {
+                    $query .= " AND ";
+                }
+                $query .= " a.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+            }
+        }
+
+
+        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $query . ' GROUP BY product_id) AS cheapestSite');
+        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $query . ' GROUP BY product_id) AS expensiveSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
@@ -138,7 +150,10 @@ class PositioningController extends Controller
         if ($this->request->has('position') && !empty($this->request->get('position'))) {
             switch ($this->request->get('position')) {
                 case "not_cheapest":
-                    $productBuilder->where(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'), '!=', 0);
+                    $productBuilder->where(function ($query) {
+                        $query->where(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'), '!=', 0)
+                            ->orWhereNull(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'));
+                    });
                     break;
                 case "most_expensive":
                     $productBuilder->where(DB::raw('ABS(expensiveSite.recent_price - reference.recent_price)'), '==', 0);
@@ -160,10 +175,18 @@ class PositioningController extends Controller
             $orderColumn = array_get($order, 'column');
             $orderSequence = array_get($order, 'dir');
             if ($orderColumn) {
-                if ($orderColumn == 'diff_ref_cheapest') {
-                    $productBuilder = $productBuilder->orderBy('diff_cheapest', $orderSequence);
+                if ($orderColumn == 'diff_ref_cheapest' && $this->request->has('reference')) {
+                    if ($this->request->has('reference')) {
+                        $productBuilder = $productBuilder->orderBy('diff_cheapest', $orderSequence);
+                    } else {
+                        $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
+                    }
                 } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
-                    $productBuilder = $productBuilder->orderBy('percent_diff_cheapest', $orderSequence);
+                    if ($this->request->has('reference')) {
+                        $productBuilder = $productBuilder->orderBy('percent_diff_cheapest', $orderSequence);
+                    } else {
+                        $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
+                    }
                 } else {
                     $productBuilder = $productBuilder->orderBy($orderColumn, $orderSequence);
                 }
