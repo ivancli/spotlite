@@ -13,6 +13,7 @@ use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\HistoricalPrice;
 use App\Models\User;
+use App\Models\UserPreference;
 use App\Validators\User\Profile\InitUpdateValidator;
 use App\Validators\User\Profile\UpdateValidator;
 use Illuminate\Http\Request;
@@ -98,6 +99,13 @@ class ProfileController extends Controller
         $this->mailingAgentRepo->editSubscriber($user->email, array(
             'Name' => $user->first_name . " " . $user->last_name,
         ));
+
+
+        $preferences = $request->get('preferences');
+        foreach ($preferences as $key => $preference) {
+            UserPreference::setPreference(auth()->user(), $key, $preference);
+        }
+
 
         if ($request->ajax()) {
             $status = true;
