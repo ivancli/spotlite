@@ -59,14 +59,20 @@ class PositioningController extends Controller
         $select = [
             'cheapestSite.site_urls as cheapest_site_url',
             'cheapestSite.recent_price as cheapest_recent_price',
+            'expensiveSite.site_urls as expensive_site_url',
+            'expensiveSite.recent_price as expensive_recent_price',
             'products.*',
             'categories.*',
         ];
 
         $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) GROUP BY product_id) AS cheapestSite');
+        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) GROUP BY product_id) AS expensiveSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
+        });
+        $productBuilder->leftJoin($expensiveSiteQuery, function ($join) {
+            $join->on('expensiveSite.product_id', '=', 'products.product_id');
         });
 
 
@@ -84,6 +90,8 @@ class PositioningController extends Controller
             $select[] = 'reference.recent_price as reference_recent_price';
             $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price) as diff_cheapest');
             $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price as percent_diff_cheapest');
+            $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price) as diff_expensive');
+            $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price)/reference.recent_price as percent_diff_expensive');
 
         }
 
@@ -126,6 +134,23 @@ class PositioningController extends Controller
             });
 
         }
+
+        if ($this->request->has('position') && !empty($this->request->get('position'))) {
+            switch ($this->request->get('position')) {
+                case "not_cheapest":
+                    $productBuilder->where(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'), '!=', 0);
+                    break;
+                case "most_expensive":
+                    $productBuilder->where(DB::raw('ABS(expensiveSite.recent_price - reference.recent_price)'), '==', 0);
+                    break;
+                case "cheapest":
+                    $productBuilder->where(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'), '=', 0);
+                    break;
+                default:
+            }
+        }
+
+
         $productBuilder->select($select);
         $recordTotal = $user->products()->count();
         $recordsFiltered = $productBuilder->count();

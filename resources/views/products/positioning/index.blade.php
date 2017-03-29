@@ -118,10 +118,10 @@
                                     <th>Category</th>
                                     <th>Product</th>
                                     <th>Reference site price</th>
-                                    <th>Cheapest site</th>
-                                    <th>Cheapest site price</th>
-                                    <th>Diff Cheapest</th>
-                                    <th>%Diff Cheapest</th>
+                                    <th>Cheapest</th>
+                                    <th>Cheapest $</th>
+                                    <th>Difference $</th>
+                                    <th>Difference %</th>
                                 </tr>
                                 </thead>
                                 <tbody>
