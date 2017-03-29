@@ -46,11 +46,11 @@
                     <div class="row m-b-20">
                         <div class="col-sm-12">
                             <form action="{{route('positioning.show')}}" id="frm-positioning" method="post"
-                                  class="form-inline sl-form-inline" onsubmit="showProducts(this); return false;">
-                                <div class="col-sm-12">
-                                    <label for="sel-reference" class="control-label">Reference site</label>&nbsp;
+                                  class="" onsubmit="showProducts(this); return false;">
+                                <div class="col-md-4 form-group">
+                                    <label for="sel-reference" class="control-label">Reference Site</label>&nbsp;
                                     <select name="reference" id="sel-reference"
-                                            class="form-control form-control-inline">
+                                            class="form-control">
                                         <option value=""></option>
                                         @foreach($domains as $domain=>$domainName)
                                             <option value="{{$domain}}"
@@ -61,46 +61,43 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-12">
-                                    <label for="sel-position" class="control-label">Competitive position</label>&nbsp;
-                                    <select name="position" id="sel-position" class="form-control form-control-inline">
-                                        <option value="">all products</option>
-                                        <option value="not_cheapest">products where reference site is not cheapest
-                                        </option>
-                                        <option value="most_expensive">products where reference site is most expensive
-                                        </option>
-                                        <option value="cheapest">products where reference site is cheapest</option>
+                                <div class="col-md-4 form-group">
+                                    <label for="sel-position" class="control-label">Competitive Position</label>&nbsp;
+                                    <select name="position" id="sel-position" class="form-control">
+                                        <option value="">All products</option>
+                                        <option value="not_cheapest">Reference site not cheapest</option>
+                                        <option value="most_expensive">Reference site most expensive</option>
+                                        <option value="cheapest">Reference site is cheapest</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-12">
+                                <div class="col-md-4 form-group">
                                     <label for="sel-cateogries" class="control-label">Categories</label>&nbsp;
-                                    <select name="category" id="sel-category" class="form-control form-control-inline">
-                                        <option value="">all categories</option>
+                                    <select name="category" id="sel-category" class="form-control">
+                                        <option value="">All categories</option>
                                         @foreach($categories as $category)
                                             <option value="{{$category->getKey()}}">{{$category->category_name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-12">
-                                    <label for="sel-exclude-competitors" class="control-label">Exclude
-                                        competitors</label>&nbsp;
+                                <div class="col-md-4 form-group">
+                                    <label for="sel-exclude-competitors" class="control-label">Exclude Competitors</label>&nbsp;
                                     <select name="exc_competitors[]" id="sel-exclude-competitors" multiple="multiple"
-                                            class="form-control form-control-inline">
+                                            class="form-control">
                                     </select>
                                 </div>
-                                <div class="col-sm-12">
+                                <div class="col-md-4 form-group">
                                     <label for="sel-brand" class="control-label">Brand</label>&nbsp;
-                                    <select name="brand" id="sel-brand" class="form-control form-control-inline">
-                                        <option value="">all brands</option>
+                                    <select name="brand" id="sel-brand" class="form-control">
+                                        <option value="">All brands</option>
                                         @foreach($brands as $brand)
                                             <option value="{{$brand}}">{{$brand}}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-12">
+                                <div class="col-md-4 form-group">
                                     <label for="sel-suppliers" class="control-label">Supplier</label>&nbsp;
-                                    <select name="supplier" id="sel-supplier" class="form-control form-control-inline">
-                                        <option value="">all suppliers</option>
+                                    <select name="supplier" id="sel-supplier" class="form-control">
+                                        <option value="">All suppliers</option>
                                         @foreach($suppliers as $supplier)
                                             <option value="{{$supplier}}">{{$supplier}}</option>
                                         @endforeach
