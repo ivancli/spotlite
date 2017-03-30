@@ -3,7 +3,7 @@
         <div class="row m-b-20">
             <div class="col-sm-12">
                 In order to Bulk Import data into SpotLite, please download the
-                <a href="{{asset('build/csvs/import_products_template.csv')}}" download>Bulk Import Products Template</a>
+                <a href="{{asset('build/csvs/import_categories_products_template.csv')}}" download>Bulk Import Categories And Products Template</a>
                 and
                 <a href="{{asset('build/csvs/import_urls_template.csv')}}" download>Bulk Import Product Page URLs Template</a>.
             </div>
@@ -24,7 +24,8 @@
                 <ul>
                     <li>Do not remove any columns (all Categories and Products are mandatory)</li>
                     <li>Do not leave Category or Product blank (each product must belong to a Category)</li>
-                    <li>Typos on Category or Product names will result in the creation of a new Category or Product</li>
+                    <li>Errors or misspellings on Category or Product names will result in the creation of new Category or Product</li>
+                    <li>There are 2 templates - first one for Categories and Products and second one for Product Page URLs. Make sure you save each template as a CSV file before uploading it on step</li>
                 </ul>
             </div>
         </div>
