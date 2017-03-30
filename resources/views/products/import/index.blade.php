@@ -1,39 +1,110 @@
 <div class="row">
     <div class="col-md-6">
-        <div class="row">
+        <div class="row m-b-20">
             <div class="col-sm-12">
-                <p>Please download <a href="{{asset('build/csvs/import_products_template.csv')}}">import products template</a> in order to import in correct format.</p>
+                In order to Bulk Import data into SpotLite, please download the
+                <a href="{{asset('build/csvs/import_products_template.csv')}}" download>Bulk Import Products Template</a>
+                and
+                <a href="{{asset('build/csvs/import_urls_template.csv')}}" download>Bulk Import Product Page URLs Template</a>.
             </div>
+        </div>
+
+        <div class="row m-b-20">
             <div class="col-sm-12">
+                <p><strong>Instructions:</strong></p>
+                <p>If you wish to import Categories, Products and Product Page URLs, please go to <span class="text-green">STEP 1</span>.</p>
+                <p>If you wish to import Product Page URLs only, please go to <span class="text-green">STEP 2</span>.</p>
+            </div>
+        </div>
+
+        <div class="row m-b-20">
+            <div class="col-sm-12">
+                <p><strong class="text-danger">Important:</strong></p>
+                <p>The following actions might cause errors:</p>
+                <ul>
+                    <li>Do not remove any columns (all Categories and Products are mandatory)</li>
+                    <li>Do not leave Category or Product blank (each product must belong to a Category)</li>
+                    <li>Typos on Category or Product names will result in the creation of a new Category or Product</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-b-20 import-product-container">
+            <div class="col-sm-12">
+                <h4 class="text-green">STEP 1 - IMPORT CATEGORIES AND PRODUCTS</h4>
+                <p>Choose the Bulk Import CSV file you wish to upload into SpotLite</p>
+
                 <div class="row">
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <ul class="text-danger errors-container">
-                        </ul>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="text-danger errors-container">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="text-danger warnings-container">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="text-success success-msg-container">
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <ul class="text-danger warnings-container">
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <ul class="text-success success-msg-container">
-                        </ul>
-                    </div>
-                </div>
+
                 <form action="{{route('product_import.product.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal sl-form-horizontal" onsubmit="submitProductImport(this); return false">
                     {!! csrf_field() !!}
-                    {{--TODO options here--}}
-                    <input type="hidden" name="import_type" value="product">
-
                     <div class="form-group">
                         <label for="file" class="col-sm-3 control-label">Select CSV File</label>
                         <div class="col-sm-9">
                             <input type="file" name="file" id="file" class="form-control">
                         </div>
                     </div>
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary btn-flat">CONFIRM</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <hr class="m-b-20">
+
+        <div class="row m-b-20 import-site-container">
+            <div class="col-sm-12">
+                <h4 class="text-green">STEP 2 - IMPORT PRODUCT PAGE URLs</h4>
+                <p>Since you already have Categories and Products set up, you may not wish to have new Categories or Products created or existing Product meta Data replaced by your Bulk Import data.
+                    If that's the case, please choose one or more options from the following:</p>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="text-danger errors-container">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="text-danger warnings-container">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="text-success success-msg-container">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action="{{route('product_import.product.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal sl-form-horizontal" onsubmit="submitProductImport(this); return false">
+                    {!! csrf_field() !!}
+                    <input type="hidden" name="import_type" value="product">
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="checkbox">
@@ -54,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group m-b-20">
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="checkbox">
                                 <label for="chk-no-product-meta-update">
@@ -64,8 +135,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="file" class="col-sm-3 control-label">Select CSV File</label>
+                        <div class="col-sm-9">
+                            <input type="file" name="file" id="file" class="form-control">
+                        </div>
+                    </div>
                     <div class="text-right">
-                        <button type="submit" class="btn btn-primary btn-flat">IMPORT</button>
+                        <button type="submit" class="btn btn-primary btn-flat">CONFIRM</button>
                     </div>
                 </form>
             </div>
@@ -87,7 +164,7 @@
             'processData': false,
             'success': function (response) {
                 if (response.status == true) {
-                    $(".success-msg-container").append(
+                    $(".import-product-container .success-msg-container").append(
                             $("<li>").text("Data has been imported to your account.")
                     ).append(function () {
                         if (response.categoryCounter > 0) {
@@ -116,7 +193,7 @@
                     });
 
                     $.each(response.warnings, function (index, warning) {
-                        $(".warnings-container").append(
+                        $(".import-product-container .warnings-container").append(
                                 $("<li>").text(warning)
                         )
                     });

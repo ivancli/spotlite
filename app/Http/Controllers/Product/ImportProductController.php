@@ -86,7 +86,7 @@ class ImportProductController extends Controller
         $siteCounter = 0;
         $productCounter = 0;
         $categoryCounter = 0;
-
+        dd($products);
         $products->each(function ($product, $index) use ($user, $categoryNames, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
             $rowNumber = $index + 2;
             /*IMPORT CATEGORIES*/
@@ -113,23 +113,26 @@ class ImportProductController extends Controller
                         'user_id' => $user->getKey()
                     ]));
                     $productCounter++;
-                    /*TODO handle meta after merging with SPOT-336*/
                 }
             }
-//            foreach ($product['sites'] as $site) {
-//                $existingProduct->sites()->save(new Site([
-//                    'site_url' => $site['url']
-//                ]));
-//                $siteCounter++;
-//            }
+
+            if (array_has($product, 'sku') && !is_null(array_get($product, 'sku'))) {
+
+            }
+            if (array_has($product, 'supplier') && !is_null(array_get($product, 'supplier'))) {
+
+            }
+            if (array_has($product, 'brand') && !is_null(array_get($product, 'brand'))) {
+
+            }
+            if (array_has($product, 'cost_price') && !is_null(array_get($product, 'cost_price'))) {
+
+            }
+
+
         });
         $status = true;
-//
-//        /*IMPORT PRODUCTS*/
         return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
-//
-//
-//        /*IMPORT SITES*/
     }
 
     public function storeSite(StoreValidator $storeValidator)
