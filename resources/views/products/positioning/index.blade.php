@@ -104,7 +104,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-12">
-                                    <button class="btn btn-primary">SHOW PRODUCTS</button>
+                                    <button class="btn btn-primary btn-flat">SHOW PRODUCTS</button>
                                 </div>
                             </form>
                         </div>
@@ -117,11 +117,11 @@
                                 <tr>
                                     <th>Category</th>
                                     <th>Product</th>
-                                    <th>Reference site price</th>
+                                    <th width="90">Reference site price</th>
                                     <th>Cheapest</th>
-                                    <th>Cheapest $</th>
-                                    <th>Difference $</th>
-                                    <th>Difference %</th>
+                                    <th width="90">Cheapest $</th>
+                                    <th width="90">Difference $</th>
+                                    <th width="90">Difference %</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -212,7 +212,7 @@
                         }
                     },
                     {
-                        "name": 'diff_cheapest',
+                        "name": 'cheapest_site_url',
                         "data": function (data) {
 
                             if (typeof data.cheapest_site_url != 'undefined' && data.cheapest_site_url != null) {
@@ -244,7 +244,7 @@
                         }
                     },
                     {
-                        "name": 'percent_diff_cheapest',
+                        "name": 'cheapest_recent_price',
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined') {
                                 if (data.cheapest_recent_price != null) {
@@ -276,6 +276,25 @@
                 ],
                 "initComplete": function (settings, json) {
                     $(".dataTables_empty").text('Click "SHOW PRODUCTS" button to load products.');
+                },
+                "rowCallback": function (row, data, index) {
+
+                    if (typeof data.cheapest_site_url != 'undefined' && data.cheapest_site_url != null) {
+                        console.info('data', data);
+                        var site_urls = data.cheapest_site_url.split('$ $');
+                        var reference = $("#sel-reference").val();
+                        var isMySite = false;
+                        if (reference) {
+                            $.each(site_urls, function (index, site_url) {
+                                if (site_url.indexOf(reference) > -1) {
+                                    isMySite = true;
+                                }
+                            });
+                        }
+                        if (isMySite) {
+                            $(row).addClass("success");
+                        }
+                    }
                 }
             });
         });
