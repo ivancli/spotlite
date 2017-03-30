@@ -25,7 +25,8 @@
                     <li>Do not remove any columns (all Categories and Products are mandatory)</li>
                     <li>Do not leave Category or Product blank (each product must belong to a Category)</li>
                     <li>Errors or misspellings on Category or Product names will result in the creation of new Category or Product</li>
-                    <li>There are 2 templates - first one for Categories and Products and second one for Product Page URLs. Make sure you save each template as a CSV file before uploading it on step</li>
+                    <li>There are 2 templates - first one for Categories and Products and second one for Product Page URLs. Make sure you save each template as a CSV file before uploading it on step 1
+                        and 2 respectively.</li>
                 </ul>
             </div>
         </div>
@@ -103,9 +104,8 @@
                         </div>
                     </div>
                 </div>
-                <form action="{{route('product_import.product.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal sl-form-horizontal" onsubmit="submitProductImport(this); return false">
+                <form action="{{route('product_import.site.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal sl-form-horizontal" onsubmit="submitURLImport(this); return false">
                     {!! csrf_field() !!}
-                    <input type="hidden" name="import_type" value="product">
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="checkbox">
@@ -153,9 +153,10 @@
 <script>
     function submitProductImport(el) {
         $(".success-msg-container").empty();
-        $(".warning-msg-container").empty();
+        $(".warnings-container").empty();
         $(".errors-container").empty();
         var $form = $(el);
+        showLoading();
         $.ajax({
             'url': $form.attr('action'),
             'method': $form.attr('method'),
@@ -164,11 +165,12 @@
             'contentType': false,
             'processData': false,
             'success': function (response) {
+                hideLoading();
                 if (response.status == true) {
                     $(".import-product-container .success-msg-container").append(
                             $("<li>").text("Data has been imported to your account.")
                     ).append(function () {
-                        if (response.categoryCounter > 0) {
+                        if (response.categoryCounter >= 0) {
                             return $("<div>").append(
                                     $("<li>").text("Imported " + response.categoryCounter + ' new categories.')
                             ).html();
@@ -176,7 +178,7 @@
                             return '';
                         }
                     }).append(function () {
-                        if (response.productCounter > 0) {
+                        if (response.productCounter >= 0) {
                             return $("<div>").append(
                                     $("<li>").text("Imported " + response.productCounter + ' new products.')
                             ).html();
@@ -184,7 +186,7 @@
                             return '';
                         }
                     }).append(function () {
-                        if (response.siteCounter > 0) {
+                        if (response.siteCounter >= 0) {
                             return $("<div>").append(
                                     $("<li>").text("Imported " + response.siteCounter + ' new sites.')
                             ).html();
@@ -202,8 +204,79 @@
                 }
             },
             'error': function (xhr, status, error) {
+                hideLoading();
                 if (xhr.status == 422) {
-                    var $errorContainer = $(".errors-container");
+                    var $errorContainer = $(".import-product-container .errors-container");
+                    $.each(xhr.responseJSON, function (index, error) {
+                        $.each(error, function (index, message) {
+                            $errorContainer.append(
+                                    $("<li>").text(message)
+                            );
+                        })
+                    });
+                } else {
+                    describeServerRespondedError(xhr.status);
+                }
+            }
+        })
+    }
+
+    function submitURLImport(el) {
+        $(".success-msg-container").empty();
+        $(".warning-msg-container").empty();
+        $(".errors-container").empty();
+        var $form = $(el);
+        showLoading();
+        $.ajax({
+            'url': $form.attr('action'),
+            'method': $form.attr('method'),
+            'data': (new FormData(el)),
+            'cache': false,
+            'contentType': false,
+            'processData': false,
+            'success': function (response) {
+                hideLoading();
+                if (response.status == true) {
+                    $(".import-site-container .success-msg-container").append(
+                            $("<li>").text("Data has been imported to your account.")
+                    ).append(function () {
+                        if (response.categoryCounter >= 0) {
+                            return $("<div>").append(
+                                    $("<li>").text("Imported " + response.categoryCounter + ' new categories.')
+                            ).html();
+                        } else {
+                            return '';
+                        }
+                    }).append(function () {
+                        if (response.productCounter >= 0) {
+                            return $("<div>").append(
+                                    $("<li>").text("Imported " + response.productCounter + ' new products.')
+                            ).html();
+                        } else {
+                            return '';
+                        }
+                    }).append(function () {
+                        if (response.siteCounter >= 0) {
+                            return $("<div>").append(
+                                    $("<li>").text("Imported " + response.siteCounter + ' new sites.')
+                            ).html();
+                        } else {
+                            return '';
+                        }
+                    });
+
+                    $.each(response.warnings, function (index, warning) {
+                        $(".import-site-container .warnings-container").append(
+                                $("<li>").text(warning)
+                        )
+                    });
+
+                }
+            },
+            'error': function (xhr, status, error) {
+                hideLoading();
+                if (xhr.status == 422) {
+                    var $errorContainer = $(".import-site-container .errors-container");
                     $.each(xhr.responseJSON, function (index, error) {
                         $.each(error, function (index, message) {
                             $errorContainer.append(

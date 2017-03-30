@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Domain;
 use App\Models\Product;
 use App\Models\Site;
 use App\Validators\Product\ImportProduct\StoreValidator;
@@ -15,10 +17,12 @@ use Maatwebsite\Excel\Facades\Excel;
 class ImportProductController extends Controller
 {
     var $request;
+    var $siteRepo;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, SiteContract $siteContract)
     {
         $this->request = $request;
+        $this->siteRepo = $siteContract;
     }
 
     /**
@@ -61,10 +65,10 @@ class ImportProductController extends Controller
             $data = $reader->all();
             foreach ($data as $index => $product) {
                 $rowNumber = $index + 2;
-                if (!isset($product->product_name) || is_null($product->product_name)) {
+                if (!isset($product->product) || is_null($product->product)) {
                     $errors[] = "Product name is missing in 'Import Products' row #{$rowNumber}";
                 }
-                if (!isset($product->category_name) || is_null($product->category_name)) {
+                if (!isset($product->category) || is_null($product->category)) {
                     $errors[] = "Category name is missing in 'Import Products' row #{$rowNumber}";
                 }
                 $productData = $product->all();
@@ -73,97 +77,201 @@ class ImportProductController extends Controller
         });
 
         $products = collect($products);
-        $product_names = $products->pluck('product_name')->all();
 
         if (count($errors) > 0) {
             return response(compact(['errors']), 422);
         }
         /*VALIDATION FINISHED*/
-        $categoryNames = $user->categories->pluck('category_name')->all();
-
         $warnings = [];
 
         $siteCounter = 0;
         $productCounter = 0;
         $categoryCounter = 0;
-        dd($products);
-        $products->each(function ($product, $index) use ($user, $categoryNames, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
+        $products->each(function ($product, $index) use ($user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
             $rowNumber = $index + 2;
             /*IMPORT CATEGORIES*/
-            $category = $user->categories()->where('category_name', $product['category_name'])->first();
+            $category = $user->categories()->where('category_name', $product['category'])->first();
             if (is_null($category)) {
                 if ($this->request->has('no_new_categories') && $this->request->get('no_new_categories') == 'on') {
-                    $warnings[] = "Category name in 'Import Products' row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
+                    $warnings[] = "Category name in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
                     $category = $user->categories()->save(new Category(array(
-                        'category_name' => $product['category_name'],
+                        'category_name' => $product['category'],
                     )));
                     $categoryCounter++;
                 }
             }
-            $existingProduct = $category->products()->where('product_name', $product['product_name'])->first();
+            $existingProduct = $category->products()->where('product_name', $product['product'])->first();
             if (is_null($existingProduct)) {
                 if ($this->request->has('no_new_products') && $this->request->get('no_new_products') == 'on') {
-                    $warnings[] = "Product '{$product['product_name']}' in 'Import Products' row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
+                    $warnings[] = "Product '{$product['product']}' in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
                     $existingProduct = $category->products()->save(new Product([
-                        'product_name' => $product['product_name'],
+                        'product_name' => $product['product'],
                         'user_id' => $user->getKey()
                     ]));
                     $productCounter++;
                 }
             }
-
+            $meta = $existingProduct->meta;
             if (array_has($product, 'sku') && !is_null(array_get($product, 'sku'))) {
-
+                $meta->sku = array_get($product, 'sku');
             }
             if (array_has($product, 'supplier') && !is_null(array_get($product, 'supplier'))) {
-
+                $meta->supplier = array_get($product, 'supplier');
             }
             if (array_has($product, 'brand') && !is_null(array_get($product, 'brand'))) {
-
+                $meta->brand = array_get($product, 'brand');
             }
             if (array_has($product, 'cost_price') && !is_null(array_get($product, 'cost_price'))) {
-
+                $meta->cost_price = array_get($product, 'cost_price');
             }
-
+            $meta->save();
 
         });
         $status = true;
         return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
     }
 
-    public function storeSite(StoreValidator $storeValidator)
+    public function storeSites(StoreValidator $storeValidator)
     {
 
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
         $file = $this->request->file('file');
 
-        $products = [];
+        $user = auth()->user();
+        $file = $this->request->file('file');
+
+        $urls = [];
         $errors = [];
 
-        //import sites
-        Excel::selectSheets('Import Sites')->load($file->getPathname(), function ($reader) use (&$products, $product_names, &$errors) {
+        /*TODO data collection and validation*/
+        //import products
+        $result = Excel::load($file->getPathname(), function ($reader) use (&$urls, &$errors) {
             $data = $reader->all();
-            foreach ($data as $index => $site) {
+            foreach ($data as $index => $url) {
                 $rowNumber = $index + 2;
-                if (!isset($site->product_name) || is_null($site->product_name)) {
-                    $errors[] = "Product name is missing in 'Import Sites' row #{$rowNumber}";
-                } elseif (!in_array($site->product_name, $product_names)) {
-                    $errors[] = "Product '{$site->product_name}' in 'Import Sites' row #{$rowNumber} does not exist in 'Import Products'";
+                if (!isset($url->category) || is_null($url->category)) {
+                    $errors[] = "Category name is missing in row #{$rowNumber}";
                 }
-                $products->each(function ($product, $index) use ($products, $site) {
-                    if ($product['product_name'] == $site->product_name) {
-                        $product['sites'][] = $site->all();
-                        $products->put($index, $product);
-                    }
-                });
-
+                if (!isset($url->product) || is_null($url->product)) {
+                    $errors[] = "Product name is missing in row #{$rowNumber}";
+                }
+                if (!isset($url->url) || is_null($url->url)) {
+                    $errors[] = "URL is missing in row #{$rowNumber}";
+                }
+                $urlData = $url->all();
+                $urls [] = $urlData;
             }
         });
+
+        $urls = collect($urls);
+
+        $siteLimit = null;
+        if ($user->needSubscription && $user->subscription->isValid()) {
+            $criteria = auth()->user()->subscriptionCriteria();
+            if (isset($criteria->site) && $criteria->site != 0) {
+                $siteLimit = intval($criteria->site);
+            }
+        }
+
+        $groupedSites = $urls->groupBy(function ($item, $key) {
+            return $item['category'] . "$ $" . $item['product'];
+        });
+
+        foreach ($urls as $url) {
+            $category = Category::where('category_name', '=', $url['category'])->first();
+            if (!is_null($category)) {
+                if ($this->request->has('no_new_products')) {
+                    $product = $category->products()->where('product_name', '=', $url['product'])->first();
+                    if (is_null($product)) {
+                        $errors[] = "Product {$url['product']} does not exist in Category {$url['category']} in your account.";
+                    } else {
+                        if (!is_null($siteLimit)) {
+                            $numberOfImportingSites = count($groupedSites[$category->category_name . "$ $" . $product->product_name]);
+                            if ($siteLimit - $product->sites()->count() < $numberOfImportingSites) {
+                                $errors[] = "You have reached the site limit of your subscription plan. Please upgrade your subscription plan to add more sites.";
+                            }
+                        }
+                    }
+                }
+            } elseif ($this->request->has('no_new_categories')) {
+                $errors[] = "{$url['category']} does not exist in your account.";
+            }
+        }
+
+
+        if (count($errors) > 0) {
+            return response(compact(['errors']), 422);
+        }
+        $categoryCounter = 0;
+        $productCounter = 0;
+        $siteCounter = 0;
+
+        $urls->each(function ($url, $index) use ($user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter, $siteLimit) {
+            $rowNumber = $index + 2;
+            $category = $user->categories()->where('category_name', '=', $url['category'])->first();
+            if (is_null($category)) {
+                if ($this->request->has('no_new_categories')) {
+                    /*TODO add to warning*/
+                    $warnings[] = "Category in row #{$rowNumber} does not exist in your account, this Category and its Product Page URLs were NOT imported.";
+                    return true;
+                } else {
+                    /*TODO create new category*/
+                    $category = $user->categories()->save(new Category(array(
+                        'category_name' => $url['category'],
+                    )));
+                    $categoryCounter++;
+                }
+            }
+            $product = $category->products()->where('product_name', '=', $url['product'])->first();
+            if (is_null($product)) {
+                if ($this->request->has('no_new_products')) {
+                    $warnings[] = "Product in row #{$rowNumber} does not exist in Category:{$category->category_name}, this Product and its URLs were NOT imported.";
+                    return true;
+                } else {
+                    $product = $category->products()->save(new Product(array(
+                        'product_name' => $url['product'],
+                    )));
+                    $user->products()->save($product);
+                    $productCounter++;
+                }
+            }
+
+
+            if (!is_null($category) && !is_null($product)) {
+
+                /*validating subscription status*/
+                if (!is_null($siteLimit)) {
+                    $currentSiteCount = $product->sites()->count();
+                    if ($currentSiteCount >= $siteLimit) {
+                        $warnings[] = "You have reached the site limit in row #{$rowNumber}. Please upgrade your subscription plan to add more sites.";
+                        return true;
+                    }
+                }
+
+                $site = $product->sites()->save(new Site(array(
+                    "site_url" => $url['url'],
+                )));
+
+                $domainUrl = $site->domain;
+                $domain = Domain::where('domain_url', '=', $domainUrl)->first();
+
+                if (!is_null($domain)) {
+                    $this->siteRepo->adoptDomainPreferences($site->getKey(), $domain->getKey());
+                    $site->last_crawled_at = null;
+                    $site->comment = null;
+                    $site->save();
+                }
+
+                $siteCounter++;
+            }
+        });
+        $status = true;
+        return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
     }
 
     /**

@@ -5,7 +5,9 @@
        data-product-meta-brand="{{$product->meta->brand}}"
        data-product-meta-supplier="{{$product->meta->supplier}}"
        data-product-meta-sku="{{$product->meta->sku}}"
+       @if(!is_null($product->meta->cost_price) && floatval($product->meta->cost_price) != 0)
        data-product-meta-cost-price="${{number_format($product->meta->cost_price, 2)}}"
+        @endif
 >
     <thead>
     <tr>
@@ -172,7 +174,7 @@
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th class="sortable" width="20%">Site Name</th>
+                        <th class="sortable" data-col="site_url" width="20%">Site Name</th>
                         <th class="text-right sortable sorting sorting-asc" data-col="recent_price" width="15%">Current Price</th>
                         <th class="text-right sortable" data-col="previousPrice" width="15%">Previous Price</th>
                         <th class="hidden-xs sortable text-right" data-col="diffPrice" width="15%">Change</th>
@@ -330,10 +332,12 @@
                                     return "";
                                 }
                             }).append(function () {
-                                if ($("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-cost-price")) {
+                                var costPrice = $("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-cost-price");
+                                console.info('costPrice', costPrice);
+                                if (costPrice && parseFloat(costPrice) != 0) {
                                     return $("<div>").append(
                                             $("<strong>").text("Cost price"),
-                                            ": " + $("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-cost-price"),
+                                            ": " + costPrice,
                                             $("<br>")
                                     )
                                 } else {

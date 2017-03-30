@@ -168,6 +168,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{route('account.index')}}#user-settings">My Account</a></li>
+                                <li><a href="{{route('account.index')}}#import-products">Bulk Import</a></li>
                                 <li><a href="{{route('account.index')}}#user-password">Reset Password</a></li>
                                 <li><a href="{{route('account.index')}}#user-domains">Site Names</a></li>
                                 {{--<li><a href="{{route('account.index')}}#display-settings">Display Settings</a></li>--}}
