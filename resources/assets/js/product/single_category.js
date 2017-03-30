@@ -58,7 +58,6 @@ function btnDeleteCategoryOnClick(el) {
 function appendCreateProductBlock(el) {
     $(el).find(".add-item-label").slideUp();
     $(el).find(".add-item-controls").slideDown();
-    $(el).find(".txt-product-name").focus();
 }
 
 function appendUpgradeForCreateProductBlock(el) {
@@ -75,12 +74,19 @@ function cancelAddProduct(el) {
 
 function btnAddProductOnClick(el) {
     showLoading();
+    var $categoryWrapper = $(el).closest(".category-wrapper");
     $.ajax({
         "url": "/product",
         "method": "post",
         "data": {
             "category_id": $(el).closest(".category-wrapper").attr('data-category-id'),
-            "product_name": $(el).closest(".category-wrapper").find(".txt-product-name").val()
+            "product_name": $categoryWrapper.find(".frm-store-product").find(".txt-product-name").val(),
+            "meta": {
+                "brand": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-brand").val(),
+                "supplier": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-supplier").val(),
+                "sku": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-sku").val(),
+                "cost_price": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-cost-price").val()
+            }
         },
         "dataType": "json",
         "success": function (response) {

@@ -37,4 +37,12 @@ interface SubscriptionContract
      * @return mixed
      */
     public function updateCreditCardDetails(Subscription $subscription);
+
+    /**
+     * validating a coupon code based on its product family id
+     * @param $coupon_code
+     * @param $product_family_id
+     * @return mixed
+     */
+    public function validateCoupon($coupon_code, $product_family_id);
 }

@@ -74,7 +74,7 @@ function toggleEditSiteURL(el) {
         $tr.find(".frm-edit-site-url").hide();
     } else {
         $tr.find(".btn-edit-align-middle").addClass("editing").hide();
-        $tr.find("input.txt-site-url").val($tr.find(".site-url-link").attr("data-content"));
+        $tr.find("input.txt-site-url").val($tr.find(".site-url-link").attr("data-url"));
         $tr.find(".site-url-link").hide();
         $tr.find(".frm-edit-site-url").show();
         $tr.find(".frm-edit-site-url .txt-site-url").focus()

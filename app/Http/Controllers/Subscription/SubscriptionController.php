@@ -95,7 +95,7 @@ class SubscriptionController extends Controller
             $apiProductId = $request->get('api_product_id');
             $user = auth()->user();
 
-            if ($apiProductId != $user->apiSubscription->product_id) {
+            if (is_null($user->apiSubscription) || $apiProductId != $user->apiSubscription->product_id) {
                 /*TODO show subscription preview next billing manifest*/
                 $preview = Chargify::subscription()->preview(array(
                     "product_id" => $apiProductId,

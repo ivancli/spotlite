@@ -320,14 +320,17 @@ function toggleEditProductName(el) {
     var $tbl = $(el).closest(".product-wrapper");
     if ($tbl.find(".btn-edit-product").hasClass("editing")) {
         $tbl.find(".btn-edit-product").removeClass("editing").show();
-        $tbl.find(".product-name-link").show();
-        $tbl.find(".frm-edit-product").hide();
+        $tbl.find(".frm-edit-product").slideUp(function () {
+            $tbl.find(".product-name-link").slideDown();
+            $tbl.find('.product-info').show();
+        });
     } else {
         $tbl.find(".btn-edit-product").addClass("editing").hide();
         $tbl.find("input.product-name").val($tbl.find(".product-name-link").text());
-        $tbl.find(".product-name-link").hide();
-        $tbl.find(".frm-edit-product").show();
-        $tbl.find(".frm-edit-product .product-name").focus();
+        $tbl.find('.product-info').hide();
+        $tbl.find(".product-name-link").slideUp(function () {
+            $tbl.find(".frm-edit-product").slideDown();
+        });
     }
 }
 
@@ -349,22 +352,30 @@ function txtProductOnBlur(el) {
 
 function submitEditProductName(el) {
     showLoading();
+    var $productWrapper = $(el).closest(".product-wrapper");
+    var $form = $productWrapper.find(".frm-edit-product");
     $.ajax({
-        "url": $(el).attr("action"),
+        "url": $form.attr("action"),
         "method": "put",
-        "data": $(el).serialize(),
+        "data": $form.serialize(),
         "dataType": "json",
         "success": function (response) {
             hideLoading();
             if (response.status == true) {
                 gaEditProduct();
+                alertP("Update Product", "Product details have been updated.");
+                $productWrapper.attr("data-product-meta-brand", $form.find(".txt-product-meta-brand").val());
+                $productWrapper.attr("data-product-meta-supplier", $form.find(".txt-product-meta-supplier").val());
+                $productWrapper.attr("data-product-meta-sku", $form.find(".txt-product-meta-sku").val());
+                $productWrapper.attr("data-product-meta-cost-price", $form.find(".txt-product-meta-cost-price").val());
 
-                alertP("Update Product", "Product name has been updated.");
-                $(el).siblings(".product-name-link").text($(el).find(".product-name").val()).show();
-                $(el).hide();
-                $(el).closest(".product-wrapper").find(".btn-edit-product.editing").removeClass("editing").show();
+                $form.slideUp(function () {
+                    $form.siblings(".product-name-link").text($form.find(".product-name").val()).show();
+                    $productWrapper.find(".btn-edit-product.editing").removeClass("editing").slideDown();
+                    $productWrapper.find('.product-info').show();
+                });
             } else {
-                alertP("Oops! Something went wrong.", 'Unable to update product name, please try again later.');
+                alertP("Oops! Something went wrong.", 'Unable to update product details, please try again later.');
             }
         },
         "error": function (xhr, status, error) {

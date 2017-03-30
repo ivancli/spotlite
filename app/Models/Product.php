@@ -17,9 +17,16 @@ class Product extends Model
 {
     protected $primaryKey = "product_id";
     protected $fillable = [
-        "product_name", "category_id", "user_id", "group_id", "product_order", "report_task_id"
+        "product_name", "category_id", "user_id", "group_id", "product_order", "report_task_id",
     ];
-    protected $appends = ["urls", "siteCount"];
+
+    protected $with = [
+        'meta'
+    ];
+
+    protected $appends = [
+        "urls", "siteCount"
+    ];
 
     public function user()
     {
@@ -31,10 +38,20 @@ class Product extends Model
         return $this->belongsTo('App\Models\Category', 'category_id', 'category_id');
     }
 
-
     public function sites()
     {
         return $this->hasMany('App\Models\Site', 'product_id', 'product_id');
+    }
+
+    public function cheapestSites()
+    {
+        $minPrice = $this->sites()->min('recent_price');
+        return $this->sites()->whereNotNull('recent_price')->where("recent_price", $minPrice);
+    }
+
+    public function meta()
+    {
+        return $this->hasOne('App\Models\ProductMeta', 'product_id', 'product_id');
     }
 
     public function filteredSites()

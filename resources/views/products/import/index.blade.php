@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-offset-2 col-md-8">
         <div class="row m-b-20">
             <div class="col-sm-12">
                 In order to Bulk Import data into SpotLite, please download the

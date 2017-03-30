@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Product', 'user_id', 'user_id');
     }
 
+    public function productMetas()
+    {
+        return $this->hasManyThrough('App\Models\ProductMeta', 'App\Models\Product', 'user_id', 'product_id', 'user_id');
+    }
+
     public function dashboards()
     {
         return $this->hasMany('App\Models\Dashboard\Dashboard', 'user_id', 'user_id')->orderBy("dashboard_order", "asc");
@@ -254,8 +259,8 @@ class User extends Authenticatable
         Cache::tags(['users', "user_" . $this->getKey()])->flush();
         if (!is_null($this->apiSubscription)) {
             Cache::tags(["subscriptions.{$this->apiSubscription->id}"])->flush();
+            Cache::tags(['chargify', 'subscriptions', 'subscription', "subscriptions.{$this->apiSubscription->id}"])->flush();
         }
-        Cache::tags(['chargify', 'subscriptions', 'subscription', "subscriptions.{$this->apiSubscription->id}"])->flush();
     }
 }
 

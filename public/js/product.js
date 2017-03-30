@@ -58,7 +58,6 @@ function btnDeleteCategoryOnClick(el) {
 function appendCreateProductBlock(el) {
     $(el).find(".add-item-label").slideUp();
     $(el).find(".add-item-controls").slideDown();
-    $(el).find(".txt-product-name").focus();
 }
 
 function appendUpgradeForCreateProductBlock(el) {
@@ -75,12 +74,19 @@ function cancelAddProduct(el) {
 
 function btnAddProductOnClick(el) {
     showLoading();
+    var $categoryWrapper = $(el).closest(".category-wrapper");
     $.ajax({
         "url": "/product",
         "method": "post",
         "data": {
             "category_id": $(el).closest(".category-wrapper").attr('data-category-id'),
-            "product_name": $(el).closest(".category-wrapper").find(".txt-product-name").val()
+            "product_name": $categoryWrapper.find(".frm-store-product").find(".txt-product-name").val(),
+            "meta": {
+                "brand": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-brand").val(),
+                "supplier": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-supplier").val(),
+                "sku": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-sku").val(),
+                "cost_price": $categoryWrapper.find(".frm-store-product").find(".txt-product-meta-cost-price").val()
+            }
         },
         "dataType": "json",
         "success": function (response) {
@@ -658,14 +664,17 @@ function toggleEditProductName(el) {
     var $tbl = $(el).closest(".product-wrapper");
     if ($tbl.find(".btn-edit-product").hasClass("editing")) {
         $tbl.find(".btn-edit-product").removeClass("editing").show();
-        $tbl.find(".product-name-link").show();
-        $tbl.find(".frm-edit-product").hide();
+        $tbl.find(".frm-edit-product").slideUp(function () {
+            $tbl.find(".product-name-link").slideDown();
+            $tbl.find('.product-info').show();
+        });
     } else {
         $tbl.find(".btn-edit-product").addClass("editing").hide();
         $tbl.find("input.product-name").val($tbl.find(".product-name-link").text());
-        $tbl.find(".product-name-link").hide();
-        $tbl.find(".frm-edit-product").show();
-        $tbl.find(".frm-edit-product .product-name").focus();
+        $tbl.find('.product-info').hide();
+        $tbl.find(".product-name-link").slideUp(function () {
+            $tbl.find(".frm-edit-product").slideDown();
+        });
     }
 }
 
@@ -687,22 +696,30 @@ function txtProductOnBlur(el) {
 
 function submitEditProductName(el) {
     showLoading();
+    var $productWrapper = $(el).closest(".product-wrapper");
+    var $form = $productWrapper.find(".frm-edit-product");
     $.ajax({
-        "url": $(el).attr("action"),
+        "url": $form.attr("action"),
         "method": "put",
-        "data": $(el).serialize(),
+        "data": $form.serialize(),
         "dataType": "json",
         "success": function (response) {
             hideLoading();
             if (response.status == true) {
                 gaEditProduct();
+                alertP("Update Product", "Product details have been updated.");
+                $productWrapper.attr("data-product-meta-brand", $form.find(".txt-product-meta-brand").val());
+                $productWrapper.attr("data-product-meta-supplier", $form.find(".txt-product-meta-supplier").val());
+                $productWrapper.attr("data-product-meta-sku", $form.find(".txt-product-meta-sku").val());
+                $productWrapper.attr("data-product-meta-cost-price", $form.find(".txt-product-meta-cost-price").val());
 
-                alertP("Update Product", "Product name has been updated.");
-                $(el).siblings(".product-name-link").text($(el).find(".product-name").val()).show();
-                $(el).hide();
-                $(el).closest(".product-wrapper").find(".btn-edit-product.editing").removeClass("editing").show();
+                $form.slideUp(function () {
+                    $form.siblings(".product-name-link").text($form.find(".product-name").val()).show();
+                    $productWrapper.find(".btn-edit-product.editing").removeClass("editing").slideDown();
+                    $productWrapper.find('.product-info').show();
+                });
             } else {
-                alertP("Oops! Something went wrong.", 'Unable to update product name, please try again later.');
+                alertP("Oops! Something went wrong.", 'Unable to update product details, please try again later.');
             }
         },
         "error": function (xhr, status, error) {
@@ -967,7 +984,7 @@ function toggleEditSiteURL(el) {
         $tr.find(".frm-edit-site-url").hide();
     } else {
         $tr.find(".btn-edit-align-middle").addClass("editing").hide();
-        $tr.find("input.txt-site-url").val($tr.find(".site-url-link").attr("data-content"));
+        $tr.find("input.txt-site-url").val($tr.find(".site-url-link").attr("data-url"));
         $tr.find(".site-url-link").hide();
         $tr.find(".frm-edit-site-url").show();
         $tr.find(".frm-edit-site-url .txt-site-url").focus()

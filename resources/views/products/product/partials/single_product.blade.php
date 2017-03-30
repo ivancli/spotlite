@@ -1,43 +1,103 @@
 <table class="table table-condensed product-wrapper" data-product-id="{{$product->getKey()}}"
        data-alert-link="{{$product->urls['alert']}}"
        data-report-task-link="{{$product->urls['report_task']}}"
-       data-get-site-usage-per-product-link="{{$product->urls['site_usage']}}">
+       data-get-site-usage-per-product-link="{{$product->urls['site_usage']}}"
+       data-product-meta-brand="{{$product->meta->brand}}"
+       data-product-meta-supplier="{{$product->meta->supplier}}"
+       data-product-meta-sku="{{$product->meta->sku}}"
+       data-product-meta-cost-price="${{number_format($product->meta->cost_price, 2)}}"
+>
     <thead>
     <tr>
-        <th class="shrink product-th">
+        <th class="shrink product-th" style="padding-top: 20px; padding-bottom: 20px;">
             <a class="btn-collapse btn-product-dragger" href="#" onclick="return false;"><i class="fa fa-tag"></i></a>
         </th>
         <th class="product-th">
             <a class="text-muted product-name-link" href="#" onclick="return false;">{{$product->product_name}}</a>
             @if(!auth()->user()->isPastDue)
-                {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product', 'style' => "display :none;", 'onsubmit' => 'submitEditProductName(this); return false;')) !!}
-                <div class="input-group sl-input-group">
-                    <input type="text" name="product_name" placeholder="Product Name" autocomplete="off"
-                           class="form-control sl-form-control input-lg product-name"
-                           onkeyup="cancelEditProductName(this, event)" onblur="txtProductOnBlur(this)"
-                           value="{{$product->product_name}}">
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default btn-flat btn-lg">
-                            <i class="fa fa-check"></i>
-                        </button>
-                    </span>
+                {!! Form::model($product, array('route' => array('product.update', $product->getKey()), 'method'=>'delete', 'class'=>'frm-edit-product form-horizontal sl-form-horizontal', 'style' => "display :none;", 'onsubmit' => 'submitEditProductName(this); return false;')) !!}
+                <input type="text" name="product_name" autocomplete="off" placeholder="Enter product name" class="form-control txt-item product-name" value="{{$product->product_name}}">
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Brand</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="meta[brand]" class="form-control txt-product-meta txt-product-meta-brand" value="{{$product->meta->brand}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Supplier</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="meta[supplier]" class="form-control  txt-product-meta txt-product-meta-supplier" value="{{$product->meta->supplier}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">SKU</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="meta[sku]" class="form-control  txt-product-meta txt-product-meta-sku" value="{{$product->meta->sku}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Cost price</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="meta[cost_price]" class="form-control  txt-product-meta txt-product-meta-cost-price" value="{{$product->meta->cost_price}}">
+                    </div>
+                </div>
+                <div class="text-right" style="margin-top: 10px;">
+                    <button class="btn btn-primary btn-flat btn-sm"
+                            onclick="submitEditProductName(this); event.stopPropagation(); event.preventDefault();">
+                        CONFIRM
+                    </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-default btn-flat btn-cancel-edit-product btn-sm"
+                            onclick="cancelEditProductName(this); event.stopPropagation(); event.preventDefault();">
+                        CANCEL
+                    </button>
                 </div>
                 {!! Form::close() !!}
 
-                <span class="btn-edit btn-edit-product" onclick="toggleEditProductName(this)">Edit &nbsp; <i
-                            class="fa fa-pencil-square-o"></i></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="btn-edit text-muted product-info" id="product-{{$product->getKey()}}-info">
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                </span>
+                &nbsp;
+                @if($product->cheapestSites->count() > 0)
+                    <div style="display:inline-block; font-weight: normal; font-size: 11px;" class="hidden-xs hidden-sm text-muted">
+                        Cheapest:
+                        <span style="font-weight: bold;">
+                            @if(!is_null($product->cheapestSites->first()->userDomainName))
+                                {{$product->cheapestSites->first()->userDomainName}}
+                            @else
+                                {{$product->cheapestSites->first()->domain}}
+                            @endif
+                        </span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        Current Price: <span style="font-weight: bold;">{{"$" . number_format($product->cheapestSites->first()->recent_price, 2, '.', ',')}}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        Price Change:
+                        <span style="font-weight: bold;">
+                            @if(!is_null($product->cheapestSites->first()->diffPrice))
+                                @if(round($product->cheapestSites->first()->diffPrice, 2, PHP_ROUND_HALF_UP) != 0)
+                                    <i class="glyphicon {{$product->cheapestSites->first()->diffPrice > 0 ? "glyphicon-triangle-top text-increase" : "glyphicon-triangle-bottom text-danger"}}"></i>
+                                    ${{number_format(abs($product->cheapestSites->first()->diffPrice), 2, '.', ',')}}
+                                @else
+                                    <strong><i class="fa fa-minus"></i></strong>
+                                @endif
+                            @else
+                                <strong><i class="fa fa-minus"></i></strong>
+                            @endif
+                        </span>
+                    </div>
+                @endif
             @endif
         </th>
-        <th class="text-right action-cell product-th">
+        <th class="text-right action-cell product-th" style="padding-bottom: 20px;padding-top: 20px;">
             @if(!auth()->user()->isPastDue)
+                <a href="#" class="btn-action btn-edit-product" onclick="toggleEditProductName(this); event.preventDefault(); return false;">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </a>
                 <a href="#" class="btn-action" onclick="showProductChart('{{$product->urls['chart']}}'); return false;"
                    data-toggle="tooltip" title="chart">
                     <i class="fa fa-line-chart"></i>
                 </a>
-                {{--<a href="#" class="btn-action btn-alert" onclick="showProductAlertForm(this); return false;"--}}
-                {{--data-toggle="tooltip" title="alert">--}}
-                {{--<i class="fa {{!is_null($product->alert) ? "fa-bell alert-enabled" : "fa-bell-o"}}"></i>--}}
-                {{--</a>--}}
                 <a href="#" class="btn-action" onclick="showProductReportTaskForm(this); return false;"
                    data-toggle="tooltip" title="report">
                     <i class="fa {{!is_null($product->reportTask) ? "fa-envelope ico-report-enabled" : "fa-envelope-o"}}"></i>
@@ -51,63 +111,73 @@
                 {!! Form::close() !!}
             @endif
         </th>
-        <th class="text-center vertical-align-middle" style="background-color: #e8e8e8;padding: 0 !important;"
-            width="70">
-            <a class="text-muted btn-collapse" style="font-size: 30px;" href="#product-{{$product->getKey()}}"
-               role="button"
-               data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
-               aria-controls="product-{{$product->getKey()}}">
-                <i class="fa fa-angle-up"></i>
-            </a>
-        </th>
-    </tr>
-    <tr>
-        <td></td>
-        <td colspan="3">
-            <div class="text-light">
-                Created
-                @if(!is_null($product->created_at))
-                    on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}
-                @endif
-                <strong class="text-muted"><i>by {{$product->user->first_name}} {{$product->user->last_name}}</i></strong>
+        <th class="text-center product-th" width="70" style="padding:0 !important">
+            <div style="background-color:#e8e8e8; height: 65px;padding-top: 10px; padding-bottom: 10px;">
+                <a class="text-muted btn-collapse collapsed" style="font-size: 30px;" href="#product-{{$product->getKey()}}"
+                   role="button"
+                   data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
+                   aria-controls="product-{{$product->getKey()}}">
+                    <i class="fa fa-angle-up"></i>
+                </a>
             </div>
-            @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
-                <div class="text-light">
-                    <small>
-                        <strong class="text-muted">
-                            <span class="lbl-site-usage-per-product">{{$product->sites()->count()}}</span>
-                            /
-                            <span class="lbl-site-total-per-product">{{auth()->user()->subscriptionCriteria()->site}}</span>
-                        </strong>
-                        &nbsp;
-                        Product URLs Tracked
-                    </small>
-                </div>
-            @endif
-        </td>
+        </th>
     </tr>
     </thead>
     <tbody>
     <tr>
         <td></td>
         <td colspan="3" class="table-container">
-            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse in m-b-20" aria-expanded="true"
-                 data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10"
+            <div id="product-{{$product->getKey()}}" class="collapsible-product-div collapse m-b-20" aria-expanded="false"
+                 data-sites-url="{{$product->urls['show_sites']}}" data-start="0" data-length="10" data-order="recent_price" data-sequence="asc"
             >
+                <style>
+                    .tbl-site th {
+                        cursor: pointer;
+                        position: relative;
+                    }
+
+                    .tbl-site th.sortable{
+                        padding-right: 30px;
+
+                    }
+
+                    .tbl-site th.sortable:not(.sorting)::after {
+                        content: "\f0dc";
+                        font: normal normal normal 14px/1 FontAwesome;
+                        color: #dcdcdc;
+                        padding-left: 5px;
+                        position: absolute;
+                    }
+
+                    .tbl-site th.sorting.sorting-asc:after {
+                        content: "\f160";
+                        font: normal normal normal 14px/1 FontAwesome;
+                        color: #a3a3a3;
+                        padding-left: 5px;
+                        position: absolute;
+                    }
+
+                    .tbl-site th.sorting.sorting-desc:after {
+                        content: "\f161";
+                        font: normal normal normal 14px/1 FontAwesome;
+                        color: #a3a3a3;
+                        padding-left: 5px;
+                        position: absolute;
+                    }
+
+                    .tbl-site tbody td{
+                        padding-right: 30px !important;
+                    }
+                </style>
                 <table class="table table-striped table-condensed tbl-site">
                     <thead>
                     <tr>
-                        <th width="15%">Site</th>
-                        @if(!auth()->user()->needSubscription || auth()->user()->subscriptionCriteria()->my_price == true)
-                            <th class="text-center" width="10%">My Site</th>
-                        @endif
-                        <th width="10%" class="text-right">Current Price</th>
-                        <th width="10%" class="text-right">Previous Price</th>
-                        <th width="10%" class="hidden-xs text-right">Change</th>
-                        <th width="10%" class="hidden-xs" style="padding-left: 20px;">Last Changed</th>
-                        <th>Updated</th>
-                        <th>Tracked Since</th>
-                        <th width="100px"></th>
+                        <th class="sortable" width="20%">Site Name</th>
+                        <th class="text-right sortable sorting sorting-asc" data-col="recent_price" width="15%">Current Price</th>
+                        <th class="text-right sortable" data-col="previousPrice" width="15%">Previous Price</th>
+                        <th class="hidden-xs sortable text-right" data-col="diffPrice" width="15%">Change</th>
+                        <th class="hidden-xs sortable" data-col="priceLastChangedAt" style="padding-left: 20px;">Last Changed</th>
+                        <th width="150px"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -137,36 +207,27 @@
                                     <div class="add-item-label add-site-label">
                                         <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
                                         <div class="site-label-text-container">
-                                            <div>ADD THE PRODUCT PAGE URL FOR THE PRICE YOU WANT TO TRACK. E.G.
-                                                http://www.company.com.au/productpage/price
-                                            </div>
+                                            <div>ADD THE PRODUCT PAGE URL</div>
                                             {{--<div>For example http://www.company.com.au/productpage/price</div>--}}
                                         </div>
                                     </div>
                                     <div class="add-item-controls">
-                                        <div class="row">
-                                            <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
-                                                <form action="{{route('site.store')}}" method="post"
-                                                      class="frm-store-site"
-                                                      onsubmit="getPricesCreate(this); return false;">
-                                                    <input type="text" autocomplete="off"
-                                                           {{--placeholder="e.g. http://www.company.com.au/productpage/price"--}}
-                                                           name="site_url"
-                                                           class="txt-site-url form-control txt-item">
-                                                </form>
-                                            </div>
-                                            <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                                <button class="btn btn-primary btn-flat"
-                                                        onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
-                                                    ADD PRODUCT PAGE URL
-                                                </button>
-                                                &nbsp;&nbsp;
-                                                <button class="btn btn-default btn-flat btn-cancel-add-site"
-                                                        id="btn-cancel-add-site-{{$product->getKey()}}"
-                                                        onclick="cancelAddSite(this); event.stopPropagation(); event.preventDefault();">
-                                                    CANCEL
-                                                </button>
-                                            </div>
+                                        <form action="{{route('site.store')}}" method="post"
+                                              class="frm-store-site" style="display: inline-block; width: 175px;"
+                                              onsubmit="getPricesCreate(this); return false;">
+                                            <input type="text" autocomplete="off" name="site_url" class="txt-site-url form-control txt-item">
+                                        </form>
+                                        <div style="display:inline-block; vertical-align: top;">
+                                            <button class="btn btn-primary btn-flat"
+                                                    onclick="getPricesCreate(this); event.stopPropagation(); event.preventDefault();">
+                                                CONFIRM
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <button class="btn btn-default btn-flat btn-cancel-add-site"
+                                                    id="btn-cancel-add-site-{{$product->getKey()}}"
+                                                    onclick="cancelAddSite(this); event.stopPropagation(); event.preventDefault();">
+                                                CANCEL
+                                            </button>
                                         </div>
                                     </div>
                                     @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
@@ -192,20 +253,107 @@
     </tr>
     </tbody>
     <script type="text/javascript">
-        var siteDrake{{$product->getKey()}} = null;
         $(function () {
-            /**
-             * drag and drop
-             */
-            siteDrake{{$product->getKey()}} = dragula([$("#product-{{$product->getKey()}} > table > tbody").get(0)], {
-                moves: function (el, container, handle) {
-                    return !$(handle).hasClass("add-site-row") && $(handle).closest(".add-site-row").length == 0 && !$(handle).hasClass("empty-message-row") && $(handle).closest(".empty-message-row").length == 0 && !$(handle).hasClass("load-more-site") && $(handle).closest(".load-more-site").length == 0;
+            $("#product-{{$product->getKey()}} .tbl-site thead th.sortable").on("click", function () {
+                /* TODO check class and update wrapper attribute */
+                var $th = $(this);
+                var $sortingAttributeContainer = $th.closest(".collapsible-product-div");
+                if ($th.hasClass("sorting")) {
+                    if ($th.hasClass("sorting-asc")) {
+                        $th.removeClass("sorting-asc").addClass("sorting-desc");
+                        $sortingAttributeContainer.attr({
+                            "data-order": $th.attr("data-col"),
+                            "data-sequence": "desc"
+                        });
+                    } else {
+                        $th.removeClass("sorting-desc").addClass("sorting-asc");
+                        $sortingAttributeContainer.attr({
+                            "data-order": $th.attr("data-col"),
+                            "data-sequence": "asc"
+                        });
+                    }
+                } else {
+                    $th.closest("tr").find("th").removeClass("sorting").removeClass("sorting-asc").removeClass("sorting-desc");
+                    $th.addClass("sorting sorting-asc");
+                    $sortingAttributeContainer.attr({
+                        "data-order": $th.attr("data-col"),
+                        "data-sequence": "asc"
+                    });
                 }
-            }).on('drop', function (el, target, source, sibling) {
-                updateSiteOrder({{$product->getKey()}});
+
+                $sortingAttributeContainer.attr("data-start", 0);
+
+                var product_id = $(this).closest(".product-wrapper").attr("data-product-id");
+
+                $(this).closest(".tbl-site").find(".site-wrapper").remove();
+                showLoadingSites(product_id);
+                loadSites(product_id, function (response) {
+                    $("#product-" + product_id + " .tbl-site tbody .spinner-row").before(response.html);
+                    updateProductEmptyMessage();
+                });
             });
 
+
             loadAndAttachSites('{{$product->getKey()}}');
+            $("#product-{{$product->getKey()}}-info").popover({
+                content: function () {
+                    return $("<div>")
+                            .append(function () {
+                                console.info($(this));
+                                if ($("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-brand")) {
+                                    return $("<div>").append(
+                                            $("<strong>").text("Brand"),
+                                            ": " + $("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-brand"),
+                                            $("<br>")
+                                    )
+                                } else {
+                                    return "";
+                                }
+                            }).append(function () {
+                                if ($("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-supplier")) {
+                                    return $("<div>").append(
+                                            $("<strong>").text("Supplier"),
+                                            ": " + $("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-supplier"),
+                                            $("<br>")
+                                    )
+                                } else {
+                                    return "";
+                                }
+                            }).append(function () {
+                                if ($("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-sku")) {
+                                    return $("<div>").append(
+                                            $("<strong>").text("SKU"),
+                                            ": " + $("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-sku"),
+                                            $("<br>")
+                                    )
+                                } else {
+                                    return "";
+                                }
+                            }).append(function () {
+                                if ($("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-cost-price")) {
+                                    return $("<div>").append(
+                                            $("<strong>").text("Cost price"),
+                                            ": " + $("#product-{{$product->getKey()}}-info").closest(".product-wrapper").attr("data-product-meta-cost-price"),
+                                            $("<br>")
+                                    )
+                                } else {
+                                    return "";
+                                }
+                            }).append(
+                                    $("<div>").css("font-size", "12px").append(
+                                            "Created by {{auth()->user()->first_name . ' ' . auth()->user()->last_name}} on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($product->created_at))}}"
+                                    )
+                                    @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription) && auth()->user()->subscriptionCriteria()->site != 0)
+                                    ,
+                                    $("<div>").css("font-size", "12px").append(
+                                            "Product URLs Tracked {{$product->sites()->count()}}/{{auth()->user()->subscriptionCriteria()->site}}"
+                                    )
+                                    @endif
+                             ).html()
+                },
+                html: true,
+                trigger: "hover"
+            })
         });
 
         function loadAndAttachSites(product_id) {
@@ -224,6 +372,8 @@
                 "data": {
                     "start": $productWrapper.attr("data-start"),
                     "length": $productWrapper.attr("data-length"),
+                    "order": $productWrapper.attr("data-order"),
+                    "sequence": $productWrapper.attr("data-sequence"),
                     "keyword": $(".general-search-input").val()
                 },
                 "dataType": "json",
@@ -234,7 +384,7 @@
                         $productWrapper.attr("data-end", loadedSitesCount < $productWrapper.attr("data-length") ? "true" : "false");
                         $productWrapper.attr("data-start", parseInt($productWrapper.attr("data-start")) + loadedSitesCount);
                         if (loadedSitesCount < $productWrapper.attr("data-length")) {
-                            $productWrapper.find(".load-more-site").remove();
+                            $productWrapper.find(".load-more-site").hide();
                         } else {
                             $productWrapper.find(".load-more-site").show();
                         }

@@ -108,6 +108,38 @@
     </div>
 </div>
 
+<div class="form-group">
+    <label for="" class="col-md-3 control-label">Date format</label>
+    <div class="col-md-9">
+        <select name="preferences[DATE_FORMAT]" id="sel-date-format"
+                class="form-control">
+            <option value="j M y" {{auth()->user()->preference('DATE_FORMAT') == 'j M y' ? 'selected': ''}}>{{date('j M y')}}</option>
+            <option value="Y-m-d" {{auth()->user()->preference('DATE_FORMAT') == 'Y-m-d' ? 'selected': ''}}>{{date('Y-m-d')}}</option>
+            <option value="d F" {{auth()->user()->preference('DATE_FORMAT') == 'd F' ? 'selected': ''}}>{{date('d F')}}</option>
+            <option value="j M Y" {{auth()->user()->preference('DATE_FORMAT') == 'j M Y' ? 'selected': ''}}>{{date('j M Y')}}</option>
+            <option value="Ymd" {{auth()->user()->preference('DATE_FORMAT') == 'Ymd' ? 'selected': ''}}>{{date('Ymd')}}</option>
+            <option value="Y-m-d" {{auth()->user()->preference('DATE_FORMAT') == 'Y-m-d' ? 'selected': ''}}>{{date('Y-m-d')}}</option>
+            <option value="jS \of F Y" {{auth()->user()->preference('DATE_FORMAT') == 'jS \of F Y' ? 'selected': ''}}>{{date('jS \of F Y')}}</option>
+            <option value="j F Y" {{auth()->user()->preference('DATE_FORMAT') == 'j F Y' ? 'selected': ''}}>{{date('j F Y')}}</option>
+            <option value="F j, Y" {{auth()->user()->preference('DATE_FORMAT') == 'F j, Y' ? 'selected': ''}}>{{date('F j, Y')}}</option>
+            <option value="d/m/Y" {{auth()->user()->preference('DATE_FORMAT') == 'd/m/Y' ? 'selected': ''}}>{{date('d/m/Y')}}</option>
+            <option value="m/d/Y" {{auth()->user()->preference('DATE_FORMAT') == 'm/d/Y' ? 'selected': ''}}>{{date('m/d/Y')}}</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label for="" class="col-md-3 control-label">Time format</label>
+    <div class="col-md-9">
+        <select name="preferences[TIME_FORMAT]" id="sel-time-format"
+                class="form-control">
+            <option value="g:i a" {{auth()->user()->preference('TIME_FORMAT') == 'g:i a' ? 'selected' : ''}}>{{date('g:i a')}}</option>
+            <option value="h:i a" {{auth()->user()->preference('TIME_FORMAT') == 'h:i a' ? 'selected' : ''}}>{{date('h:i a')}}</option>
+            <option value="g:i A" {{auth()->user()->preference('TIME_FORMAT') == 'g:i A' ? 'selected' : ''}}>{{date('g:i A')}}</option>
+            <option value="h:i A" {{auth()->user()->preference('TIME_FORMAT') == 'h:i A' ? 'selected' : ''}}>{{date('h:i A')}}</option>
+            <option value="H:i" {{auth()->user()->preference('TIME_FORMAT') == 'H:i' ? 'selected' : ''}}>{{date('H:i')}}</option>
+        </select>
+    </div>
+</div>
 
 <div class="text-right">
     {!! Form::submit('UPDATE', ["class"=>"btn btn-primary btn-flat", "href"=>"#", "onclick"=>"profileUpdateOnClick();"]) !!}

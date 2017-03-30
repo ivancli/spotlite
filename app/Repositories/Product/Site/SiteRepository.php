@@ -58,13 +58,28 @@ class SiteRepository implements SiteContract
         } else {
             $sitesBuilder = $product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc');
         }
+//        if ($this->request->has('start')) {
+//            $sitesBuilder->skip($this->request->get('start'));
+//        }
+//        if ($this->request->has('length')) {
+//            $sitesBuilder->take($this->request->get('length'));
+//        }
+        $sites = $sitesBuilder->get();
+
+        if ($this->request->has('order') && !empty($this->request->get('order'))) {
+            if ($this->request->has('sequence') && $this->request->get('sequence') == 'desc') {
+                $sites = $sites->sortByDesc($this->request->get('order'));
+            } else {
+                $sites = $sites->sortBy($this->request->get('order'));
+            }
+        }
         if ($this->request->has('start')) {
-            $sitesBuilder->skip($this->request->get('start'));
+            $sites = $sites->slice($this->request->get('start'), $sites->count());
         }
         if ($this->request->has('length')) {
-            $sitesBuilder->take($this->request->get('length'));
+            $sites = $sites->take($this->request->get('length'));
         }
-        $sites = $sitesBuilder->get();
+
         return $sites;
     }
 

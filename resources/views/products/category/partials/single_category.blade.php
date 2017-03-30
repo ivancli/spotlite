@@ -1,4 +1,4 @@
-<div class="row category-wrapper" data-category-id="{{$category->getKey()}}" draggable="true"
+<div class="row category-wrapper" data-category-id="{{$category->getKey()}}"
      data-report-task-link="{{$category->urls['report_task']}}"
      data-get-site-usage-link="{{$category->urls['site_usage']}}"
 >
@@ -6,10 +6,10 @@
         <table class="table table-condensed tbl-category">
             <thead>
             <tr>
-                <th class="shrink category-th">
+                <th class="shrink category-th vertical-align-middle">
                     <a class="btn-collapse btn-category-dragger"><i class="fa fa-tag "></i></a>
                 </th>
-                <th class="category-th">
+                <th class="category-th  vertical-align-middle">
                     <a class="text-muted category-name-link" href="#"
                        onclick="return false;">{{$category->category_name}}</a>
 
@@ -27,14 +27,16 @@
                             </span>
                         </div>
                         {!! Form::close() !!}
-
-                        <span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i
-                                    class="fa fa-pencil-square-o"></i></span>
+                        {{--<span class="btn-edit btn-edit-category" onclick="toggleEditCategoryName(this)">Edit &nbsp; <i--}}
+                        {{--class="fa fa-pencil-square-o"></i></span>--}}
                     @endif
                 </th>
 
-                <th class="text-right action-cell category-th">
+                <th class="text-right action-cell category-th vertical-align-middle">
                     @if(!auth()->user()->isPastDue)
+                        <a href="#" class="btn-action btn-edit-category" onclick="toggleEditCategoryName(this); event.preventDefault(); return false;">
+                            <i class="glyphicon glyphicon-pencil"></i>
+                        </a>
                         <a href="#" class="btn-action btn-chart" data-toggle="tooltip" title="chart"
                            onclick="showCategoryChart('{{$category->urls['chart']}}'); return false;">
                             <i class="fa fa-line-chart"></i>
@@ -54,7 +56,7 @@
                     @endif
                 </th>
                 <th class="text-center vertical-align-middle" style="background-color: #d3d3d3;" width="70">
-                    <a class="text-muted btn-collapse collapsed" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
+                    <a class="text-muted btn-collapse" style="font-size: 35px;" href="#category-{{$category->getKey()}}"
                        role="button"
                        data-toggle="collapse" data-parent="#accordion" aria-expanded="false"
                        aria-controls="category-{{$category->getKey()}}">
@@ -62,26 +64,23 @@
                     </a>
                 </th>
             </tr>
+            </thead>
+            <tbody>
             <tr>
-                <th></th>
-                <td colspan="3" class="category-th">
-                    <div class="text-light">
-                        Created
-                        @if(!is_null($category->created_at))
-                            on {{date(auth()->user()->preference('DATE_FORMAT'), strtotime($category->created_at))}}
-                        @endif
-                        <strong class="text-muted"><i>by {{$category->user->first_name}} {{$category->user->last_name}}</i></strong>
-                    </div>
-                    <div class="text-light">
-                        Product URLs Tracked:
-                        <strong><span class="lbl-site-usage text-muted">{{$category->sites()->count()}}</span></strong>
-                    </div>
-                </td>
-            </tr>
+                <td></td>
+                <td colspan="3" class="table-container">
+                    <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
+                         data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
+                         data-end="false" aria-expanded="true">
+                        <div class="row">
+                            <div class="col-sm-12 text-center">
+                                <div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">
+
+                                </div>
+                            </div>
+                        </div>
+
             @if(!auth()->user()->isPastDue)
-                <tr>
-                    <th></th>
-                    <th colspan="3" class="category-th action-cell add-item-cell">
                         <div class="add-item-block add-product-container"
                              onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
                             <div class="add-item-label">
@@ -89,26 +88,57 @@
                                 <span class="add-item-text">ADD PRODUCT</span>
                             </div>
                             <div class="add-item-controls">
-                                <div class="row">
-                                    <div class="col-lg-8 col-md-7 col-sm-5 col-xs-4">
-                                        <form action="{{route('product.store')}}" method="post"
-                                              class="frm-store-product"
-                                              onsubmit="btnAddProductOnClick(this); return false;">
-                                            <input type="text" name="product_name" autocomplete="off"
-                                                   class="form-control txt-item txt-product-name">
-                                        </form>
+                                <form action="{{route('product.store')}}" method="post" class="form-horizontal sl-form-horizontal frm-store-product"
+                                      onsubmit="btnAddProductOnClick(this); return false;">
+                                    <input type="text" name="product_name" autocomplete="off" placeholder="Enter product name" class="form-control txt-item txt-product-name">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Brand</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control txt-product-meta txt-product-meta-brand">
+                                        </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 text-right">
-                                        <button class="btn btn-primary btn-flat"
-                                                onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                            ADD PRODUCT
-                                        </button>
-                                        &nbsp;&nbsp;
-                                        <button class="btn btn-default btn-flat btn-cancel-add-product"
-                                                onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
-                                            CANCEL
-                                        </button>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Supplier</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-supplier">
+                                        </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">SKU</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-sku">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Cost price</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-cost-price">
+                                        </div>
+                                    </div>
+                                </form>
+                                <style>
+                                    .txt-product-meta {
+                                        border: none;
+                                        border-bottom: 1px solid #73d0c0;
+                                        -webkit-box-shadow: none;
+                                        -moz-box-shadow: none;
+                                        box-shadow: none;
+                                        font-size: 15px !important;
+                                        font-weight: normal;
+                                        padding-left: 0px;
+                                        padding-right: 0px;
+                                    }
+                                </style>
+                                <div class="text-right" style="margin-top: 10px;">
+                                    <button class="btn btn-primary btn-flat"
+                                            onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                        CONFIRM
+                                    </button>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-default btn-flat btn-cancel-add-product"
+                                            onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
+                                        CANCEL
+                                    </button>
                                 </div>
                             </div>
                             @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
@@ -125,24 +155,7 @@
                                 </div>
                             @endif
                         </div>
-                    </th>
-                </tr>
-            @endif
-            </thead>
-            <tbody>
-            <tr>
-                <td></td>
-                <td colspan="3" class="table-container">
-                    <div id="category-{{$category->getKey()}}" class="collapse collapsible-category-div"
-                         data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
-                         data-end="false" aria-expanded="false">
-                        <div class="row">
-                            <div class="col-sm-12 text-center">
-                                <div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">
-
-                                </div>
-                            </div>
-                        </div>
+        @endif
                     </div>
                 </td>
             </tr>
@@ -190,8 +203,8 @@
             $.ajax({
                 "url": $categoryWrapper.attr("data-products-url"),
                 "data": {
-                    "start": $categoryWrapper.attr("data-start"),
-                    "length": $categoryWrapper.attr("data-length"),
+//                    "start": $categoryWrapper.attr("data-start"),
+//                    "length": $categoryWrapper.attr("data-length"),
                     "keyword": $(".general-search-input").val()
                 },
                 "dataType": "json",

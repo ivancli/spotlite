@@ -181,6 +181,9 @@ return [
         'active' => [
             'required' => 'Activeness is required.',
         ],
+        'reference' => [
+            'required_with' => 'Please select a reference site when :values is selected.'
+        ]
     ],
 
     /*
