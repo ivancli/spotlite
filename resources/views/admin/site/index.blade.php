@@ -378,6 +378,18 @@
                             "data-toggle": "tooltip",
                             "data-placement": "left"
                         })
+                    } else if (data.product.user.isPastDue == true) {
+                        $(row).addClass("danger").attr({
+                            "title": "The subscription of site owner is past due.",
+                            "data-toggle": "tooltip",
+                            "data-placement": "left"
+                        })
+                    } else if (data.product.user.isCancelled == true) {
+                        $(row).addClass("danger").attr({
+                            "title": "The subscription of site owner is cancelled.",
+                            "data-toggle": "tooltip",
+                            "data-placement": "left"
+                        })
                     } else {
                         if(data.product.user.needSubscription == true && data.product.user.subscriptionCriteria != null){
                             $(row).attr({
