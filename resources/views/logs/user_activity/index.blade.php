@@ -68,7 +68,7 @@
                             return $("<div>").append(
                                     $("<a>").attr({
                                         "href": data.urls.owner
-                                    }).addClass("text-muted").text(data.owner.first_name + " " + data.owner.last_name)
+                                    }).addClass("text-muted").text(data.owner.first_name + " " + data.owner.last_name + "(" + data.owner.email + ")")
                             ).html();
                         }
                     },
