@@ -124,6 +124,10 @@
             -khtml-opacity: 0.5;
             opacity: 0.5;
         }
+
+        .basic-notifications {
+            padding-left: 45px;
+        }
     </style>
     <div class="row">
         <div class="col-sm-12">
@@ -176,7 +180,9 @@
                                         &nbsp;
                                         <i class="fa fa-play"></i>
                                         &nbsp;
-                                        <span>Basic Alerts - a single alert type across all Categories and Products</span>
+                                        <span>
+                                            Basic Alerts - a single alert type across all Categories and Products
+                                        </span>
                                         <div class="basic-notifications"
                                              @if(auth()->user()->alerts()->count() == 0)
                                              style="display :none;"
@@ -214,7 +220,9 @@
                                         <i class="fa fa-play"></i>
                                         &nbsp;
                                         <span>
-                                            Advanced Alerts - Choose Category or Product &amp; triggered by:
+                                            Advanced Alerts -
+                                            <span class="appear-text">individual alerts for Categories and Products</span>
+                                            <span class="hidden-text" style="display: none;">Choose Category or Product &amp; triggered by: </span>
                                             &nbsp;&nbsp;
                                             <a href="#" class="text-muted" data-toggle="popover" data-trigger="hover" data-container="body"
                                                data-content="Tick the Category to choose the type of alert. Exapnd Category see the Products and choose individual alerts.">
@@ -552,10 +560,14 @@
                         $(".basic-notifications").slideDown();
                         $(el).closest("li").addClass("active");
                         $("#txt-search").fadeOut();
+                        $(".hidden-text").hide();
+                        $(".appear-text").show();
                     } else {
                         $(".basic-notifications").slideUp();
                         $(el).closest("li").removeClass("active");
                         $("#txt-search").fadeOut();
+                        $(".hidden-text").hide();
+                        $(".appear-text").show();
                     }
                     break;
                 case "advanced":
@@ -565,10 +577,14 @@
                         $(".advanced-notifications").slideDown();
                         $(el).closest("li").addClass("active");
                         $("#txt-search").fadeIn();
+                        $(".hidden-text").show();
+                        $(".appear-text").hide();
                     } else {
                         $("#txt-search").fadeOut();
                         $(".advanced-notifications").slideUp();
                         $(el).closest("li").removeClass("active");
+                        $(".hidden-text").hide();
+                        $(".appear-text").show();
                     }
                     break;
             }
