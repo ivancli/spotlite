@@ -117,54 +117,26 @@
             color: #fff;
         }
 
-        /*ul.lst-category > li::after,*/
-        /*ul.lst-category > li::before {*/
-        /*border: 0;*/
-        /*}*/
-
-        /*.lst-category li::before,*/
-        /*.lst-product li::before {*/
-        /*border-left: 1px dashed #c0c0c0;*/
-        /*bottom: 50px;*/
-        /*height: 100%;*/
-        /*top: 0;*/
-        /*width: 1px;*/
-        /*}*/
-
-        /*.lst-category li::after,*/
-        /*.lst-product li::after {*/
-        /*border-top: 1px dashed #c0c0c0;*/
-        /*height: 20px;*/
-        /*top: 25px;*/
-        /*width: 35px;*/
-        /*}*/
-
-        /*.lst-category li::after,*/
-        /*.lst-category li::before,*/
-        /*.lst-product li::after,*/
-        /*.lst-product li::before {*/
-        /*content: '';*/
-        /*left: -35px;*/
-        /*position: absolute;*/
-        /*right: auto;*/
-        /*}*/
+        .lst-alert-type > li:not(.active) {
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            -khtml-opacity: 0.5;
+            opacity: 0.5;
+        }
     </style>
     <div class="row">
         <div class="col-sm-12">
-            <p class="text-muted font-size-17">
-                {{--In this area of SpotLite you can set-up all the prices that you want to track. Simply add a category,--}}
-                {{--then a product name. Once you have done this, simply copy and paste the product pages of the brands--}}
-                {{--prices you want to track. To do this go to each of the brand or competitors site, navigate to the--}}
-                {{--product details page or any place that holds the pricing information. Copy and paste the URL into the--}}
-                {{--Add URL box shown below.--}}
-                Here you can see the list of alerts you have set up across your Categories and Products. You'll be able
-                to edit or delete them by clicking on the corresponding icons on the far right hand side of each
-                Category or Product line.
+            <p class="text-muted font-size-17 m-b-20">
+                You can set up Basic or Advanced real-time alerts so you can receive email notifications when your competitors or channels change prices, beat your price or match a specific price
+                point you nominate.
+            </p>
+            <p class="text-muted font-size-17 m-b-20">
+                <span class="text-danger">Important:</span> some Categories and Products have frequent price changes and you'll be notified of each one of them, which might result in a large quantity
+                of emails. If you don't want to receive many emails, you might want to Schedule a Report instead.
             </p>
         </div>
     </div>
-
-    <hr class="content-divider-white">
 
     <div class="row">
         <div class="col-sm-12">
@@ -182,7 +154,6 @@
                 <div class="tab-content">
 
                     <div class="chart tab-pane active" id="alert-settings">
-
                         <div class="warning-message-container text-danger m-b-10" style="display: none;">
                             <i class="fa fa-info-circle"></i> &nbsp; For this alert to be set up, you need to
                             <a href="https://spotlitehelp.zendesk.com/hc/en-us/articles/235847887-How-do-I-nominate-My-Site-URL-" class="text-danger" style="text-decoration: underline">nominate your
@@ -191,6 +162,7 @@
 
                         <div class="row">
                             <div class="col-md-9">
+                                <p style="padding-left: 20px;">To receive price change email alerts, choose from the following options:</p>
                                 <ul class="lst-alert-type text-muted" style="padding-left: 20px; list-style: none;">
                                     <li class="
                                     @if(auth()->user()->alerts()->count() > 0)
