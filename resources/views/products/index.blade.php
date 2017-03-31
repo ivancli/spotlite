@@ -62,7 +62,7 @@
                         </div>
                     @else
                         <div class="row m-b-10 text-muted font-weight-bold">
-                            <div class="col-md-8 line-height-30">
+                            <div class="col-md-12 line-height-30">
                                 @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
                                     @if(!is_null(auth()->user()->apiSubscription->product()))
                                         {{auth()->user()->apiSubscription->product()->name}} Plan:
@@ -90,22 +90,22 @@
                                     products
                                 @endif
                             </div>
-                            <div class="col-md-4">
-                                <div class="pull-right">
-                                    <a href="#" onclick="showSetUpNotifications(); return false;"
-                                       class="btn btn-purple btn-flat {{auth()->user()->isPastDue ? 'disabled' : ''}}" id="btn-set-up-alerts">
-                                        @if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)
-                                            <i class="fa fa-bell ico-alert-enabled"></i>
-                                            &nbsp;
-                                            MANAGE ALERTS
-                                        @else
-                                            <i class="fa fa-bell-o"></i>
-                                            &nbsp;
-                                            SET UP ALERTS
-                                        @endif
-                                    </a>
-                                </div>
-                            </div>
+                            {{--<div class="col-md-4">--}}
+                                {{--<div class="pull-right">--}}
+                                    {{--<a href="#" onclick="showSetUpNotifications(); return false;"--}}
+                                       {{--class="btn btn-purple btn-flat {{auth()->user()->isPastDue ? 'disabled' : ''}}" id="btn-set-up-alerts">--}}
+                                        {{--@if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)--}}
+                                            {{--<i class="fa fa-bell ico-alert-enabled"></i>--}}
+                                            {{--&nbsp;--}}
+                                            {{--MANAGE ALERTS--}}
+                                        {{--@else--}}
+                                            {{--<i class="fa fa-bell-o"></i>--}}
+                                            {{--&nbsp;--}}
+                                            {{--SET UP ALERTS--}}
+                                        {{--@endif--}}
+                                    {{--</a>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                         </div>
 
                     @endif
