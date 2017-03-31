@@ -64,7 +64,7 @@
                 <h4 class="modal-title">Set Up Alerts</h4>
             </div>
             <div class="modal-body">
-                <div class="warnning-message-container text-danger m-b-10" style="display: none;">
+                <div class="warning-message-container text-danger m-b-10" style="display: none;">
                     <i class="fa fa-info-circle"></i> &nbsp; For this alert to be set up, you need to
                     <a href="https://spotlitehelp.zendesk.com/hc/en-us/articles/235847887-How-do-I-nominate-My-Site-URL-" class="text-danger" style="text-decoration: underline">nominate your site URL</a>
                 </div>
@@ -397,7 +397,7 @@
         }
 
         function checkCompanyURL() {
-            $(".warnning-message-container").hide();
+            $(".warning-message-container").hide();
             var show = false;
             $(".sel-category-notification-type, .sel-notification-type, #basic-notification-type").each(function () {
                 if ($(this).val() == "my price" && (user.company_url == null || user.company_url.trim() == "")) {
@@ -405,9 +405,9 @@
                 }
             });
             if (show == true) {
-                $(".warnning-message-container").show();
+                $(".warning-message-container").show();
             } else {
-                $(".warnning-message-container").hide();
+                $(".warning-message-container").hide();
             }
         }
 

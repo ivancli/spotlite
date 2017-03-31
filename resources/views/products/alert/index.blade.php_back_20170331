@@ -1,0 +1,378 @@
+@extends('layouts.adminlte')
+@section('title', 'Alerts')
+@section('header_title', "Alerts")
+
+@section('breadcrumbs')
+    {{--    {!! Breadcrumbs::render('alert_index') !!}--}}
+@stop
+
+@section('head_scripts')
+    {{--TOUR--}}
+    @if(auth()->user()->categories()->count() > 0)
+        <script type="text/javascript" src="{{elixir('js/dashboard-tour.js')}}"></script>
+    @else
+        <script type="text/javascript" src="{{elixir('js/alert-tour.js')}}"></script>
+    @endif
+@stop
+
+@section('links')
+    <link rel="stylesheet" href="{{elixir('css/tour.css')}}">
+@stop
+
+@section('content')
+    <style>
+        #tbl-report-task .popover {
+            font-size: 11px;
+        }
+
+        #tbl-report-task .popover .popover-content {
+            padding: 5px 7px;
+        }
+
+        .collapsed > .fa-play {
+            transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            transition: transform 550ms ease;
+            -moz-transition: -moz-transform 550ms ease;
+            -ms-transition: -ms-transform 550ms ease;
+            -o-transition: -o-transform 550ms ease;
+            -webkit-transition: -webkit-transform 550ms ease;
+        }
+
+        .fa-play {
+            transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            transition: transform 550ms ease;
+            -moz-transition: -moz-transform 550ms ease;
+            -ms-transition: -ms-transform 550ms ease;
+            -o-transition: -o-transform 550ms ease;
+            -webkit-transition: -webkit-transform 550ms ease;
+            color: #696969;
+        }
+
+        ul {
+            overflow: hidden;
+        }
+
+        .checkbox {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    </style>
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="text-muted font-size-17">
+                {{--In this area of SpotLite you can set-up all the prices that you want to track. Simply add a category,--}}
+                {{--then a product name. Once you have done this, simply copy and paste the product pages of the brands--}}
+                {{--prices you want to track. To do this go to each of the brand or competitors site, navigate to the--}}
+                {{--product details page or any place that holds the pricing information. Copy and paste the URL into the--}}
+                {{--Add URL box shown below.--}}
+                Here you can see the list of alerts you have set up across your Categories and Products. You'll be able
+                to edit or delete them by clicking on the corresponding icons on the far right hand side of each
+                Category or Product line.
+            </p>
+        </div>
+    </div>
+
+    <hr class="content-divider-white">
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs ui-sortable-handle">
+                    <li class="active">
+                        <a href="#alert-settings" data-toggle="tab" aria-expanded="true">Alert Settings</a>
+                    </li>
+                    <li class="">
+                        <a href="#alert-history" data-toggle="tab" aria-expanded="false">Alert History</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+
+                    <div class="chart tab-pane active" id="alert-settings">
+                        <ul style="list-style: none;">
+                            <li class="basic-list-container">
+                                <div class="li-group">
+                                    <div class="checkbox">
+                                        <label class="collapsed">
+                                            <input type="checkbox" id="rd-alert-type-basic" name="alert_type" onchange="updateAlertTypeStatus(this);">
+                                            &nbsp;
+                                            <i class="fa fa-play"></i>
+                                            &nbsp;
+                                            <span>Basic Alerts - a single alert type across all Categories and Products</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="basic-form" style="display:none">
+                                    <form id="frm-notification-basic" class="nl-form">
+                                        Send alert when
+                                        &nbsp;
+                                        <select name="notification_type" id="basic-notification-type" onchange="checkCompanyURL();">
+                                            <option value=""> -- select alert type --</option>
+                                            <option value="my price" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'my price' ? "selected" : ""}}>
+                                                my price was beaten
+                                            </option>
+                                            <option value="price changed" {{!is_null(auth()->user()->alerts()->first()) && auth()->user()->alerts()->first()->comparison_price_type == 'price changed' ? "selected" : ""}}>
+                                                price changes
+                                            </option>
+                                        </select>
+                                        &nbsp;
+                                        in all categories.
+                                        <div class="nl-overlay"></div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="advanced-list-container" style="position: relative">
+                                <div class="li-group">
+                                    <div class="checkbox">
+                                        <label class="collapsed">
+                                            <input type="checkbox" id="rd-alert-type-advanced" name="alert_type" onchange="updateAlertTypeStatus(this);">
+                                            &nbsp;
+                                            <i class="fa fa-play"></i>
+                                            &nbsp;
+                                            <span>Advanced Alerts - Choose Category or Product &amp; triggered by:</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <ul class="lst-categories" style="list-style: none; display: none;">
+                                    @foreach(auth()->user()->categories as $category)
+                                        <li style="position: relative;">
+                                            <div class="li-group">
+                                                <div class="checkbox">
+                                                    <label class="collapsed">
+                                                        <input type="checkbox" onchange="updateCategoryStatus(this);">
+                                                        &nbsp;
+                                                        <i class="fa fa-play"></i>
+                                                        &nbsp;
+                                                        <span>{{$category->category_name}}</span>
+                                                        <div class="category-form">
+                                                            <form class="form-control-inline frm-category-notification nl-form" style="display: none;">
+                                                                <select class="form-control input-sm form-control-inline sel-category-notification-type"
+                                                                        onchange="checkCompanyURL();">
+                                                                    <option value=""> -- select alert type --</option>
+                                                                    <option value="my price" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'my price' ? "selected" : ""}}>
+                                                                        beats my price
+                                                                    </option>
+                                                                    <option value="price changed" {{!is_null($category->alert) && $category->alert->comparison_price_type == 'price changed' ? "selected" : ""}}>
+                                                                        price changes
+                                                                    </option>
+                                                                </select>
+                                                                <div class="nl-overlay"></div>
+                                                            </form>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="products-container" style="display: none;">
+                                                <ul style="list-style: none;">
+                                                    @foreach($category->products as $product)
+                                                        <li style="position: relative">
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox">
+                                                                    &nbsp;
+                                                                    <span>{{$product->product_name}}</span>
+                                                                </label>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart tab-pane" id="alert-history">
+                        <table class="table table-striped table-condensed table-bordered" id="tbl-alert-log">
+                            <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Sent at</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@stop
+
+@section('scripts')
+    <script type="text/javascript">
+        var tblAlertLog = null;
+        $(function () {
+            $("a[data-toggle=tab][href='#alert-history']").on("shown.bs.tab", function (e) {
+                if (tblAlertLog == null) {
+                    initAlertLog();
+                }
+            });
+
+            jQuery.fn.dataTable.Api.register('processing()', function (show) {
+                return this.iterator('table', function (ctx) {
+                    ctx.oApi._fnProcessingDisplay(ctx, show);
+                });
+            });
+        });
+
+        function updateAlertTypeStatus(el) {
+            if ($(el).is(":checked")) {
+                if ($(el).attr("id") == "rd-alert-type-basic") {
+                    $("#rd-alert-type-advanced").prop("checked", false);
+                    collapseAdvancedAlert();
+                    expandBasicAlert();
+                } else {
+                    $("#rd-alert-type-basic").prop("checked", false);
+                    /*TODO expand */
+                    expandAdvancedAlert();
+                    collapseBasicAlert();
+                }
+            } else {
+                if ($(el).attr("id") == "rd-alert-type-advanced") {
+                    collapseAdvancedAlert();
+                } else {
+                    collapseBasicAlert();
+                }
+            }
+        }
+
+        function expandAdvancedAlert() {
+            $(".advanced-list-container > .li-group").find(".collapsed").removeClass("collapsed");
+            $(".lst-categories").slideDown();
+        }
+        function expandBasicAlert() {
+            $(".basic-list-container > .li-group").find(".collapsed").removeClass("collapsed");
+            $(".basic-form").slideDown();
+        }
+
+        function collapseAdvancedAlert() {
+            $(".advanced-list-container > .li-group").find("label").addClass("collapsed");
+            $(".lst-categories").slideUp();
+        }
+        function collapseBasicAlert() {
+            $(".basic-list-container > .li-group").find("label").addClass("collapsed");
+            $(".basic-form").slideUp();
+        }
+
+        function updateCategoryStatus(el) {
+            if ($(el).is(":checked")) {
+                $(el).closest("label").removeClass("collapsed");
+                expandCategory($(el).closest("li").find(".products-container"));
+            } else {
+                $(el).closest("label").addClass("collapsed");
+                collapseCategory($(el).closest("li").find(".products-container"));
+            }
+        }
+
+        function expandCategory($el) {
+            $el.slideDown();
+        }
+
+        function collapseCategory($el) {
+            $el.slideUp();
+
+        }
+
+        function initAlertLog() {
+            tblAlertLog = $("#tbl-alert-log").DataTable({
+                "pagingType": "full_numbers",
+                "processing": true,
+                "serverSide": true,
+                "filter": false,
+                "pageLength": 10,
+                "ordering": false,
+                "language": {
+                    "emptyTable": "No alert logs in the list",
+                    "zeroRecords": "No alert logs in the list"
+                },
+                "dom": "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12'p>>",
+                "ajax": {
+                    "url": "{{route('alert_log.index')}}"
+                },
+                "columns": [
+                    {
+                        "name": "alert_activity_log_id",
+                        "data": function (data) {
+                            var content = JSON.parse(data.content);
+                            var popoverContent = "";
+                            var alertOwnerType = "";
+                            if (data.alert_activity_log_owner_type == "product") {
+                                alertOwnerType = "Product ";
+                                popoverContent = $("<div>").append(
+                                    $("<div>").append(
+                                        "Name: ",
+                                        $("<strong>").text(data.alert_activity_log_owner.product_name)
+                                    ),
+                                    $("<div>").append(
+                                        "Number of sites: ",
+                                        $("<strong>").text(data.alert_activity_log_owner.siteCount)
+                                    )
+                                ).html()
+                            } else {
+                                alertOwnerType = "Site ";
+                                popoverContent = $("<div>").append(
+                                    $("<div>").append(
+                                        "Domain: ",
+                                        $("<strong>").text(data.alert_activity_log_owner.domain)
+                                    ),
+                                    $("<div>").append(
+                                        "Last crawled: ",
+                                        $("<strong>").text(timestampToDateTimeByFormat(moment(data.alert_activity_log_owner.last_crawled_at).unix(), datefmt + " " + timefmt))
+                                    ),
+                                    $("<div>").append(
+                                        "Recent price: ",
+                                        $("<strong>").text('$' + parseFloat(data.alert_activity_log_owner.recent_price).formatMoney(2, '.', ','))
+                                    )
+                                ).html()
+                            }
+
+                            return $("<div>").append(
+                                $("<div>").append(
+                                    $("<a>").attr({
+                                        "href": "#",
+                                        "onclick": "return false;",
+                                        "data-toggle": "popover",
+                                        "data-content": popoverContent,
+                                        "data-html": true,
+                                        "data-trigger": "hover"
+                                    }).addClass("text-muted").text(alertOwnerType),
+                                    "alert sent to ",
+                                    $("<a>").attr({
+                                        "href": "mailto:" + content.email.alert_email_address
+                                    }).text(content.email.alert_email_address)
+                                )
+                            ).html();
+                        }
+                    },
+                    {
+                        "name": "created_at",
+                        "data": function (data) {
+                            return timestampToDateTimeByFormat(moment(data.created_at).unix(), datefmt + " " + timefmt);
+                        }
+                    }
+                ],
+                "drawCallback": function (settings) {
+                    initialisePopover();
+                }
+            });
+
+        }
+
+        function initialisePopover() {
+            $("[data-toggle=popover]").popover();
+        }
+    </script>
+
+@stop
