@@ -280,3 +280,5 @@ Route::get('api/geo/city/{ip_address?}', 'API\GeoController@cityByIP')->name('ap
 Route::get('api/geo/all/{ip_address?}', 'API\GeoController@allByIP')->name('api.geo.all');
 
 Route::get('api/subscription/verify_coupon', 'API\SubscriptionController@verifyCoupon')->name('api.subscription.coupon');
+
+Route::get('test', 'TestController@index');

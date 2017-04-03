@@ -80,6 +80,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\UserDomain', 'user_id', 'user_id')->orderBy('domain', 'asc');
     }
 
+    public function reportTask()
+    {
+        return $this->morphOne('App\Models\ReportTask', 'report_task_owner', null, null, 'user_id');
+    }
 
     public function nonHiddenDashboards()
     {

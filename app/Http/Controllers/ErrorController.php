@@ -28,9 +28,9 @@ class ErrorController extends Controller
         if (isset($input['url']) && !empty($input['url']) && parse_url($input['url']) !== false && isset(parse_url($input['url'])['host'])) {
             $host = parse_url($input['url'])['host'];
         }
-        dispatch((new SendMail('errors.email.front_end', compact(['input']), array(
-            "email" => config('error_notifier.email'),
-            "subject" => 'Error on ' . $host,
-        )))->onQueue("mailing"));
+//        dispatch((new SendMail('errors.email.front_end', compact(['input']), array(
+//            "email" => config('error_notifier.email'),
+//            "subject" => 'Error on ' . $host,
+//        )))->onQueue("mailing"));
     }
 }
