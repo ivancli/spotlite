@@ -12,6 +12,8 @@ use App\Events\User\Profile\ProfileViewed;
 use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\HistoricalPrice;
+use App\Models\ReportEmail;
+use App\Models\ReportTask;
 use App\Models\User;
 use App\Models\UserPreference;
 use App\Validators\User\Profile\InitUpdateValidator;
@@ -104,6 +106,43 @@ class ProfileController extends Controller
         $preferences = $request->get('preferences');
         foreach ($preferences as $key => $preference) {
             UserPreference::setPreference(auth()->user(), $key, $preference);
+        }
+
+        /*it's freaking stupid that designers want to place a reporting function in edit profile page */
+        /*here we go, daily/weekly digest*/
+        if ($request->has('digest') && $request->get('digest') == 'on') {
+            $frequency = $request->get('frequency');
+            $time = $request->get('time');
+            $day = $request->get('day');
+            $weekday = $request->get('weekday');
+            $data = array();
+            switch ($frequency) {
+                case "daily":
+                    $data = [
+                        'frequency' => $frequency,
+                        'time' => $time,
+                        'weekday' => $weekday == 'on' ? 'y' : 'n'
+                    ];
+                    break;
+                case "weekly":
+                    $data = [
+                        'frequency' => $frequency,
+                        'day' => $day
+                    ];
+                    break;
+            }
+
+            if (is_null($user->reportTask)) {
+                $reportTask = $user->reportTask()->save(new ReportTask($data));
+                $reportTask->emails()->save(new ReportEmail([
+                    "report_email_address" => $user->email
+                ]));
+            } else {
+                $user->reportTask->update($data);
+            }
+
+        } elseif (!is_null($user->reportTask)) {
+            $user->reportTask->delete();
         }
 
 

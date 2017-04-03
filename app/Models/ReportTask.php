@@ -14,13 +14,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReportTask extends Model
 {
+    public $timestamps = false;
     protected $primaryKey = "report_task_id";
     protected $fillable = [
         "report_task_owner_type", "report_task_owner_id", "frequency", "date", "day", "time", "weekday_only", "delivery_method", "file_type", "status", "last_sent_at"
     ];
     protected $appends = ["urls"];
-
-    public $timestamps = false;
 
     public function reportable()
     {
@@ -48,10 +47,14 @@ class ReportTask extends Model
     {
         $reportTaskOwnerType = $this->report_task_owner_type;
         $reportTaskOwnerId = $this->report_task_owner_id;
-        return array(
-            "edit" => route("report_task.$reportTaskOwnerType.edit", $reportTaskOwnerId),
-            "delete" => route("report_task.$reportTaskOwnerType.destroy", $reportTaskOwnerId),
-        );
+        if ($reportTaskOwnerType != 'user') {
+            return array(
+                "edit" => route("report_task.$reportTaskOwnerType.edit", $reportTaskOwnerId),
+                "delete" => route("report_task.$reportTaskOwnerType.destroy", $reportTaskOwnerId),
+            );
+        } else {
+            return [];
+        }
     }
 
 }

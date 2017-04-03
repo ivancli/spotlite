@@ -19,7 +19,7 @@ class Site extends Model
     protected $fillable = [
         "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "status", "my_price", "comment", "site_order", "created_at", "updated_at"
     ];
-    protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt', 'userDomainName'];
+    protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt', 'userDomainName', 'isCheapest', 'isMostExpensive'];
 
     public function preference()
     {
@@ -135,6 +135,26 @@ class Site extends Model
             }
         }
         return null;
+    }
+
+    public function getIsCheapestAttribute()
+    {
+        $product = $this->product;
+        if (!is_null($product) && $product->cheapestSites()->count() > 0) {
+            return $product->cheapestSites()->where('site_id', '=', $this->getKey())->count() > 0;
+        } else {
+            return false;
+        }
+    }
+
+    public function getIsMostExpensiveAttribute()
+    {
+        $product = $this->product;
+        if (!is_null($product) && $product->mostExpensiveSites()->count() > 0) {
+            return $product->mostExpensiveSites()->where('site_id', '=', $this->getKey())->count() > 0;
+        } else {
+            return false;
+        }
     }
 
     public function statusOK()

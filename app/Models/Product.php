@@ -49,6 +49,12 @@ class Product extends Model
         return $this->sites()->whereNotNull('recent_price')->where("recent_price", $minPrice);
     }
 
+    public function mostExpensiveSites()
+    {
+        $minPrice = $this->sites()->max('recent_price');
+        return $this->sites()->whereNotNull('recent_price')->where("recent_price", $minPrice);
+    }
+
     public function meta()
     {
         return $this->hasOne('App\Models\ProductMeta', 'product_id', 'product_id');
