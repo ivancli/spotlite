@@ -68,7 +68,7 @@ class SendReport extends Job implements ShouldQueue
                 $data = compact(['report', 'reportTask']);
                 break;
             case "user":
-                $subject = "SpotLite Digest for " . date("Y-m-d");
+                $subject = title_case($this->reportTask->frequency) . " Digest - " . date("Y-m-d");
                 $view = 'products.report.email.user';
 
                 $user = $this->reportTask->reportable;
