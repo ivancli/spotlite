@@ -877,7 +877,7 @@
                                 Legend:&nbsp;&nbsp;&nbsp;&nbsp;
                                 <img src="{{asset('/build/images/email/up.png')}}" alt="" width="10"> Price Increase &nbsp;&nbsp;&nbsp;&nbsp;
                                 <img src="{{asset('/build/images/email/down.png')}}" alt="" width="10"> Price Decrease &nbsp;&nbsp;&nbsp;&nbsp;
-                                <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="10"> Price Crawl Failed
+                                <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="10"> Price Check Failed
                             </p>
                             <div style="width: 100% !important;  overflow-x: auto;">
 
