@@ -207,7 +207,7 @@
             <div class="col-sm-12">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="weekday" {{ !is_null($user->reporTask) && $user->reportTask->weekday == 'y' ? 'checked="checked"' : '' }}> weekday only
+                        <input type="checkbox" name="weekday" {{ !is_null($user->reporTask) && $user->reportTask->weekday == 'y' ? 'checked="checked"' : '' }}> Weekday only
                     </label>
                 </div>
             </div>

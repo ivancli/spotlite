@@ -117,7 +117,7 @@
             color: #fff;
         }
 
-        .lst-alert-type > li:not(.active) {
+        .lst-alert-type > li.inactive {
             -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
             filter: alpha(opacity=50);
             -moz-opacity: 0.5;
@@ -225,7 +225,7 @@
                                             <span class="hidden-text" style="display: none;">Choose Category or Product &amp; triggered by: </span>
                                             &nbsp;&nbsp;
                                             <a href="#" class="text-muted" data-toggle="popover" data-trigger="hover" data-container="body"
-                                               data-content="Tick the Category to choose the type of alert. Exapnd Category see the Products and choose individual alerts.">
+                                               data-content="Tick the Category to choose the type of alert. Expand Category to see the Products and choose individual alerts.">
                                                 <i class="fa fa-info-circle"></i>
                                             </a>
                                         </span>
@@ -330,7 +330,7 @@
                                 </ul>
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" id="txt-search" placeholder="SEARCH" style="
+                                <input type="text" class="form-control" id="txt-search" placeholder="SEARCH CATEGORY/PRODUCT NAME" style="
                                 @if(auth()->user()->categoryAlerts()->count() == 0 && auth()->user()->productAlerts()->count() == 0)
                                         display: none;
                                 @endif
@@ -554,28 +554,29 @@
             switch ($(el).attr("data-type")) {
                 case "basic":
                     /*disable advanced*/
-                    $("#rd-alert-type-advanced").prop("checked", false).closest("li").removeClass("active");
+                    $("#rd-alert-type-advanced").prop("checked", false).closest("li").removeClass("active").addClass("inactive");
                     $(".advanced-notifications").slideUp();
                     if ($(el).is(":checked")) {
                         $(".basic-notifications").slideDown();
-                        $(el).closest("li").addClass("active");
+                        $(el).closest("li").addClass("active").removeClass("inactive");
                         $("#txt-search").fadeOut();
                         $(".hidden-text").hide();
                         $(".appear-text").show();
                     } else {
                         $(".basic-notifications").slideUp();
                         $(el).closest("li").removeClass("active");
+                        $("#rd-alert-type-advanced").closest("li").removeClass("inactive");
                         $("#txt-search").fadeOut();
                         $(".hidden-text").hide();
                         $(".appear-text").show();
                     }
                     break;
                 case "advanced":
-                    $("#rd-alert-type-basic").prop("checked", false).closest("li").removeClass("active");
+                    $("#rd-alert-type-basic").prop("checked", false).closest("li").removeClass("active").addClass("inactive");
                     $(".basic-notifications").slideUp();
                     if ($(el).is(":checked")) {
                         $(".advanced-notifications").slideDown();
-                        $(el).closest("li").addClass("active");
+                        $(el).closest("li").addClass("active").removeClass("inactive");
                         $("#txt-search").fadeIn();
                         $(".hidden-text").show();
                         $(".appear-text").hide();
@@ -583,6 +584,7 @@
                         $("#txt-search").fadeOut();
                         $(".advanced-notifications").slideUp();
                         $(el).closest("li").removeClass("active");
+                        $("#rd-alert-type-basic").closest("li").removeClass("inactive");
                         $(".hidden-text").hide();
                         $(".appear-text").show();
                     }
