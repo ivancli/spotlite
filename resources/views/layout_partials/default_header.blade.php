@@ -168,7 +168,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{route('account.index')}}#user-settings">My Account</a></li>
-                                <li><a href="{{route('account.index')}}#import-products">Bulk Import</a></li>
+                                <li><a href="{{route('account.index')}}#import-products">Bulk Import <span style="font-size: 10px;color: #00d200;font-weight: bold;position: absolute;padding-left: 3px;">NEW</span></a></li>
                                 <li><a href="{{route('account.index')}}#user-password">Reset Password</a></li>
                                 <li><a href="{{route('account.index')}}#user-domains">Site Names</a></li>
                                 {{--<li><a href="{{route('account.index')}}#display-settings">Display Settings</a></li>--}}
@@ -209,76 +209,3 @@
         <!-- /.container-fluid -->
     </nav>
 </header>
-
-
-{{--<header class="main-header">--}}
-{{--<!-- Logo -->--}}
-{{--<a href="{{route('dashboard.index')}}" class="logo">--}}
-{{--<!-- mini logo for sidebar mini 50x50 pixels -->--}}
-{{--<span class="logo-mini"><img src="{{asset('build/images/favicon.png')}}" alt="SpotLite" height="30"></span>--}}
-{{--<!-- logo for regular state and mobile devices -->--}}
-{{--<span class="logo-lg">--}}
-{{--            <img src="{{asset('build/images/logo-fixed-custom.png')}}" alt="SpotLite" height="40">--}}
-{{--            <img src="{{asset('build/images/SpotLite_Logo_with_tagline2.png')}}" alt="SpotLite" height="100">--}}
-
-{{--<img src="{{asset('build/images/logo_transparent_white_text.png')}}" alt="SpotLite" height="75"--}}
-{{--style="padding-top: 20px;">--}}
-{{--</span>--}}
-{{--</a>--}}
-{{--<!-- Header Navbar: style can be found in header.less -->--}}
-{{--<nav class="navbar navbar-static-top">--}}
-{{--<!-- Sidebar toggle button-->--}}
-{{--<a href="#" class="sidebar-toggle visible-xs" data-toggle="offcanvas" role="button"--}}
-{{--onclick="saveSidebarStatus()">--}}
-{{--<span class="sr-only">Toggle navigation</span>--}}
-{{--</a>--}}
-
-{{--<div class="navbar-custom-menu">--}}
-{{--<ul class="nav navbar-nav">--}}
-{{--@if(Auth::check())--}}
-{{--<li>--}}
-{{--<a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"--}}
-{{--aria-expanded="false">--}}
-{{--<i class="glyphicon glyphicon-cog"></i>--}}
-{{--&nbsp;&nbsp;--}}
-{{--<i class="fa fa-caret-down"></i>--}}
-{{--</a>--}}
-{{--<ul class="dropdown-menu">--}}
-{{--<li><a href="{{route('account.index')}}#user-settings">My Account</a></li>--}}
-{{--<li><a href="{{route('account.index')}}#user-password">Reset Password</a></li>--}}
-{{--<li><a href="{{route('account.index')}}#user-domains">Site Names</a></li>--}}
-{{--<li><a href="{{route('account.index')}}#display-settings">Display Settings</a></li>--}}
-{{--<li><a href="{{route('account.index')}}#manage-subscription">Manage My Subscription</a></li>--}}
-{{--<li><a href="{{route('logout')}}" onclick="gaLogout();">Logout</a></li>--}}
-{{--</ul>--}}
-{{--</li>--}}
-{{--<li>--}}
-{{--<a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"--}}
-{{--aria-expanded="false">--}}
-{{--<i class="fa fa-question-circle"></i>--}}
-{{--&nbsp;&nbsp;--}}
-{{--<i class="fa fa-caret-down"></i>--}}
-{{--</a>--}}
-{{--<ul class="dropdown-menu">--}}
-{{--<li><a href="#" onclick="startSpotLiteTour(this); return false;">--}}
-{{--SpotLite Tour--}}
-{{--</a>--}}
-{{--</li>--}}
-{{--<li>--}}
-{{--<a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682247-Video-Tutorials"--}}
-{{--target="_blank">Video--}}
-{{--Tutorials</a></li>--}}
-{{--<li><a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204664368-FAQ"--}}
-{{--target="_blank">FAQ</a></li>--}}
-{{--<li>--}}
-{{--<a href="https://spotlitehelp.zendesk.com/hc/en-us/categories/204682187-Step-by-Step-Guide"--}}
-{{--target="_blank">Step by Step Guide</a>--}}
-{{--</li>--}}
-{{--<li><a href="#" onclick="showContactUs(); return false;">Contact us</a></li>--}}
-{{--</ul>--}}
-{{--</li>--}}
-{{--@endif--}}
-{{--</ul>--}}
-{{--</div>--}}
-{{--</nav>--}}
-{{--</header>--}}
