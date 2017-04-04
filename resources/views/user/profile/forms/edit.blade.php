@@ -149,7 +149,7 @@
     </div>
 </div>
 <div class="form-group">
-    <h4 class="col-sm-12 font-weight-bold">Display Preferences</h4>
+    <h4 class="col-sm-12 font-weight-bold">SpotLite Digest</h4>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
