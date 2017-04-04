@@ -959,6 +959,9 @@
                         </div>
 
                         <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
+                            <p style="font-family: roboto,tahoma,sans-serif;">You can check details of all your Categories and Products price changes on your Products page:</p>
+                        </div>
+                        <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
                             <div class="btn btn--shadow btn--large" style="text-align:left;">
                                 <![if !mso]><a
                                         style='border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px 13px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #fff;box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.2);background-color: #7ed0c0; font-family: "Open Sans", sans-serif;font-family: "Open Sans",sans-serif;'
