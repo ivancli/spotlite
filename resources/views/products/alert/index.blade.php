@@ -89,6 +89,7 @@
         }
 
         .lst-category, .lst-product {
+            margin-top: 15px;
             margin-bottom: 5px;
             padding-left: 45px;
         }
@@ -96,6 +97,7 @@
         .lst-category > li,
         .lst-product > li {
             margin-top: 5px;
+            padding-bottom: 10px;
         }
 
         #txt-search {

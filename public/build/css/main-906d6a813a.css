@@ -187,7 +187,7 @@ td,
 th {
   padding: 0;
 }
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-40a20d9ea8.css */
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src\build//css/main-906d6a813a.css */
 @media print {
   *,
   *:before,
@@ -16429,6 +16429,7 @@ ______________________________________________________________
 }
 
 .advanced-notifications {
+    margin-top: 15px;
     margin-bottom: 20px;
 }
 
