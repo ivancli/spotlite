@@ -414,6 +414,8 @@
                             }
                         } else {
                             $(this).slideDown();
+                            var productMatched = false;
+                            $(this).find("[data-product-name]").slideDown();
                         }
                     });
                 } else {
