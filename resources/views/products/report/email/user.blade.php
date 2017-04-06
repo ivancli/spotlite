@@ -914,7 +914,13 @@
                                             <td style="padding: 2px; border: 1px solid #a9a9a9;">{{ !is_null($site->product->category) ?  $site->product->category->category_name : '' }}</td>
                                             <td style="padding: 2px; border: 1px solid #a9a9a9;">{{ $site->product->product_name }}</td>
                                             <td style="padding: 2px; border: 1px solid #a9a9a9;">
-                                                <a href="{{$site->site_url}}" target="_blank" style="color: inherit">
+                                                <a href="{{$site->site_url}}" target="_blank" style="
+                                                @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
+                                                        color: #ff0000; font-weight: bold;
+                                                @elseif($site->my_price == 'y')
+                                                        color: #11ce9f; font-weight: bold;
+                                                @endif
+                                                        ">
                                                     @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
                                                         CHECK PRODUCT PAGE URL
                                                     @else
