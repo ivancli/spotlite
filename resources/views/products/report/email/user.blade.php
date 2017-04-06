@@ -881,17 +881,17 @@
                             </p>
                         </div>
 
-                            <!--[if (mso)|(IE)]>
+                        <!--[if (mso)|(IE)]>
                         <div>
                             <div style="width: 100%; margin-top: 20px; margin-bottom: 20px;">
                                 <table style="width: 100%; font-size: 10px; font-weight: bold; font-family: roboto,tahoma,sans-serif;color: #464447;">
-                            <![endif]-->
+                        <![endif]-->
 
-                            <!--[if !mso]><!-->
+                        <!--[if !mso]><!-->
                         <div style=" margin-left: 20px; margin-right: 20px;">
                             <div style="width: 100% !important;  overflow-x: auto;">
                                 <table style="margin-top: 20px; margin-bottom: 20px; width: 100%; font-size: 10px; font-weight: bold; min-width: 660px !important; font-family: roboto,tahoma,sans-serif;color: #464447;">
-                            <!--<![endif]-->
+                                    <!--<![endif]-->
                                     <thead>
                                     <tr style="color: #fff; background-color: #7ed0c0">
                                         <th style="padding: 2px; border: 1px solid #a9a9a9;">Category</th>
@@ -919,6 +919,7 @@
                                                         color: #ff0000 !important; font-weight: bold;
                                                 @elseif($site->my_price == 'y')
                                                         color: #11ce9f !important; font-weight: bold;
+                                                @else
                                                 @endif
                                                         ">
                                                     @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
@@ -945,7 +946,7 @@
                                                         @else
                                                             <img src="{{asset('/build/images/email/down.png')}}" alt="" width="8">
                                                         @endif
-                                                    &nbsp;
+                                                        &nbsp;
                                                         ${{ number_format(abs($site->diffPrice), 2, ',', '.')}}
                                                     @else
                                                         <div style="text-align:center">
