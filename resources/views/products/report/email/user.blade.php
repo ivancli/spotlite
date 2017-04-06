@@ -879,9 +879,19 @@
                                 <img src="{{asset('/build/images/email/down.png')}}" alt="" width="10"> Price Decrease &nbsp;&nbsp;&nbsp;&nbsp;
                                 <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="10"> Price Check Failed
                             </p>
-                            <div style="width: 100% !important;  overflow-x: auto;">
+                        </div>
 
-                                <table style="margin-top: 20px; margin-bottom: 20px; width: 100%; font-size: 10px; font-weight: bold; min-width: 660px !important;">
+                            <!--[if (mso)|(IE)]>
+                        <div>
+                            <div style="width: 100%; margin-top: 20px; margin-bottom: 20px;">
+                                <table style="width: 100%; font-size: 10px; font-weight: bold; font-family: roboto,tahoma,sans-serif;color: #464447;">
+                            <![endif]-->
+
+                            <!--[if !mso]><!-->
+                        <div style=" margin-left: 20px; margin-right: 20px;">
+                            <div style="width: 100% !important;  overflow-x: auto;">
+                                <table style="margin-top: 20px; margin-bottom: 20px; width: 100%; font-size: 10px; font-weight: bold; min-width: 660px !important; font-family: roboto,tahoma,sans-serif;color: #464447;">
+                            <!--<![endif]-->
                                     <thead>
                                     <tr style="color: #fff; background-color: #7ed0c0">
                                         <th style="padding: 2px; border: 1px solid #a9a9a9;">Category</th>
