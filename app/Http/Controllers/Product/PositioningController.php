@@ -66,25 +66,31 @@ class PositioningController extends Controller
         ];
 
         $excludeQuery = "";
+        $excludeQuery = " WHERE ";
         if ($this->request->has('exclude') && is_array($this->request->get('exclude'))) {
-            $excludeQuery = " WHERE ";
             foreach ($this->request->get('exclude') as $index => $exclude) {
                 if ($index != 0) {
                     $excludeQuery .= " AND ";
                 }
                 $excludeQuery .= " a.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
             }
+            $excludeQuery .= " AND a.status != 'invalid'";
+        }else{
+            $excludeQuery .= " WHERE a.status != 'invalid'";
         }
 
         $subExcludeQuery = "";
+        $subExcludeQuery = " WHERE ";
         if ($this->request->has('exclude') && is_array($this->request->get('exclude'))) {
-            $subExcludeQuery = " WHERE ";
             foreach ($this->request->get('exclude') as $index => $exclude) {
                 if ($index != 0) {
                     $subExcludeQuery .= " AND ";
                 }
                 $subExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
             }
+            $subExcludeQuery .= " AND sites.status != 'invalid'";
+        }else{
+            $subExcludeQuery .= " WHERE sites.status != 'invalid'";
         }
 
 
