@@ -37,6 +37,12 @@
         select.form-control-inline {
             min-width: 150px;
         }
+
+        td.cel-product-name,
+        td.cel-category-name {
+            word-wrap: break-word;
+            word-break: break-all;
+        }
     </style>
     {{--@include('products.partials.banner_stats')--}}
     <div class="row">
@@ -195,10 +201,12 @@
                 "columns": [
                     {
                         "name": 'category_name',
+                        "class": 'cel-category-name',
                         "data": 'category_name'
                     },
                     {
                         "name": 'product_name',
+                        "class": 'cel-product-name',
                         "data": 'product_name'
                     },
                     {
