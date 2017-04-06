@@ -951,7 +951,7 @@
                                                 @endif
                                             </td>
                                             <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: center">
-                                                @if($showLastChange)
+                                                @if($site->showLastChange)
                                                     @if(!is_null($site->priceLastChangedAt))
                                                         {{date($reportTask->reportable->preference('DATE_FORMAT') . " " . $reportTask->reportable->preference('TIME_FORMAT'), strtotime($site->priceLastChangedAt))}}
                                                     @else
