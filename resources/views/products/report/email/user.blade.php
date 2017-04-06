@@ -938,7 +938,7 @@
                                                         @else
                                                             <img src="{{asset('/build/images/email/down.png')}}" alt="" width="8">
                                                         @endif
-                                                        ${{ number_format(abs($site->diffPrice), 2, '.', ',')}}
+                                                        ${{ number_format(abs($site->diffPrice), 2, ',', '.')}}
                                                     @else
                                                         <div style="text-align:center">
                                                             -
