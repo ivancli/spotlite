@@ -76,7 +76,7 @@ class PositioningController extends Controller
             }
             $excludeQuery .= " AND a.status != 'invalid'";
         }else{
-            $excludeQuery .= " WHERE a.status != 'invalid'";
+            $excludeQuery .= " a.status != 'invalid'";
         }
 
         $subExcludeQuery = "";
@@ -90,7 +90,7 @@ class PositioningController extends Controller
             }
             $subExcludeQuery .= " AND sites.status != 'invalid'";
         }else{
-            $subExcludeQuery .= " WHERE sites.status != 'invalid'";
+            $subExcludeQuery .= " sites.status != 'invalid'";
         }
 
 
