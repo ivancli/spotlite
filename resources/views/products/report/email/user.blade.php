@@ -916,9 +916,9 @@
                                             <td style="padding: 2px; border: 1px solid #a9a9a9;">
                                                 <a href="{{$site->site_url}}" target="_blank" style="
                                                 @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
-                                                        color: #ff0000; font-weight: bold;
+                                                        color: #ff0000 !important; font-weight: bold;
                                                 @elseif($site->my_price == 'y')
-                                                        color: #11ce9f; font-weight: bold;
+                                                        color: #11ce9f !important; font-weight: bold;
                                                 @endif
                                                         ">
                                                     @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
