@@ -926,7 +926,7 @@
                                                 {{ !is_null($site->recent_price) ? '$' . number_format($site->recent_price, 2, ',', '.') : '-' }}
                                             </td>
                                             <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: right; position:relative; padding-left: 8px; padding-right: 10px;">
-                                                @if($showLastChange)
+                                                @if($site->showLastChange)
                                                     @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
                                                         <div style="text-align:center">
                                                             <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="8">

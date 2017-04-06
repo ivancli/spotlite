@@ -104,9 +104,10 @@ class SendReport extends Job implements ShouldQueue
                     if($site->status != 'ok' && $site->status != 'waiting'){
                         $failedCrawlerCounter++;
                     }
+                    $site->showLastChange = $showLastChange;
                 }
                 $reportTask = $this->reportTask;
-                $data = compact(['reportTask', 'siteChangeCounter', 'cheapestCounter', 'mostExpensiveCounter', 'failedCrawlerCounter', 'showLastChange']);
+                $data = compact(['reportTask', 'siteChangeCounter', 'cheapestCounter', 'mostExpensiveCounter', 'failedCrawlerCounter']);
                 break;
             default:
                 return false;
