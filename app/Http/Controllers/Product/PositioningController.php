@@ -65,20 +65,31 @@ class PositioningController extends Controller
             'categories.*',
         ];
 
-        $query = "";
+        $excludeQuery = "";
         if ($this->request->has('exclude') && is_array($this->request->get('exclude'))) {
-            $query = " WHERE ";
+            $excludeQuery = " WHERE ";
             foreach ($this->request->get('exclude') as $index => $exclude) {
                 if ($index != 0) {
-                    $query .= " AND ";
+                    $excludeQuery .= " AND ";
                 }
-                $query .= " a.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+                $excludeQuery .= " a.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+            }
+        }
+
+        $subExcludeQuery = "";
+        if ($this->request->has('exclude') && is_array($this->request->get('exclude'))) {
+            $subExcludeQuery = " WHERE ";
+            foreach ($this->request->get('exclude') as $index => $exclude) {
+                if ($index != 0) {
+                    $subExcludeQuery .= " AND ";
+                }
+                $subExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
             }
         }
 
 
-        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $query . ' GROUP BY product_id) AS cheapestSite');
-        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $query . ' GROUP BY product_id) AS expensiveSite');
+        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $excludeQuery . ' GROUP BY product_id) AS cheapestSite');
+        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites ' . $subExcludeQuery . 'GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $excludeQuery . ' GROUP BY product_id) AS expensiveSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
