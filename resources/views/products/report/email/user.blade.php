@@ -875,9 +875,9 @@
                             </ul>
                             <p style="Margin-top: 20px;Margin-bottom: 0; text-align: right; font-size: 12px;font-family: roboto,tahoma,sans-serif;">
                                 Legend:&nbsp;&nbsp;&nbsp;&nbsp;
-                                <img src="{{asset('/build/images/email/up.png')}}" alt="" width="10"> Price Increase &nbsp;&nbsp;&nbsp;&nbsp;
-                                <img src="{{asset('/build/images/email/down.png')}}" alt="" width="10"> Price Decrease &nbsp;&nbsp;&nbsp;&nbsp;
-                                <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="10"> Price Check Failed
+                                <img src="{{asset('/build/images/email/up.png')}}" alt="" width="10"> &nbsp; Price Increase &nbsp;&nbsp;&nbsp;&nbsp;
+                                <img src="{{asset('/build/images/email/down.png')}}" alt="" width="10"> &nbsp; Price Decrease &nbsp;&nbsp;&nbsp;&nbsp;
+                                <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="10"> &nbsp; Price Check Failed
                             </p>
                         </div>
 
@@ -930,6 +930,7 @@
                                                     @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
                                                         <div style="text-align:center">
                                                             <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="8">
+                                                            &nbsp;
                                                             -
                                                         </div>
                                                     @elseif(!is_null($site->diffPrice))
@@ -938,6 +939,7 @@
                                                         @else
                                                             <img src="{{asset('/build/images/email/down.png')}}" alt="" width="8">
                                                         @endif
+                                                    &nbsp;
                                                         ${{ number_format(abs($site->diffPrice), 2, ',', '.')}}
                                                     @else
                                                         <div style="text-align:center">
