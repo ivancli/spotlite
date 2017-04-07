@@ -1,6 +1,6 @@
 <script>
     @if(auth()->check())
-        var user = {!! json_encode(auth()->user()->toArray()) !!};
+        var user = {!! \App\Models\User::findOrFail(auth()->user()->getKey())->toJSON() !!};
         var datefmt = {!! json_encode(auth()->user()->preference('DATE_FORMAT')) !!};
         var timefmt = {!! json_encode(auth()->user()->preference('TIME_FORMAT')) !!};
 
