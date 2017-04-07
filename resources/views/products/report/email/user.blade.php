@@ -930,7 +930,7 @@
                                                 </a>
                                             </td>
                                             <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: center">
-                                                {{ !is_null($site->recent_price) ? '$' . number_format($site->recent_price, 2, ',', '.') : '-' }}
+                                                {{ !is_null($site->recent_price) ? '$' . number_format($site->recent_price, 2, '.', ',') : '-' }}
                                             </td>
                                             <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: right; position:relative; padding-left: 8px; padding-right: 10px;">
                                                 @if($site->showLastChange)
@@ -947,7 +947,7 @@
                                                             <img src="{{asset('/build/images/email/down.png')}}" alt="" width="8">
                                                         @endif
                                                         &nbsp;
-                                                        ${{ number_format(abs($site->diffPrice), 2, ',', '.')}}
+                                                        ${{ number_format(abs($site->diffPrice), 2, '.', ',')}}
                                                     @else
                                                         <div style="text-align:center">
                                                             -
