@@ -63,6 +63,11 @@ class Category extends Model
         return $this->morphOne('App\Models\Alert', 'alert_owner', null, null, 'category_id');
     }
 
+    public function alertActivityLogs()
+    {
+        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'product_id');
+    }
+
     public function productAlerts()
     {
         return $this->hasManyThrough('App\Models\Alert', 'App\Models\Product', 'category_id', 'alert_owner_id', 'category_id')->where("alert_owner_type", "product");

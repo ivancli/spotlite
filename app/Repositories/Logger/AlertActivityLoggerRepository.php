@@ -99,10 +99,12 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
 
     public function getDataTableAlertActivityLogs()
     {
+        $categoryAlertLogs = $this->getCategoryAlertLogsByAuthUser();
         $productAlertLogs = $this->getProductAlertLogsByAuthUser();
         $siteAlertLogs = $this->getSiteAlertLogsByAuthUser();
 
-        $alertLogs = $productAlertLogs->merge($siteAlertLogs);
+        $alertLogs = $productAlertLogs->merge($categoryAlertLogs, $siteAlertLogs);
+
 
         $alertLogCount = $alertLogs->count();
 
@@ -128,6 +130,15 @@ class AlertActivityLoggerRepository implements AlertActivityLoggerContract
         $output->data = $alertLogs->toArray();
         return $output;
 
+    }
+
+    public function getCategoryAlertLogsByAuthUser()
+    {
+        $categoryLogs = auth()->user()->categories()->with('alertActivityLogs.alertActivityLoggable')->get()->pluck('alertActivityLogs')->flatten();
+        $categoryLogs = $categoryLogs->reject(function ($categoryLog, $key) {
+            return $categoryLog->type != 'sent';
+        });
+        return $categoryLogs;
     }
 
     public function getProductAlertLogsByAuthUser()
