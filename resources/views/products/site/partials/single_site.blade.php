@@ -43,6 +43,8 @@
                        class="form-control sl-form-control txt-site-url" onkeyup="cancelEditSiteURL(this, event)" onblur="cancelEditSiteURL(this)" value="{{$site->site_url}}">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default btn-flat" data-url="{{$site->urls['update']}}"
+                            onmousedown="$(this).closest('.frm-edit-site-url').data('mouseDown', true)"
+                            onmouseup="$(this).closest('.frm-edit-site-url').data('mouseDown', false)"
                             onclick="getPricesEdit(this); return false;">
                         <i class="fa fa-check"></i>
                     </button>

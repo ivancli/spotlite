@@ -82,11 +82,15 @@ function toggleEditSiteURL(el) {
 }
 
 function cancelEditSiteURL(el, event) {
-    if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
-        toggleEditSiteURL(el);
-    } else if (event.keyCode == 27) {
-        $(el).blur();
-    }
+    setTimeout(function(){
+        if (typeof event == 'undefined' || typeof event.keyCode == 'undefined') {
+            if ($(el).closest('.frm-edit-site-url').data('mouseDown') != true) {
+                toggleEditSiteURL(el);
+            }
+        } else if (event.keyCode == 27) {
+            $(el).blur();
+        }
+    }, 10);
 }
 
 function getPricesEdit(el) {
