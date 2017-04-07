@@ -403,6 +403,7 @@
                                 var thisProductName = $(this).attr("data-product-name");
                                 if (thisProductName.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
                                     productMatched = true;
+                                    $(this).slideDown();
                                 } else {
                                     $(this).slideUp();
                                 }
