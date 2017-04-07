@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\Crawl::class,
         Commands\Report::class,
-        Commands\Sync::class
+        Commands\Sync::class,
+        Commands\CloneUser::class,
     ];
 
     protected $crawler;
