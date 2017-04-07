@@ -65,7 +65,7 @@ class Category extends Model
 
     public function alertActivityLogs()
     {
-        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'product_id');
+        return $this->morphMany('App\Models\Logs\AlertActivityLog', 'alert_activity_log_owner', null, null, 'category_id');
     }
 
     public function productAlerts()
