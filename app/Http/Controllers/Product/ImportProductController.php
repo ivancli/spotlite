@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Contracts\Repository\Product\Category\CategoryContract;
+use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -17,11 +19,15 @@ use Maatwebsite\Excel\Facades\Excel;
 class ImportProductController extends Controller
 {
     var $request;
+    var $categoryRepo;
+    var $productRepo;
     var $siteRepo;
 
-    public function __construct(Request $request, SiteContract $siteContract)
+    public function __construct(Request $request, CategoryContract $categoryContract, ProductContract $productContract, SiteContract $siteContract)
     {
         $this->request = $request;
+        $this->categoryRepo = $categoryContract;
+        $this->productRepo = $productContract;
         $this->siteRepo = $siteContract;
     }
 
@@ -96,8 +102,10 @@ class ImportProductController extends Controller
                     $warnings[] = "Category name in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
+                    $categoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
                     $category = $user->categories()->save(new Category(array(
                         'category_name' => $product['category'],
+                        'category_order' => $categoryOrder + 1
                     )));
                     $categoryCounter++;
                 }
@@ -108,9 +116,11 @@ class ImportProductController extends Controller
                     $warnings[] = "Product '{$product['product']}' in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
+                    $productOrder = $category->products()->max('product_order');
                     $existingProduct = $category->products()->save(new Product([
                         'product_name' => $product['product'],
-                        'user_id' => $user->getKey()
+                        'user_id' => $user->getKey(),
+                        'product_order' => $productOrder + 1
                     ]));
                     $productCounter++;
                 }
@@ -131,6 +141,8 @@ class ImportProductController extends Controller
             $meta->save();
 
         });
+
+
         $status = true;
         return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
     }
