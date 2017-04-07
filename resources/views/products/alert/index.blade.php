@@ -461,6 +461,14 @@
                                         $("<strong>").text(data.alert_activity_log_owner.siteCount)
                                     )
                                 ).html()
+                            } else if(data.alert_activity_log_owner_type == "category"){
+                                alertOwnerType = "Category ";
+                                popoverContent = $("<div>").append(
+                                    $("<div>").append(
+                                        "Name: ",
+                                        $("<strong>").text(data.alert_activity_log_owner.category_name)
+                                    )
+                                ).html()
                             } else {
                                 alertOwnerType = "Site ";
                                 popoverContent = $("<div>").append(
