@@ -233,8 +233,10 @@ class ImportProductController extends Controller
                     return true;
                 } else {
                     /*TODO create new category*/
+                    $categoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
                     $category = $user->categories()->save(new Category(array(
                         'category_name' => $url['category'],
+                        'category_order' => $categoryOrder+1
                     )));
                     $categoryCounter++;
                 }
