@@ -155,7 +155,7 @@
     <div class="col-sm-12">
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="digest" id="chk-digest" onclick="updateDigestVisibility();" {{!is_null($user->reportTask) ? 'checked="checked"' : ''}}>
+                <input type="checkbox" name="digest" id="chk-digest" onclick="updateDigestVisibility();" {{  !is_null($user->reportTask) ? 'checked="checked"' : ''}}>
                 I'd like to receive the SpotLite Digest on my email.
             </label>
         </div>
@@ -207,7 +207,11 @@
             <div class="col-sm-12">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="weekday_only" {{ !is_null($user->reporTask) && $user->reportTask->weekday_only == 'y' ? 'checked="checked"' : '' }} value="y"> Weekday only
+                        <input type="checkbox" name="weekday_only"
+                               @if(!is_null($user->reportTask) && $user->reportTask->weekday_only == 'y')
+                               checked="checked"
+                               @endif
+                               value="y"> Weekday only
                     </label>
                 </div>
             </div>
