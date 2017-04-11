@@ -28,7 +28,7 @@ class PositioningController extends Controller
     {
         $user = auth()->user();
         $domains = [];
-        $domains = DB::table('sites')->select(DB::raw('SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(site_url, \'/\', 3), \'://\', -1), \'/\', 1), \'?\', 1) AS domain'))->get();
+        $domains = DB::table('sites')->select(DB::raw('DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(site_url, \'/\', 3), \'://\', -1), \'/\', 1), \'?\', 1) AS domain'))->get();
         $domains = array_sort($domains, function ($value) {
             return $value;
         });
