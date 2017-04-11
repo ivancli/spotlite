@@ -37,9 +37,9 @@ class PositioningController extends Controller
         foreach ($results as $result) {
             $userDomain = $user->domains()->where('domain', '=', $result->domain)->get();
             if ($userDomain->count() > 0) {
-                $domains [] = $userDomain->first()->name;
+                $domains [$result->domain] = $userDomain->first()->name;
             }else{
-                $domains[] = $result->domain;
+                $domains[$result->domain] = $result->domain;
             }
         }
         $domains = array_sort($domains, function ($value) {

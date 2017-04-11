@@ -62,12 +62,12 @@
                                     <select name="reference" id="sel-reference"
                                             class="form-control">
                                         <option value=""></option>
-                                        @foreach($domains as $domain)
+                                        @foreach($domains as $domain=>$domainName)
                                             <option value="{{$domain}}"
                                                     @if(strpos(auth()->user()->company_url, $domain) !== false)
                                                     selected="selected"
                                                     @endif
-                                            >{{$domain}}</option>
+                                            >{{$domainName}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -316,12 +316,12 @@
             var excludeValue = $selExclude.val();
             $selExclude.empty();
             var reference = $("#sel-reference").val();
-            $.each(domains, function (domain) {
+            $.each(domains, function (domain, domainName) {
                 if (domain != reference) {
                     $selExclude.append(
                         $("<option>").attr({
                             "value": domain
-                        }).text(domain)
+                        }).text(domainName)
                     )
                 }
             });
