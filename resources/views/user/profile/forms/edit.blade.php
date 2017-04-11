@@ -114,6 +114,12 @@
     </div>
 </div>
 <div class="form-group">
+    {!! Form::label('ebay_username', 'eBay Username', array('class' => 'control-label col-md-3')) !!}
+    <div class="col-md-9">
+        {!! Form::text('ebay_username', null, array('class' => 'form-control', 'placeholder' => 'This is for identifying your items on eBay')) !!}
+    </div>
+</div>
+<div class="form-group">
     <h4 class="col-sm-12 font-weight-bold">Display Preferences</h4>
 </div>
 <div class="form-group">

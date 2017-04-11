@@ -106,7 +106,7 @@ class AlertRepository implements AlertContract
                 foreach ($products as $product) {
                     if (is_null($product->alert) || $product->alert->comparison_price_type != $alert->comparison_price_type) {
 
-                        $mySite = $product->sites()->where("my_price", "y")->first();
+                        $mySite = $product->myPriceSite();
                         if ($alert->comparison_price_type == 'my price') {
                             $priceBeatCategories[$category->getKey()][$product->getKey()] = array();
                             if (is_null($mySite) || is_null($mySite->recent_price)) {
@@ -257,7 +257,7 @@ class AlertRepository implements AlertContract
         foreach ($products as $product) {
             /**IMPORTANT: if product has the same Comparison Price Type, it will not trigger Category Alert*/
             if (is_null($product->alert) || $product->alert->comparison_price_type != $alert->comparison_price_type) {
-                $mySite = $product->sites()->where("my_price", "y")->first();
+                $mySite = $product->myPriceSite();
                 if ($alert->comparison_price_type == 'my price') {
                     $priceBeatProducts[$product->getKey()] = array();
                     if (is_null($mySite) || is_null($mySite->recent_price)) {
@@ -386,7 +386,7 @@ class AlertRepository implements AlertContract
 
         $sites = $product->sites;
 
-        $mySite = $product->sites()->where("my_price", "y")->first();
+        $mySite = $product->myPriceSite();
 
         if ($alert->comparison_price_type == 'my price') {
 
@@ -477,7 +477,7 @@ class AlertRepository implements AlertContract
         }
         $product = $site->product;
 
-        $mySite = $product->sites()->where("my_price", "y")->first();
+        $mySite = $product->myPriceSite();
 
         if ($alert->comparison_price_type == 'my price') {
             if (is_null($mySite)) {

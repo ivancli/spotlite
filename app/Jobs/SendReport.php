@@ -95,10 +95,10 @@ class SendReport extends Job implements ShouldQueue
                             }
                             break;
                     }
-                    if ($site->my_price == 'y' && $site->isCheapest) {
+                    if ($site->mySite == 'y' && $site->isCheapest) {
                         $cheapestCounter++;
                     }
-                    if ($site->my_price == 'y' && $site->isMostExpensive) {
+                    if ($site->mySite == 'y' && $site->isMostExpensive) {
                         $mostExpensiveCounter++;
                     }
                     if($site->status != 'ok' && $site->status != 'waiting'){

@@ -54,9 +54,9 @@ class SiteRepository implements SiteContract
     public function getSitesByProduct(Product $product)
     {
         if ($this->request->has('keyword') && !empty($this->request->get('keyword')) && (strpos(strtolower($product->category->category_name), strtolower($this->request->get('keyword'))) === FALSE && strpos(strtolower($product->product_name), strtolower($this->request->get('keyword'))) === FALSE)) {
-            $sitesBuilder = $product->filteredSites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc');
+            $sitesBuilder = $product->filteredSites();
         } else {
-            $sitesBuilder = $product->sites()->orderBy('my_price', 'desc')->orderBy('site_order', 'asc');
+            $sitesBuilder = $product->sites();
         }
 //        if ($this->request->has('start')) {
 //            $sitesBuilder->skip($this->request->get('start'));

@@ -907,7 +907,7 @@
                                         <tr style="
                                         @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
                                                 color: #ff0000; font-weight: bold;
-                                        @elseif($site->my_price == 'y')
+                                        @elseif($site->mySite == 'y')
                                                 color: #11ce9f; font-weight: bold;
                                         @endif
                                                 ">
@@ -917,7 +917,7 @@
                                                 <a href="{{$site->site_url}}" target="_blank" style="
                                                 @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
                                                         color: #ff0000 !important; font-weight: bold;
-                                                @elseif($site->my_price == 'y')
+                                                @elseif($site->mySite == 'y')
                                                         color: #11ce9f !important; font-weight: bold;
                                                 @else
                                                 @endif

@@ -24,7 +24,9 @@ class UserRepository implements UserContract
         $user = auth()->user();
         /*TODO problematic part*/
 
-        $myPriceSites = $user->sites()->where('my_price', 'y')->get();
+        $myPriceSites = $user->sites->filter(function ($site, $index) {
+            return $site->mySite == 'y';
+        });
         if (!is_null($myCompanyDomain)) {
             list($dummy, $domainSplitted) = explode('.', $myCompanyDomain, 2);
         } else {

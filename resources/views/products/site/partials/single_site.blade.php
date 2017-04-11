@@ -3,11 +3,13 @@
     data-site-alert-url="{{$site->urls['alert']}}"
     data-site-product-show-url="{{$site->product->urls['show']}}"
     data-site-update-my-price-url="{{$site->urls['update_my_price']}}"
-    data-my-site="{{$site->my_price}}"
+    data-my-site="{{$site->mySite}}"
 >
     <td class="site-url vertical-align-middle">
         <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-url="{{$site->site_url}}">
-            @if(!is_null($site->userDomainName))
+            @if(!is_null($site->ebayItem) && !is_null($site->ebayItem->seller_username))
+                {{ $site->ebayItem->seller_username }}
+            @elseif(!is_null($site->userDomainName))
                 {{$site->userDomainName}}
             @else
                 {{$site->domain}}

@@ -111,7 +111,9 @@ class Product extends Model
 
     public function myPriceSite()
     {
-        return $this->sites()->where('my_price', 'y')->first();
+        return $this->sites->filter(function($site, $key){
+            return $site->mySite == 'y';
+        })->first();
     }
 
     public function alertOnMyPrice()

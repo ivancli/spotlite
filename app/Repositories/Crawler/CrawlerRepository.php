@@ -2,12 +2,14 @@
 namespace App\Repositories\Crawler;
 
 use App\Contracts\Repository\Crawler\CrawlerContract;
+use App\Contracts\Repository\Ebay\EbayContract;
 use App\Events\Products\Crawler\CrawlerFinishing;
 use App\Events\Products\Crawler\CrawlerLoadingHTML;
 use App\Events\Products\Crawler\CrawlerRunning;
 use App\Events\Products\Crawler\CrawlerSavingPrice;
 use App\Jobs\SendMail;
 use App\Models\Crawler;
+use App\Models\EbayItem;
 use App\Models\HistoricalPrice;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -24,6 +26,13 @@ use Invigor\Crawler\Contracts\ParserInterface;
  */
 class CrawlerRepository implements CrawlerContract
 {
+    protected $ebayRepo;
+
+    public function __construct(EbayContract $ebayContract)
+    {
+        $this->ebayRepo = $ebayContract;
+    }
+
     public function getCrawlers()
     {
         $crawlers = Crawler::all();
@@ -112,7 +121,7 @@ class CrawlerRepository implements CrawlerContract
         });
 
         $file_path = storage_path('crawler/' . $site->getKey());
-        if(File::exists($file_path)){
+        if (File::exists($file_path)) {
             File::delete($file_path);
             File::put($file_path, $content);
         }
@@ -186,6 +195,7 @@ class CrawlerRepository implements CrawlerContract
                 break;
             }
         }
+
 
         $crawler->resetStatus();
         event(new CrawlerFinishing($crawler));
