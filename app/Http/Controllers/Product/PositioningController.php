@@ -28,7 +28,10 @@ class PositioningController extends Controller
     {
         $user = auth()->user();
         $domains = [];
-        $domains = DB::table('sites')->select(DB::raw('DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(site_url, \'/\', 3), \'://\', -1), \'/\', 1), \'?\', 1) AS domain'))->get();
+        $results = DB::table('sites')->select(DB::raw('DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(site_url, \'/\', 3), \'://\', -1), \'/\', 1), \'?\', 1) AS domain'))->get();
+        foreach ($results as $result) {
+            $domains[] = $result->domain;
+        }
         $domains = array_sort($domains, function ($value) {
             return $value;
         });
@@ -69,7 +72,7 @@ class PositioningController extends Controller
                 $excludeQuery .= " a.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
             }
             $excludeQuery .= " AND a.status != 'invalid'";
-        }else{
+        } else {
             $excludeQuery .= " a.status != 'invalid'";
         }
 
@@ -83,7 +86,7 @@ class PositioningController extends Controller
                 $subExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
             }
             $subExcludeQuery .= " AND sites.status != 'invalid'";
-        }else{
+        } else {
             $subExcludeQuery .= " sites.status != 'invalid'";
         }
 
