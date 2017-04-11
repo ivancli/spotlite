@@ -139,16 +139,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group m-b-20">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <div class="checkbox">
-                                <label for="chk-no-product-meta-update">
-                                    <input type="checkbox" name="no_product_meta_update" id="chk-no-product-meta-update">
-                                    Do not update existing products' meta data
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="file" class="col-sm-3 control-label">Select CSV File</label>
                         <div class="col-sm-9">
