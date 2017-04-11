@@ -28,13 +28,7 @@ class PositioningController extends Controller
     {
         $user = auth()->user();
         $domains = [];
-        foreach ($user->sites as $site) {
-            if (!is_null($site->userDomainName) && !isset($domains[$site->domain])) {
-                $domains[$site->domain] = $site->userDomainName;
-            } elseif (!isset($domains[$site->domain])) {
-                $domains[$site->domain] = $site->domain;
-            }
-        }
+        $domains = DB::table('sites')->select(DB::raw('SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(site_url, \'/\', 3), \'://\', -1), \'/\', 1), \'?\', 1) AS domain'))->get();
         $domains = array_sort($domains, function ($value) {
             return $value;
         });
