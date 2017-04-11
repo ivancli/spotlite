@@ -43,6 +43,10 @@
             word-wrap: break-word;
             word-break: break-all;
         }
+
+        tr.my-site td, tr.my-site td a {
+            color: #43bda5 !important;
+        }
     </style>
     {{--@include('products.partials.banner_stats')--}}
     <div class="row">
@@ -300,7 +304,7 @@
                             });
                         }
                         if (isMySite) {
-                            $(row).addClass("success");
+                            $(row).addClass("my-site");
                         }
                     }
                 }
