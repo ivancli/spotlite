@@ -29,13 +29,17 @@ class PositioningController extends Controller
         $user = auth()->user();
         $domains = [];
         $results = DB::table('sites')
-            ->join(DB::raw('products ON(sites.product_id=products.product_id AND products.user_id=' . $user->getKey() . ')'))
+            ->join('products', function ($query) {
+                $query->on('sites.product_id', '=', 'products.product_id');
+            })->where('products.user_id', '=', $user->getKey())
             ->select(DB::raw('DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(site_url, \'/\', 3), \'://\', -1), \'/\', 1), \'?\', 1) AS domain'))->get();
 
         foreach ($results as $result) {
-            $userDomain = $user->domains->where('domain', '=', $result->domain)->get();
+            $userDomain = $user->domains()->where('domain', '=', $result->domain)->get();
             if ($userDomain->count() > 0) {
                 $domains [] = $userDomain->first()->name;
+            }else{
+                $domains[] = $result->domain;
             }
         }
         $domains = array_sort($domains, function ($value) {
