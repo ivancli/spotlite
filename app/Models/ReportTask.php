@@ -17,7 +17,7 @@ class ReportTask extends Model
     public $timestamps = false;
     protected $primaryKey = "report_task_id";
     protected $fillable = [
-        "report_task_owner_type", "report_task_owner_id", "frequency", "date", "day", "time", "weekday_only", "delivery_method", "file_type", "status", "last_sent_at"
+        "report_task_owner_type", "report_task_owner_id", "frequency", "date", "day", "time", "weekday_only", "delivery_method", "file_type", "status", "last_sent_at", "show_all"
     ];
     protected $appends = ["urls"];
 

@@ -79,8 +79,8 @@ class SendReport extends Job implements ShouldQueue
                 $cheapestCounter = 0;
                 $mostExpensiveCounter = 0;
                 $failedCrawlerCounter = 0;
-                $showLastChange = false;
                 foreach ($sites as $site) {
+                    $showLastChange = false;
                     switch ($this->reportTask->frequency) {
                         case 'daily':
                             if (!is_null($site->priceLastChangedAt) && $site->priceLastChangedAt->diffInHours(Carbon::now()) < 24) {
@@ -101,8 +101,9 @@ class SendReport extends Job implements ShouldQueue
                     if ($site->my_price == 'y' && $site->isMostExpensive) {
                         $mostExpensiveCounter++;
                     }
-                    if($site->status != 'ok' && $site->status != 'waiting'){
+                    if ($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath') {
                         $failedCrawlerCounter++;
+                        $showLastChange = true;
                     }
                     $site->showLastChange = $showLastChange;
                 }

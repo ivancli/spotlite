@@ -115,19 +115,22 @@ class ProfileController extends Controller
             $time = $request->get('time');
             $day = $request->get('day');
             $weekday = $request->get('weekday_only');
+            $showAll = $request->get('show_all');
             $data = array();
             switch ($frequency) {
                 case "daily":
                     $data = [
                         'frequency' => $frequency,
                         'time' => $time,
-                        'weekday_only' => $weekday == 'y' ? 'y' : 'n'
+                        'weekday_only' => $weekday == 'y' ? 'y' : 'n',
+                        'show_all' => $showAll == 'y' ? 'y' : 'n'
                     ];
                     break;
                 case "weekly":
                     $data = [
                         'frequency' => $frequency,
-                        'day' => $day
+                        'day' => $day,
+                        'show_all' => $showAll == 'y' ? 'y' : 'n'
                     ];
                     break;
             }

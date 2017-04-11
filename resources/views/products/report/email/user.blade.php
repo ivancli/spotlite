@@ -904,73 +904,76 @@
                                     </thead>
                                     <tbody>
                                     @foreach($reportTask->reportable->sites as $site)
-                                        <tr style="
-                                        @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
-                                                color: #ff0000; font-weight: bold;
-                                        @elseif($site->my_price == 'y')
-                                                color: #11ce9f; font-weight: bold;
-                                        @endif
-                                                ">
-                                            <td style="padding: 2px; border: 1px solid #a9a9a9;">{{ !is_null($site->product->category) ?  $site->product->category->category_name : '' }}</td>
-                                            <td style="padding: 2px; border: 1px solid #a9a9a9;">{{ $site->product->product_name }}</td>
-                                            <td style="padding: 2px; border: 1px solid #a9a9a9;">
-                                                <a href="{{$site->site_url}}" target="_blank" style="
-                                                @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
-                                                        color: #ff0000 !important; font-weight: bold;
-                                                @elseif($site->my_price == 'y')
-                                                        color: #11ce9f !important; font-weight: bold;
-                                                @else
-                                                @endif
-                                                        ">
+                                        @if($reportTask->show_all != 'y' && (!$site->showLastChange))
+                                        @else
+                                            <tr style="
+                                            @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
+                                                    color: #ff0000; font-weight: bold;
+                                            @elseif($site->my_price == 'y')
+                                                    color: #11ce9f; font-weight: bold;
+                                            @endif
+                                                    ">
+                                                <td style="padding: 2px; border: 1px solid #a9a9a9;">{{ !is_null($site->product->category) ?  $site->product->category->category_name : '' }}</td>
+                                                <td style="padding: 2px; border: 1px solid #a9a9a9;">{{ $site->product->product_name }}</td>
+                                                <td style="padding: 2px; border: 1px solid #a9a9a9;">
+                                                    <a href="{{$site->site_url}}" target="_blank" style="
                                                     @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
-                                                        CHECK PRODUCT PAGE URL
+                                                            color: #ff0000 !important; font-weight: bold;
+                                                    @elseif($site->my_price == 'y')
+                                                            color: #11ce9f !important; font-weight: bold;
                                                     @else
-                                                        {{ !is_null($site->userDomainName) ? $site->userDomainName : $site->domain }}
                                                     @endif
-                                                </a>
-                                            </td>
-                                            <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: center">
-                                                {{ !is_null($site->recent_price) ? '$' . number_format($site->recent_price, 2, '.', ',') : '-' }}
-                                            </td>
-                                            <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: right; position:relative; padding-left: 8px; padding-right: 10px;">
-                                                @if($site->showLastChange)
-                                                    @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
-                                                        <div style="text-align:center">
-                                                            <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="8">
-                                                            &nbsp;
-                                                            -
-                                                        </div>
-                                                    @elseif(!is_null($site->diffPrice))
-                                                        @if($site->diffPrice > 0)
-                                                            <img src="{{asset('/build/images/email/up.png')}}" alt="" width="8">
+                                                            ">
+                                                        @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
+                                                            CHECK PRODUCT PAGE URL
                                                         @else
-                                                            <img src="{{asset('/build/images/email/down.png')}}" alt="" width="8">
+                                                            {{ !is_null($site->userDomainName) ? $site->userDomainName : $site->domain }}
                                                         @endif
-                                                        &nbsp;
-                                                        ${{ number_format(abs($site->diffPrice), 2, '.', ',')}}
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: center">
+                                                    {{ !is_null($site->recent_price) ? '$' . number_format($site->recent_price, 2, '.', ',') : '-' }}
+                                                </td>
+                                                <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: right; position:relative; padding-left: 8px; padding-right: 10px;">
+                                                    @if($site->showLastChange)
+                                                        @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
+                                                            <div style="text-align:center">
+                                                                <img src="{{asset('/build/images/email/cross.png')}}" alt="" width="8">
+                                                                &nbsp;
+                                                                -
+                                                            </div>
+                                                        @elseif(!is_null($site->diffPrice))
+                                                            @if($site->diffPrice > 0)
+                                                                <img src="{{asset('/build/images/email/up.png')}}" alt="" width="8">
+                                                            @else
+                                                                <img src="{{asset('/build/images/email/down.png')}}" alt="" width="8">
+                                                            @endif
+                                                            &nbsp;
+                                                            ${{ number_format(abs($site->diffPrice), 2, '.', ',')}}
+                                                        @else
+                                                            <div style="text-align:center">
+                                                                -
+                                                            </div>
+                                                        @endif
                                                     @else
                                                         <div style="text-align:center">
                                                             -
                                                         </div>
                                                     @endif
-                                                @else
-                                                    <div style="text-align:center">
-                                                        -
-                                                    </div>
-                                                @endif
-                                            </td>
-                                            <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: center">
-                                                @if($site->showLastChange)
-                                                    @if(!is_null($site->priceLastChangedAt))
-                                                        {{date($reportTask->reportable->preference('DATE_FORMAT') . " " . $reportTask->reportable->preference('TIME_FORMAT'), strtotime($site->priceLastChangedAt))}}
+                                                </td>
+                                                <td style="padding: 2px; border: 1px solid #a9a9a9; text-align: center">
+                                                    @if($site->showLastChange)
+                                                        @if(!is_null($site->priceLastChangedAt))
+                                                            {{date($reportTask->reportable->preference('DATE_FORMAT') . " " . $reportTask->reportable->preference('TIME_FORMAT'), strtotime($site->priceLastChangedAt))}}
+                                                        @else
+                                                            -
+                                                        @endif
                                                     @else
                                                         -
                                                     @endif
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>

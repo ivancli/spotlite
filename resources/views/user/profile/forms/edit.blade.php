@@ -177,15 +177,15 @@
             <div class="col-md-9">
                 <select name="time" class="form-control">
                     <option value="00:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '00:00:00' ? 'selected="selected"' : ''}}>12:00 am</option>
-                    <option value="1:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '1:00:00' ? 'selected="selected"' : ''}}>1:00 am</option>
-                    <option value="2:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '2:00:00' ? 'selected="selected"' : ''}}>2:00 am</option>
-                    <option value="3:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '3:00:00' ? 'selected="selected"' : ''}}>3:00 am</option>
-                    <option value="4:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '4:00:00' ? 'selected="selected"' : ''}}>4:00 am</option>
-                    <option value="5:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '5:00:00' ? 'selected="selected"' : ''}}>5:00 am</option>
-                    <option value="6:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '6:00:00' ? 'selected="selected"' : ''}}>6:00 am</option>
-                    <option value="7:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '7:00:00' ? 'selected="selected"' : ''}}>7:00 am</option>
-                    <option value="8:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '8:00:00' ? 'selected="selected"' : ''}}>8:00 am</option>
-                    <option value="9:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '9:00:00' ? 'selected="selected"' : ''}}>9:00 am</option>
+                    <option value="1:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '01:00:00' ? 'selected="selected"' : ''}}>1:00 am</option>
+                    <option value="2:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '02:00:00' ? 'selected="selected"' : ''}}>2:00 am</option>
+                    <option value="3:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '03:00:00' ? 'selected="selected"' : ''}}>3:00 am</option>
+                    <option value="4:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '04:00:00' ? 'selected="selected"' : ''}}>4:00 am</option>
+                    <option value="5:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '05:00:00' ? 'selected="selected"' : ''}}>5:00 am</option>
+                    <option value="6:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '06:00:00' ? 'selected="selected"' : ''}}>6:00 am</option>
+                    <option value="7:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '07:00:00' ? 'selected="selected"' : ''}}>7:00 am</option>
+                    <option value="8:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '08:00:00' ? 'selected="selected"' : ''}}>8:00 am</option>
+                    <option value="9:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '09:00:00' ? 'selected="selected"' : ''}}>9:00 am</option>
                     <option value="10:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '10:00:00' ? 'selected="selected"' : ''}}>10:00 am</option>
                     <option value="11:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '11:00:00' ? 'selected="selected"' : ''}}>11:00 am</option>
                     <option value="12:00:00" {{!is_null($user->reportTask) && $user->reportTask->time == '12:00:00' ? 'selected="selected"' : ''}}>12:00 pm</option>
@@ -216,20 +216,33 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="weekly-conf-container" style="display: none;">
+        <div class="weekly-conf-container" style="display: none;">
+            <div class="form-group">
+                <label for="" class="col-md-3 control-label">Day</label>
+                <div class="col-md-9">
+                    <select name="day" class="form-control">
+                        <option value="1" {{ !is_null($user->reportTask) && $user->reportTask->day == '1' ? 'selected="selected"' : '' }}>Monday</option>
+                        <option value="2" {{ !is_null($user->reportTask) && $user->reportTask->day == '2' ? 'selected="selected"' : '' }}>Tuesday</option>
+                        <option value="3" {{ !is_null($user->reportTask) && $user->reportTask->day == '3' ? 'selected="selected"' : '' }}>Wednesday</option>
+                        <option value="4" {{ !is_null($user->reportTask) && $user->reportTask->day == '4' ? 'selected="selected"' : '' }}>Thursday</option>
+                        <option value="5" {{ !is_null($user->reportTask) && $user->reportTask->day == '5' ? 'selected="selected"' : '' }}>Friday</option>
+                        <option value="6" {{ !is_null($user->reportTask) && $user->reportTask->day == '6' ? 'selected="selected"' : '' }}>Saturday</option>
+                        <option value="7" {{ !is_null($user->reportTask) && $user->reportTask->day == '7' ? 'selected="selected"' : '' }}>Sunday</option>
+                    </select>
+                </div>
+            </div>
+        </div>
         <div class="form-group">
-            <label for="" class="col-md-3 control-label">Day</label>
-            <div class="col-md-9">
-                <select name="day" class="form-control">
-                    <option value="1" {{ !is_null($user->reportTask) && $user->reportTask->day == '1' ? 'selected="selected"' : '' }}>Monday</option>
-                    <option value="2" {{ !is_null($user->reportTask) && $user->reportTask->day == '2' ? 'selected="selected"' : '' }}>Tuesday</option>
-                    <option value="3" {{ !is_null($user->reportTask) && $user->reportTask->day == '3' ? 'selected="selected"' : '' }}>Wednesday</option>
-                    <option value="4" {{ !is_null($user->reportTask) && $user->reportTask->day == '4' ? 'selected="selected"' : '' }}>Thursday</option>
-                    <option value="5" {{ !is_null($user->reportTask) && $user->reportTask->day == '5' ? 'selected="selected"' : '' }}>Friday</option>
-                    <option value="6" {{ !is_null($user->reportTask) && $user->reportTask->day == '6' ? 'selected="selected"' : '' }}>Saturday</option>
-                    <option value="7" {{ !is_null($user->reportTask) && $user->reportTask->day == '7' ? 'selected="selected"' : '' }}>Sunday</option>
-                </select>
+            <div class="col-sm-12">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="show_all"
+                               @if(!is_null($user->reportTask) && $user->reportTask->show_all == 'y')
+                               checked="checked"
+                               @endif
+                               value="y"> Show all URLs in SpotLite Digest
+                    </label>
+                </div>
             </div>
         </div>
     </div>
