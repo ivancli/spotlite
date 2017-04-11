@@ -72,6 +72,13 @@
                     <div id="category-{{$category->getKey()}}" class="collapse in collapsible-category-div"
                          data-products-url="{{$category->urls['show_products']}}" data-start="0" data-length="10"
                          data-end="false" aria-expanded="true">
+
+
+                        <div class="load-more-product">
+                            <a class="text-green" style="cursor: pointer"
+                               onclick="loadAndAttachProducts('{{$category->getKey()}}')">LOAD MORE&hellip;
+                            </a>
+                        </div>
                         <div class="row">
                             <div class="col-sm-12 text-center">
                                 <div class="dotdotdot loading-products" style="margin: 20px auto; display: none;">
@@ -80,82 +87,82 @@
                             </div>
                         </div>
 
-            @if(!auth()->user()->isPastDue)
-                        <div class="add-item-block add-product-container"
-                             onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
-                            <div class="add-item-label">
-                                <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
-                                <span class="add-item-text">ADD PRODUCT</span>
-                            </div>
-                            <div class="add-item-controls">
-                                <form action="{{route('product.store')}}" method="post" class="form-horizontal sl-form-horizontal frm-store-product"
-                                      onsubmit="btnAddProductOnClick(this); return false;">
-                                    <input type="text" name="product_name" autocomplete="off" placeholder="Enter product name" class="form-control txt-item txt-product-name">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3">Brand</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control txt-product-meta txt-product-meta-brand">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3">Supplier</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-supplier">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3">SKU</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-sku">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3">Cost price</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control  txt-product-meta txt-product-meta-cost-price">
-                                        </div>
-                                    </div>
-                                </form>
-                                <style>
-                                    .txt-product-meta {
-                                        border: none;
-                                        border-bottom: 1px solid #73d0c0;
-                                        -webkit-box-shadow: none;
-                                        -moz-box-shadow: none;
-                                        box-shadow: none;
-                                        font-size: 15px !important;
-                                        font-weight: normal;
-                                        padding-left: 0px;
-                                        padding-right: 0px;
-                                    }
-                                </style>
-                                <div class="text-right" style="margin-top: 10px;">
-                                    <button class="btn btn-primary btn-flat"
-                                            onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
-                                        CONFIRM
-                                    </button>
-                                    &nbsp;&nbsp;
-                                    <button class="btn btn-default btn-flat btn-cancel-add-product"
-                                            onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
-                                        CANCEL
-                                    </button>
+                        @if(!auth()->user()->isPastDue)
+                            <div class="add-item-block add-product-container"
+                                 onclick="appendCreateProductBlock(this); event.stopPropagation(); return false;">
+                                <div class="add-item-label">
+                                    <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;
+                                    <span class="add-item-text">ADD PRODUCT</span>
                                 </div>
-                            </div>
-                            @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
-                                <div class="upgrade-for-add-item-controls" style="display: none;">
-                                    <span class="add-item-text">
-                                        You have reached the product limit of
-                                        {{auth()->user()->apiSubscription->product()->name}} plan.
-                                        Please
-                                        <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
-                                           onclick="event.stopPropagation();">
-                                            upgrade your subscription
-                                        </a> to add more products.
-                                    </span>
+                                <div class="add-item-controls">
+                                    <form action="{{route('product.store')}}" method="post" class="form-horizontal sl-form-horizontal frm-store-product"
+                                          onsubmit="btnAddProductOnClick(this); return false;">
+                                        <input type="text" name="product_name" autocomplete="off" placeholder="Enter product name" class="form-control txt-item txt-product-name">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3">Brand</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control txt-product-meta txt-product-meta-brand">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3">Supplier</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control  txt-product-meta txt-product-meta-supplier">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3">SKU</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control  txt-product-meta txt-product-meta-sku">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-3">Cost price</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control  txt-product-meta txt-product-meta-cost-price">
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <style>
+                                        .txt-product-meta {
+                                            border: none;
+                                            border-bottom: 1px solid #73d0c0;
+                                            -webkit-box-shadow: none;
+                                            -moz-box-shadow: none;
+                                            box-shadow: none;
+                                            font-size: 15px !important;
+                                            font-weight: normal;
+                                            padding-left: 0px;
+                                            padding-right: 0px;
+                                        }
+                                    </style>
+                                    <div class="text-right" style="margin-top: 10px;">
+                                        <button class="btn btn-primary btn-flat"
+                                                onclick="btnAddProductOnClick(this); event.stopPropagation(); event.preventDefault();">
+                                            CONFIRM
+                                        </button>
+                                        &nbsp;&nbsp;
+                                        <button class="btn btn-default btn-flat btn-cancel-add-product"
+                                                onclick="cancelAddProduct(this); event.stopPropagation(); event.preventDefault();">
+                                            CANCEL
+                                        </button>
+                                    </div>
                                 </div>
-                            @endif
-                        </div>
-        @endif
+                                @if(auth()->user()->needSubscription && !is_null(auth()->user()->subscription))
+                                    <div class="upgrade-for-add-item-controls" style="display: none;">
+                                        <span class="add-item-text">
+                                            You have reached the product limit of
+                                            {{auth()->user()->apiSubscription->product()->name}} plan.
+                                            Please
+                                            <a href="{{route('subscription.edit', auth()->user()->subscription->getKey())}}"
+                                               onclick="event.stopPropagation();">
+                                                upgrade your subscription
+                                            </a> to add more products.
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </td>
             </tr>
@@ -203,16 +210,21 @@
             $.ajax({
                 "url": $categoryWrapper.attr("data-products-url"),
                 "data": {
-//                    "start": $categoryWrapper.attr("data-start"),
-//                    "length": $categoryWrapper.attr("data-length"),
+                    "start": $categoryWrapper.attr("data-start"),
+                    "length": $categoryWrapper.attr("data-length"),
                     "keyword": $(".general-search-input").val()
                 },
                 "dataType": "json",
                 "success": function (response) {
                     hideLoadingProducts(category_id);
                     if (response.status == true) {
-                        $categoryWrapper.attr("data-end", response.recordFiltered < $categoryWrapper.attr("data-length"));
-                        $categoryWrapper.attr("data-start", parseInt($categoryWrapper.attr("data-start")) + response.recordFiltered);
+                        var loadedProductCount = $(response.html).length;
+                        console.info($(response.html).length)
+                        $categoryWrapper.attr("data-end", loadedProductCount < $categoryWrapper.attr("data-length"));
+                        if (loadedProductCount < $categoryWrapper.attr("data-length")) {
+                            $categoryWrapper.find(".load-more-product").hide();
+                        }
+                        $categoryWrapper.attr("data-start", parseInt($categoryWrapper.attr("data-start")) + loadedProductCount);
                         if ($.isFunction(successCallback)) {
                             successCallback(response);
                         }
@@ -236,6 +248,12 @@
                     }
                 }
             })
+        }
+
+        function loadAndAttachProducts(category_id) {
+            loadProducts(category_id, function (response) {
+                $("#category-" + category_id).find(".load-more-product").before(response.html);
+            });
         }
 
         function showLoadingProducts(category_id) {
