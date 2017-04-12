@@ -114,8 +114,9 @@ class ImportProductController extends Controller
         $productCounter = 0;
         $categoryCounter = 0;
 
+        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
 
-        $products->each(function ($product, $index) use ($user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
+        $products->each(function ($product, $index) use (&$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
             $rowNumber = $index + 2;
             /*IMPORT CATEGORIES*/
             $category = $user->categories()->where('category_name', $product['category'])->first();
@@ -124,10 +125,9 @@ class ImportProductController extends Controller
                     $warnings[] = "Category name in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
-                    $categoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
                     $category = $user->categories()->save(new Category(array(
                         'category_name' => $product['category'],
-                        'category_order' => $categoryOrder + 1
+                        'category_order' => $greatestCategoryOrder++
                     )));
                     $categoryCounter++;
                 }
@@ -138,11 +138,10 @@ class ImportProductController extends Controller
                     $warnings[] = "Product '{$product['product']}' in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
-                    $productOrder = $category->products()->max('product_order');
                     $existingProduct = $category->products()->save(new Product([
                         'product_name' => $product['product'],
                         'user_id' => $user->getKey(),
-                        'product_order' => $productOrder + 1
+                        'product_order' => 999
                     ]));
                     $productCounter++;
                 }
