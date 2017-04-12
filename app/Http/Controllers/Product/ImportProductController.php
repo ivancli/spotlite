@@ -58,6 +58,7 @@ class ImportProductController extends Controller
      */
     public function storeProducts(StoreValidator $storeValidator)
     {
+        ini_set('max_execution_time', 300);
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
         $file = $this->request->file('file');
@@ -129,10 +130,11 @@ class ImportProductController extends Controller
                     $warnings[] = "Category name in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
-                    $category = $user->categories()->save(new Category(array(
+                    $category = Category::create([
                         'category_name' => $product['category'],
-                        'category_order' => $greatestCategoryOrder++
-                    )));
+                        'category_order' => $greatestCategoryOrder++,
+                        'user_id' => $user->getKey()
+                    ]);
                     $categoryCounter++;
                 }
             }
@@ -142,11 +144,12 @@ class ImportProductController extends Controller
                     $warnings[] = "Product '{$product['product']}' in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
                     return true;
                 } else {
-                    $existingProduct = $category->products()->save(new Product([
+                    $existingProduct = Product::create([
                         'product_name' => $product['product'],
                         'user_id' => $user->getKey(),
-                        'product_order' => 999
-                    ]));
+                        'product_order' => 999,
+                        'category_id' => $category->getKey()
+                    ]);
                     $productCounter++;
                 }
             }
