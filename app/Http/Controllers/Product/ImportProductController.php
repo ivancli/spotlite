@@ -58,7 +58,7 @@ class ImportProductController extends Controller
      */
     public function storeProducts(StoreValidator $storeValidator)
     {
-        ini_set('max_execution_time', 300);
+        set_time_limit(3000);
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
         $file = $this->request->file('file');
@@ -177,7 +177,7 @@ class ImportProductController extends Controller
 
     public function storeSites(StoreValidator $storeValidator)
     {
-        ini_set('max_execution_time', 300);
+        set_time_limit(3000);
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
         $file = $this->request->file('file');
