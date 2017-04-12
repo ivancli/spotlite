@@ -94,6 +94,7 @@ class ImportProductController extends Controller
                     }
                     if ($productCounts > $productLimit) {
                         $errors[] = "You have reached maximum amount of products. Please upgrade your subscription plan to import more products.";
+                        break;
                     }
                 }
 
@@ -226,6 +227,7 @@ class ImportProductController extends Controller
                             $numberOfImportingSites = count($groupedSites[$category->category_name . "$ $" . $product->product_name]);
                             if ($siteLimit - $product->sites()->count() < $numberOfImportingSites) {
                                 $errors[] = "You have reached the site limit of your subscription plan. Please upgrade your subscription plan to add more sites.";
+                                break;
                             }
                         }
                     }
