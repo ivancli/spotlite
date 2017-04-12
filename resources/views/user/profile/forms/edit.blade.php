@@ -240,7 +240,7 @@
                                @if(!is_null($user->reportTask) && $user->reportTask->show_all == 'y')
                                checked="checked"
                                @endif
-                               value="y"> Show all URLs in SpotLite Digest
+                               value="y"> Show all Product Page URLs in SpotLite Digest
                     </label>
                 </div>
             </div>
