@@ -61,7 +61,6 @@ class ImportProductController extends Controller
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
         $file = $this->request->file('file');
-
         $products = [];
         $errors = [];
 
@@ -114,6 +113,8 @@ class ImportProductController extends Controller
         $siteCounter = 0;
         $productCounter = 0;
         $categoryCounter = 0;
+
+
         $products->each(function ($product, $index) use ($user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
             $rowNumber = $index + 2;
             /*IMPORT CATEGORIES*/

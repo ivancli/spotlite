@@ -9,7 +9,7 @@ class CreateProductsTable extends Migration {
 	{
 		Schema::create('products', function(Blueprint $table) {
 			$table->increments('product_id');
-			$table->text('product_name');
+			$table->string('product_name');
 			$table->integer('category_id')->unsigned()->nullable()->index();
 			$table->integer('user_id')->unsigned()->index()->nullable();
             $table->integer('group_id')->unsigned()->index()->nullable();
