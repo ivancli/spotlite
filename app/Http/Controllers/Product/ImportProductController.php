@@ -69,7 +69,7 @@ class ImportProductController extends Controller
         //import products
 
         $productCounts = $user->products()->count();
-        $productNames = $user->products->pluck('product_name');
+        $productNames = $user->products->pluck('product_name')->toArray();
 
         $subCriteria = $user->subscriptionCriteria();
         $productLimit = 0;
