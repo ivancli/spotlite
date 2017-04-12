@@ -67,7 +67,17 @@ class ImportProductController extends Controller
 
         /*TODO data collection and validation*/
         //import products
-        $result = Excel::load($file->getPathname(), function ($reader) use (&$products, &$errors) {
+
+        $productCounts = $user->products()->count();
+        $productNames = $user->products->pluck('product_name');
+
+        $subCriteria = $user->subscriptionCriteria();
+        $productLimit = 0;
+        if (!is_null($subCriteria)) {
+            $productLimit = isset($subCriteria->product) ? $subCriteria->product : 0;
+        }
+
+        $result = Excel::load($file->getPathname(), function ($reader) use ($productLimit, $productNames, $productCounts, $user, &$products, &$errors) {
             $data = $reader->all();
             foreach ($data as $index => $product) {
                 $rowNumber = $index + 2;
@@ -77,6 +87,16 @@ class ImportProductController extends Controller
                 if (!isset($product->category) || is_null($product->category)) {
                     $errors[] = "Category name is missing in 'Import Products' row #{$rowNumber}";
                 }
+
+                if ($productLimit > 0) {
+                    if (!in_array($product->product, $productNames)) {
+                        $productCounts++;
+                    }
+                    if ($productCounts > $productLimit) {
+                        $errors[] = "You have reached maximum amount of products. Please upgrade your subscription plan to import more products.";
+                    }
+                }
+
                 $productData = $product->all();
                 $products [] = $productData;
             }
@@ -236,7 +256,7 @@ class ImportProductController extends Controller
                     $categoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
                     $category = $user->categories()->save(new Category(array(
                         'category_name' => $url['category'],
-                        'category_order' => $categoryOrder+1
+                        'category_order' => $categoryOrder + 1
                     )));
                     $categoryCounter++;
                 }
