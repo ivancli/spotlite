@@ -115,11 +115,15 @@ class ImportProductController extends Controller
         $categoryCounter = 0;
 
         $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
+        $categories = $user->categories;
 
-        $products->each(function ($product, $index) use (&$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
+        $products->each(function ($product, $index) use ($categories, &$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
             $rowNumber = $index + 2;
             /*IMPORT CATEGORIES*/
-            $category = $user->categories()->where('category_name', $product['category'])->first();
+//            $category = $user->categories()->where('category_name', $product['category'])->first();
+            $category = $categories->filter(function ($category, $index) use ($product) {
+                return $category->category_name == $product['category'];
+            })->first();
             if (is_null($category)) {
                 if ($this->request->has('no_new_categories') && $this->request->get('no_new_categories') == 'on') {
                     $warnings[] = "Category name in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
