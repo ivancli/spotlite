@@ -147,7 +147,7 @@ class ImportProductController extends Controller
                     $existingProduct = Product::create([
                         'product_name' => $product['product'],
                         'user_id' => $user->getKey(),
-                        'product_order' => 999,
+                        'product_order' => 99999,
                         'category_id' => $category->getKey()
                     ]);
                     $productCounter++;
@@ -177,7 +177,7 @@ class ImportProductController extends Controller
 
     public function storeSites(StoreValidator $storeValidator)
     {
-
+        ini_set('max_execution_time', 300);
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
         $file = $this->request->file('file');
@@ -251,10 +251,16 @@ class ImportProductController extends Controller
         $categoryCounter = 0;
         $productCounter = 0;
         $siteCounter = 0;
+        $categories = $user->categories;
+        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
 
-        $urls->each(function ($url, $index) use ($user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter, $siteLimit) {
+        $urls->each(function ($url, $index) use (&$greatestCategoryOrder, $categories, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter, $siteLimit) {
             $rowNumber = $index + 2;
-            $category = $user->categories()->where('category_name', '=', $url['category'])->first();
+
+            $category = $categories->filter(function ($category, $index) use ($url) {
+                return $category->category_name == $url['category'];
+            })->first();
+
             if (is_null($category)) {
                 if ($this->request->has('no_new_categories')) {
                     /*TODO add to warning*/
@@ -262,11 +268,11 @@ class ImportProductController extends Controller
                     return true;
                 } else {
                     /*TODO create new category*/
-                    $categoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
-                    $category = $user->categories()->save(new Category(array(
+                    $category = Category::create([
                         'category_name' => $url['category'],
-                        'category_order' => $categoryOrder + 1
-                    )));
+                        'category_order' => $greatestCategoryOrder++,
+                        'user_id' => $user->getKey()
+                    ]);
                     $categoryCounter++;
                 }
             }
@@ -276,10 +282,12 @@ class ImportProductController extends Controller
                     $warnings[] = "Product in row #{$rowNumber} does not exist in Category:{$category->category_name}, this Product and its URLs were NOT imported.";
                     return true;
                 } else {
-                    $product = $category->products()->save(new Product(array(
+                    $product = Product::create([
                         'product_name' => $url['product'],
-                    )));
-                    $user->products()->save($product);
+                        'product_order' => 99999,
+                        'category_id' => $category->getKey(),
+                        'user_id' => $user->getKey()
+                    ]);
                     $productCounter++;
                 }
             }
