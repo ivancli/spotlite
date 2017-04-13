@@ -8,57 +8,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Repository\Ebay\EbayContract;
+use App\Models\Site;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
     var $request;
+    var $ebayRepo;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, EbayContract $ebayContract)
     {
         $this->request = $request;
+        $this->ebayRepo = $ebayContract;
     }
 
     public function index()
     {
-        $reportTask = auth()->user()->reportTask;
-        $user = $reportTask->reportable;
-
-        $sites = $user->sites;
-
-        $siteChangeCounter = 0;
-        $cheapestCounter = 0;
-        $mostExpensiveCounter = 0;
-        $failedCrawlerCounter = 0;
-        $showLastChange = false;
-        foreach ($sites as $site) {
-            switch ($reportTask->frequency) {
-                case 'daily':
-                    if (!is_null($site->priceLastChangedAt) && $site->priceLastChangedAt->diffInHours(Carbon::now()) < 24) {
-                        $siteChangeCounter++;
-                        $showLastChange = true;
-                    }
-                    break;
-                case 'weekly':
-                    if (!is_null($site->priceLastChangedAt) && $site->priceLastChangedAt->diffInHours(Carbon::now()) < 168) {
-                        $siteChangeCounter++;
-                        $showLastChange = true;
-                    }
-                    break;
-            }
-            if ($site->my_price == 'y' && $site->isCheapest) {
-                $cheapestCounter++;
-            }
-            if ($site->my_price == 'y' && $site->isMostExpensive) {
-                $mostExpensiveCounter++;
-            }
-            if($site->status != 'ok' && $site->status != 'waiting'){
-                $failedCrawlerCounter++;
+        $site = Site::findOrFail(26);
+        if (strpos($site->domain, 'www.ebay.com') !== false) {
+            $url = $site->site_url;
+            $path = parse_url($url)['path'];
+            $tokens = explode('/', $path);
+            $itemId = $tokens[count($tokens) - 1];
+            if ($itemId) {
+                $this->ebayRepo->getItem($itemId);
             }
         }
-
-        $view = 'products.report.email.user';
-        return view($view)->with(compact(['reportTask', 'siteChangeCounter', 'cheapestCounter', 'mostExpensiveCounter', 'failedCrawlerCounter', 'showLastChange']));
     }
 }

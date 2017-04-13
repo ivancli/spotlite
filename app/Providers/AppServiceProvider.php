@@ -279,6 +279,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Contracts\Repository\Legal\PrivacyPolicyContract', 'App\Repositories\Legal\PrivacyPolicyRepository');
         $this->app->bind('App\Contracts\Repository\Legal\TermAndConditionContract', 'App\Repositories\Legal\TermAndConditionRepository');
         $this->app->bind('App\Contracts\Repository\Security\TokenContract', 'App\Repositories\Security\TokenRepository');
+        $this->app->bind('App\Contracts\Repository\Ebay\EbayContract', 'App\Repositories\Ebay\EbayRepository');
 
         /* Site Query Filters */
         $this->app->when('App\Http\Controllers\Crawler\SiteController')

@@ -18,6 +18,7 @@ class AlterUsersTable extends Migration
             $table->text('company_type')->nullable();
             $table->text('company_name')->nullable();
             $table->text('company_url')->nullable();
+            $table->text('ebay_username')->nullable();
             $table->char('agree_terms', 1)->default('y');
         });
     }

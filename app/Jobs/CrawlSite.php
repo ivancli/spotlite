@@ -10,8 +10,10 @@ namespace App\Jobs;
 
 
 use App\Contracts\Repository\Crawler\CrawlerContract;
+use App\Contracts\Repository\Ebay\EbayContract;
 use App\Models\Crawler;
 use App\Models\Domain;
+use App\Models\EbayItem;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -39,9 +41,10 @@ class CrawlSite extends Job implements ShouldQueue
     /**
      * Execute the job.
      * @param CrawlerContract $crawler
+     * @param EbayContract $ebayRepo
      * @return bool
      */
-    public function handle(CrawlerContract $crawler)
+    public function handle(CrawlerContract $crawler, EbayContract $ebayRepo)
     {
         $this->crawler->pick();
         if (isset($this->crawler->site) && isset($this->crawler->site->product) && isset($this->crawler->site->product->user)) {
@@ -99,6 +102,40 @@ class CrawlSite extends Job implements ShouldQueue
         }
 
         $crawler->crawl($this->crawler, $crawlerClass, $parserClass, $currencyFormatterClass);
+
+        /*TODO refine this part*/
+        $site = $this->crawler->site;
+        Log::info($site->domain);
+        if (strpos($site->domain, 'www.ebay.com') !== false) {
+            Log::info("called");
+            $url = $site->site_url;
+            $path = parse_url($url)['path'];
+            $tokens = explode('/', $path);
+            $itemId = $tokens[count($tokens) - 1];
+            if ($itemId) {
+                $item = $ebayRepo->getItem($itemId);
+                $ebayItem = $site->ebayItem;
+                if (is_null($ebayItem)) {
+                    $ebayItem = $site->ebayItem()->save(new EbayItem());
+                }
+
+                $ebayItem->title = isset($item->title) ? $item->title : null;
+                $ebayItem->subtitle = isset($item->subtitle) ? $item->subtitle : null;
+                $ebayItem->shortDescription = isset($item->shortDescription) ? $item->shortDescription : null;
+                $ebayItem->price = isset($item->price) && isset($item->price->value) ? $item->price->value : null;
+                $ebayItem->currency = isset($item->price) && isset($item->price->currency) ? $item->price->currency : null;
+                $ebayItem->category = isset($item->categoryPath) ? $item->categoryPath : null;
+                $ebayItem->condition = isset($item->condition) ? $item->condition : null;
+                $ebayItem->location_city = isset($item->itemLocation) && isset($item->itemLocation->city) ? $item->itemLocation->city : null;
+                $ebayItem->location_postcode = isset($item->itemLocation) && isset($item->itemLocation->postalCode) ? $item->itemLocation->postalCode : null;
+                $ebayItem->location_country = isset($item->itemLocation) && isset($item->itemLocation->country) ? $item->itemLocation->country : null;
+                $ebayItem->image_url = isset($item->image) && isset($item->image->imageUrl) ? $item->image->imageUrl : null;
+                $ebayItem->brand = isset($item->brand) ? $item->brand : null;
+                $ebayItem->seller_username = isset($item->seller) && isset($item->seller->username) ? $item->seller->username : null;
+
+                $ebayItem->save();
+            }
+        }
 
         /* unset everything to prevent memory leak */
         unset($user, $crawler_class, $parser_class);
