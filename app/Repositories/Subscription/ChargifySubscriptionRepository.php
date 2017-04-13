@@ -158,7 +158,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
                 $product->criteria = json_decode($product->description);
 
-                if (array_has($product->criteria, 'hidden') && array_get($product->criteria, 'hidden') == 1) {
+                if (isset($product->criteria->hidden) && $product->criteria->hidden == 1) {
                     continue;
                 }
 
