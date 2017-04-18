@@ -1,5 +1,13 @@
 <p>
-    We found that at <a href="{{$alert->alertable->site_url}}">{{parse_url($alert->alertable->site_url)['host']}}</a>
+    We found that at <a href="{{$alert->alertable->site_url}}">
+        @if(!is_null($alert->alertable->ebayItem))
+            {{ $alert->alertable->ebayItem->seller_username }}
+        @elseif
+            {{ $alert->alertable->userDomainName }}
+        @else
+            {{ $alert->alertable->domain }}
+        @endif
+    </a>
     the price for {{$alert->alertable->product->product_name}} is
     @if($alert->comparison_price_type == "my price")
         @if($alert->alertable->recent_price > $mySite->recent_price)

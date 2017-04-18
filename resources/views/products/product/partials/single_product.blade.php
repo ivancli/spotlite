@@ -65,7 +65,9 @@
                     <div style="display:inline-block; font-weight: normal; font-size: 11px;" class="hidden-xs hidden-sm text-muted">
                         Cheapest:
                         <span style="font-weight: bold;">
-                            @if(!is_null($product->cheapestSites->first()->userDomainName))
+                            @if(!is_null($product->cheapestSites->first()->ebayItem))
+                                {{$product->cheapestSites->first()->ebayItem->seller_username}}
+                            @elseif(!is_null($product->cheapestSites->first()->userDomainName))
                                 {{$product->cheapestSites->first()->userDomainName}}
                             @else
                                 {{$product->cheapestSites->first()->domain}}

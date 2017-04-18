@@ -354,7 +354,11 @@ class AlertRepository implements AlertContract
                 $product = Product::findOrFail($productID)->toArray();
                 $product['sites'] = array();
                 foreach ($sites as $siteID) {
-                    $site = Site::findOrFail($siteID)->toArray();
+                    $objectSite = Site::findOrFail($siteID);
+                    $site = $objectSite->toArray();
+                    if (!is_null($objectSite->ebayItem)) {
+                        $site['seller_username'] = $objectSite->ebayItem->seller_username;
+                    }
                     $product['sites'][] = $site;
                 }
 
@@ -514,40 +518,6 @@ class AlertRepository implements AlertContract
         }
     }
 
-    private function comparePrices($priceA, $priceB, $operator)
-    {
-        switch ($operator) {
-            case "=<":
-                return $priceA <= $priceB;
-                break;
-            case "<":
-                return $priceA < $priceB;
-                break;
-            case "=>":
-                return $priceA >= $priceB;
-                break;
-            case ">":
-                return $priceA > $priceB;
-                break;
-            default:
-                return false;
-        }
-    }
-
-    private function getAlertsCount()
-    {
-        $siteWithAlerts = auth()->user()->sites()->with("alert")->get();
-
-        $siteAlerts = array();
-        foreach ($siteWithAlerts as $siteWithAlert) {
-            if (!is_null($siteWithAlert->alert)) {
-                $siteAlerts [] = $siteWithAlert->alert;
-            }
-        }
-
-        return auth()->user()->alerts()->count() + auth()->user()->categoryAlerts()->count() + auth()->user()->productAlerts()->count() + count($siteAlerts);
-    }
-
     public function getDataTableAlerts()
     {
         $userAlerts = $this->getUserAlertsByAuthUser();
@@ -637,5 +607,39 @@ class AlertRepository implements AlertContract
             return is_null($alert);
         });
         return $siteAlerts;
+    }
+
+    private function comparePrices($priceA, $priceB, $operator)
+    {
+        switch ($operator) {
+            case "=<":
+                return $priceA <= $priceB;
+                break;
+            case "<":
+                return $priceA < $priceB;
+                break;
+            case "=>":
+                return $priceA >= $priceB;
+                break;
+            case ">":
+                return $priceA > $priceB;
+                break;
+            default:
+                return false;
+        }
+    }
+
+    private function getAlertsCount()
+    {
+        $siteWithAlerts = auth()->user()->sites()->with("alert")->get();
+
+        $siteAlerts = array();
+        foreach ($siteWithAlerts as $siteWithAlert) {
+            if (!is_null($siteWithAlert->alert)) {
+                $siteAlerts [] = $siteWithAlert->alert;
+            }
+        }
+
+        return auth()->user()->alerts()->count() + auth()->user()->categoryAlerts()->count() + auth()->user()->productAlerts()->count() + count($siteAlerts);
     }
 }
