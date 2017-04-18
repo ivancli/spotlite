@@ -58,8 +58,7 @@ class Crawl extends Command
                                 continue;
                             }
                         }
-                        $delay = rand(1, 900);
-                        dispatch((new CrawlSite($crawler))->onQueue("crawling")->delay($delay));
+                        dispatch((new CrawlSite($crawler))->onQueue("crawling"));
                         $crawler->queue();
                         $crawler->last_active_at = date("Y-m-d H:i:s");
                         $crawler->save();
