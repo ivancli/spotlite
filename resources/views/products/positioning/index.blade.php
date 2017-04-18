@@ -233,7 +233,7 @@
                                 var $container = $("<div>");
                                 $.each(site_urls_and_ebay, function (index, site_url_and_ebay) {
                                     var site_url = site_url_and_ebay.split('$#$')[0];
-                                    if (site_url_and_ebay.split('$#$').length > 1) {
+                                    if (site_url_and_ebay.split('$#$').length > 1 && site_url_and_ebay.split('$#$')[1] != '') {
                                         var ebay_username = site_url_and_ebay.split('$#$')[1];
                                     }
                                     console.info('ebay_username', ebay_username);
