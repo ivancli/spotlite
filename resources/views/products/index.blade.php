@@ -229,6 +229,7 @@
                             $(".list-container").fadeIn();
                         });
                         hideLoading();
+                        $(".general-search-input").focus();
                         generalSearchPromise = null;
                     }, function (xhr, status, error) {
                         hideLoading();
