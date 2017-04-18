@@ -30,11 +30,13 @@ class TestController extends Controller
         $site = Site::findOrFail(9565);
         if (strpos($site->domain, 'www.ebay.com') !== false) {
             $url = $site->site_url;
+            $url = 'http://www.ebay.com.au/itm/1-x-2017-Australian-1-one-dollar-100-Years-Anzac-Coin-from-Mint-Bag-RARE-UNC-/182529585621?hash=item2a7f9c71d5';
             $path = parse_url($url)['path'];
             $tokens = explode('/', $path);
             $itemId = $tokens[count($tokens) - 1];
             if ($itemId) {
                 $item = $this->ebayRepo->getItem($itemId);
+                dd($item);
                 $ebayItem = $site->ebayItem;
                 if (is_null($ebayItem)) {
                     $ebayItem = $site->ebayItem()->save(new EbayItem());

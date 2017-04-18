@@ -229,10 +229,14 @@
 
                             if (typeof data.cheapest_site_url != 'undefined' && data.cheapest_site_url != null) {
                                 console.info(data);
-                                var site_urls = data.cheapest_site_url.split('$ $');
-                                console.info('site_urls', site_urls);
+                                var site_urls_and_ebay = data.cheapest_site_url.split('$ $');
                                 var $container = $("<div>");
-                                $.each(site_urls, function (index, site_url) {
+                                $.each(site_urls_and_ebay, function (index, site_url_and_ebay) {
+                                    var site_url = site_url_and_ebay.split('$#$')[0];
+                                    if (site_url_and_ebay.split('$#$').length > 1) {
+                                        var ebay_username = site_url_and_ebay.split('$#$')[1];
+                                    }
+                                    console.info('ebay_username', ebay_username);
                                     $container.append(
                                         $("<div>").append(
                                             $("<a>").attr({
@@ -240,11 +244,15 @@
                                                 "target": "_blank"
                                             }).text(function () {
                                                 var siteUrlText = site_url;
-                                                $.each(domains, function (domain, domainName) {
-                                                    if (site_url.indexOf(domain) > -1) {
-                                                        siteUrlText = domainName
-                                                    }
-                                                });
+                                                if (typeof ebay_username != 'undefined') {
+                                                    siteUrlText = ebay_username;
+                                                } else {
+                                                    $.each(domains, function (domain, domainName) {
+                                                        if (site_url.indexOf(domain) > -1) {
+                                                            siteUrlText = domainName
+                                                        }
+                                                    });
+                                                }
                                                 return siteUrlText;
                                             })
                                         )
@@ -298,6 +306,7 @@
                         var isMySite = false;
                         if (reference) {
                             $.each(site_urls, function (index, site_url) {
+                                site_url = site_url.split('$#$')[0];
                                 if (site_url.indexOf(reference) > -1) {
                                     isMySite = true;
                                 }

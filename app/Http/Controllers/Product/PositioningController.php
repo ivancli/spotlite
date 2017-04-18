@@ -101,8 +101,8 @@ class PositioningController extends Controller
         }
 
 
-        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $excludeQuery . ' GROUP BY product_id) AS cheapestSite');
-        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(a.site_url SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites ' . $subExcludeQuery . 'GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) ' . $excludeQuery . ' GROUP BY product_id) AS expensiveSite');
+        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(ebay_items.seller_username, \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS cheapestSite');
+        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(ebay_items.seller_username, \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites ' . $subExcludeQuery . 'GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS expensiveSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
@@ -119,7 +119,7 @@ class PositioningController extends Controller
 //            $referenceQuery = DB::table('sites as reference');
 //            $referenceQuery->where('reference.site_url', 'LIKE', "%{$referenceDomain}%");
 //            $referenceQuery->limit(1);
-            $productBuilder = $productBuilder->leftJoin($referenceQuery, function ($join) {
+            $productBuilder->leftJoin($referenceQuery, function ($join) {
                 $join->on('reference.product_id', '=', 'products.product_id');
             });
             $select[] = 'reference.site_url as reference_site_url';
@@ -133,11 +133,11 @@ class PositioningController extends Controller
 
         if ($this->request->has('category')) {
             $category = $this->request->get('category');
-            $productBuilder = $productBuilder->join('categories', function ($join) use ($category) {
+            $productBuilder->join('categories', function ($join) use ($category) {
                 $join->on('products.category_id', '=', 'categories.category_id')->where('categories.category_id', '=', $category);
             });
         } else {
-            $productBuilder = $productBuilder->join('categories', 'categories.category_id', '=', 'products.category_id');
+            $productBuilder->join('categories', 'categories.category_id', '=', 'products.category_id');
         }
 
         if ($this->request->has('brand') || $this->request->has('supplier')) {
