@@ -522,7 +522,7 @@
                                                     <a href="{{$site['site_url']}}">
                                                         @if(isset($site['seller_username']))
                                                             {{ $site['seller_username'] }}
-                                                        @elseif
+                                                        @elseif(isset($site['userDomainName']) && !is_null($site['userDomainName']))
                                                             {{ $site['userDomainName'] }}
                                                         @else
                                                             {{ $site['domain'] }}
