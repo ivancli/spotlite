@@ -105,9 +105,7 @@ class CrawlSite extends Job implements ShouldQueue
 
         /*TODO refine this part*/
         $site = $this->crawler->site;
-        Log::info($site->domain);
         if (strpos($site->domain, 'www.ebay.com') !== false) {
-            Log::info("called");
             $url = $site->site_url;
             $path = parse_url($url)['path'];
             $tokens = explode('/', $path);
