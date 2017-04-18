@@ -64,9 +64,9 @@
                       onsubmit="submitProductImport(this); return false">
                     {!! csrf_field() !!}
                     <div class="form-group">
-                        <label for="file" class="col-sm-3 control-label">Select CSV File</label>
+                        <label for="category-product-file" class="col-sm-3 control-label">Select CSV File</label>
                         <div class="col-sm-9">
-                            <input type="file" name="file" id="file" class="form-control">
+                            <input type="file" name="file" id="category-product-file" class="form-control">
                         </div>
                     </div>
 
@@ -140,9 +140,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="file" class="col-sm-3 control-label">Select CSV File</label>
+                        <label for="url-file" class="col-sm-3 control-label">Select CSV File</label>
                         <div class="col-sm-9">
-                            <input type="file" name="file" id="file" class="form-control">
+                            <input type="file" name="file" id="url-file" class="form-control">
                         </div>
                     </div>
                     <div class="text-right">
@@ -201,6 +201,7 @@
                         )
                     });
 
+                    $("#category-product-file").val("");
                 }
             },
             'error': function (xhr, status, error) {
@@ -270,7 +271,8 @@
                             $("<li>").text(warning)
                         )
                     });
-
+                    
+                    $("#url-file").val("");
                 }
             },
             'error': function (xhr, status, error) {
