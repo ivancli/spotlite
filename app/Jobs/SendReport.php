@@ -54,6 +54,7 @@ class SendReport extends Job implements ShouldQueue
                 $fileName = date("Y-m-d") . " SpotLite Category Report for {$category->category_name}" . "." . $this->reportTask->file_type;
                 $subject = "{$category->category_name} Category Report for " . date("Y-m-d");
                 $view = 'products.report.email.category';
+                $reportTask = $this->reportTask;
                 $data = compact(['report', 'reportTask']);
                 break;
             case "product":
@@ -65,6 +66,7 @@ class SendReport extends Job implements ShouldQueue
                 $subject = "{$product->product_name} Product Report for " . date("Y-m-d");
                 $fileName = date("Y-m-d") . " SpotLite Product Report for {$product->product_name}" . "." . $this->reportTask->file_type;
                 $view = 'products.report.email.product';
+                $reportTask = $this->reportTask;
                 $data = compact(['report', 'reportTask']);
                 break;
             case "user":
