@@ -78,7 +78,7 @@ class ReportTaskRepository implements ReportTaskContract
             $fileName = str_replace(' ', '_', $category->category_name) . "_category_report";
             $excel = Excel::create($fileName, function ($excel) use ($category, $data, $fileName) {
                 $excel->sheet($category->category_name, function ($sheet) use ($data) {
-                    $sheet->loadview('products.report.excel.category')->with(compact(['data']));
+                    $sheet->loadview('products.report.excel.category', compact(['data']));
                     $sheet->setColumnFormat(array(
                         'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
                         'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
@@ -123,7 +123,7 @@ class ReportTaskRepository implements ReportTaskContract
         $fileName = str_replace(' ', '_', $product->product_name) . "_product_report";
         $excel = Excel::create($fileName, function ($excel) use ($data, $fileName) {
             $excel->sheet("sheet_1", function ($sheet) use ($data) {
-                $sheet->loadview('products.report.excel.product')->with(compact(['data']));
+                $sheet->loadview('products.report.excel.product', compact(['data']));
                 $sheet->setColumnFormat(array(
                     'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
                     'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
