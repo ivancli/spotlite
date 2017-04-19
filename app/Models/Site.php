@@ -140,7 +140,7 @@ class Site extends Model
 
             //matching both sub-domain and domain
             $ebayItem = $this->ebayItem;
-            if (!is_null($ebayUsername) && !is_null($ebayItem)) {
+            if (!is_null($ebayUsername) && !empty($ebayUsername) && !is_null($ebayItem)) {
                 return $ebayUsername == $ebayItem->seller_username ? 'y' : 'n';
             } elseif ($subdomainSplitted == $domainSplitted) {
                 return 'y';
