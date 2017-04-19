@@ -350,15 +350,17 @@
                     )
                 }
             });
-            $.each(ebayUsername, function (index, ebayUsername) {
-                if ('eBay: ' + ebayUsername != reference) {
-                    $selExclude.append(
-                        $("<option>").attr({
-                            "value": 'eBay: ' + ebayUsername
-                        }).text('eBay: ' + ebayUsername)
-                    )
-                }
-            });
+            if(reference.indexOf('www.ebay.com') == -1){
+                $.each(ebayUsername, function (index, ebayUsername) {
+                    if ('eBay: ' + ebayUsername != reference) {
+                        $selExclude.append(
+                            $("<option>").attr({
+                                "value": 'eBay: ' + ebayUsername
+                            }).text('eBay: ' + ebayUsername)
+                        )
+                    }
+                });
+            }
             $selExclude.select2();
             $selExclude.val(excludeValue).trigger('change');
         }
