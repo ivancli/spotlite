@@ -521,7 +521,7 @@
                                                 <li>
                                                     <a href="{{$site['site_url']}}">
                                                         @if(isset($site['seller_username']))
-                                                            {{ $site['seller_username'] }}
+                                                            eBay: {{ $site['seller_username'] }}
                                                         @elseif(isset($site['userDomainName']) && !is_null($site['userDomainName']))
                                                             {{ $site['userDomainName'] }}
                                                         @else

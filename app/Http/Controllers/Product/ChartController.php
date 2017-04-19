@@ -170,7 +170,7 @@ class ChartController extends Controller
                     $data[$siteId]["average"] = array();
                     $site = $this->siteRepo->getSite($siteId);
                     if (!is_null($site->ebayItem)) {
-                        $data[$siteId]["name"] = $site->ebayItem->seller_username;
+                        $data[$siteId]["name"] = "eBay: " . $site->ebayItem->seller_username;
                     } else {
                         $data[$siteId]["name"] = is_null($site->userDomainName) ? $site->domain : $site->userDomainName;
                     }
@@ -242,7 +242,7 @@ class ChartController extends Controller
                 $data[$site_id] = array();
                 $data[$site_id]["average"] = array();
                 if (!is_null($site->ebayItem)) {
-                    $data[$site_id]["name"] = $site->ebayItem->seller_username;
+                    $data[$site_id]["name"] = "eBay".$site->ebayItem->seller_username;
                 } else {
                     $data[$site_id]["name"] = is_null($site->userDomainName) ? $site->domain : $site->userDomainName;
                 }

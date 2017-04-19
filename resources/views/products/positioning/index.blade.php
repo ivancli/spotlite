@@ -69,6 +69,13 @@
                                                     @endif
                                             >{{$domainName}}</option>
                                         @endforeach
+                                        @foreach($ebaySellerUsernames as $ebaySellerUsername)
+                                            <option value="eBay: {{$ebaySellerUsername}}"
+                                                    @if(strpos(auth()->user()->ebay_username, $ebaySellerUsername) !== false)
+                                                    selected="selected"
+                                                    @endif
+                                            >eBay: {{$ebaySellerUsername}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-4 form-group">
@@ -150,6 +157,7 @@
     <script>
         var tblProducts = null;
         var domains = {!! json_encode($domains) !!};
+        var ebayUsername = {!! json_encode($ebaySellerUsernames) !!};
 
         $(function () {
             populateExcludeCompetitors();
@@ -236,7 +244,6 @@
                                     if (site_url_and_ebay.split('$#$').length > 1 && site_url_and_ebay.split('$#$')[1] != '') {
                                         var ebay_username = site_url_and_ebay.split('$#$')[1];
                                     }
-                                    console.info('ebay_username', ebay_username);
                                     $container.append(
                                         $("<div>").append(
                                             $("<a>").attr({
@@ -305,12 +312,21 @@
                         var reference = $("#sel-reference").val();
                         var isMySite = false;
                         if (reference) {
-                            $.each(site_urls, function (index, site_url) {
-                                site_url = site_url.split('$#$')[0];
-                                if (site_url.indexOf(reference) > -1) {
-                                    isMySite = true;
-                                }
-                            });
+                            if (reference.indexOf('eBay: ') > -1) {
+                                $.each(site_urls, function (index, site_url) {
+                                    var ebayUsername = site_url.split('$#$')[1];
+                                    if (ebayUsername == reference) {
+                                        isMySite = true;
+                                    }
+                                });
+                            } else {
+                                $.each(site_urls, function (index, site_url) {
+                                    site_url = site_url.split('$#$')[0];
+                                    if (site_url.indexOf(reference) > -1) {
+                                        isMySite = true;
+                                    }
+                                });
+                            }
                         }
                         if (isMySite) {
                             $(row).addClass("my-site");
@@ -331,6 +347,15 @@
                         $("<option>").attr({
                             "value": domain
                         }).text(domainName)
+                    )
+                }
+            });
+            $.each(ebayUsername, function (index, ebayUsername) {
+                if ('eBay: ' + ebayUsername != reference) {
+                    $selExclude.append(
+                        $("<option>").attr({
+                            "value": 'eBay: ' + ebayUsername
+                        }).text('eBay: ' + ebayUsername)
                     )
                 }
             });

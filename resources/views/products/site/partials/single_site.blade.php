@@ -8,7 +8,7 @@
     <td class="site-url vertical-align-middle">
         <a href="{{$site->site_url}}" target="_blank" class="text-muted site-url-link" data-url="{{$site->site_url}}">
             @if(!is_null($site->ebayItem) && !is_null($site->ebayItem->seller_username))
-                {{ $site->ebayItem->seller_username }}
+                eBay: {{ $site->ebayItem->seller_username }}
             @elseif(!is_null($site->userDomainName))
                 {{$site->userDomainName}}
             @else

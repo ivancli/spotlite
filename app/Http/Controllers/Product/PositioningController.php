@@ -38,7 +38,7 @@ class PositioningController extends Controller
             $userDomain = $user->domains()->where('domain', '=', $result->domain)->get();
             if ($userDomain->count() > 0) {
                 $domains [$result->domain] = $userDomain->first()->name;
-            }else{
+            } else {
                 $domains[$result->domain] = $result->domain;
             }
         }
@@ -46,12 +46,21 @@ class PositioningController extends Controller
             return $value;
         });
 
+        $ebaySellerUsernames = [];
+        $ebayResults = DB::table('ebay_items')->join('sites', 'ebay_items.site_id', '=', 'sites.site_id')->join('products', 'sites.product_id', '=', 'products.product_id')
+            ->where('user_id', '=', 1)->whereNotNull('seller_username')
+            ->select('seller_username')->distinct()
+            ->get();
+        $ebaySellerUsernames = array_map(function ($item) {
+            return $item->seller_username;
+        }, $ebayResults);
+
         $categories = $user->categories;
         $productMetas = $user->productMetas;
         $brands = $productMetas->sortBy('brand')->pluck('brand')->unique();
         $suppliers = $productMetas->sortBy('supplier')->pluck('supplier')->unique();
 
-        return view('products.positioning.index')->with(compact(['domains', 'categories', 'brands', 'suppliers']));
+        return view('products.positioning.index')->with(compact(['domains', 'ebaySellerUsernames', 'categories', 'brands', 'suppliers']));
     }
 
     public function show(ShowValidator $showValidator)
@@ -79,7 +88,11 @@ class PositioningController extends Controller
                 if ($index != 0) {
                     $excludeQuery .= " AND ";
                 }
-                $excludeQuery .= " a.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+                if (strpos($exclude, 'eBay: ') !== false) {
+                    $excludeQuery .= " ebay_items.seller_username != '" . addslashes(urlencode(str_replace('eBay: ', '', $exclude))) . "' ";
+                } else {
+                    $excludeQuery .= " a.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+                }
             }
             $excludeQuery .= " AND a.status != 'invalid'";
         } else {
@@ -93,7 +106,11 @@ class PositioningController extends Controller
                 if ($index != 0) {
                     $subExcludeQuery .= " AND ";
                 }
-                $subExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+                if (strpos($exclude, 'eBay: ') !== false) {
+                    $subExcludeQuery .= " ebay_items.seller_username != '" . addslashes(urlencode(str_replace('eBay: ', '', $exclude))) . "' ";
+                } else {
+                    $subExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+                }
             }
             $subExcludeQuery .= " AND sites.status != 'invalid'";
         } else {
@@ -101,8 +118,8 @@ class PositioningController extends Controller
         }
 
 
-        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(ebay_items.seller_username, \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS cheapestSite');
-        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(ebay_items.seller_username, \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites ' . $subExcludeQuery . 'GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS expensiveSite');
+        $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS cheapestSite');
+        $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS expensiveSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
@@ -114,21 +131,25 @@ class PositioningController extends Controller
 
         if ($this->request->has('reference')) {
             $referenceDomain = $this->request->get('reference');
-            $referenceQuery = DB::raw('(SELECT * FROM sites WHERE site_url LIKE "%' . addslashes(urlencode($referenceDomain)) . '%") AS reference');
+            if (strpos($referenceDomain, 'eBay: ') !== false) {
+                $ebayUsername = str_replace('eBay: ', '', $referenceDomain);
+                $referenceQuery = DB::raw('(SELECT sites.*, ebay_items.seller_username FROM ebay_items JOIN sites USING(site_id) WHERE seller_username LIKE "%' . addslashes(urlencode($ebayUsername)) . '%") AS reference');
+                $productBuilder->leftJoin($referenceQuery, function ($join) {
+                    $join->on('reference.product_id', '=', 'products.product_id');
+                });
+            } else {
+                $referenceQuery = DB::raw('(SELECT * FROM sites WHERE site_url LIKE "%' . addslashes(urlencode($referenceDomain)) . '%") AS reference');
 
-//            $referenceQuery = DB::table('sites as reference');
-//            $referenceQuery->where('reference.site_url', 'LIKE', "%{$referenceDomain}%");
-//            $referenceQuery->limit(1);
-            $productBuilder->leftJoin($referenceQuery, function ($join) {
-                $join->on('reference.product_id', '=', 'products.product_id');
-            });
+                $productBuilder->leftJoin($referenceQuery, function ($join) {
+                    $join->on('reference.product_id', '=', 'products.product_id');
+                });
+            }
             $select[] = 'reference.site_url as reference_site_url';
             $select[] = 'reference.recent_price as reference_recent_price';
             $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price) as diff_cheapest');
             $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price as percent_diff_cheapest');
             $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price) as diff_expensive');
             $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price)/reference.recent_price as percent_diff_expensive');
-
         }
 
         if ($this->request->has('category')) {

@@ -1,7 +1,7 @@
 <p>
     We found that at <a href="{{$alert->alertable->site_url}}">
         @if(!is_null($alert->alertable->ebayItem))
-            {{ $alert->alertable->ebayItem->seller_username }}
+            eBay: {{ $alert->alertable->ebayItem->seller_username }}
         @elseif
             {{ $alert->alertable->userDomainName }}
         @else

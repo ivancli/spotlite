@@ -41,7 +41,7 @@
                 <td>
                     <a href="{{$site->site_url}}">
                         @if(!is_null($site->ebayItem))
-                            {{ $site->ebayItem->seller_username }}
+                            eBay: {{ $site->ebayItem->seller_username }}
                         @elseif(!is_null($site->userDomainName))
                             {{ $site->userDomainName }}
                         @else
