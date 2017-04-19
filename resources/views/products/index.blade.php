@@ -247,6 +247,16 @@
                 if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height()) {
                     if (!theEnd) {
                         loadCategories(start, initLength, function (response) {
+                            if ($("#btn-collapse-all").text() == "Expand All") {
+                                var $categoriesHTML = $("<div>").append(response.categoriesHTML);
+                                $categoriesHTML.find(".btn-collapse").addClass("collapsed").attr({
+                                    "aria-expanded": "false"
+                                });
+                                $categoriesHTML.find(".collapsible-category-div").removeClass("in").attr({
+                                    "aria-expanded": "false"
+                                });
+                                response.categoriesHTML = $categoriesHTML.html();
+                            }
                             $(".list-container").append(response.categoriesHTML);
                         }, function (xhr, status, error) {
 
