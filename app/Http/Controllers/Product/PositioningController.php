@@ -48,7 +48,7 @@ class PositioningController extends Controller
 
         $ebaySellerUsernames = [];
         $ebayResults = DB::table('ebay_items')->join('sites', 'ebay_items.site_id', '=', 'sites.site_id')->join('products', 'sites.product_id', '=', 'products.product_id')
-            ->where('user_id', '=', 1)->whereNotNull('seller_username')
+            ->where('user_id', '=', auth()->user()->getKey())->whereNotNull('seller_username')
             ->select('seller_username')->distinct()
             ->get();
         $ebaySellerUsernames = array_map(function ($item) {
