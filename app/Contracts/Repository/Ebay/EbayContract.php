@@ -11,4 +11,6 @@ interface EbayContract
     public function getAccessToken();
 
     public function getItem($id);
+
+    public function getItemGroup($id);
 }

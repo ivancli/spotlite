@@ -56,7 +56,35 @@ class EbayRepository implements EbayContract
     public function getItem($id)
     {
         $access_token = $this->getAccessToken();
-        $url = "https://api.ebay.com/buy/browse/v1/item/v1%7C{$id}%7C0";
+        if (strpos($id, 'v1') !== false) {
+            $id = urlencode($id);
+            $url = "https://api.ebay.com/buy/browse/v1/item/{$id}";
+        } else {
+            $url = "https://api.ebay.com/buy/browse/v1/item/v1%7C{$id}%7C0";
+        }
+        $ch = curl_init();
+        $curlHeaders = array(
+            "Authorization: Bearer {$access_token}",
+        );
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+        /*disable this before push to live*/
+        $buffer = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($buffer);
+        return $result;
+    }
+
+    public function getItemGroup($id)
+    {
+        $access_token = $this->getAccessToken();
+        $url = "https://api.ebay.com/buy/browse/v1/item_group/{$id}";
         $ch = curl_init();
         $curlHeaders = array(
             "Authorization: Bearer {$access_token}",

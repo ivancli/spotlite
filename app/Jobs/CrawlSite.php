@@ -112,6 +112,14 @@ class CrawlSite extends Job implements ShouldQueue
             $itemId = $tokens[count($tokens) - 1];
             if ($itemId) {
                 $item = $ebayRepo->getItem($itemId);
+                if (isset($item->errors)) {
+                    $itemGroup = $ebayRepo->getItemGroup($itemId);
+                    if (isset($itemGroup->items) && is_array($itemGroup->items)) {
+                        $itemGroupItem = array_first($itemGroup->items);
+                        $itemId = $itemGroupItem->itemId;
+                        $item = $ebayRepo->getItem($itemId);
+                    }
+                }
                 $ebayItem = $site->ebayItem;
                 if (is_null($ebayItem)) {
                     $ebayItem = $site->ebayItem()->save(new EbayItem());
