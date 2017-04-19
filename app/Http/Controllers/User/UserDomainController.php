@@ -43,10 +43,17 @@ class UserDomainController extends Controller
         $user = auth()->user();
         $user->domains()->delete();
         foreach ($domains as $key => $domain) {
-            $user->domains()->save(new UserDomain([
-                "domain" => $domain,
-                "name" => isset($names[$key]) && !empty($names[$key]) ? $names[$key] : null,
-            ]));
+            if (isset($names[$key]) && !empty($names[$key])) {
+                $user->domains()->save(new UserDomain([
+                    "domain" => $domain,
+                    "name" => isset($names[$key]) && !empty($names[$key]) ? $names[$key] : null,
+                ]));
+            } else {
+                $userDomain = $user->domains()->where('domain', '=', $domain)->first();
+                if (!is_null($userDomain)) {
+                    $userDomain->delete();
+                }
+            }
         }
 
         $status = true;
