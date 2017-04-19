@@ -141,6 +141,7 @@ return [
         'product_name' => [
             'required' => 'Product name is required.',
             'max' => 'Product name accepts maximum :max characters.',
+            'unique_per_category' => 'A product with the same name already exist in this category.',
         ],
         'frequency' => [
             'required' => 'Frequency is required.',

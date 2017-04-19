@@ -169,8 +169,8 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{route('account.index')}}#user-settings">My Account</a></li>
                                 <li><a href="{{route('account.index')}}#import-products">Bulk Import <span style="font-size: 10px;color: #00d200;font-weight: bold;position: absolute;padding-left: 3px;">NEW</span></a></li>
-                                <li><a href="{{route('account.index')}}#user-password">Reset Password</a></li>
                                 <li><a href="{{route('account.index')}}#user-domains">Site Names</a></li>
+                                <li><a href="{{route('account.index')}}#user-password">Reset Password</a></li>
                                 {{--<li><a href="{{route('account.index')}}#display-settings">Display Settings</a></li>--}}
                                 @if(auth()->user()->needSubscription)
                                     <li><a href="{{route('account.index')}}#manage-subscription">Manage My Subscription</a></li>

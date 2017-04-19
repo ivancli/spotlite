@@ -927,7 +927,13 @@
                                                         @if($site->status != 'ok' && $site->status != 'waiting' && $site->status != 'null_xpath')
                                                             CHECK PRODUCT PAGE URL
                                                         @else
-                                                            {{ !is_null($site->userDomainName) ? $site->userDomainName : $site->domain }}
+                                                            @if(!is_null($site->ebayItem))
+                                                                eBay: {{ $site->ebayItem->seller_username }}
+                                                            @elseif(!is_null($site->userDomainName))
+                                                                {{ $site->userDomainName }}
+                                                            @else
+                                                                {{ $site->domain }}
+                                                            @endif
                                                         @endif
                                                     </a>
                                                 </td>

@@ -91,20 +91,20 @@
                                 @endif
                             </div>
                             {{--<div class="col-md-4">--}}
-                                {{--<div class="pull-right">--}}
-                                    {{--<a href="#" onclick="showSetUpNotifications(); return false;"--}}
-                                       {{--class="btn btn-purple btn-flat {{auth()->user()->isPastDue ? 'disabled' : ''}}" id="btn-set-up-alerts">--}}
-                                        {{--@if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)--}}
-                                            {{--<i class="fa fa-bell ico-alert-enabled"></i>--}}
-                                            {{--&nbsp;--}}
-                                            {{--MANAGE ALERTS--}}
-                                        {{--@else--}}
-                                            {{--<i class="fa fa-bell-o"></i>--}}
-                                            {{--&nbsp;--}}
-                                            {{--SET UP ALERTS--}}
-                                        {{--@endif--}}
-                                    {{--</a>--}}
-                                {{--</div>--}}
+                            {{--<div class="pull-right">--}}
+                            {{--<a href="#" onclick="showSetUpNotifications(); return false;"--}}
+                            {{--class="btn btn-purple btn-flat {{auth()->user()->isPastDue ? 'disabled' : ''}}" id="btn-set-up-alerts">--}}
+                            {{--@if(auth()->user()->alerts()->count() > 0 || auth()->user()->categoryAlerts()->count() > 0 || auth()->user()->productAlerts()->count() > 0)--}}
+                            {{--<i class="fa fa-bell ico-alert-enabled"></i>--}}
+                            {{--&nbsp;--}}
+                            {{--MANAGE ALERTS--}}
+                            {{--@else--}}
+                            {{--<i class="fa fa-bell-o"></i>--}}
+                            {{--&nbsp;--}}
+                            {{--SET UP ALERTS--}}
+                            {{--@endif--}}
+                            {{--</a>--}}
+                            {{--</div>--}}
                             {{--</div>--}}
                         </div>
 
@@ -170,7 +170,7 @@
     <script type="text/javascript">
         var start = 0;
         var length = 5;
-        var initLength = 5;
+        var initLength = 10;
         var theEnd = false;
         var categoryLoadingPromise = false;
         /**
@@ -229,6 +229,7 @@
                             $(".list-container").fadeIn();
                         });
                         hideLoading();
+                        $(".general-search-input").focus();
                         generalSearchPromise = null;
                     }, function (xhr, status, error) {
                         hideLoading();
@@ -246,6 +247,16 @@
                 if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height()) {
                     if (!theEnd) {
                         loadCategories(start, initLength, function (response) {
+                            if ($("#btn-collapse-all").text() == "Expand All") {
+                                var $categoriesHTML = $("<div>").append(response.categoriesHTML);
+                                $categoriesHTML.find(".btn-collapse").addClass("collapsed").attr({
+                                    "aria-expanded": "false"
+                                });
+                                $categoriesHTML.find(".collapsible-category-div").removeClass("in").attr({
+                                    "aria-expanded": "false"
+                                });
+                                response.categoriesHTML = $categoriesHTML.html();
+                            }
                             $(".list-container").append(response.categoriesHTML);
                         }, function (xhr, status, error) {
 

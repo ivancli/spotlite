@@ -8,57 +8,82 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use App\Contracts\Repository\Ebay\EbayContract;
+use App\Jobs\CrawlSite;
+use App\Models\Crawler;
+use App\Models\Site;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TestController extends Controller
 {
     var $request;
+    var $ebayRepo;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, EbayContract $ebayContract)
     {
         $this->request = $request;
+        $this->ebayRepo = $ebayContract;
     }
 
     public function index()
     {
-        $reportTask = auth()->user()->reportTask;
-        $user = $reportTask->reportable;
+        $url = "http://www.ebay.com.au/itm/Tornado-Bluetooth-Smart-Padlock-/222389229596?&_trksid=p2056016.m2518.l4276";
+        $path = parse_url($url)['path'];
+        $tokens = explode('/', $path);
+        $itemId = $tokens[count($tokens) - 1];
+        if ($itemId) {
+            $item = $this->ebayRepo->getItem($itemId);
+            if (isset($item->errors)) {
+                $itemGroup = $this->ebayRepo->getItemGroup($itemId);
+                if (isset($itemGroup->items) && is_array($itemGroup->items)) {
+                    $itemGroupItem = array_first($itemGroup->items);
+                    $itemId = $itemGroupItem->itemId;
+                    $item = $this->ebayRepo->getItem($itemId);
+                }
+            }
+            $ebayItem = $site->ebayItem;
+            if (is_null($ebayItem)) {
+                $ebayItem = $site->ebayItem()->save(new EbayItem());
+            }
 
-        $sites = $user->sites;
+            $ebayItem->title = isset($item->title) ? $item->title : null;
+            $ebayItem->subtitle = isset($item->subtitle) ? $item->subtitle : null;
+            $ebayItem->shortDescription = isset($item->shortDescription) ? $item->shortDescription : null;
+            $ebayItem->price = isset($item->price) && isset($item->price->value) ? $item->price->value : null;
+            $ebayItem->currency = isset($item->price) && isset($item->price->currency) ? $item->price->currency : null;
+            $ebayItem->category = isset($item->categoryPath) ? $item->categoryPath : null;
+            $ebayItem->condition = isset($item->condition) ? $item->condition : null;
+            $ebayItem->location_city = isset($item->itemLocation) && isset($item->itemLocation->city) ? $item->itemLocation->city : null;
+            $ebayItem->location_postcode = isset($item->itemLocation) && isset($item->itemLocation->postalCode) ? $item->itemLocation->postalCode : null;
+            $ebayItem->location_country = isset($item->itemLocation) && isset($item->itemLocation->country) ? $item->itemLocation->country : null;
+            $ebayItem->image_url = isset($item->image) && isset($item->image->imageUrl) ? $item->image->imageUrl : null;
+            $ebayItem->brand = isset($item->brand) ? $item->brand : null;
+            $ebayItem->seller_username = isset($item->seller) && isset($item->seller->username) ? $item->seller->username : null;
 
-        $siteChangeCounter = 0;
-        $cheapestCounter = 0;
-        $mostExpensiveCounter = 0;
-        $failedCrawlerCounter = 0;
-        $showLastChange = false;
-        foreach ($sites as $site) {
-            switch ($reportTask->frequency) {
-                case 'daily':
-                    if (!is_null($site->priceLastChangedAt) && $site->priceLastChangedAt->diffInHours(Carbon::now()) < 24) {
-                        $siteChangeCounter++;
-                        $showLastChange = true;
-                    }
-                    break;
-                case 'weekly':
-                    if (!is_null($site->priceLastChangedAt) && $site->priceLastChangedAt->diffInHours(Carbon::now()) < 168) {
-                        $siteChangeCounter++;
-                        $showLastChange = true;
-                    }
-                    break;
-            }
-            if ($site->my_price == 'y' && $site->isCheapest) {
-                $cheapestCounter++;
-            }
-            if ($site->my_price == 'y' && $site->isMostExpensive) {
-                $mostExpensiveCounter++;
-            }
-            if($site->status != 'ok' && $site->status != 'waiting'){
-                $failedCrawlerCounter++;
-            }
+            $ebayItem->save();
         }
+//        $site = Site::findOrFail(45835);
+//        $product = $site->product;
+//        if (!is_null($product)) {
+//            $companyUrl = $product->user->company_url;
+//            $ebayUsername = $product->user->ebay_username;
+//
+//            $myCompanyDomain = parse_url($companyUrl)['host'];
+//
+//            list($dummy, $subdomainSplitted) = explode('.', $site->domain, 2);
+//            list($dummy, $domainSplitted) = explode('.', $myCompanyDomain, 2);
+//
+//            //matching both sub-domain and domain
+//            $ebayItem = $site->ebayItem;
+//            if (!is_null($ebayUsername) && !empty($ebayUsername) && !is_null($ebayItem)) {
+//                return $ebayUsername == $ebayItem->seller_username ? 'y' : 'n';
+//            } elseif ($subdomainSplitted == $domainSplitted) {
+//                return 'y';
+//            }
+//        }
+//        return 'n';
 
-        $view = 'products.report.email.user';
-        return view($view)->with(compact(['reportTask', 'siteChangeCounter', 'cheapestCounter', 'mostExpensiveCounter', 'failedCrawlerCounter', 'showLastChange']));
     }
 }

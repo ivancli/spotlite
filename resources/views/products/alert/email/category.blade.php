@@ -519,7 +519,15 @@
                                         <ul>
                                             @foreach($product['sites'] as $site)
                                                 <li>
-                                                    <a href="{{$site['site_url']}}">{{!isset($site['userDomainName']) || is_null($site['userDomainName']) ? $site['domain'] : $site['userDomainName']}}</a>
+                                                    <a href="{{$site['site_url']}}">
+                                                        @if(isset($site['seller_username']))
+                                                            eBay: {{ $site['seller_username'] }}
+                                                        @elseif(isset($site['userDomainName']) && !is_null($site['userDomainName']))
+                                                            {{ $site['userDomainName'] }}
+                                                        @else
+                                                            {{ $site['domain'] }}
+                                                        @endif
+                                                    </a>
                                                 </li>
                                             @endforeach
                                         </ul>

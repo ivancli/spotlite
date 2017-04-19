@@ -9,7 +9,7 @@
                 <th class="shrink category-th vertical-align-middle">
                     <a class="btn-collapse btn-category-dragger"><i class="fa fa-tag "></i></a>
                 </th>
-                <th class="category-th  vertical-align-middle">
+                <th class="category-th  vertical-align-middle" style="word-wrap:break-word;word-break:break-all;">
                     <a class="text-muted category-name-link" href="#"
                        onclick="return false;">{{$category->category_name}}</a>
 

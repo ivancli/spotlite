@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $primaryKey = "user_id";
     protected $fillable = [
         'title', 'first_name', 'last_name', 'email', 'password', 'verification_code', 'last_login', 'first_login',
-        'industry', 'company_type', 'company_name', 'company_url', 'agree_terms', 'set_password',
+        'industry', 'company_type', 'company_name', 'company_url', 'ebay_username', 'agree_terms', 'set_password',
     ];
     /**
      * The attributes that should be hidden for arrays.

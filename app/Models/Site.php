@@ -19,7 +19,8 @@ class Site extends Model
     protected $fillable = [
         "product_id", "site_url", "recent_price", "last_crawled_at", "price_diff", "status", "my_price", "comment", "site_order", "created_at", "updated_at"
     ];
-    protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt', 'userDomainName', 'isCheapest', 'isMostExpensive'];
+    protected $appends = ['urls', 'domain', 'previousPrice', 'diffPrice', 'priceLastChangedAt', 'userDomainName', 'isCheapest', 'isMostExpensive', 'mySite'];
+    protected $with = ['ebayItem'];
 
     public function preference()
     {
@@ -54,6 +55,11 @@ class Site extends Model
     public function historicalPrices()
     {
         return $this->hasMany('App\Models\HistoricalPrice', 'site_id', 'site_id');
+    }
+
+    public function ebayItem()
+    {
+        return $this->hasOne('App\Models\EbayItem', 'site_id', 'site_id');
     }
 
     public function scopeFilter($query, QueryFilter $filters)
@@ -118,6 +124,29 @@ class Site extends Model
             }
         }
         return null;
+    }
+
+    public function getMySiteAttribute()
+    {
+        $product = $this->product;
+        if (!is_null($product)) {
+            $companyUrl = $product->user->company_url;
+            $ebayUsername = $product->user->ebay_username;
+
+            $myCompanyDomain = parse_url($companyUrl)['host'];
+
+            list($dummy, $subdomainSplitted) = explode('.', $this->domain, 2);
+            list($dummy, $domainSplitted) = explode('.', $myCompanyDomain, 2);
+
+            //matching both sub-domain and domain
+            $ebayItem = $this->ebayItem;
+            if (!is_null($ebayUsername) && !empty($ebayUsername) && !is_null($ebayItem)) {
+                return $ebayUsername == $ebayItem->seller_username ? 'y' : 'n';
+            } elseif ($subdomainSplitted == $domainSplitted) {
+                return 'y';
+            }
+        }
+        return 'n';
     }
 
     public function getDomainAttribute()

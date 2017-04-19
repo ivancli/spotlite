@@ -168,6 +168,7 @@ class ProductController extends Controller
      */
     public function update(UpdateValidator $updateValidator, $id)
     {
+        $this->request->merge(['product_id' => $id]);
         $updateValidator->validate($this->request->all());
         $product = $this->productRepo->getProduct($id);
         event(new ProductUpdating($product));

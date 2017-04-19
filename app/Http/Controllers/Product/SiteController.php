@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Contracts\Repository\Crawler\CrawlerContract;
+use App\Contracts\Repository\Ebay\EbayContract;
 use App\Contracts\Repository\Product\Alert\AlertContract;
 use App\Contracts\Repository\Product\Domain\DomainContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
@@ -22,6 +23,7 @@ use App\Exceptions\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Libraries\CommonFunctions;
 use App\Models\Domain;
+use App\Models\EbayItem;
 use App\Models\Site;
 use App\Validators\Product\Site\GetPriceValidator;
 use App\Validators\Product\Site\StoreValidator;
@@ -42,10 +44,11 @@ class SiteController extends Controller
     protected $productRepo;
     protected $crawlerRepo;
     protected $alertRepo;
+    protected $ebayRepo;
     protected $request;
 
 
-    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract, AlertContract $alertContract, Request $request)
+    public function __construct(SiteContract $siteContract, ProductContract $productContract, DomainContract $domainContract, CrawlerContract $crawlerContract, AlertContract $alertContract, EbayContract $ebayContract, Request $request)
     {
         $this->middleware('permission:create_site', ['only' => ['create', 'store']]);
         $this->middleware('permission:read_site', ['only' => ['show']]);
@@ -60,6 +63,7 @@ class SiteController extends Controller
         $this->productRepo = $productContract;
         $this->crawlerRepo = $crawlerContract;
         $this->alertRepo = $alertContract;
+        $this->ebayRepo = $ebayContract;
         $this->request = $request;
     }
 
