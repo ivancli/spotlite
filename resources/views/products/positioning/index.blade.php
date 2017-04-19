@@ -67,7 +67,7 @@
                                                     @if(strpos(auth()->user()->company_url, $domain) !== false)
                                                     selected="selected"
                                                     @endif
-                                            >{{$domainName}}</option>
+                                            >{{empty($domainName) ? $domain : $domainName}}</option>
                                         @endforeach
                                         @foreach($ebaySellerUsernames as $ebaySellerUsername)
                                             <option value="eBay: {{$ebaySellerUsername}}"
