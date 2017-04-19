@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+    @if(auth()->check() && auth()->user()->set_password == 'n')
+        <!-- Google Code for Sign Up Conversion Page -->
+            <script type="text/javascript">
+                /* <![CDATA[ */
+                var google_conversion_id = 855050554;
+                var google_conversion_language = "en";
+                var google_conversion_format = "3";
+                var google_conversion_color = "ffffff";
+                var google_conversion_label = "MSeiCNX9rXAQupLclwM";
+                var google_conversion_value = 0.00;
+                var google_conversion_currency = "AUD";
+                var google_remarketing_only = false;
+                /* ]]> */
+            </script>
+            <script type="text/javascript"
+                    src="//www.googleadservices.com/pagead/conversion.js">
+            </script>
+            <noscript>
+                <div style="display:inline;">
+                    <img height="1" width="1" style="border-style:none;" alt=""
+                         src="//www.googleadservices.com/pagead/conversion/855050554/?value=0.00&amp;currency_code=AUD&amp;label=MSeiCNX9rXAQupLclwM&amp;guid=ON&amp;script=0"/>
+                </div>
+            </noscript>
+    @endif
     {{--redirect if js not available--}}
     <noscript>
         <meta http-equiv="refresh" content="0; url={{route('errors.javascript_disabled')}}"/>
@@ -93,39 +117,6 @@
 @yield('scripts')
 
 @include('scripts.notification')
-@if(auth()->check() && auth()->user()->set_password == 'n')
-    <!-- Google Code for Credit card info Conversion Page
-In your html page, add the snippet and call
-goog_report_conversion when someone clicks on the
-chosen link or button. -->
-    <script type="text/javascript">
-        /* <![CDATA[ */
-        goog_snippet_vars = function () {
-            var w = window;
-            w.google_conversion_id = 870390092;
-            w.google_conversion_label = "r6VWCJ7InG4QzLKEnwM";
-            w.google_remarketing_only = false;
-        }
-        // DO NOT CHANGE THE CODE BELOW.
-        goog_report_conversion = function (url) {
-            goog_snippet_vars();
-            window.google_conversion_format = "3";
-            var opt = new Object();
-            opt.onload_callback = function () {
-                if (typeof(url) != 'undefined') {
-                    window.location = url;
-                }
-            }
-            var conv_handler = window['google_trackConversion'];
-            if (typeof(conv_handler) == 'function') {
-                conv_handler(opt);
-            }
-        }
-        /* ]]> */
-    </script>
-    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion_async.js"></script>
-
-@endif
 </body>
 </html>
 
