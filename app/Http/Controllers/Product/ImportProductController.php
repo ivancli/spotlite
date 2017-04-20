@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Product;
 use App\Contracts\Repository\Product\Category\CategoryContract;
 use App\Contracts\Repository\Product\Product\ProductContract;
 use App\Contracts\Repository\Product\Site\SiteContract;
+use App\Events\Products\Import\AfterStoreProducts;
+use App\Events\Products\Import\AfterStoreSites;
+use App\Events\Products\Import\BeforeStoreProducts;
+use App\Events\Products\Import\BeforeStoreSites;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Domain;
@@ -48,6 +52,7 @@ class ImportProductController extends Controller
      */
     public function create()
     {
+
     }
 
     /**
@@ -58,6 +63,8 @@ class ImportProductController extends Controller
      */
     public function storeProducts(StoreValidator $storeValidator)
     {
+        event(new BeforeStoreProducts());
+
         set_time_limit(3000);
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
@@ -166,13 +173,16 @@ class ImportProductController extends Controller
 
         });
 
-
         $status = true;
+
+        event(new AfterStoreProducts());
+
         return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
     }
 
     public function storeSites(StoreValidator $storeValidator)
     {
+        event(new BeforeStoreSites());
         set_time_limit(3000);
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
@@ -314,6 +324,9 @@ class ImportProductController extends Controller
             }
         });
         $status = true;
+
+        event(new AfterStoreSites());
+
         return compact(['status', 'siteCounter', 'productCounter', 'categoryCounter', 'warnings']);
     }
 

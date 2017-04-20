@@ -27,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Listeners\Products\CrawlerEventSubscriber',
         'App\Listeners\Products\AlertEventSubscriber',
         'App\Listeners\Products\ReportEventSubscriber',
+        'App\Listeners\Products\PositioningEventSubscriber',
+        'App\Listeners\Products\ImportEventSubscriber',
+        'App\Listeners\User\UserDomainEventSubscriber',
     ];
 
     /**

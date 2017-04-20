@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\User\UserDomain\AfterStore;
+use App\Events\User\UserDomain\BeforeStore;
 use App\Http\Controllers\Controller;
 use App\Models\UserDomain;
 use Illuminate\Http\Request;
@@ -38,6 +40,8 @@ class UserDomainController extends Controller
      */
     public function store(Request $request)
     {
+        event(new BeforeStore());
+
         $domains = $request->get('domains');
         $names = $request->get('names');
         $user = auth()->user();
@@ -57,6 +61,9 @@ class UserDomainController extends Controller
         }
 
         $status = true;
+
+        event(new AfterStore());
+
         return compact(['status']);
     }
 
