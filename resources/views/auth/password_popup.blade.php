@@ -34,9 +34,6 @@
     </div>
     <script type="text/javascript">
         function submitSetPasswordForm(el) {
-            if($.isFunction(goog_report_conversion)){
-                goog_report_conversion();
-            }
             showLoading();
             var $form = $(el);
             $.ajax({
