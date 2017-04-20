@@ -161,7 +161,7 @@
                 <i class="fa fa-line-chart"></i>
             </a>
             {!! Form::model($site, array('route' => array('site.destroy', $site->getKey()), 'method'=>'delete', 'class'=>'frm-delete-site', 'onsubmit' => 'return false;')) !!}
-            <a href="#" class="btn-action" data-name="{{parse_url($site->site_url)['host']}}"
+            <a href="#" class="btn-action" data-name="{{$site->domain}}"
                onclick="btnDeleteSiteOnClick(this); return false;"
                data-toggle="tooltip" title="delete">
                 <i class="glyphicon glyphicon-trash"></i>
