@@ -13,7 +13,11 @@ class StyleHelper
 {
     public static function set_active_starts_with($str, $class = 'active')
     {
-        return starts_with(Request::route()->getName(), $str) ? $class : '';
+        if (!is_null(Request::route())) {
+            return starts_with(Request::route()->getName(), $str) ? $class : '';
+        } else {
+            return '';
+        }
     }
 
     public static function set_active_or($strs, $class = 'active')

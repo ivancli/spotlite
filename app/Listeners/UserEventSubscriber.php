@@ -30,7 +30,7 @@ class UserEventSubscriber
      */
     public function onUserLogin($event)
     {
-        dispatch((new LogUserActivity(auth()->user(), "login"))->onQueue("logging"));
+        dispatch((new LogUserActivity(auth()->user(), "login"))->onQueue("logging")->onConnection('sync'));
 
         $user = $event->user;
         $user->clearAllCache();

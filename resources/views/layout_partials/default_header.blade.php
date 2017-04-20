@@ -11,6 +11,7 @@
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
+            @if(auth()->check())
             <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="{{Style::set_active('/')}} {{Style::set_active_starts_with('dashboard')}}">
@@ -155,6 +156,7 @@
                     </form>
                 @endif
             </div>
+            @endif
             <!-- /.navbar-collapse -->
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">

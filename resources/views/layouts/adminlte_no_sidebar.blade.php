@@ -47,7 +47,7 @@
     <script type="text/javascript" src="{{elixir('js/main.js')}}"></script>
     <script type="text/javascript" src="{{elixir('js/dashboard.js')}}"></script>
 </head>
-<body class="hold-transition skin-black-light sidebar-mini">
+<body class="hold-transition skin-black-light layout-top-nav">
 <!-- Site wrapper -->
 <div class="wrapper">
 
