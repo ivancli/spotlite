@@ -139,7 +139,12 @@ class Site extends Model
             } else {
                 $companyUrl = $product->user->company_url;
                 if (!is_null($product->user->company_url) && !empty($product->user->company_url)) {
-                    $myCompanyDomain = parse_url($companyUrl)['host'];
+                    $myCompanyDomain = parse_url($companyUrl);
+                    if (!is_null($myCompanyDomain) && is_array($myCompanyDomain) && isset($myCompanyDomain['host'])) {
+                        $myCompanyDomain = parse_url($companyUrl)['host'];
+                    } else {
+                        return 'n';
+                    }
                 } else {
                     return "n";
                 }
