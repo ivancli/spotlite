@@ -256,7 +256,7 @@
                                                 } else {
                                                     $.each(domains, function (domain, domainName) {
                                                         if (site_url.indexOf(domain) > -1) {
-                                                            siteUrlText = domainName
+                                                            siteUrlText = (domainName != null && domainName.length > 0) ? domainName : domain;
                                                         }
                                                     });
                                                 }
