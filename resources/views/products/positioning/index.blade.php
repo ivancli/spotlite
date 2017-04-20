@@ -346,7 +346,7 @@
                     $selExclude.append(
                         $("<option>").attr({
                             "value": domain
-                        }).text(domainName.trim().length > 0 ? domainName : domain)
+                        }).text(domainName != null && domainName.length > 0 ? domainName : domain)
                     )
                 }
             });
