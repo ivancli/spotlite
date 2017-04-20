@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    @if(auth()->check() && auth()->user()->set_password == 'n')
+    @if(auth()->check() && auth()->user()->conversion_tracked != 'y')
         <!-- Google Code for Sign Up Conversion Page -->
             <script type="text/javascript">
                 /* <![CDATA[ */
@@ -24,6 +24,7 @@
                          src="//www.googleadservices.com/pagead/conversion/855050554/?value=0.00&amp;currency_code=AUD&amp;label=MSeiCNX9rXAQupLclwM&amp;guid=ON&amp;script=0"/>
                 </div>
             </noscript>
+        <?php auth()->user()->setConversionTracked(); ?>
     @endif
     {{--redirect if js not available--}}
     <noscript>
