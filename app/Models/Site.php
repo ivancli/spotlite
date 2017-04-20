@@ -129,7 +129,7 @@ class Site extends Model
     public function getMySiteAttribute()
     {
         $product = $this->product;
-        if (!is_null($product)) {
+        if (!is_null($product) && !is_null($product->user->company_url)) {
             $companyUrl = $product->user->company_url;
             $ebayUsername = $product->user->ebay_username;
 
