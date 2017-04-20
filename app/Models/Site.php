@@ -129,10 +129,9 @@ class Site extends Model
     public function getMySiteAttribute()
     {
         $product = $this->product;
-        if (!is_null($product) && !is_null($product->user->company_url)) {
+        if (!is_null($product) && !is_null($product->user->company_url) && !empty($product->user->company_url)) {
             $companyUrl = $product->user->company_url;
             $ebayUsername = $product->user->ebay_username;
-
             $myCompanyDomain = parse_url($companyUrl)['host'];
 
             list($dummy, $subdomainSplitted) = explode('.', $this->domain, 2);
