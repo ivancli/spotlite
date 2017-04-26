@@ -9,6 +9,10 @@
 namespace App\Http\Controllers\Product;
 
 
+use App\Events\Products\Positioning\AfterShow;
+use App\Events\Products\Positioning\AfterIndex;
+use App\Events\Products\Positioning\BeforeIndex;
+use App\Events\Products\Positioning\BeforeShow;
 use App\Http\Controllers\Controller;
 use App\Validators\Product\Positioning\ShowValidator;
 use Illuminate\Http\Request;
@@ -26,6 +30,8 @@ class PositioningController extends Controller
 
     public function index()
     {
+        event(new BeforeIndex());
+
         $user = auth()->user();
         $domains = [];
         $results = DB::table('sites')
@@ -60,11 +66,14 @@ class PositioningController extends Controller
         $brands = $productMetas->sortBy('brand')->pluck('brand')->unique();
         $suppliers = $productMetas->sortBy('supplier')->pluck('supplier')->unique();
 
+        event(new AfterIndex());
+
         return view('products.positioning.index')->with(compact(['domains', 'ebaySellerUsernames', 'categories', 'brands', 'suppliers']));
     }
 
     public function show(ShowValidator $showValidator)
     {
+        event(new BeforeShow());
         DB::enableQueryLog();
 
         $showValidator->validate($this->request->all());
@@ -252,6 +261,8 @@ class PositioningController extends Controller
 //        }
         $draw = $this->request->get('draw');
         $data = $products;
+
+        event(new AfterShow());
 
         return compact(['data', 'draw', 'recordTotal', 'recordsFiltered']);
     }
