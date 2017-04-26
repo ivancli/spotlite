@@ -50,5 +50,6 @@ return [
         "Special Price:",
         "Special Price",
         "Price with rebate:",
+        "Reg.&nbsp;",
     ]
 ];
