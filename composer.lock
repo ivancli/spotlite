@@ -736,11 +736,11 @@
         },
         {
             "name": "invigor/crawler",
-            "version": "1.1.59",
+            "version": "1.1.60",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git",
-                "reference": "da545fc8198df0e8e2bd01f28941a0ba65b70317"
+                "reference": "86846f8de8824f4753f882a3df8e108dcf2f19de"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -770,7 +770,7 @@
                 }
             ],
             "description": "Invigor Crawler Package",
-            "time": "2017-04-28T01:07:40+00:00"
+            "time": "2017-04-28T01:12:41+00:00"
         },
         {
             "name": "invigor/um",
