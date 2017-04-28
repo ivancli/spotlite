@@ -902,7 +902,7 @@ function updateUserSiteUsagePerProduct(el) {
 function updateAddSitePanelStatus(usage, total, el) {
     var $productWrapper = $(el).closest(".product-wrapper");
     var $addSiteContainer = $productWrapper.find(".add-site-container");
-    if (usage >= total) {
+    if (total != 0 && usage >= total) {
         $addSiteContainer.attr('onclick', 'appendUpgradeForCreateSiteBlock(this); event.stopPropagation(); return false;');
     } else {
         $addSiteContainer.attr('onclick', 'appendCreateSiteBlock(this); event.stopPropagation(); return false;');
