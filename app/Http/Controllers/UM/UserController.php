@@ -24,6 +24,7 @@ class UserController extends UMUserController
         $this->middleware('permission:read_user', ['only' => ['index', 'show']]);
         $this->middleware('permission:update_user', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete_user', ['only' => ['destroy']]);
+        $this->middleware('permission:login_as_user', ['only' => ['loginAs']]);
 
         $this->storeValidator = $storeValidator;
         $this->updateValidator = $updateValidator;
@@ -272,5 +273,12 @@ class UserController extends UMUserController
                 return redirect()->route('um.user.index')->with(compact(['status']));
             }
         }
+    }
+
+    public function loginAs(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        auth()->login($user);
+        return redirect()->to('/');
     }
 }

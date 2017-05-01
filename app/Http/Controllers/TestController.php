@@ -14,6 +14,7 @@ use App\Models\Crawler;
 use App\Models\Site;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Invigor\Crawler\Repositories\Crawlers;
 use Invigor\Crawler\Repositories\Crawlers\DefaultCrawler;
 use Maatwebsite\Excel\Facades\Excel;
@@ -31,14 +32,7 @@ class TestController extends Controller
 
     public function index()
     {
-        $defaultCrawler = app(DefaultCrawler::class);
-
-        $options = array(
-            "url" => "http://musiciansoasis.com.au/ibanez/467-ibanez-m80m-8-string-meshuggah-signature-electric-guitar.html",
-        );
-        $defaultCrawler->setOptions($options);
-        $defaultCrawler->loadHTML();
-        $html = $defaultCrawler->getHTML();
-        dd($html);
+        $user = User::findOrFail(5);
+        Auth::login($user);
     }
 }

@@ -2,7 +2,7 @@
 @section('title', 'User List')
 @section('header_title', 'Users')
 @section('breadcrumbs')
-{{--    {!! Breadcrumbs::render('user') !!}--}}
+    {{--    {!! Breadcrumbs::render('user') !!}--}}
 @stop
 @section('content')
     @include('um.partials.banner_stats')
@@ -76,24 +76,31 @@
                         "sortable": false,
                         "data": function (data) {
                             return $("<div>").append(
-                                    $("<a>").attr({
-                                        "href": data.urls.show
-                                    }).addClass("text-muted").append(
-                                            $("<i>").addClass("glyphicon glyphicon-search")
-                                    ),
-                                    "&nbsp;",
-                                    $("<a>").attr({
-                                        "href": data.urls.edit
-                                    }).addClass("text-muted").append(
-                                            $("<i>").addClass("glyphicon glyphicon-pencil")
-                                    ),
-                                    "&nbsp;",
-                                    $("<a>").attr({
-                                        "href": "#",
-                                        "onclick": "deleteUser('" + data.urls.delete + "')"
-                                    }).addClass('text-danger').append(
-                                            $("<i>").addClass("glyphicon glyphicon-trash")
-                                    )
+                                "&nbsp;",
+                                $("<a>").attr({
+                                    "href": "/um/user/login-as/" + data.user_id
+                                }).addClass("text-muted").append(
+                                    $("<i>").addClass("fa fa-user-secret")
+                                ),
+                                "&nbsp;",
+                                $("<a>").attr({
+                                    "href": data.urls.show
+                                }).addClass("text-muted").append(
+                                    $("<i>").addClass("glyphicon glyphicon-search")
+                                ),
+                                "&nbsp;",
+                                $("<a>").attr({
+                                    "href": data.urls.edit
+                                }).addClass("text-muted").append(
+                                    $("<i>").addClass("glyphicon glyphicon-pencil")
+                                ),
+                                "&nbsp;",
+                                $("<a>").attr({
+                                    "href": "#",
+                                    "onclick": "deleteUser('" + data.urls.delete + "')"
+                                }).addClass('text-danger').append(
+                                    $("<i>").addClass("glyphicon glyphicon-trash")
+                                )
                             ).html();
 //                            return
                         }

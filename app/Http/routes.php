@@ -213,6 +213,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('term_and_condition', 'Legal\TermAndConditionController', ['except' => ['show']]);
     Route::put('privacy_policy/activeness/{id}', 'Legal\PrivacyPolicyController@toggleActiveness')->name('privacy_policy.activeness');
     Route::put('term_and_condition/activeness/{id}', 'Legal\TermAndConditionController@toggleActiveness')->name('term_and_condition.activeness');
+
+
+
+    Route::get('um/user/login-as/{id}', 'UM\UserController@loginAs')->name('um.user.login_as');
 });
 
 /**
