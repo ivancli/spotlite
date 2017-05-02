@@ -84,7 +84,7 @@ class EbayRepository implements EbayContract
     public function getItemGroup($id)
     {
         $access_token = $this->getAccessToken();
-        $url = "https://api.ebay.com/buy/browse/v1/item_group/{$id}";
+        $url = "https://api.ebay.com/buy/browse/v1/item/get_items_by_item_group?item_group_id={$id}";
         $ch = curl_init();
         $curlHeaders = array(
             "Authorization: Bearer {$access_token}",
