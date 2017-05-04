@@ -120,8 +120,15 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <button class="btn btn-primary btn-flat">SHOW PRODUCTS</button>
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <button class="btn btn-primary btn-flat btn-export" disabled="disabled" onclick="event.preventDefault(); exportPositioningTable();">
+                                        <i class="fa fa-download"></i>
+                                        &nbsp;
+                                        EXPORT
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -158,6 +165,7 @@
         var tblProducts = null;
         var domains = {!! json_encode($domains) !!};
         var ebayUsername = {!! json_encode($ebaySellerUsernames) !!};
+        var currentQueryData = {};
 
         $(function () {
             populateExcludeCompetitors();
@@ -195,6 +203,7 @@
                                 d.order[index].column = d.columns[d.order[index].column].name;
                             }
                         });
+                        currentQueryData = d;
                     },
                     "error": function (xhr, status, error) {
                         if (xhr.responseJSON != null && typeof xhr.responseJSON != 'undefined') {
@@ -332,6 +341,10 @@
                             $(row).addClass("my-site");
                         }
                     }
+                },
+                "drawCallback": function (settings) {
+                    var hasData = $("#tbl-products > tbody > tr").length > 0 && !$("#tbl-products > tbody > tr:first td").hasClass("dataTables_empty")
+                    $(".btn-export").prop("disabled", !hasData);
                 }
             });
         });
@@ -350,7 +363,7 @@
                     )
                 }
             });
-            if(reference.indexOf('www.ebay.com') == -1){
+            if (reference.indexOf('www.ebay.com') == -1) {
                 $.each(ebayUsername, function (index, ebayUsername) {
                     if ('eBay: ' + ebayUsername != reference) {
                         $selExclude.append(
@@ -367,6 +380,10 @@
 
         function showProducts(el) {
             tblProducts.ajax.reload();
+        }
+
+        function exportPositioningTable() {
+            window.location.href = '{{route('positioning.export')}}?data=' + JSON.stringify(currentQueryData);
         }
     </script>
 @stop

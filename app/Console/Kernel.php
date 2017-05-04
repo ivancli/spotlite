@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\Report::class,
         Commands\Sync::class,
         Commands\CloneUser::class,
+        Commands\TempCrawl::class,
     ];
 
     protected $crawler;
