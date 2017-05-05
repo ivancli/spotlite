@@ -43,7 +43,7 @@
                 @if(isset($product->cheapest_site_url))
                     @foreach(explode('$ $', $product->cheapest_site_url) as $index=>$cheapestSite)
                         @if(isset(explode('$#$', $cheapestSite)[1]))
-                            {{ explode('$#$', $cheapestSite)[1] }}<br>
+                            {{ explode('$#$', $cheapestSite)[1] }}@if(count(explode('$ $', $product->cheapest_site_url)) > 1)<br>@endif
                         @endif
                     @endforeach
                 @endif
@@ -51,7 +51,7 @@
             <td>
                 @if(isset($product->cheapest_site_url))
                     @foreach(explode('$ $', $product->cheapest_site_url) as $cheapestSite)
-                        {{ explode('$#$', $cheapestSite)[0] }}<br>
+                        {{ explode('$#$', $cheapestSite)[0] }}@if(count(explode('$ $', $product->cheapest_site_url)) > 1)<br>@endif
                     @endforeach
                 @endif
             </td>
