@@ -42,9 +42,8 @@
             <th>
                 @if(isset($product->cheapest_site_url))
                     @foreach(explode('$ $', $product->cheapest_site_url) as $index=>$cheapestSite)
-
                         @if(isset(explode('$#$', $cheapestSite)[1]))
-                            {{ explode('$#$', $cheapestSite)[1] }}@if($index > 0),@endif
+                            {{ explode('$#$', $cheapestSite)[1] }}
                         @endif
                     @endforeach
                 @endif
