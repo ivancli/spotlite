@@ -13,7 +13,7 @@
     <tbody>
     @foreach($products as $product)
         <tr
-        @if($product->reference_recent_price== $product->cheapest_recent_price)
+        @if(isset($product->reference_recent_price) && $product->reference_recent_price == $product->cheapest_recent_price)
             style="color: #43bda5 !important"
                 @endif
         >
