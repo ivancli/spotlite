@@ -120,15 +120,19 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-6">
-                                    <button class="btn btn-primary btn-flat">SHOW PRODUCTS</button>
-                                </div>
-                                <div class="col-sm-6 text-right">
-                                    <button class="btn btn-primary btn-flat btn-export" disabled="disabled" onclick="event.preventDefault(); exportPositioningTable();">
-                                        <i class="fa fa-download"></i>
-                                        &nbsp;
-                                        EXPORT
-                                    </button>
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <button class="btn btn-primary btn-flat">SHOW PRODUCTS</button>
+                                        </div>
+                                        <div class="col-sm-6 text-right">
+                                            <button class="btn btn-primary btn-flat btn-export" disabled="disabled" onclick="event.preventDefault(); exportPositioningTable();">
+                                                <i class="fa fa-download"></i>
+                                                &nbsp;
+                                                EXPORT
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>

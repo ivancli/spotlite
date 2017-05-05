@@ -15,8 +15,11 @@ use App\Events\Products\Positioning\BeforeIndex;
 use App\Events\Products\Positioning\BeforeShow;
 use App\Http\Controllers\Controller;
 use App\Validators\Product\Positioning\ShowValidator;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use PDO;
 
 class PositioningController extends Controller
 {
@@ -437,11 +440,15 @@ class PositioningController extends Controller
                 }
             }
         }
-
         $products = $productBuilder->get();
 
-        $draw = $this->request->get('draw');
-        dd($products);
+        $fileName = "export_positioning_" . Carbon::now()->format('YmdHis');
+
+        Excel::create($fileName, function ($excel) use ($products) {
+            $excel->sheet('positioning view', function ($sheet) use ($products) {
+                $sheet->loadView('products.positioning.export', compact(['products']));
+            });
+        })->download('csv');
 
         /*TODO use excel to format it*/
 
