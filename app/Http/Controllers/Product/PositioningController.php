@@ -275,12 +275,15 @@ class PositioningController extends Controller
         $productBuilder = $user->products();
         $productBuilder = DB::table('products AS products')->where('products.user_id', '=', $user->getKey());
 
+        $productBuilder->leftJoin('product_metas', 'products.product_id', '=', 'product_metas.product_id');
+
         $select = [
             'cheapestSite.site_urls as cheapest_site_url',
             'cheapestSite.recent_price as cheapest_recent_price',
             'expensiveSite.site_urls as expensive_site_url',
             'expensiveSite.recent_price as expensive_recent_price',
             'products.*',
+            'product_metas.*',
             'categories.*',
         ];
 

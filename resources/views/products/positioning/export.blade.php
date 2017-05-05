@@ -3,8 +3,13 @@
     <tr>
         <th>Category</th>
         <th>Product</th>
+        <th>Brand</th>
+        <th>Supplier</th>
+        <th>SKU</th>
+        <th>Cost price</th>
         <th>Reference site price</th>
-        <th>Cheapest</th>
+        <th>Cheapest site</th>
+        <th>Cheapest site URL</th>
         <th>Cheapest $</th>
         <th>Difference $</th>
         <th>Difference %</th>
@@ -13,12 +18,20 @@
     <tbody>
     @foreach($products as $product)
         <tr
-        @if(isset($product->reference_recent_price) && $product->reference_recent_price == $product->cheapest_recent_price)
-            style="color: #43bda5 !important"
+                @if(isset($product->reference_recent_price) && $product->reference_recent_price == $product->cheapest_recent_price)
+                style="color: #43bda5 !important"
                 @endif
         >
             <td>{{ $product->category_name }}</td>
             <td>{{ $product->product_name }}</td>
+            <td>{{ $product->brand }}</td>
+            <td>{{ $product->supplier }}</td>
+            <td>{{ $product->sku }}</td>
+            <td>
+                @if(!is_null($product->cost_price))
+                    ${{ number_format(floatval($product->cost_price), 2) }}
+                @endif
+            </td>
             <td>
                 @if(isset($product->reference_recent_price) && !is_null($product->reference_recent_price))
                     ${{ number_format($product->reference_recent_price, 2) }}
@@ -26,14 +39,19 @@
                     n/a
                 @endif
             </td>
+            <th>
+                @if(isset($product->cheapest_site_url))
+                    @foreach(explode('$ $', $product->cheapest_site_url) as $index=>$cheapestSite)
+
+                        @if(isset(explode('$#$', $cheapestSite)[1]))
+                            {{ explode('$#$', $cheapestSite)[1] }}@if($index > 0),@endif
+                        @endif
+                    @endforeach
+                @endif
+            </th>
             <td>
                 @if(isset($product->cheapest_site_url))
                     @foreach(explode('$ $', $product->cheapest_site_url) as $cheapestSite)
-                        {{--@if(isset(explode('$#$', $cheapestSite)[1]))--}}
-                            {{--<a href="{{ explode('$#$', $cheapestSite)[0] }}">{{ explode('$#$', $cheapestSite)[1] }}</a>--}}
-                        {{--@else--}}
-                            {{--<a href="{{ explode('$#$', $cheapestSite)[0] }}">{{ explode('$#$', $cheapestSite)[0] }}</a>--}}
-                        {{--@endif--}}
                         {{ explode('$#$', $cheapestSite)[0] }}
                     @endforeach
                 @endif
