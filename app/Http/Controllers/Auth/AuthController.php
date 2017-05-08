@@ -99,7 +99,6 @@ class AuthController extends Controller
             'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'signup_link' => 'required',
             'api_product_id' => 'required',
             'agree_terms' => 'required',
         ]);
@@ -116,6 +115,10 @@ class AuthController extends Controller
         $chargifyLink = request('signup_link');
         $verificationCode = str_random(10);
 
+        $referer = request()->server('HTTP_REFERER');
+        $referer = parse_url($referer);
+        $path = $referer['path'];
+
         $user = User::create([
             'title' => isset($data['title']) ? $data['title'] : '',
             'first_name' => $data['first_name'],
@@ -126,6 +129,7 @@ class AuthController extends Controller
             'verification_code' => $verificationCode,
             'agree_terms' => $data['agree_terms'],
             'set_password' => isset($data['set_password']) ? $data['set_password'] : 'y',
+            'subscription_location' => strpos($path, 'us') !== false ? 'us' : 'au',
         ]);
 
         $role = UMRole::where("name", "client")->first();
@@ -137,6 +141,8 @@ class AuthController extends Controller
             'EmailAddress' => $user->email,
             'Name' => $user->first_name . " " . $user->last_name,
         ));
+
+        request()->session()->put('subscription_location', $user->subscription_location);
 
         if (request()->has('api_product_id')) {
             $product = Chargify::product()->get(request('api_product_id'));
@@ -248,7 +254,6 @@ class AuthController extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'signup_link' => 'required',
             'api_product_id' => 'required',
             'agree_terms' => 'required',
         ]);
@@ -314,6 +319,8 @@ class AuthController extends Controller
             $errors = array(
                 ['Session has expired please refresh and try again.']
             );
+
+
             if ($request->has('callback')) {
                 return response()->json(compact(['errors', 'status']))->setCallback($request->get('callback'));
             } else if ($request->wantsJson()) {

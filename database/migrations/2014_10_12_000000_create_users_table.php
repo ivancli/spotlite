@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->text('verification_code');
             $table->char('is_first_login', 1)->nullable()->comment("y=yes,n=no");
+            $table->string('subscription_location')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->rememberToken();
         });

@@ -15,7 +15,15 @@ class UserRepository implements UserContract
 
     public function sampleUser()
     {
-        $sampleUser = User::where("email", 'admin@spotlite.com.au')->first();
+        $user = auth()->user();
+        switch ($user->subscription_location) {
+            case "us":
+                $sampleUser = User::where("email", 'us@spotlite.com.au')->first();
+                break;
+            case "au":
+            default:
+                $sampleUser = User::where("email", 'admin@spotlite.com.au')->first();
+        }
         return $sampleUser;
     }
 
@@ -33,7 +41,7 @@ class UserRepository implements UserContract
             $domainSplitted = null;
         }
 
-        if($user->needSubscription && $user->subscription && $user->subscriptionCriteria()->my_price == false){
+        if ($user->needSubscription && $user->subscription && $user->subscriptionCriteria()->my_price == false) {
             $domainSplitted = null;
         }
 

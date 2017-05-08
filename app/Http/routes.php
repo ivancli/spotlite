@@ -247,7 +247,8 @@ Route::get('term_and_condition/{id}', 'Legal\TermAndConditionController@show')->
 
 
 Route::match(['get', 'post', 'put', 'delete'], 'subscription/webhook', 'Subscription\SubscriptionController@webhookUpdate')->name('subscription.webhook_update');
-Route::get('subscription/product_families', 'Subscription\SubscriptionController@productFamilies')->name('subscription.product_families');
+Route::get('subscription/product_families', 'Subscription\SubscriptionController@productFamiliesAU')->name('subscription.product_families');
+Route::get('subscription/product_families_us', 'Subscription\SubscriptionController@productFamiliesUS')->name('subscription.product_families_us');
 
 /**
  * Error messages

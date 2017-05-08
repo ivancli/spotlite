@@ -204,7 +204,7 @@
         <div class="row">
             @foreach($productFamilies as $productFamily)
                 <div class="col-lg-3 col-md-6 plan"
-                     data-link="{{array_first($productFamily->product->public_signup_pages)->url}}"
+                     data-link="{{!empty($productFamily->product->public_signup_pages) ? array_first($productFamily->product->public_signup_pages)->url : null}}"
                      data-id="{{$productFamily->product->id}}"
                      data-price="{{$productFamily->product->price_in_cents}}">
                     <div>

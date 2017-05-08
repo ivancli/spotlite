@@ -30,9 +30,9 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
     public function generateUpdatePaymentLink($subscription_id)
     {
-        $message = "update_payment--$subscription_id--" . config("chargify.api_share_key");
+        $message = "update_payment--$subscription_id--" . $this->api_share_key();
         $token = $this->generateToken($message);
-        $link = config('chargify.api_domain') . "update_payment/$subscription_id/" . $token;
+        $link = $this->api_domain() . "update_payment/$subscription_id/" . $token;
         return $link;
     }
 
@@ -178,6 +178,68 @@ class ChargifySubscriptionRepository implements SubscriptionContract
     }
 
     /**
+     * @return mixed
+     */
+    public function getUsProductList()
+    {
+        return Cache::rememberForever('product_families_us.products', function () {
+            $families = Chargify::productFamily()->all();
+            $productFamilies = array();
+            foreach ($families as $index => $family) {
+                //remove starter family
+                if ($family->id == 780243) {
+                    continue;
+                }
+                $apiProducts = Chargify::product()->allByProductFamily($family->id);
+                if (isset($apiProducts->errors) || count($apiProducts) == 0) {
+                    continue;
+                }
+                foreach ($apiProducts as $apiProduct) {
+                    if (strpos($apiProduct->handle, 'onboarding') === false) {
+                        $product = $apiProduct;
+                    }
+                }
+                if (!isset($product)) {
+                    continue;
+                }
+
+                $subscriptionPreview = Chargify::subscription()->preview(array(
+                    "product_id" => $product->id,
+                    "customer_attributes" => array(
+                        "first_name" => "Spot",
+                        "last_name" => "Lite",
+                        "email" => "admin@spotlite.com.au",
+                        "country" => "AU",
+                        "state" => "New South Wales"
+                    ),
+                    "payment_profile_attributes" => array(
+                        "billing_country" => "AU",
+                        "billing_state" => "NSW",
+                    )
+                ));
+
+                $product->criteria = json_decode($product->description);
+
+                if (isset($product->criteria->hidden) && $product->criteria->hidden == 1) {
+                    continue;
+                }
+
+                $productFamily = $family;
+                $productFamily->product = $product;
+                $productFamily->preview = $subscriptionPreview;
+                $productFamilies[] = $productFamily;
+
+                unset($product);
+                unset($apiProducts);
+                unset($productFamily);
+            }
+            $productFamilies = collect($productFamilies);
+            $productFamilies = $productFamilies->sortBy('product.price_in_cents')->values();
+            return $productFamilies;
+        });
+    }
+
+    /**
      * validating a coupon code based on its product family id
      * @param $coupon_code
      * @param $product_family_id
@@ -196,5 +258,17 @@ class ChargifySubscriptionRepository implements SubscriptionContract
     private function generateToken($str)
     {
         return substr(sha1($str), 0, 10);
+    }
+
+    private function api_domain()
+    {
+        $subscriptionLocation = request()->session()->get('subscription_location', 'au');
+        return config("chargify.{$subscriptionLocation}.api_domain");
+    }
+
+    private function api_share_key()
+    {
+        $subscriptionLocation = request()->session()->get('subscription_location', 'au');
+        return config("chargify.{$subscriptionLocation}.api_share_key");
     }
 }

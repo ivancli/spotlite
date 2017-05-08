@@ -661,9 +661,24 @@ class SubscriptionController extends Controller
         AppPreference::setSyncReserved('n');
     }
 
-    public function productFamilies(Request $request)
+    public function productFamiliesAU(Request $request)
     {
+        $request->session()->put('subscription_location', 'au');
         $productFamilies = $this->subscriptionRepo->getProductList();
+        $status = true;
+        if ($request->has('callback')) {
+            return response()->json(compact(['productFamilies', 'status']))->setCallback($request->get('callback'));
+        } else if ($request->wantsJson()) {
+            return response()->json(compact(['productFamilies', 'status']));
+        } else {
+            return compact(['productFamilies', 'status']);
+        }
+    }
+
+    public function productFamiliesUS(Request $request)
+    {
+        $request->session()->put('subscription_location', 'us');
+        $productFamilies = $this->subscriptionRepo->getUsProductList();
         $status = true;
         if ($request->has('callback')) {
             return response()->json(compact(['productFamilies', 'status']))->setCallback($request->get('callback'));
