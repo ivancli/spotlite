@@ -479,6 +479,7 @@ class SubscriptionController extends Controller
             $subscription->save();
             $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
             $status = true;
+            auth()->user()->clearAllCache();
             return compact(['status', 'subscription']);
             //current subscription no payment method
 //            return $this->store($request);
@@ -545,6 +546,7 @@ class SubscriptionController extends Controller
                     )
                 ));
                 $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
+                auth()->user()->clearAllCache();
                 event(new SubscriptionUpdated($subscription));
                 if ($request->ajax()) {
                     $status = true;
