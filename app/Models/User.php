@@ -264,8 +264,8 @@ class User extends Authenticatable
     public function clearAllCache()
     {
         $this->clearCache();
-        Cache::tags([$this->subscription_location . "user_{$this->getKey()}"])->flush();
-        Cache::tags([$this->subscription_location . 'users', "user_" . $this->getKey()])->flush();
+        Cache::tags(["user_{$this->getKey()}"])->flush();
+        Cache::tags(['users', "user_" . $this->getKey()])->flush();
         if (!is_null($this->apiSubscription)) {
             Cache::tags([$this->subscription_location . "subscriptions.{$this->apiSubscription->id}"])->flush();
             Cache::tags([$this->subscription_location . 'chargify', $this->subscription_location . 'subscriptions', $this->subscription_location . 'subscription', $this->subscription_location . "subscriptions.{$this->apiSubscription->id}"])->flush();
