@@ -219,7 +219,7 @@ class User extends Authenticatable
         $this->save();
     }
 
-        /**
+    /**
      * Check if the user can still add product
      *
      * @return bool
@@ -264,11 +264,11 @@ class User extends Authenticatable
     public function clearAllCache()
     {
         $this->clearCache();
-        Cache::tags(["user_{$this->getKey()}"])->flush();
-        Cache::tags(['users', "user_" . $this->getKey()])->flush();
+        Cache::tags([$this->subscription_location . "user_{$this->getKey()}"])->flush();
+        Cache::tags([$this->subscription_location . 'users', "user_" . $this->getKey()])->flush();
         if (!is_null($this->apiSubscription)) {
-            Cache::tags(["subscriptions.{$this->apiSubscription->id}"])->flush();
-            Cache::tags(['chargify', 'subscriptions', 'subscription', "subscriptions.{$this->apiSubscription->id}"])->flush();
+            Cache::tags([$this->subscription_location . "subscriptions.{$this->apiSubscription->id}"])->flush();
+            Cache::tags([$this->subscription_location . 'chargify', $this->subscription_location . 'subscriptions', $this->subscription_location . 'subscription', $this->subscription_location . "subscriptions.{$this->apiSubscription->id}"])->flush();
         }
     }
 }
