@@ -143,7 +143,6 @@ class AuthController extends Controller
         ));
 
         request()->session()->put('subscription_location', $user->subscription_location);
-
         if (request()->has('api_product_id')) {
             $product = Chargify::product()->get(request('api_product_id'));
             $coupon_code = isset($data['coupon']) ? $data['coupon'] : '';
@@ -234,6 +233,10 @@ class AuthController extends Controller
                                 "Key" => "CancelledAfterEndofTrial",
                                 "Value" => null
                             ),
+                            array(
+                                "Key" => "SubscriptionLocation",
+                                "Value" => $user->subscription_location
+                            )
                         )
                     ));
 
