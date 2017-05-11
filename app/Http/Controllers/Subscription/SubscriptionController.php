@@ -680,7 +680,7 @@ class SubscriptionController extends Controller
     public function productFamiliesUS(Request $request)
     {
         $request->session()->put('subscription_location', 'us');
-        $productFamilies = $this->subscriptionRepo->getUsProductList();
+        $productFamilies = $this->subscriptionRepo->getProductList();
         $status = true;
         if ($request->has('callback')) {
             return response()->json(compact(['productFamilies', 'status']))->setCallback($request->get('callback'));

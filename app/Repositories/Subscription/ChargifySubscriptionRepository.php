@@ -120,7 +120,8 @@ class ChargifySubscriptionRepository implements SubscriptionContract
      */
     public function getProductList()
     {
-        return Cache::rememberForever('product_families.products', function () {
+        $subscriptionLocation = session('subscription_location', 'au');
+        return Cache::rememberForever($subscriptionLocation . '_product_families.products', function () {
             $families = Chargify::productFamily()->all();
             $productFamilies = array();
             foreach ($families as $index => $family) {
