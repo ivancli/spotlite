@@ -297,7 +297,6 @@ class ImportProductController extends Controller
 
 
         $categoryCounter = count($newCategories);
-        $productCounter = 0;
         $siteCounter = 0;
 
         $newProducts = [];
@@ -375,6 +374,8 @@ class ImportProductController extends Controller
         DomainPreference::insert($domainPreferences);
 
         Site::insert($newSites);
+
+        $siteCounter = count($newSites);
 
         $categories = $user->categories()->with('sites')->get();
         $sites = $categories->pluck('sites')->flatten();
