@@ -24,6 +24,7 @@ return [
     ],
 
     "price_describers" => [
+        "ONLINE PRICE: ",
         "\n",
         "\t",
         ",",
@@ -51,6 +52,5 @@ return [
         "Special Price",
         "Price with rebate:",
         "Reg.&nbsp;",
-        "ONLINE PRICE: "
     ]
 ];
