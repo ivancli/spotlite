@@ -344,7 +344,7 @@ class ImportProductController extends Controller
                     'product_id' => $product->getKey()
                 ];
                 $newDomain = parse_url($url['url'])['host'];
-                if(!in_array($newDomain, $newDomains)){
+                if (!in_array($newDomain, $newDomains)) {
                     $newDomains[] = $newDomain;
                 }
             }
@@ -356,7 +356,7 @@ class ImportProductController extends Controller
 
 
         $insertDomains = [];
-        foreach($newDomains as $newDomain){
+        foreach ($newDomains as $newDomain) {
             $insertDomains[] = [
                 'domain_url' => $newDomain
             ];
@@ -366,7 +366,7 @@ class ImportProductController extends Controller
         $domainsNeedPreference = Domain::doesntHave('preference')->get();
         $domain_ids = $domainsNeedPreference->pluck('domain_id');
         $domainPreferences = [];
-        foreach($domain_ids as $domain_id){
+        foreach ($domain_ids as $domain_id) {
             $domainPreferences[] = [
                 'domain_id' => $domain_id,
             ];
@@ -382,20 +382,37 @@ class ImportProductController extends Controller
 
         $site_ids = $sites->pluck('site_id');
 
-        $newSiteRelations = [];
-        foreach($site_ids as $site_id){
-            $newSiteRelations[] = [
-                'site_id' => $site_id
+        $newSiteCrawlers = [];
+        $newSitePreference = [];
+
+        $domainWithPreferences = Domain::with('preference')->get();
+
+        foreach ($sites as $site) {
+
+            $domain = $domainsNeedPreference->filter(function ($domain) use ($site) {
+                return $site->domain == $domain->domain_url;
+            })->first();
+            if (is_null($domain)) {
+                continue;
+            }
+            $preference = $domain->preference;
+            $newSiteCrawlers[] = [
+                'site_id' => $site->getKey(),
+                'crawler_class' => $domain->crawler_class,
+                'parser_class' => $domain->parser_class,
+            ];
+            $newSitePreference[] = [
+                'site_id' => $site->getKey(),
+                'xpath_1' => !is_null($preference) ? $preference->xpath_1 : null,
+                'xpath_2' => !is_null($preference) ? $preference->xpath_2 : null,
+                'xpath_3' => !is_null($preference) ? $preference->xpath_3 : null,
+                'xpath_4' => !is_null($preference) ? $preference->xpath_4 : null,
+                'xpath_5' => !is_null($preference) ? $preference->xpath_5 : null,
             ];
         }
 
-        SitePreference::insert($newSiteRelations);
-        Crawler::insert($newSiteRelations);
-        foreach($sites as $site){
-            $domain = Domain::where('domain_url', '=', $site->domain)->first();
-            $this->siteRepo->adoptDomainPreferences($site->getKey(), $domain->getKey());
-        }
-
+        SitePreference::insert($newSitePreference);
+        Crawler::insert($newSiteCrawlers);
 
 
 //        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
