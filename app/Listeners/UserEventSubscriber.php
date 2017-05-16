@@ -33,6 +33,10 @@ class UserEventSubscriber
         dispatch((new LogUserActivity(auth()->user(), "login"))->onQueue("logging")->onConnection('sync'));
 
         $user = $event->user;
+
+
+
+
         $user->clearAllCache();
         if (!is_null($user->apiSubscription)) {
             Cache::tags(["subscriptions.{$user->apiSubscription->id}"])->flush();

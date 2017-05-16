@@ -2,6 +2,21 @@
 <html>
 <head>
     @if(auth()->check() && auth()->user()->conversion_tracked != 'y')
+        @if(auth()->user()->subscription_location == 'us')
+            <script type="text/javascript">
+                var capterra_vkey = '4596f7f001c14d80b9df45fb40bed681',
+                    capterra_vid = '2094080',
+                    capterra_prefix = (('https:' == document.location.protocol) ? 'https://ct.capterra.com' : 'http://ct.capterra.com');
+                (function () {
+                        var ct = document.createElement('script');
+                        ct.type = 'text/javascript';
+                        ct.async = true;
+                        ct.src = capterra_prefix + '/capterra_tracker.js?vid=' + capterra_vid + '&vkey=' + capterra_vkey;
+                        var s = document.getElementsByTagName('script')[0];
+                        s.parentNode.insertBefore(ct, s);
+                    })();
+            </script>
+        @else
         <!-- Google Code for Sign Up Conversion Page -->
             <script type="text/javascript">
                 /* <![CDATA[ */
@@ -24,6 +39,7 @@
                          src="//www.googleadservices.com/pagead/conversion/855050554/?value=0.00&amp;currency_code=AUD&amp;label=MSeiCNX9rXAQupLclwM&amp;guid=ON&amp;script=0"/>
                 </div>
             </noscript>
+        @endif
         <?php auth()->user()->setConversionTracked(); ?>
     @endif
     {{--redirect if js not available--}}

@@ -479,6 +479,7 @@ class SubscriptionController extends Controller
             $subscription->save();
             $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
             $status = true;
+            auth()->user()->clearAllCache();
             return compact(['status', 'subscription']);
             //current subscription no payment method
 //            return $this->store($request);
@@ -545,6 +546,7 @@ class SubscriptionController extends Controller
                     )
                 ));
                 $this->mailingAgentRepo->updateNextLevelSubscriptionPlan(auth()->user());
+                auth()->user()->clearAllCache();
                 event(new SubscriptionUpdated($subscription));
                 if ($request->ajax()) {
                     $status = true;
@@ -661,8 +663,23 @@ class SubscriptionController extends Controller
         AppPreference::setSyncReserved('n');
     }
 
-    public function productFamilies(Request $request)
+    public function productFamiliesAU(Request $request)
     {
+        $request->session()->put('subscription_location', 'au');
+        $productFamilies = $this->subscriptionRepo->getProductList();
+        $status = true;
+        if ($request->has('callback')) {
+            return response()->json(compact(['productFamilies', 'status']))->setCallback($request->get('callback'));
+        } else if ($request->wantsJson()) {
+            return response()->json(compact(['productFamilies', 'status']));
+        } else {
+            return compact(['productFamilies', 'status']);
+        }
+    }
+
+    public function productFamiliesUS(Request $request)
+    {
+        $request->session()->put('subscription_location', 'us');
         $productFamilies = $this->subscriptionRepo->getProductList();
         $status = true;
         if ($request->has('callback')) {

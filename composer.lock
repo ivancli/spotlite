@@ -469,16 +469,16 @@
         },
         {
             "name": "geoip2/geoip2",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "b28a0ed0190cd76c878ed7002a5d1bb8c5f4c175"
+                "reference": "87602e1c9f5014291b06e126847123360cb6c2db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/b28a0ed0190cd76c878ed7002a5d1bb8c5f4c175",
-                "reference": "b28a0ed0190cd76c878ed7002a5d1bb8c5f4c175",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/87602e1c9f5014291b06e126847123360cb6c2db",
+                "reference": "87602e1c9f5014291b06e126847123360cb6c2db",
                 "shasum": ""
             },
             "require": {
@@ -487,6 +487,7 @@
                 "php": ">=5.3.1"
             },
             "require-dev": {
+                "apigen/apigen": "^4.1",
                 "phpunit/phpunit": "4.2.*",
                 "squizlabs/php_codesniffer": "2.*"
             },
@@ -516,7 +517,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2017-01-31T17:28:48+00:00"
+            "time": "2017-05-08T20:05:30+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -702,7 +703,7 @@
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-chargify.git",
-                "reference": "924d52bc93c9eb2b1299b37fe177947a92175020"
+                "reference": "592badaa0a607c5a5738b914e32726945c2a9301"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -732,7 +733,7 @@
                 "laravel",
                 "subscription"
             ],
-            "time": "2017-03-16 00:53:05"
+            "time": "2017-05-08 04:59:45"
         },
         {
             "name": "invigor/crawler",
@@ -1993,16 +1994,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.7",
+            "version": "v5.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4"
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
-                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/9a06dc570a0367850280eefd3f1dc2da45aef517",
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517",
                 "shasum": ""
             },
             "require": {
@@ -2043,7 +2044,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-04-20T17:32:18+00:00"
+            "time": "2017-05-01T15:54:03+00:00"
         },
         {
             "name": "symfony/console",
