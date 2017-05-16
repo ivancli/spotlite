@@ -112,7 +112,7 @@ class ImportProductController extends Controller
                 $productData = $product->all();
                 $products [] = $productData;
             }
-        });
+        }, 'Windows-1252');
 
         $products = collect($products);
 
@@ -128,54 +128,149 @@ class ImportProductController extends Controller
 
         $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
 
-        $products->each(function ($product, $index) use (&$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
-            $rowNumber = $index + 2;
-            /*IMPORT CATEGORIES*/
-            $category = $user->categories()->where('category_name', $product['category'])->first();
-            if (is_null($category)) {
-                if ($this->request->has('no_new_categories') && $this->request->get('no_new_categories') == 'on') {
-                    $warnings[] = "Category name in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
-                    return true;
-                } else {
-                    $category = Category::create([
-                        'category_name' => $product['category'],
-                        'category_order' => $greatestCategoryOrder++,
-                        'user_id' => $user->getKey()
-                    ]);
-                    $categoryCounter++;
-                }
+
+        $groupedMetas = $products->groupBy(function ($item, $key) {
+            return $item['category'] . "$ $" . $item['product'];
+        });
+
+
+        /*create new categories*/
+        $spreadsheetCategories = $products->pluck('category')->unique()->values();
+        $categoryNames = auth()->user()->categories->pluck('category_name')->unique()->values();
+        $diffedCategories = $spreadsheetCategories->diff($categoryNames);
+        $newCategories = [];
+        foreach ($diffedCategories as $diffedCategory) {
+            $newCategories[] = [
+                'category_name' => $diffedCategory,
+                'category_order' => $greatestCategoryOrder++,
+                'user_id' => $user->getKey(),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+        }
+
+        Category::insert($newCategories);
+
+        $categories = $user->categories()->with('products')->get();
+        $forProductPurposeCategories = [];
+        foreach ($products as $product) {
+            if (!array_key_exists($product['category'], $forProductPurposeCategories)) {
+                $forProductPurposeCategories[$product['category']] = [];
             }
-            $existingProduct = $category->products()->where('product_name', $product['product'])->first();
-            if (is_null($existingProduct)) {
-                if ($this->request->has('no_new_products') && $this->request->get('no_new_products') == 'on') {
-                    $warnings[] = "Product '{$product['product']}' in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
-                    return true;
-                } else {
-                    $existingProduct = Product::create([
-                        'product_name' => $product['product'],
-                        'user_id' => $user->getKey(),
-                        'product_order' => 99999,
-                        'category_id' => $category->getKey()
-                    ]);
-                    $productCounter++;
-                }
+            if (!in_array($product['product'], $forProductPurposeCategories[$product['category']])) {
+                $forProductPurposeCategories[$product['category']][] = $product['product'];
             }
-            $meta = $existingProduct->meta;
-            if (array_has($product, 'sku') && !is_null(array_get($product, 'sku'))) {
-                $meta->sku = array_get($product, 'sku');
+        }
+
+
+        $categoryCounter = count($newCategories);
+
+        $newProducts = [];
+        foreach ($forProductPurposeCategories as $category_name => $forProductPurposeCategory) {
+            $category = $categories->filter(function ($category) use ($category_name) {
+                return $category->category_name == $category_name;
+            })->first();
+            $forProductPurposeProducts = collect($forProductPurposeCategory);
+            $forProductPurposeProducts = $forProductPurposeProducts->unique()->values();
+            $productNames = $category->products->pluck('product_name')->unique()->values();
+            $diffedProducts = $forProductPurposeProducts->diff($productNames);
+            foreach ($diffedProducts as $diffedProduct) {
+                $newProducts[] = [
+                    'product_name' => $diffedProduct,
+                    'category_id' => $category->getKey(),
+                    'product_order' => 99999,
+                    'user_id' => $user->getKey()
+                ];
             }
-            if (array_has($product, 'supplier') && !is_null(array_get($product, 'supplier'))) {
-                $meta->supplier = array_get($product, 'supplier');
-            }
-            if (array_has($product, 'brand') && !is_null(array_get($product, 'brand'))) {
-                $meta->brand = array_get($product, 'brand');
-            }
-            if (array_has($product, 'cost_price') && !is_null(array_get($product, 'cost_price'))) {
-                $meta->cost_price = array_get($product, 'cost_price');
+        }
+        $productCounter = count($newProducts);
+        Product::insert($newProducts);
+        $categories = $user->categories()->with('products')->get();
+        foreach ($groupedMetas as $categoryAndProduct => $groupedMeta) {
+            $groupedMeta = array_first(array_first($groupedMeta));
+            list($tempCategory, $tempProduct) = explode('$ $', $categoryAndProduct);
+            $category = $categories->filter(function ($category) use ($tempCategory, $tempProduct) {
+                return $category->category_name == $tempCategory;
+            })->first();
+            $product = $category->products->filter(function ($product) use ($tempProduct) {
+                return $product->product_name == $tempProduct;
+            })->first();
+            $meta = $product->meta;
+            if (is_null($meta)) {
+                $meta = new ProductMeta([
+                    'sku' => isset($groupedMeta['sku']) ? $groupedMeta['sku'] : null,
+                    'supplier' => isset($groupedMeta['supplier']) ? $groupedMeta['supplier'] : null,
+                    'brand' => isset($groupedMeta['brand']) ? $groupedMeta['brand'] : null,
+                    'cost_price' => isset($groupedMeta['cost_price']) ? $groupedMeta['cost_price'] : null,
+                ]);
+            } else {
+                $meta->sku = isset($groupedMeta['sku']) ? $groupedMeta['sku'] : null;
+                $meta->supplier = isset($groupedMeta['supplier']) ? $groupedMeta['supplier'] : null;
+                $meta->brand = isset($groupedMeta['brand']) ? $groupedMeta['brand'] : null;
+                $meta->cost_price = isset($groupedMeta['cost_price']) ? $groupedMeta['cost_price'] : null;
             }
             $meta->save();
+        }
 
-        });
+//        $product_ids = auth()->user()->products->pluck('product_id');
+//
+//        $newMetas = [];
+//        foreach ($product_ids as $product_id) {
+//            $newMetas[] = [
+//                'product_id' => $product_id
+//            ];
+//        }
+//        ProductMeta::insert($newMetas);
+//
+//
+//        $products->each(function ($product, $index) use (&$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter) {
+//            $rowNumber = $index + 2;
+//            /*IMPORT CATEGORIES*/
+//            $category = $user->categories()->where('category_name', $product['category'])->first();
+//            if (is_null($category)) {
+//                if ($this->request->has('no_new_categories') && $this->request->get('no_new_categories') == 'on') {
+//                    $warnings[] = "Category name in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
+//                    return true;
+//                } else {
+//                    $category = Category::create([
+//                        'category_name' => $product['category'],
+//                        'category_order' => $greatestCategoryOrder++,
+//                        'user_id' => $user->getKey()
+//                    ]);
+//                    $categoryCounter++;
+//                }
+//            }
+//            $existingProduct = $category->products()->where('product_name', $product['product'])->first();
+//            if (is_null($existingProduct)) {
+//                if ($this->request->has('no_new_products') && $this->request->get('no_new_products') == 'on') {
+//                    $warnings[] = "Product '{$product['product']}' in row #{$rowNumber} does not exist in your account, this product and its sites were NOT imported.";
+//                    return true;
+//                } else {
+//                    $existingProduct = Product::create([
+//                        'product_name' => $product['product'],
+//                        'user_id' => $user->getKey(),
+//                        'product_order' => 99999,
+//                        'category_id' => $category->getKey()
+//                    ]);
+//                    $productCounter++;
+//                }
+//            }
+//            $meta = $existingProduct->meta;
+//            if (array_has($product, 'sku') && !is_null(array_get($product, 'sku'))) {
+//                $meta->sku = array_get($product, 'sku');
+//            }
+//            if (array_has($product, 'supplier') && !is_null(array_get($product, 'supplier'))) {
+//                $meta->supplier = array_get($product, 'supplier');
+//            }
+//            if (array_has($product, 'brand') && !is_null(array_get($product, 'brand'))) {
+//                $meta->brand = array_get($product, 'brand');
+//            }
+//            if (array_has($product, 'cost_price') && !is_null(array_get($product, 'cost_price'))) {
+//                $meta->cost_price = array_get($product, 'cost_price');
+//            }
+//            $meta->save();
+//
+//        });
 
         $status = true;
 
@@ -210,7 +305,7 @@ class ImportProductController extends Controller
                 }
                 if (!isset($url->url) || is_null($url->url)) {
                     $errors[] = "URL is missing in row #{$rowNumber}";
-                }elseif(filter_var($url->url, FILTER_VALIDATE_URL) === false){
+                } elseif (filter_var($url->url, FILTER_VALIDATE_URL) === false) {
                     $errors[] = "URL is invalid in row #{$rowNumber}";
                 }
                 $urlData = $url->all();
