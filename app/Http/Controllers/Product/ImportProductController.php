@@ -210,6 +210,8 @@ class ImportProductController extends Controller
                 }
                 if (!isset($url->url) || is_null($url->url)) {
                     $errors[] = "URL is missing in row #{$rowNumber}";
+                }elseif(filter_var($url->url, FILTER_VALIDATE_URL) === false){
+                    $errors[] = "URL is invalid in row #{$rowNumber}";
                 }
                 $urlData = $url->all();
                 $urls [] = $urlData;
