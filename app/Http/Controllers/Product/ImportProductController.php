@@ -11,9 +11,13 @@ use App\Events\Products\Import\BeforeStoreProducts;
 use App\Events\Products\Import\BeforeStoreSites;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Crawler;
 use App\Models\Domain;
+use App\Models\DomainPreference;
 use App\Models\Product;
+use App\Models\ProductMeta;
 use App\Models\Site;
+use App\Models\SitePreference;
 use App\Validators\Product\ImportProduct\StoreValidator;
 use Illuminate\Http\Request;
 
@@ -186,9 +190,7 @@ class ImportProductController extends Controller
         set_time_limit(3000);
         $storeValidator->validate($this->request->all());
         $user = auth()->user();
-        $file = $this->request->file('file');
 
-        $user = auth()->user();
         $file = $this->request->file('file');
 
         $urls = [];
@@ -228,11 +230,22 @@ class ImportProductController extends Controller
             return $item['category'] . "$ $" . $item['product'];
         });
 
+        $categories = $user->categories()->with('products')->get();
+
+        $newCategories = [];
+        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
+        $categoryNames = $categories->pluck('category_name');
         foreach ($urls as $url) {
-            $category = Category::where('category_name', '=', $url['category'])->first();
+//            $category = Category::where('category_name', '=', $url['category'])->first();
+            $category = $categories->filter(function ($category) use ($url) {
+                return $category->category_name == $url['category'];
+            })->first();
             if (!is_null($category)) {
                 if ($this->request->has('no_new_products')) {
-                    $product = $category->products()->where('product_name', '=', $url['product'])->first();
+//                    $product = $category->products()->where('product_name', '=', $url['product'])->first();
+                    $product = $category->products->filter(function ($product) use ($url) {
+                        return $product->product_name == $url['product'];
+                    })->first();
                     if (is_null($product)) {
                         $errors[] = "Product {$url['product']} does not exist in Category {$url['category']} in your account.";
                     } else {
@@ -250,79 +263,254 @@ class ImportProductController extends Controller
             }
         }
 
-
         if (count($errors) > 0) {
             return response(compact(['errors']), 422);
         }
-        $categoryCounter = 0;
-        $productCounter = 0;
+
+
+        /*create new categories*/
+        $spreadsheetCategories = $urls->pluck('category')->unique()->values();
+        $categoryNames = $categories->pluck('category_name')->unique()->values();
+        $diffedCategories = $spreadsheetCategories->diff($categoryNames);
+        foreach ($diffedCategories as $diffedCategory) {
+            $newCategories[] = [
+                'category_name' => $diffedCategory,
+                'category_order' => $greatestCategoryOrder++,
+                'user_id' => $user->getKey(),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+        }
+
+        Category::insert($newCategories);
+
+        $categories = $user->categories()->with('products')->get();
+        $forProductPurposeCategories = [];
+        foreach ($urls as $url) {
+            if (!array_key_exists($url['category'], $forProductPurposeCategories)) {
+                $forProductPurposeCategories[$url['category']] = [];
+            }
+            if (!in_array($url['product'], $forProductPurposeCategories[$url['category']])) {
+                $forProductPurposeCategories[$url['category']][] = $url['product'];
+            }
+        }
+
+
+        $categoryCounter = count($newCategories);
         $siteCounter = 0;
-        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
 
-        $urls->each(function ($url, $index) use (&$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter, $siteLimit) {
-            $rowNumber = $index + 2;
-
-            $category = $user->categories()->where('category_name', $url['category'])->first();
-            if (is_null($category)) {
-                if ($this->request->has('no_new_categories')) {
-                    /*TODO add to warning*/
-                    $warnings[] = "Category in row #{$rowNumber} does not exist in your account, this Category and its Product Page URLs were NOT imported.";
-                    return true;
-                } else {
-                    /*TODO create new category*/
-                    $category = Category::create([
-                        'category_name' => $url['category'],
-                        'category_order' => $greatestCategoryOrder++,
-                        'user_id' => $user->getKey()
-                    ]);
-                    $categoryCounter++;
+        $newProducts = [];
+        foreach ($forProductPurposeCategories as $category_name => $forProductPurposeCategory) {
+            $category = $categories->filter(function ($category) use ($category_name) {
+                return $category->category_name == $category_name;
+            })->first();
+            $forProductPurposeProducts = collect($forProductPurposeCategory);
+            $forProductPurposeProducts = $forProductPurposeProducts->unique()->values();
+            $productNames = $category->products->pluck('product_name')->unique()->values();
+            $diffedProducts = $forProductPurposeProducts->diff($productNames);
+            foreach ($diffedProducts as $diffedProduct) {
+                $newProducts[] = [
+                    'product_name' => $diffedProduct,
+                    'category_id' => $category->getKey(),
+                    'product_order' => 99999,
+                    'user_id' => $user->getKey()
+                ];
+            }
+        }
+        $productCounter = count($newProducts);
+        Product::insert($newProducts);
+        $product_ids = auth()->user()->products->pluck('product_id');
+        $newMetas = [];
+        foreach ($product_ids as $product_id) {
+            $newMetas[] = [
+                'product_id' => $product_id
+            ];
+        }
+        ProductMeta::insert($newMetas);
+        $categories = $user->categories()->with('products')->get();
+        $newSites = [];
+        $newDomains = [];
+        foreach ($groupedSites as $categoryAndProduct => $groupedSite) {
+            list($tempCategory, $tempProduct) = explode('$ $', $categoryAndProduct);
+            $category = $categories->filter(function ($category) use ($tempCategory, $tempProduct) {
+                return $category->category_name == $tempCategory;
+            })->first();
+            $product = $category->products->filter(function ($product) use ($tempProduct) {
+                return $product->product_name == $tempProduct;
+            })->first();
+            foreach ($groupedSite as $url) {
+                $newSites[] = [
+                    'site_url' => $url['url'],
+                    'product_id' => $product->getKey()
+                ];
+                $newDomain = parse_url($url['url'])['host'];
+                if (!in_array($newDomain, $newDomains)) {
+                    $newDomains[] = $newDomain;
                 }
             }
-            $product = $category->products()->where('product_name', '=', $url['product'])->first();
-            if (is_null($product)) {
-                if ($this->request->has('no_new_products')) {
-                    $warnings[] = "Product in row #{$rowNumber} does not exist in Category:{$category->category_name}, this Product and its URLs were NOT imported.";
-                    return true;
-                } else {
-                    $product = Product::create([
-                        'product_name' => $url['product'],
-                        'product_order' => 99999,
-                        'category_id' => $category->getKey(),
-                        'user_id' => $user->getKey()
-                    ]);
-                    $productCounter++;
-                }
+        }
+        $domains = Domain::all()->pluck('domain_url');
+        $newDomains = collect($newDomains);
+
+        $newDomains = $newDomains->diff($domains);
+
+
+        $insertDomains = [];
+        foreach ($newDomains as $newDomain) {
+            $insertDomains[] = [
+                'domain_url' => $newDomain
+            ];
+        }
+
+        Domain::insert($insertDomains);
+        $domainsNeedPreference = Domain::doesntHave('preference')->get();
+        $domain_ids = $domainsNeedPreference->pluck('domain_id');
+        $domainPreferences = [];
+        foreach ($domain_ids as $domain_id) {
+            $domainPreferences[] = [
+                'domain_id' => $domain_id,
+            ];
+        }
+        DomainPreference::insert($domainPreferences);
+
+        Site::insert($newSites);
+
+        $siteCounter = count($newSites);
+
+        $categories = $user->categories()->with('sites')->get();
+        $sites = $categories->pluck('sites')->flatten();
+
+        $site_ids = $sites->pluck('site_id');
+
+        $newSiteCrawlers = [];
+        $newSitePreference = [];
+
+        $domainWithPreferences = Domain::with('preference')->get();
+
+        foreach ($sites as $site) {
+
+            $domain = $domainsNeedPreference->filter(function ($domain) use ($site) {
+                return $site->domain == $domain->domain_url;
+            })->first();
+            if (is_null($domain)) {
+                continue;
             }
+            $preference = $domain->preference;
+            $newSiteCrawlers[] = [
+                'site_id' => $site->getKey(),
+                'crawler_class' => $domain->crawler_class,
+                'parser_class' => $domain->parser_class,
+            ];
+            $newSitePreference[] = [
+                'site_id' => $site->getKey(),
+                'xpath_1' => !is_null($preference) ? $preference->xpath_1 : null,
+                'xpath_2' => !is_null($preference) ? $preference->xpath_2 : null,
+                'xpath_3' => !is_null($preference) ? $preference->xpath_3 : null,
+                'xpath_4' => !is_null($preference) ? $preference->xpath_4 : null,
+                'xpath_5' => !is_null($preference) ? $preference->xpath_5 : null,
+            ];
+        }
+
+        SitePreference::insert($newSitePreference);
+        Crawler::insert($newSiteCrawlers);
 
 
-            if (!is_null($category) && !is_null($product)) {
-
-                /*validating subscription status*/
-                if (!is_null($siteLimit)) {
-                    $currentSiteCount = $product->sites()->count();
-                    if ($currentSiteCount >= $siteLimit) {
-                        $warnings[] = "You have reached the site limit in row #{$rowNumber}. Please upgrade your subscription plan to add more sites.";
-                        return true;
-                    }
-                }
-
-                $site = $product->sites()->save(new Site(array(
-                    "site_url" => $url['url'],
-                )));
-
-                $domainUrl = $site->domain;
-                $domain = Domain::where('domain_url', '=', $domainUrl)->first();
-
-                if (!is_null($domain)) {
-                    $this->siteRepo->adoptDomainPreferences($site->getKey(), $domain->getKey());
-                    $site->last_crawled_at = null;
-                    $site->comment = null;
-                    $site->save();
-                }
-
-                $siteCounter++;
-            }
-        });
+//        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
+//        $domains = Domain::all();
+//
+//        $urls->each(function ($url, $index) use ($domains, &$categories, &$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter, $siteLimit) {
+//            $rowNumber = $index + 2;
+//
+////            $category = $user->categories()->where('category_name', $url['category'])->first();
+//            $category = $categories->filter(function ($category) use ($url) {
+//                return $category->category_name == $url['category'];
+//            })->first();
+//            if (is_null($category)) {
+//                if ($this->request->has('no_new_categories')) {
+//                    /*TODO add to warning*/
+//                    $warnings[] = "Category in row #{$rowNumber} does not exist in your account, this Category and its Product Page URLs were NOT imported.";
+//                    return true;
+//                } else {
+//                    /*TODO create new category*/
+//                    $category = Category::create([
+//                        'category_name' => $url['category'],
+//                        'category_order' => $greatestCategoryOrder++,
+//                        'user_id' => $user->getKey()
+//                    ]);
+//                    $categories->push($category);
+//                    $categoryCounter++;
+//                }
+//            }
+////            $product = $category->products()->where('product_name', '=', $url['product'])->first();
+//            $product = $category->products->filter(function ($product) use ($url) {
+//                return $product->product_name == $url['product'];
+//            })->first();
+//            if (is_null($product)) {
+//                if ($this->request->has('no_new_products')) {
+//                    $warnings[] = "Product in row #{$rowNumber} does not exist in Category:{$category->category_name}, this Product and its URLs were NOT imported.";
+//                    return true;
+//                } else {
+//                    $product = Product::create([
+//                        'product_name' => $url['product'],
+//                        'product_order' => 99999,
+//                        'category_id' => $category->getKey(),
+//                        'user_id' => $user->getKey()
+//                    ]);
+//                    $category->products->push($product);
+//                    $productCounter++;
+//                }
+//            }
+//
+//
+//            if (!is_null($category) && !is_null($product)) {
+//
+//                /*validating subscription status*/
+//                if (!is_null($siteLimit)) {
+//                    $currentSiteCount = $product->sites()->count();
+//                    if ($currentSiteCount >= $siteLimit) {
+//                        $warnings[] = "You have reached the site limit in row #{$rowNumber}. Please upgrade your subscription plan to add more sites.";
+//                        return true;
+//                    }
+//                }
+//
+//                $site = $product->sites()->save(new Site(array(
+//                    "site_url" => $url['url'],
+//                )));
+//
+////                $domainUrl = $site->domain;
+//////                $domain = Domain::where('domain_url', '=', $domainUrl)->first();
+////                $domain = $domains->filter(function($domain) use($domainUrl){
+////                    return $domain->domain_url == $domainUrl;
+////                })->first();
+////
+////                if (!is_null($domain)) {
+//////                    $this->siteRepo->adoptDomainPreferences($site->getKey(), $domain->getKey());
+////
+////                    $preference = $site->preference;
+////
+////                    $targetPreference = $domain->preference;
+////
+////                    $preference->xpath_1 = $targetPreference->xpath_1;
+////                    $preference->xpath_2 = $targetPreference->xpath_2;
+////                    $preference->xpath_3 = $targetPreference->xpath_3;
+////                    $preference->xpath_4 = $targetPreference->xpath_4;
+////                    $preference->xpath_5 = $targetPreference->xpath_5;
+////                    $preference->save();
+////
+////                    $site->crawler->update(array(
+////                        "crawler_class" => $domain->crawler_class,
+////                        "parser_class" => $domain->parser_class
+////                    ));
+////
+////
+////                    $site->last_crawled_at = null;
+////                    $site->comment = null;
+////                    $site->save();
+////                }
+//
+//                $siteCounter++;
+//            }
+//        });
         $status = true;
 
         event(new AfterStoreSites());
