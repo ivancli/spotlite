@@ -214,7 +214,7 @@ class ImportProductController extends Controller
                 $urlData = $url->all();
                 $urls [] = $urlData;
             }
-        });
+        }, 'Windows-1252');
 
         $urls = collect($urls);
 
