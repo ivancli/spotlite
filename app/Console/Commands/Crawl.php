@@ -50,6 +50,7 @@ class Crawl extends Command
                     /*check user subscription plan*/
                     if (isset($crawler->site) && isset($crawler->site->product) && isset($crawler->site->product->user)) {
                         $user = $crawler->site->product->user;
+                        request()->session()->put('subscription_location', $user->subscription_location);
                         if ($user->needSubscription && !is_null($crawler->last_active_at)) {
                             $lastActiveAt = date('Y-m-d H:00:00', strtotime($crawler->last_active_at));
                             $hoursDifference = intval((strtotime($currentRoundedHours) - strtotime($lastActiveAt)) / 3600);
