@@ -1103,8 +1103,7 @@ $(function () {
                                 "padding": "10px",
                                 "color": "#fff"
                             }).append(
-                                '&nbsp; <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"aria-expanded="false"><i class="fa fa-question-circle"></i>&nbsp;<i class="fa fa-caret-down"></i></a> &nbsp;&nbsp;&nbsp;',
-                                $("<i>").addClass("fa fa-caret-down")
+                                '&nbsp; <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"aria-expanded="false"><i class="fa fa-question-circle"></i>&nbsp;<i class="fa fa-caret-down"></i></a> &nbsp;&nbsp;&nbsp;'
                             )
                         )
                     )
