@@ -98,6 +98,13 @@ function btnAddProductOnClick(el) {
                     showLoading();
                     loadSingleProduct(response.product.urls.show, function (html) {
                         hideLoading();
+
+                        var $html = $("<div>").append(html);
+                        $html.find(".btn-collapse.collapsed").removeClass("collapsed").attr("aria-expanded", "true");
+                        $html.find(".collapsible-product-div").addClass("in").attr({
+                            "aria-expanded": "true"
+                        });
+                        html = $html.html();
                         $(el).closest(".tbl-category").find(".collapsible-category-div").prepend(html);
                         updateProductOrder($(el).closest(".category-wrapper").attr('data-category-id'));
                         updateProductEmptyMessage();
