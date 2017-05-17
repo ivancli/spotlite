@@ -126,7 +126,7 @@ class ImportProductController extends Controller
         $productCounter = 0;
         $categoryCounter = 0;
 
-        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
+        $greatestCategoryOrder = $this->categoryRepo->getCategoriesCount();
 
 
         $groupedMetas = $products->groupBy(function ($item, $key) {
@@ -330,7 +330,7 @@ class ImportProductController extends Controller
         $categories = $user->categories()->with('products')->get();
 
         $newCategories = [];
-        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
+        $greatestCategoryOrder = $this->categoryRepo->getCategoriesCount();
         $categoryNames = $categories->pluck('category_name');
         foreach ($urls as $url) {
 //            $category = Category::where('category_name', '=', $url['category'])->first();
@@ -512,7 +512,7 @@ class ImportProductController extends Controller
         Crawler::insert($newSiteCrawlers);
 
 
-//        $greatestCategoryOrder = $this->categoryRepo->getGreatestCategoryOrder();
+//        $greatestCategoryOrder = $this->categoryRepo->getCategoriesCount();
 //        $domains = Domain::all();
 //
 //        $urls->each(function ($url, $index) use ($domains, &$categories, &$greatestCategoryOrder, $user, &$warnings, &$siteCounter, &$productCounter, &$categoryCounter, $siteLimit) {
