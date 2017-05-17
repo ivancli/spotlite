@@ -164,7 +164,7 @@
 
                     @if(Auth::check())
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle lnk-drop-down-need-help" data-toggle="dropdown"
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
                                 <i class="glyphicon glyphicon-cog"></i>&nbsp;<i class="fa fa-caret-down"></i>
                             </a>
