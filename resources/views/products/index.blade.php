@@ -26,7 +26,8 @@
             <div class="col-sm-12">
                 <p class="text-muted font-size-17">
                     You can set up all Categories and Products you want to keep an eye on and SpotLite will update the
-                    prices for you automatically. Simply add a Category name, then a Product name. Now all you have to do is
+                    prices for you automatically. Simply add a Category name, then a Product name. Now all you have to
+                    do is
                     copy and paste the Product Page URLs of the prices you want to track on the Product Page URL field
                     within each Product section, as shown below.
 
@@ -51,10 +52,13 @@
                                     <tr>
                                         <td style="border: none !important;">
                                             <h3 style="margin-top:0;">OH NO! YOUR TRIAL HAS EXPIRED!</h3>
-                                            <p style="font-size: 18px;margin-bottom:0">To re-activate your account and continue to use SpotLite, please add a payment method.</p>
+                                            <p style="font-size: 18px;margin-bottom:0">To re-activate your account and
+                                                continue to use SpotLite, please add a payment method.</p>
                                         </td>
-                                        <td class="shrink" style="border: none !important; vertical-align: middle !important;">
-                                            <a href="{{$updatePaymentLink}}" class="btn btn-primary btn-lg">ADD PAYMENT METHOD</a>
+                                        <td class="shrink"
+                                            style="border: none !important; vertical-align: middle !important;">
+                                            <a href="{{$updatePaymentLink}}" class="btn btn-primary btn-lg">ADD PAYMENT
+                                                METHOD</a>
                                         </td>
                                     </tr>
                                 </table>
@@ -70,24 +74,27 @@
                                         Credit:
                                     @endif
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-
-                                    {{--TODO update color based on the ratio--}}
-                                    <div class="progress vertical-align-middle"
-                                         style="width: 300px;display: inline-block;margin-bottom: 0;background-color:#dedede;border-radius: 10px; height:15px;">
-                                        <div class="progress-bar progress-bar-success progress-bar-striped"
-                                             id="prog-product-usage"
-                                             role="progressbar"
-                                             aria-valuenow="{{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}"
-                                             aria-valuemin="0" aria-valuemax="100"
-                                             style="width: {{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}%">
+                                    @if(auth()->user()->subscriptionCriteria()->product != 0)
+                                        {{--TODO update color based on the ratio--}}
+                                        <div class="progress vertical-align-middle"
+                                             style="width: 300px;display: inline-block;margin-bottom: 0;background-color:#dedede;border-radius: 10px; height:15px;">
+                                            <div class="progress-bar progress-bar-success progress-bar-striped"
+                                                 id="prog-product-usage"
+                                                 role="progressbar"
+                                                 aria-valuenow="{{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}"
+                                                 aria-valuemin="0" aria-valuemax="100"
+                                                 style="width: {{auth()->user()->products()->count() / auth()->user()->subscriptionCriteria()->product * 100}}%">
+                                            </div>
                                         </div>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <span id="lbl-product-usage">{{auth()->user()->products()->count()}}</span>
-                                    &nbsp;/&nbsp;
-                                    <span id="lbl-product-total">{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}</span>
-                                    &nbsp;
-                                    products
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span id="lbl-product-usage">{{auth()->user()->products()->count()}}</span>
+                                        &nbsp;/&nbsp;
+                                        <span id="lbl-product-total">{{auth()->user()->subscriptionCriteria()->product == 0 ? "unlimited" : auth()->user()->subscriptionCriteria()->product}}</span>
+                                        &nbsp;
+                                        products
+                                    @else
+                                        unlimited products
+                                    @endif
                                 @endif
                             </div>
                             {{--<div class="col-md-4">--}}
@@ -122,7 +129,8 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <form action="{{route('category.store')}}" method="post"
-                                                      class="frm-store-category" style="display:inline-block; width: 175px;"
+                                                      class="frm-store-category"
+                                                      style="display:inline-block; width: 175px;"
                                                       onsubmit="btnAddCategoryOnClick(this); return false;">
                                                     <input type="text" id="txt-category-name" autocomplete="off"
                                                            class="form-control txt-item" name="category_name">
@@ -133,7 +141,8 @@
                                                         CONFIRM
                                                     </button>
                                                     &nbsp;&nbsp;
-                                                    <button class="btn btn-default btn-flat" id="btn-cancel-add-category"
+                                                    <button class="btn btn-default btn-flat"
+                                                            id="btn-cancel-add-category"
                                                             onclick="cancelAddCategory(this); event.stopPropagation(); event.preventDefault();">
                                                         CANCEL
                                                     </button>
