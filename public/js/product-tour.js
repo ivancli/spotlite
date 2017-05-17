@@ -1085,7 +1085,30 @@ $(function () {
                 element: ".lnk-drop-down-need-help",
                 title: "WE'RE HERE FOR YOU",
                 content: "You can always check our FAQ, Tutorials or contact us in case you have questions or concerns.",
-                placement: "bottom"
+                placement: "bottom",
+                onShown: function () {
+                    $(".tour-step-background").append(
+                        $("<div>").css({
+                            "height": "100%",
+                            "padding": "15px"
+                        }).append(
+                            $("<a>").addClass("dropdown-toggle lnk-drop-down-need-help tour-step-backdrop tour-tour-element tour-tour-13-element").attr({
+                                "href": "/product",
+                                "data-toggle": "dropdown",
+                                "aria-expanded": "false"
+                            }).css({
+                                "background-color": "#7ed0c0",
+                                "height": "100%",
+                                "display": "block",
+                                "padding": "10px",
+                                "color": "#fff"
+                            }).append(
+                                "&nbsp;NEED HELP ? &nbsp;&nbsp;&nbsp;",
+                                $("<i>").addClass("fa fa-caret-down")
+                            )
+                        )
+                    )
+                }
             }
         ],
         backdrop: true,
