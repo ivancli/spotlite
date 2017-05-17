@@ -12,6 +12,7 @@ use App\Contracts\Repository\Ebay\EbayContract;
 use App\Jobs\CrawlSite;
 use App\Models\Crawler;
 use App\Models\Site;
+use App\Models\SitePreference;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,11 @@ class TestController extends Controller
 
     public function index()
     {
-        $user = User::findOrFail(5);
-        Auth::login($user);
+        $sites = Site::all();
+        foreach($sites as $site){
+            if($site->preference()->count() == 0){
+                $site->preference()->save(new SitePreference());
+            }
+        }
     }
 }
