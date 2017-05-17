@@ -36,20 +36,20 @@ class Subscription extends Model
 
     public function isValid()
     {
-        $subscription = Chargify::subscription()->get($this->api_subscription_id);
+        $subscription = Chargify::subscription($this->user->subscription_location)->get($this->api_subscription_id);
         return $subscription->state == 'active' || $subscription->state == 'trialing';
     }
 
     public function getIsPastDueAttribute()
     {
-        $subscription = Chargify::subscription()->get($this->api_subscription_id);
+        $subscription = Chargify::subscription($this->user->subscription_location)->get($this->api_subscription_id);
 
         return !is_null($subscription) && $subscription->state == 'past_due';
     }
 
     public function getIsCancelledAttribute()
     {
-        $subscription = Chargify::subscription()->get($this->api_subscription_id);
+        $subscription = Chargify::subscription($this->user->subscription_location)->get($this->api_subscription_id);
         return !is_null($subscription) && $subscription->state == 'canceled';
     }
 

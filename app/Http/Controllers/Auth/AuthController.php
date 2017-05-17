@@ -142,9 +142,8 @@ class AuthController extends Controller
             'Name' => $user->first_name . " " . $user->last_name,
         ));
 
-        request()->session()->put('subscription_location', $user->subscription_location);
         if (request()->has('api_product_id')) {
-            $product = Chargify::product()->get(request('api_product_id'));
+            $product = Chargify::product($user->subscription_location)->get(request('api_product_id'));
             $coupon_code = isset($data['coupon']) ? $data['coupon'] : '';
             $reference = array(
                 "user_id" => $user->getKey(),
@@ -165,7 +164,7 @@ class AuthController extends Controller
                 "coupon_code" => $coupon_code
             );
 
-            $result = Chargify::subscription()->create($fields);
+            $result = Chargify::subscription($user->subscription_location)->create($fields);
             if (!isset($result->errors)) {
                 /* clear verification code*/
                 $user->verification_code = null;

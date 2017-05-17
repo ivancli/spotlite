@@ -28,11 +28,11 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         $this->mailingAgentRepo = $mailingAgentContract;
     }
 
-    public function generateUpdatePaymentLink($subscription_id)
+    public function generateUpdatePaymentLink(User $user, $subscription_id)
     {
-        $message = "update_payment--$subscription_id--" . $this->api_share_key();
+        $message = "update_payment--$subscription_id--" . $this->api_share_key($user->subscription_location);
         $token = $this->generateToken($message);
-        $link = $this->api_domain() . "update_payment/$subscription_id/" . $token;
+        $link = $this->api_domain($user->subscription_location) . "update_payment/$subscription_id/" . $token;
         return $link;
     }
 
@@ -50,7 +50,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
             $user->clearAllCache();
 
-            $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id, true);
+            $apiSubscription = Chargify::subscription($user->subscription_location)->get($subscription->api_subscription_id, true);
             if (!is_null($apiSubscription) && $apiSubscription !== false) {
                 if (!is_null($apiSubscription->canceled_at)) {
                     $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
@@ -79,7 +79,8 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
     public function updateCreditCardDetails(Subscription $subscription)
     {
-        $apiSubscription = Chargify::subscription()->get($subscription->api_subscription_id);
+        $user = $subscription->user;
+        $apiSubscription = Chargify::subscription($user->subscription_location)->get($subscription->api_subscription_id);
         if (is_null($apiSubscription) || $apiSubscription == false) {
             return false;
         }
@@ -120,16 +121,15 @@ class ChargifySubscriptionRepository implements SubscriptionContract
      */
     public function getProductList()
     {
-        $subscriptionLocation = session('subscription_location', 'au');
-        return Cache::rememberForever($subscriptionLocation . '_product_families.products', function () {
-            $families = Chargify::productFamily()->all();
+        return Cache::rememberForever('au_product_families.products', function () {
+            $families = Chargify::productFamily('au')->all();
             $productFamilies = array();
             foreach ($families as $index => $family) {
                 //remove starter family
                 if ($family->id == 780243) {
                     continue;
                 }
-                $apiProducts = Chargify::product()->allByProductFamily($family->id);
+                $apiProducts = Chargify::product('au')->allByProductFamily($family->id);
                 if (isset($apiProducts->errors) || count($apiProducts) == 0) {
                     continue;
                 }
@@ -142,7 +142,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                     continue;
                 }
 
-                $subscriptionPreview = Chargify::subscription()->preview(array(
+                $subscriptionPreview = Chargify::subscription('au')->preview(array(
                     "product_id" => $product->id,
                     "customer_attributes" => array(
                         "first_name" => "Spot",
@@ -183,15 +183,15 @@ class ChargifySubscriptionRepository implements SubscriptionContract
      */
     public function getUsProductList()
     {
-        return Cache::rememberForever('product_families_us.products', function () {
-            $families = Chargify::productFamily()->all();
+        return Cache::rememberForever('us_product_families.products', function () {
+            $families = Chargify::productFamily('us')->all();
             $productFamilies = array();
             foreach ($families as $index => $family) {
                 //remove starter family
                 if ($family->id == 780243) {
                     continue;
                 }
-                $apiProducts = Chargify::product()->allByProductFamily($family->id);
+                $apiProducts = Chargify::product('us')->allByProductFamily($family->id);
                 if (isset($apiProducts->errors) || count($apiProducts) == 0) {
                     continue;
                 }
@@ -204,7 +204,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
                     continue;
                 }
 
-                $subscriptionPreview = Chargify::subscription()->preview(array(
+                $subscriptionPreview = Chargify::subscription('us')->preview(array(
                     "product_id" => $product->id,
                     "customer_attributes" => array(
                         "first_name" => "Spot",
@@ -242,13 +242,14 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
     /**
      * validating a coupon code based on its product family id
+     * @param $subscriptionLocation
      * @param $coupon_code
      * @param $product_family_id
      * @return mixed
      */
-    public function validateCoupon($coupon_code, $product_family_id)
+    public function validateCoupon($subscriptionLocation, $coupon_code, $product_family_id)
     {
-        $coupon = Chargify::coupon()->validate($coupon_code, $product_family_id);
+        $coupon = Chargify::coupon($subscriptionLocation)->validate($coupon_code, $product_family_id);
         if (!isset($coupon->errors) && is_null($coupon->archived_at)) {
             return true;
         } else {
@@ -261,15 +262,13 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         return substr(sha1($str), 0, 10);
     }
 
-    private function api_domain()
+    private function api_domain($subscriptionLocation)
     {
-        $subscriptionLocation = request()->session()->get('subscription_location', 'au');
         return config("chargify.{$subscriptionLocation}.api_domain");
     }
 
-    private function api_share_key()
+    private function api_share_key($subscriptionLocation)
     {
-        $subscriptionLocation = request()->session()->get('subscription_location', 'au');
         return config("chargify.{$subscriptionLocation}.api_share_key");
     }
 }
