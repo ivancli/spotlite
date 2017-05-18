@@ -17,7 +17,7 @@ class Subscription extends Model
     public $timestamps = false;
     protected $primaryKey = "subscription_id";
     protected $fillable = [
-        'api_product_id', 'api_custom_id', 'api_subscription_id', 'expiry_date', 'cancelled_at',
+        'api_product_id', 'api_custom_id', 'api_subscription_id', 'expiry_date', 'cancelled_at', 'subscription_location',
     ];
 
     protected $appends = [
@@ -36,20 +36,20 @@ class Subscription extends Model
 
     public function isValid()
     {
-        $subscription = Chargify::subscription($this->user->subscription_location)->get($this->api_subscription_id);
+        $subscription = Chargify::subscription($this->subscription_location)->get($this->api_subscription_id);
         return $subscription->state == 'active' || $subscription->state == 'trialing';
     }
 
     public function getIsPastDueAttribute()
     {
-        $subscription = Chargify::subscription($this->user->subscription_location)->get($this->api_subscription_id);
+        $subscription = Chargify::subscription($this->subscription_location)->get($this->api_subscription_id);
 
         return !is_null($subscription) && $subscription->state == 'past_due';
     }
 
     public function getIsCancelledAttribute()
     {
-        $subscription = Chargify::subscription($this->user->subscription_location)->get($this->api_subscription_id);
+        $subscription = Chargify::subscription($this->subscription_location)->get($this->api_subscription_id);
         return !is_null($subscription) && $subscription->state == 'canceled';
     }
 

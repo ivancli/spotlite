@@ -138,8 +138,9 @@ class User extends Authenticatable
     public function getApiSubscriptionAttribute()
     {
         if ($this->needSubscription && !is_null($this->subscription)) {
-            return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_subscription', config('cache.ttl'), function () {
-                return Chargify::subscription($this->subscription_location)->get($this->subscription->api_subscription_id);
+            $subscription = $this->subscription;
+            return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_subscription', config('cache.ttl'), function ()  use($subscription){
+                return Chargify::subscription($subscription->subscription_location)->get($subscription->api_subscription_id);
             });
         } else {
             return null;
@@ -204,7 +205,7 @@ class User extends Authenticatable
     public function subscriptionCriteria()
     {
         if (!is_null($this->apiSubscription)) {
-            $product = Chargify::product($this->subscription_location)->get($this->apiSubscription->product_id);
+            $product = Chargify::product($this->subscription->subscription_location)->get($this->apiSubscription->product_id);
             if (!is_null($product->description)) {
                 $criteria = json_decode($product->description);
                 return $criteria;

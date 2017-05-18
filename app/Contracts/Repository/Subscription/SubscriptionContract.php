@@ -25,11 +25,12 @@ interface SubscriptionContract
     /**
      * Generate a link for customers to update their payment method
      * https://help.chargify.com/public-pages/self-service-pages.html
-     * @param User $user
+     * @param Subscription $subscription
      * @param $subscription_id
      * @return mixed
+     * @internal param User $user
      */
-    public function generateUpdatePaymentLink(User $user, $subscription_id);
+    public function generateUpdatePaymentLink(Subscription $subscription, $subscription_id);
 
     /**
      * Synchronise user subscription status

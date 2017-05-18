@@ -67,15 +67,15 @@ class SubscriptionController extends Controller
         if (!is_null($sub)) {
             $subscription = $user->apiSubscription;
             if ($subscription != false) {
-                $portalLink = Chargify::customer($user->subscription_location)->getLink($subscription->customer_id);
-                $subscriptionTransactions = Chargify::transaction($user->subscription_location)->allBySubscription($subscription->id);
+                $portalLink = Chargify::customer($sub->subscription_location)->getLink($subscription->customer_id);
+                $subscriptionTransactions = Chargify::transaction($sub->subscription_location)->allBySubscription($subscription->id);
                 $transactions = $subscriptionTransactions;
 
                 $transactions = collect($transactions);
                 $transactions = $transactions->sortBy('created_at');
 
 
-                $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($subscription->id);
+                $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($sub, $subscription->id);
 
                 event(new SubscriptionManagementViewed());
                 return view('subscriptions.index')->with(compact(['sub', 'allSubs', 'subscription', 'updatePaymentLink', 'portalLink', 'transactions']));
@@ -97,7 +97,7 @@ class SubscriptionController extends Controller
 
             if (is_null($user->apiSubscription) || $apiProductId != $user->apiSubscription->product_id) {
                 /*TODO show subscription preview next billing manifest*/
-                $preview = Chargify::subscription($user->subscription_location)->preview(array(
+                $preview = Chargify::subscription($user->subscription->subscription_location)->preview(array(
                     "product_id" => $apiProductId,
                     "customer_attributes" => array(
                         "first_name" => "Spot",
@@ -117,7 +117,7 @@ class SubscriptionController extends Controller
                 $subscriptionPreview = Chargify::subscription($user->subscription_location)->previewRenew($user->apiSubscription->id);
             }
 
-            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id);
+            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->subscription, $user->apiSubscription->id);
             $product = Chargify::product($user->subscription_location)->get($request->get('api_product_id'));
             $product->criteria = json_decode($product->description);
             return view('subscriptions.confirm')->with(compact(['product', 'subscriptionPreview', 'updatePaymentLink']));
@@ -148,7 +148,7 @@ class SubscriptionController extends Controller
             /* check if payment profile exists*/
             if (is_null($user->apiSubscription->credit_card_id)) {
                 // if no payment profile, redirect user to update credit card page
-                return redirect()->to($this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id));
+                return redirect()->to($this->subscriptionRepo->generateUpdatePaymentLink($user->subscription, $user->apiSubscription->id));
             } else {
                 // if there is payment profile, try to reactivate subscription
                 $result = Chargify::subscription($user->subscription_location)->reactivate($user->apiSubscription->id);
@@ -158,7 +158,7 @@ class SubscriptionController extends Controller
                     /* return back to error page*/
                     /* suggest either change credit card or make sure credit has sufficient fund and try again*/
                     $subscriptionErrors = $result->errors;
-                    $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id);
+                    $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->subscription, $user->apiSubscription->id);
                     return redirect()->back()->withErrors(compact(['subscriptionErrors']));
                 } else {
                     $user->clearAllCache();
@@ -666,7 +666,6 @@ class SubscriptionController extends Controller
 
     public function productFamiliesAU(Request $request)
     {
-        $request->session()->put('subscription_location', 'au');
         $productFamilies = $this->subscriptionRepo->getProductList();
         $status = true;
         if ($request->has('callback')) {
@@ -680,8 +679,7 @@ class SubscriptionController extends Controller
 
     public function productFamiliesUS(Request $request)
     {
-        $request->session()->put('subscription_location', 'us');
-        $productFamilies = $this->subscriptionRepo->getProductList();
+        $productFamilies = $this->subscriptionRepo->getUsProductList();
         $status = true;
         if ($request->has('callback')) {
             return response()->json(compact(['productFamilies', 'status']))->setCallback($request->get('callback'));

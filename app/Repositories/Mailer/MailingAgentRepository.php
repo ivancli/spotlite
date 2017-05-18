@@ -384,7 +384,7 @@ class MailingAgentRepository implements MailingAgentContract
 
             /*somehow unable to use dependency injection in this repo*/
             /*fetch product list manually*/
-            $products = Chargify::product($user->subscription_location)->all();
+            $products = Chargify::product($user->subscription->subscription_location)->all();
             $products = collect($products);
             $products = $products->filter(function ($product, $key) {
                 return strpos(strtolower($product->name), 'onboarding') === false;

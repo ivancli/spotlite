@@ -26,7 +26,7 @@ class MessageController extends Controller
         $user = auth()->user();
         if ($user->needSubscription) {
             $subscription = $user->subscription;
-            $apiSubscription = Chargify::subscription($user->subscription_location)->get($subscription->api_subscription_id);
+            $apiSubscription = Chargify::subscription($subscription->subscription_location)->get($subscription->api_subscription_id);
         }
         $sampleUser = $this->userRepo->sampleUser();
 
@@ -44,7 +44,7 @@ class MessageController extends Controller
     {
         $user = auth()->user();
         $subscription = $user->subscription;
-        $apiSubscription = Chargify::subscription($user->subscription_location)->get($subscription->api_subscription_id);
+        $apiSubscription = Chargify::subscription($subscription->subscription_location)->get($subscription->api_subscription_id);
         if ($raw == 0) {
             return view('msg.subscription.welcome')->with(compact(['apiSubscription']));
         } else {
@@ -57,7 +57,7 @@ class MessageController extends Controller
         $user = auth()->user();
         $subscription = Subscription::findOrFail($subscription_id);
         if ($subscription->user_id == $user->getKey()) {
-            $apiSubscription = Chargify::subscription($user->subscription_location)->get($subscription->api_subscription_id);
+            $apiSubscription = Chargify::subscription($subscription->subscription_location)->get($subscription->api_subscription_id);
             if ($raw == 0) {
                 return view('msg.subscription.cancelled')->with(compact(['apiSubscription']));
             } else {

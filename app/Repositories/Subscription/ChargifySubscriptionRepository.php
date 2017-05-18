@@ -28,11 +28,11 @@ class ChargifySubscriptionRepository implements SubscriptionContract
         $this->mailingAgentRepo = $mailingAgentContract;
     }
 
-    public function generateUpdatePaymentLink(User $user, $subscription_id)
+    public function generateUpdatePaymentLink(Subscription $subscription, $subscription_id)
     {
-        $message = "update_payment--$subscription_id--" . $this->api_share_key($user->subscription_location);
+        $message = "update_payment--$subscription_id--" . $this->api_share_key($subscription->subscription_location);
         $token = $this->generateToken($message);
-        $link = $this->api_domain($user->subscription_location) . "update_payment/$subscription_id/" . $token;
+        $link = $this->api_domain($subscription->subscription_location) . "update_payment/$subscription_id/" . $token;
         return $link;
     }
 
@@ -50,7 +50,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
 
             $user->clearAllCache();
 
-            $apiSubscription = Chargify::subscription($user->subscription_location)->get($subscription->api_subscription_id, true);
+            $apiSubscription = Chargify::subscription($subscription->subscription_location)->get($subscription->api_subscription_id, true);
             if (!is_null($apiSubscription) && $apiSubscription !== false) {
                 if (!is_null($apiSubscription->canceled_at)) {
                     $subscription->cancelled_at = date('Y-m-d h:i:s', strtotime($apiSubscription->canceled_at));
@@ -80,7 +80,7 @@ class ChargifySubscriptionRepository implements SubscriptionContract
     public function updateCreditCardDetails(Subscription $subscription)
     {
         $user = $subscription->user;
-        $apiSubscription = Chargify::subscription($user->subscription_location)->get($subscription->api_subscription_id);
+        $apiSubscription = Chargify::subscription($subscription->subscription_location)->get($subscription->api_subscription_id);
         if (is_null($apiSubscription) || $apiSubscription == false) {
             return false;
         }
