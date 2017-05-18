@@ -9,6 +9,7 @@
 namespace App\Console\Commands;
 
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
@@ -27,9 +28,7 @@ class FullReport extends Command
             $this->output->error('user_id not found');
             return false;
         }
-        $user = User::findOrFail($user_id);
-
-        $categories = $user->categories;
+        $categories = Category::where('user_id', '=', $user_id);
         $data = $categories;
         $fileName = "full_report";
         $excel = Excel::create("{$user_id}_{$fileName}", function ($excel) use ($categories, $data, $fileName) {
