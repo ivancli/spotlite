@@ -51,14 +51,14 @@ class Crawl extends Command
                     if (isset($crawler->site) && isset($crawler->site->product) && isset($crawler->site->product->user)) {
                         $user = $crawler->site->product->user;
 //                        request()->session()->put('subscription_location', $user->subscription_location);
-//                        if ($user->needSubscription && !is_null($crawler->last_active_at)) {
-//                            $lastActiveAt = date('Y-m-d H:00:00', strtotime($crawler->last_active_at));
-//                            $hoursDifference = intval((strtotime($currentRoundedHours) - strtotime($lastActiveAt)) / 3600);
-//                            if (is_null($user->subscription) || !is_null($user->subscription->cancelled_at) || is_null($user->subscriptionCriteria()) || $user->subscriptionCriteria()->frequency > $hoursDifference) {
-//                                //not the time to crawl yet
-//                                continue;
-//                            }
-//                        }
+                        if ($user->needSubscription && !is_null($crawler->last_active_at)) {
+                            $lastActiveAt = date('Y-m-d H:00:00', strtotime($crawler->last_active_at));
+                            $hoursDifference = intval((strtotime($currentRoundedHours) - strtotime($lastActiveAt)) / 3600);
+                            if (is_null($user->subscription) || !is_null($user->subscription->cancelled_at) || is_null($user->subscriptionCriteria()) || $user->subscriptionCriteria()->frequency > $hoursDifference) {
+                                //not the time to crawl yet
+                                continue;
+                            }
+                        }
                         dispatch((new CrawlSite($crawler))->onQueue("crawling"));
                         $crawler->queue();
                         $crawler->last_active_at = date("Y-m-d H:i:s");
