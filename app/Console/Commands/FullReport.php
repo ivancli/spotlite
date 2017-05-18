@@ -28,7 +28,7 @@ class FullReport extends Command
             $this->output->error('user_id not found');
             return false;
         }
-        $categories = Category::where('user_id', '=', $user_id);
+        $categories = Category::where('user_id', '=', $user_id)->get();
         $data = $categories;
         $fileName = "full_report";
         $excel = Excel::create("{$user_id}_{$fileName}", function ($excel) use ($categories, $data, $fileName) {
