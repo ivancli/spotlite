@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repository\Ebay\EbayContract;
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Jobs\CrawlSite;
 use App\Models\Crawler;
 use App\Models\Site;
@@ -22,37 +23,20 @@ use Maatwebsite\Excel\Facades\Excel;
 class TestController extends Controller
 {
     var $request;
-    var $ebayRepo;
+    var $mailingAgentRepo;
 
-    public function __construct(Request $request, EbayContract $ebayContract)
+    public function __construct(Request $request, MailingAgentContract $mailingAgentContract)
     {
         $this->request = $request;
-        $this->ebayRepo = $ebayContract;
+        $this->mailingAgentRepo = $mailingAgentContract;
     }
 
     public function index()
     {
-        $user_id = $this->request->get('user_id');
-        $categories = Category::where('user_id', '=', $user_id)->get();
-        $data = $categories;
-        $fileName = "full_report";
-        $excel = Excel::create("{$user_id}_{$fileName}", function ($excel) use ($categories, $data, $fileName) {
-            $excel->sheet("full_report", function ($sheet) use ($data) {
-                $sheet->loadview('products.report.excel.user', compact(['data']));
-                $sheet->setColumnFormat(array(
-                    'D' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'E' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
-                    'F' => \PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-                    'G' => \PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2,
-                ));
-                $sheet->setWidth('A', 30);
-                $sheet->setWidth('B', 30);
-                $sheet->setWidth('C', 30);
-                $sheet->setWidth('D', 20);
-                $sheet->setWidth('E', 20);
-                $sheet->setWidth('F', 20);
-                $sheet->setWidth('G', 20);
-            });
-        })->store('csv');
+        $this->mailingAgentRepo->addSubscriber(array(
+            'EmailAddress' => 'ivan.li_live_au_2',
+            'Name' => 'invigor' . " " . 'test',
+        ));
+
     }
 }
