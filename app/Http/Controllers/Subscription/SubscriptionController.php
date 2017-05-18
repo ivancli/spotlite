@@ -47,10 +47,17 @@ class SubscriptionController extends Controller
         if (!$user->needSubscription || (!is_null($user->subscription) && $user->subscription->isValid())) {
             return redirect()->route('dashboard.index');
         }
-        $productFamilies = $this->subscriptionRepo->getProductList();
+        switch ($user->subscription->subscription_location) {
+            case 'us':
+                $productFamilies = $this->subscriptionRepo->getUsProductList();
+                break;
+            case 'au':
+            default:
+                $productFamilies = $this->subscriptionRepo->getProductList();
+        }
         event(new SubscriptionViewed());
         if (!is_null($user->apiSubscription) && $user->apiSubscription->state == 'past_due') {
-            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->apiSubscription->id);
+            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->subscription, $user->apiSubscription->id);
             return view('subscriptions.subscription_trial_ended')->with(compact(['productFamilies', 'updatePaymentLink']));
         }
         return view('subscriptions.subscription_plans')->with(compact(['productFamilies']));

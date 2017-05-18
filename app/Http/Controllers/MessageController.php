@@ -73,7 +73,7 @@ class MessageController extends Controller
     {
         $apiSubscriptionId = auth()->user()->subscription->api_subscription_id;
         $user = auth()->user();
-        $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user, $apiSubscriptionId);
+        $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->subscription, $apiSubscriptionId);
 
         if ($raw == 0) {
             return view('msg.subscription.credit_card_expiry')->with(compact(['updatePaymentLink']));
