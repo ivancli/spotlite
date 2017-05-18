@@ -41,7 +41,6 @@ class UserController extends UMUserController
     public function index(Request $request, $format = null)
     {
         if ($request->ajax()) {
-            dump(time());
             $users = User::when($request->has('start'), function ($query) use ($request) {
                 return $query->skip($request->get('start'));
             })
@@ -65,7 +64,6 @@ class UserController extends UMUserController
                     }
                     return $query;
                 })->get();
-            dump(time());
             $output = new \stdClass();
             $output->draw = (int)($request->has('draw') ? $request->get('draw') : 0);
             $output->recordsTotal = User::count();
