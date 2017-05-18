@@ -31,7 +31,7 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->get($email);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             $subscriber = $result->response;
             return $subscriber;
         } else {
@@ -59,7 +59,7 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->update($email, $fields);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -70,7 +70,7 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->delete($email);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return true;
         } else {
             return $result->response;
@@ -81,7 +81,7 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->unsubscribe($email);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return true;
         } else {
             return $result->response;
@@ -102,7 +102,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -123,7 +123,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -190,7 +190,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -211,7 +211,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -232,7 +232,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -253,7 +253,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -274,7 +274,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
@@ -370,7 +370,7 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
             return $result->response;
