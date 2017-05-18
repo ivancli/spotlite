@@ -1,38 +1,33 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ivan.li
- * Date: 4/3/2017
- * Time: 10:50 AM
+ * User: Ivan
+ * Date: 18/05/2017
+ * Time: 12:48 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
-use App\Contracts\Repository\Ebay\EbayContract;
-use App\Jobs\CrawlSite;
-use App\Models\Crawler;
-use App\Models\Site;
+
+use App\Models\Category;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Invigor\Crawler\Repositories\Crawlers;
-use Invigor\Crawler\Repositories\Crawlers\DefaultCrawler;
+use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
-class TestController extends Controller
+class FullReport extends Command
 {
-    var $request;
-    var $ebayRepo;
+    protected $signature = "full-report {user_id}";
+    protected $description = 'Pushing available crawlers to queue';
 
-    public function __construct(Request $request, EbayContract $ebayContract)
-    {
-        $this->request = $request;
-        $this->ebayRepo = $ebayContract;
-    }
+    protected $crawler = null;
 
-    public function index()
+    public function handle()
     {
-        $user_id = $this->request->get('user_id');
+        $user_id = $this->argument('user_id');
+        if(is_null($user_id)){
+            $this->output->error('user_id not found');
+            return false;
+        }
         $categories = Category::where('user_id', '=', $user_id)->get();
         $data = $categories;
         $fileName = "full_report";
@@ -54,5 +49,6 @@ class TestController extends Controller
                 $sheet->setWidth('G', 20);
             });
         })->store('csv');
+
     }
 }
