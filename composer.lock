@@ -703,7 +703,7 @@
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-chargify.git",
-                "reference": "0a3c499da5a0090de329df65c880f3c4b459638e"
+                "reference": "7273c0cf5fe5cc8faa6d734c28e7e891bf2a6b3c"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -733,7 +733,7 @@
                 "laravel",
                 "subscription"
             ],
-            "time": "2017-05-18 15:04:13"
+            "time": "2017-05-18 15:15:46"
         },
         {
             "name": "invigor/crawler",
