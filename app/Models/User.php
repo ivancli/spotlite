@@ -32,7 +32,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription', 'numberOfLogin', 'isPastDue', 'isCancelled'
+        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription', 'numberOfLogin', 'isPastDue', 'isCancelled', 'urls'
     ];
 
     public function subscription()
@@ -188,6 +188,15 @@ class User extends Authenticatable
     public function getIsCancelledAttribute()
     {
         return !is_null($this->subscription) && $this->subscription->isCancelled;
+    }
+
+    public function getUrlsAttribute()
+    {
+        return array(
+            "show" => route('um.user.show', $this->getKey()),
+            "edit" => route('um.user.edit', $this->getKey()),
+            "delete" => route('um.user.destroy', $this->getKey())
+        );
     }
 
 //----------------------------------------------------------------------------------------------------------------------
