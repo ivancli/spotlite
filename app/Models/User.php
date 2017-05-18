@@ -205,11 +205,13 @@ class User extends Authenticatable
     public function subscriptionCriteria()
     {
         if (!is_null($this->apiSubscription)) {
-            $product = Chargify::product($this->subscription->subscription_location)->get($this->apiSubscription->product_id);
-            if (!is_null($product->description)) {
-                $criteria = json_decode($product->description);
-                return $criteria;
-            }
+            return Cache::tags(['users', "user_" . $this->getKey()])->remember('subscription_criteria', config('cache.ttl'), function () {
+                $product = Chargify::product($this->subscription->subscription_location)->get($this->apiSubscription->product_id);
+                if (!is_null($product->description)) {
+                    $criteria = json_decode($product->description);
+                    return $criteria;
+                }
+            });
         }
         return null;
     }
