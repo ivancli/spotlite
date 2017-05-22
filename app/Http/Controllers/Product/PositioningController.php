@@ -90,6 +90,7 @@ class PositioningController extends Controller
             'expensiveSite.recent_price as expensive_recent_price',
             'products.*',
             'categories.*',
+            DB::raw('COUNT(sites.site_id) as number_of_sites')
         ];
 
         $excludeQuery = "";
@@ -200,7 +201,6 @@ class PositioningController extends Controller
                     ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
                     ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%");
             });
-
         }
 
         if ($this->request->has('position') && !empty($this->request->get('position'))) {
@@ -225,6 +225,10 @@ class PositioningController extends Controller
         $productBuilder->select($select);
         $recordTotal = $user->products()->count();
         $recordsFiltered = $productBuilder->count();
+
+        $productBuilder->leftJoin('sites', 'products.product_id', '=', 'sites.product_id');
+        $productBuilder->groupBy('products.product_id');
+        $productBuilder->having('number_of_sites', '>', 1);
 
         if ($this->request->has('order')) {
             $order = array_first($this->request->get('order'));
@@ -285,6 +289,7 @@ class PositioningController extends Controller
             'products.*',
             'product_metas.*',
             'categories.*',
+            DB::raw('COUNT(sites.site_id) as number_of_sites')
         ];
 
         $excludeQuery = "";
@@ -421,6 +426,10 @@ class PositioningController extends Controller
         $recordTotal = $user->products()->count();
         $recordsFiltered = $productBuilder->count();
 
+        $productBuilder->leftJoin('sites', 'products.product_id', '=', 'sites.product_id');
+        $productBuilder->groupBy('products.product_id');
+        $productBuilder->having('number_of_sites', '>', 1);
+
         if ($this->request->has('order')) {
             $order = array_first($this->request->get('order'));
             $orderColumn = array_get($order, 'column');
@@ -446,7 +455,6 @@ class PositioningController extends Controller
         $products = $productBuilder->get();
 
         $fileName = "export_positioning_" . Carbon::now()->format('YmdHis');
-
         Excel::create($fileName, function ($excel) use ($products) {
             $excel->sheet('positioning view', function ($sheet) use ($products) {
                 $sheet->loadView('products.positioning.export', compact(['products']));
