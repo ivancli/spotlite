@@ -72,6 +72,7 @@ class Site extends Model
         return array(
             "admin_update" => route("admin.site.update", $this->getKey()),
             "test" => route("admin.site.test", $this->getKey()),
+            "queue" => route("admin.site.queue", $this->getKey()),
             "admin_delete" => route("admin.site.destroy", $this->getKey()),
             "admin_crawler_edit" => !is_null($this->crawler) ? route("admin.crawler.edit", $this->crawler->getKey()) : null,
             "show" => route("site.show", $this->getKey()),

@@ -297,6 +297,13 @@
                                             $("<i>").addClass("glyphicon glyphicon-globe")
                                     ).addClass("text-muted"),
                                     "&nbsp;&nbsp;",
+                                    $("<a>").attr({
+                                        "href":"#",
+                                        "onclick": "pushToQueue('" + data.urls.queue + "')"
+                                    }).append(
+                                        $("<i>").addClass("glyphicon glyphicon-triangle-right")
+                                    ),
+                                    "&nbsp;&nbsp;",
                                     $("<div>").addClass("btn-group").attr({
                                         "data-toggle": "tooltip",
                                         "title": "Update status"
@@ -636,6 +643,26 @@
                 "success": function (response) {
                     hideLoading();
                     reloadSiteTable();
+                },
+                "error": function (xhr, status, error) {
+                    hideLoading();
+                    describeServerRespondedError(xhr.status);
+                }
+            })
+        }
+
+        function pushToQueue(url)
+        {
+            showLoading();
+            $.ajax({
+                "url": url,
+                "method": "post",
+                "success": function(response){
+                    if(response.status === true){
+                        hideLoading();
+                        alertP("Push to queue", "Site has been pushed to queue.");
+                        reloadSiteTable();
+                    }
                 },
                 "error": function (xhr, status, error) {
                     hideLoading();

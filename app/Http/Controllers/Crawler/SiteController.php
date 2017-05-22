@@ -15,6 +15,7 @@ use App\Contracts\Repository\Product\Site\SiteContract;
 use App\Exceptions\ValidationException;
 use App\Filters\QueryFilter;
 use App\Http\Controllers\Controller;
+use App\Jobs\CrawlSite;
 use App\Libraries\CommonFunctions;
 use App\Models\Domain;
 use App\Validators\Crawler\Site\StoreValidator;
@@ -287,5 +288,24 @@ class SiteController extends Controller
         } else {
             return redirect()->route('admin.site.index');
         }
+    }
+
+    public function queue(Request $request, $site_id)
+    {
+        $site = $this->siteRepo->getSite($site_id);
+        if ($site->crawler()->count() > 0) {
+            $site->statusWaiting();
+            $crawler = $site->crawler;
+            dispatch((new CrawlSite($crawler))->onQueue("crawling"));
+            $crawler->queue();
+            $crawler->last_active_at = date("Y-m-d H:i:s");
+            $crawler->save();
+
+            $status = true;
+        } else {
+            $status = false;
+        }
+
+        return compact(['status']);
     }
 }
