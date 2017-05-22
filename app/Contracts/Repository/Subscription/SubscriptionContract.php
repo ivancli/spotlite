@@ -25,10 +25,12 @@ interface SubscriptionContract
     /**
      * Generate a link for customers to update their payment method
      * https://help.chargify.com/public-pages/self-service-pages.html
+     * @param Subscription $subscription
      * @param $subscription_id
      * @return mixed
+     * @internal param User $user
      */
-    public function generateUpdatePaymentLink($subscription_id);
+    public function generateUpdatePaymentLink(Subscription $subscription, $subscription_id);
 
     /**
      * Synchronise user subscription status
@@ -45,9 +47,10 @@ interface SubscriptionContract
 
     /**
      * validating a coupon code based on its product family id
+     * @param $subscriptionLocation
      * @param $coupon_code
      * @param $product_family_id
      * @return mixed
      */
-    public function validateCoupon($coupon_code, $product_family_id);
+    public function validateCoupon($subscriptionLocation, $coupon_code, $product_family_id);
 }

@@ -31,8 +31,9 @@ class SubscriptionController extends Controller
         $data = $this->request->all();
         $couponCode = $data['coupon_code'];
         $productFamilyId = $data['product_family_id'];
+        $subscriptionLocation = $data['subscription_location'];
 
-        $isValid = $this->subscriptionRepo->validateCoupon($couponCode, $productFamilyId);
+        $isValid = $this->subscriptionRepo->validateCoupon($subscriptionLocation, $couponCode, $productFamilyId);
 
         if ($this->request->has('callback')) {
             return response()->json(compact(['isValid']))->setCallback($this->request->get('callback'));

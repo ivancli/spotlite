@@ -118,7 +118,7 @@ class AuthController extends Controller
         $referer = request()->server('HTTP_REFERER');
         $referer = parse_url($referer);
         $path = $referer['path'];
-
+        $subscriptionLocation = strpos($path, 'us') !== false ? 'us' : 'au';
         $user = User::create([
             'title' => isset($data['title']) ? $data['title'] : '',
             'first_name' => $data['first_name'],
@@ -129,7 +129,7 @@ class AuthController extends Controller
             'verification_code' => $verificationCode,
             'agree_terms' => $data['agree_terms'],
             'set_password' => isset($data['set_password']) ? $data['set_password'] : 'y',
-            'subscription_location' => strpos($path, 'us') !== false ? 'us' : 'au',
+            'subscription_location' => $subscriptionLocation,
         ]);
 
         $role = UMRole::where("name", "client")->first();
@@ -142,9 +142,8 @@ class AuthController extends Controller
             'Name' => $user->first_name . " " . $user->last_name,
         ));
 
-        request()->session()->put('subscription_location', $user->subscription_location);
         if (request()->has('api_product_id')) {
-            $product = Chargify::product()->get(request('api_product_id'));
+            $product = Chargify::product($subscriptionLocation)->get(request('api_product_id'));
             $coupon_code = isset($data['coupon']) ? $data['coupon'] : '';
             $reference = array(
                 "user_id" => $user->getKey(),
@@ -165,7 +164,7 @@ class AuthController extends Controller
                 "coupon_code" => $coupon_code
             );
 
-            $result = Chargify::subscription()->create($fields);
+            $result = Chargify::subscription($subscriptionLocation)->create($fields);
             if (!isset($result->errors)) {
                 /* clear verification code*/
                 $user->verification_code = null;
@@ -173,12 +172,12 @@ class AuthController extends Controller
                 try {
                     /* update subscription record */
                     $subscription = $result;
-                    $sub = new Subscription();
-                    $sub->user_id = $user->getKey();
-                    $sub->api_product_id = $subscription->product_id;
-                    $sub->api_customer_id = $subscription->customer_id;
-                    $sub->api_subscription_id = $subscription->id;
-                    $sub->save();
+                    $subscription = $user->subscription()->save(new Subscription([
+                        'api_product_id' => $subscription->product_id,
+                        'api_customer_id' => $subscription->customer_id,
+                        'api_subscription_id' => $subscription->id,
+                        'subscription_location' => $subscriptionLocation,
+                    ]));
                     $user->clearAllCache();
 
                     $criteria = json_decode($product->description);
@@ -235,7 +234,7 @@ class AuthController extends Controller
                             ),
                             array(
                                 "Key" => "SubscriptionLocation",
-                                "Value" => $user->subscription_location
+                                "Value" => $subscriptionLocation
                             )
                         )
                     ));

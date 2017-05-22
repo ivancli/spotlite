@@ -32,7 +32,7 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription', 'numberOfLogin', 'isPastDue', 'isCancelled'
+        'preferences', 'apiSubscription', 'isStaff', 'isUnlimitedClient', 'firstAvailableDashboard', 'needSubscription', 'numberOfLogin', 'isPastDue', 'isCancelled', 'urls'
     ];
 
     public function subscription()
@@ -138,8 +138,9 @@ class User extends Authenticatable
     public function getApiSubscriptionAttribute()
     {
         if ($this->needSubscription && !is_null($this->subscription)) {
-            return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_subscription', config('cache.ttl'), function () {
-                return Chargify::subscription()->get($this->subscription->api_subscription_id);
+            $subscription = $this->subscription;
+            return Cache::tags(['users', "user_" . $this->getKey()])->remember('api_subscription', config('cache.ttl'), function ()  use($subscription){
+                return Chargify::subscription($subscription->subscription_location)->get($subscription->api_subscription_id);
             });
         } else {
             return null;
@@ -189,6 +190,15 @@ class User extends Authenticatable
         return !is_null($this->subscription) && $this->subscription->isCancelled;
     }
 
+    public function getUrlsAttribute()
+    {
+        return array(
+            "show" => route('um.user.show', $this->getKey()),
+            "edit" => route('um.user.edit', $this->getKey()),
+            "delete" => route('um.user.destroy', $this->getKey())
+        );
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 
     public function preference($key)
@@ -204,11 +214,13 @@ class User extends Authenticatable
     public function subscriptionCriteria()
     {
         if (!is_null($this->apiSubscription)) {
-            $product = Chargify::product()->get($this->apiSubscription->product_id);
-            if (!is_null($product->description)) {
-                $criteria = json_decode($product->description);
-                return $criteria;
-            }
+            return Cache::tags(['users', "user_" . $this->getKey()])->remember('subscription_criteria', config('cache.ttl'), function () {
+                $product = Chargify::product($this->subscription->subscription_location)->get($this->apiSubscription->product_id);
+                if (!is_null($product->description)) {
+                    $criteria = json_decode($product->description);
+                    return $criteria;
+                }
+            });
         }
         return null;
     }

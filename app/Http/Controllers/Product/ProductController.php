@@ -56,8 +56,9 @@ class ProductController extends Controller
     public function index()
     {
         $user = auth()->user();
-        if ($user->isPastDue) {
-            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($user->subscription->api_subscription_id);
+        if ($user->needSubscription && !is_null($user->subscription) && $user->isPastDue) {
+            $subscription = $user->subscription;
+            $updatePaymentLink = $this->subscriptionRepo->generateUpdatePaymentLink($subscription, $subscription->api_subscription_id);
         }
 
 

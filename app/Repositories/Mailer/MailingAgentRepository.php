@@ -31,7 +31,7 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->get($email);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             $subscriber = $result->response;
             return $subscriber;
         } else {
@@ -59,10 +59,10 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->update($email, $fields);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -70,10 +70,10 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->delete($email);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return true;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -81,10 +81,10 @@ class MailingAgentRepository implements MailingAgentContract
     {
         $wrap = new \CS_REST_Subscribers($this->listId, $this->auth);
         $result = $wrap->unsubscribe($email);
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return true;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -102,10 +102,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -123,10 +123,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -149,7 +149,7 @@ class MailingAgentRepository implements MailingAgentContract
         } elseif (isset($result->Message)) {
             return $result->Message;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -172,7 +172,7 @@ class MailingAgentRepository implements MailingAgentContract
         } elseif (isset($result->Message)) {
             return $result->Message;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -190,10 +190,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -211,10 +211,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -232,10 +232,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -253,10 +253,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -274,10 +274,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -370,10 +370,10 @@ class MailingAgentRepository implements MailingAgentContract
                 )
             )
         ));
-        if ($result->http_status_code == 200) {
+        if (isset($result->http_status_code) && $result->http_status_code == 200) {
             return $result;
         } else {
-            return $result->response;
+            return null;
         }
     }
 
@@ -384,7 +384,7 @@ class MailingAgentRepository implements MailingAgentContract
 
             /*somehow unable to use dependency injection in this repo*/
             /*fetch product list manually*/
-            $products = Chargify::product()->all();
+            $products = Chargify::product($user->subscription->subscription_location)->all();
             $products = collect($products);
             $products = $products->filter(function ($product, $key) {
                 return strpos(strtolower($product->name), 'onboarding') === false;

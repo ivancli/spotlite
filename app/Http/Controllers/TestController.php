@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repository\Ebay\EbayContract;
+use App\Contracts\Repository\Mailer\MailingAgentContract;
 use App\Jobs\CrawlSite;
 use App\Models\Crawler;
 use App\Models\Site;
@@ -22,17 +23,20 @@ use Maatwebsite\Excel\Facades\Excel;
 class TestController extends Controller
 {
     var $request;
-    var $ebayRepo;
+    var $mailingAgentRepo;
 
-    public function __construct(Request $request, EbayContract $ebayContract)
+    public function __construct(Request $request, MailingAgentContract $mailingAgentContract)
     {
         $this->request = $request;
-        $this->ebayRepo = $ebayContract;
+        $this->mailingAgentRepo = $mailingAgentContract;
     }
 
     public function index()
     {
-        $user = User::findOrFail(5);
-        Auth::login($user);
+        $this->mailingAgentRepo->addSubscriber(array(
+            'EmailAddress' => 'ivan.li_live_au_2',
+            'Name' => 'invigor' . " " . 'test',
+        ));
+
     }
 }

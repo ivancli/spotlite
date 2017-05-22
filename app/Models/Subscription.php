@@ -17,7 +17,7 @@ class Subscription extends Model
     public $timestamps = false;
     protected $primaryKey = "subscription_id";
     protected $fillable = [
-        'api_product_id', 'api_custom_id', 'api_subscription_id', 'expiry_date', 'cancelled_at',
+        'api_product_id', 'api_customer_id', 'api_subscription_id', 'expiry_date', 'cancelled_at', 'subscription_location',
     ];
 
     protected $appends = [
@@ -36,21 +36,27 @@ class Subscription extends Model
 
     public function isValid()
     {
-        $subscription = Chargify::subscription()->get($this->api_subscription_id);
-        return $subscription->state == 'active' || $subscription->state == 'trialing';
+        return Cache::tags(['users', "user_" . $this->getKey()])->remember('is_valid', config('cache.ttl'), function () {
+            $subscription = Chargify::subscription($this->subscription_location)->get($this->api_subscription_id);
+            return $subscription->state == 'active' || $subscription->state == 'trialing';
+        });
     }
 
     public function getIsPastDueAttribute()
     {
-        $subscription = Chargify::subscription()->get($this->api_subscription_id);
-
-        return !is_null($subscription) && $subscription->state == 'past_due';
+        return Cache::tags(['users', "user_" . $this->getKey()])->remember('is_past_due', config('cache.ttl'), function () {
+            $subscription = Chargify::subscription($this->subscription_location)->get($this->api_subscription_id);
+            return !is_null($subscription) && $subscription->state == 'past_due';
+        });
     }
 
     public function getIsCancelledAttribute()
     {
-        $subscription = Chargify::subscription()->get($this->api_subscription_id);
-        return !is_null($subscription) && $subscription->state == 'canceled';
+
+        return Cache::tags(['users', "user_" . $this->getKey()])->remember('is_cancelled', config('cache.ttl'), function () {
+            $subscription = Chargify::subscription($this->subscription_location)->get($this->api_subscription_id);
+            return !is_null($subscription) && $subscription->state == 'canceled';
+        });
     }
 
     public function creditCardExpiringWithinMonthOrExpired($month = 1)
