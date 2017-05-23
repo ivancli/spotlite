@@ -53,7 +53,16 @@ class SiteRepository implements SiteContract
 
     public function getSitesByProduct(Product $product)
     {
-        if ($this->request->has('keyword') && !empty($this->request->get('keyword')) && (strpos(strtolower($product->category->category_name), strtolower($this->request->get('keyword'))) === FALSE && strpos(strtolower($product->product_name), strtolower($this->request->get('keyword'))) === FALSE)) {
+        $meta = $product->meta;
+        $lowerCaseKeyword = strtolower($this->request->get('keyword'));
+        if ($this->request->has('keyword') && !empty($this->request->get('keyword'))
+            && (strpos(strtolower($product->category->category_name), $lowerCaseKeyword) === FALSE
+                && strpos(strtolower($product->product_name), $lowerCaseKeyword) === FALSE)
+            && (is_null($meta) || is_null($meta->sku) || strpos(strtolower($meta->sku), $lowerCaseKeyword) === FALSE)
+            && (is_null($meta) || is_null($meta->brand) || strpos(strtolower($meta->brand), $lowerCaseKeyword) === FALSE)
+            && (is_null($meta) || is_null($meta->supplier) || strpos(strtolower($meta->supplier), $lowerCaseKeyword) === FALSE)
+            && (is_null($meta) || is_null($meta->cost_price) || strpos(strtolower($meta->cost_price), $lowerCaseKeyword) === FALSE)
+        ) {
             $sitesBuilder = $product->filteredSites();
         } else {
             $sitesBuilder = $product->sites();
