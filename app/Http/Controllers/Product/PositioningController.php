@@ -176,6 +176,8 @@ class PositioningController extends Controller
             $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price)/reference.recent_price as percent_diff_expensive');
             $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price) as diff_second_cheapest');
             $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)/reference.recent_price as percent_diff_second_cheapest');
+            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, secondCheapestSite.recent_price - reference.recent_price, cheapestSite.recent_price - reference.recent_price) as dynamic_diff_price');
+            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, (secondCheapestSite.recent_price - reference.recent_price)/reference.recent_price, (cheapestSite.recent_price - reference.recent_price)/reference.recent_price) as percent_dynamic_diff_price');
         }
 
         if ($this->request->has('category')) {
@@ -253,21 +255,13 @@ class PositioningController extends Controller
             if ($orderColumn) {
                 if ($orderColumn == 'diff_ref_cheapest' && $this->request->has('reference')) {
                     if ($this->request->has('reference')) {
-                        if ($this->request->has('position') && $this->request->get('position') == 'cheapest') {
-                            $productBuilder = $productBuilder->orderBy('diff_second_cheapest', $orderSequence);
-                        } else {
-                            $productBuilder = $productBuilder->orderBy('diff_cheapest', $orderSequence);
-                        }
+                            $productBuilder = $productBuilder->orderBy('dynamic_diff_price', $orderSequence);
                     } else {
                         $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
                     }
                 } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
                     if ($this->request->has('reference')) {
-                        if ($this->request->has('position') && $this->request->get('position') == 'cheapest') {
-                            $productBuilder = $productBuilder->orderBy('percent_diff_second_cheapest', $orderSequence);
-                        } else {
-                            $productBuilder = $productBuilder->orderBy('percent_diff_cheapest', $orderSequence);
-                        }
+                            $productBuilder = $productBuilder->orderBy('percent_dynamic_diff_price', $orderSequence);
                     } else {
                         $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
                     }
