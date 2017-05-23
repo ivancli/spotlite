@@ -502,7 +502,6 @@ class PositioningController extends Controller
             }
         }
         $products = $productBuilder->get();
-
         $position = $this->request->get('position', null);
         $fileName = "export_positioning_" . Carbon::now()->format('YmdHis');
         Excel::create($fileName, function ($excel) use ($products,$position) {

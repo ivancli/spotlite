@@ -63,7 +63,7 @@
                 @endif
             </td>
             <td>
-                @if(isset($product->reference_site_url) && strpos($product->cheapest_site_url, $product->reference_site_url) !== false)
+                @if(isset($product->reference_recent_price) && floatval($product->cheapest_recent_price) - floatval($product->reference_recent_price) == 0)
                     @if(isset($product->diff_second_cheapest) && !is_null($product->diff_second_cheapest))
                         +${{ number_format($product->diff_second_cheapest, 2) }}
                     @else
@@ -78,7 +78,7 @@
                 @endif
             </td>
             <td>
-                @if(isset($product->reference_site_url) && strpos($product->cheapest_site_url, $product->reference_site_url) !== false)
+                @if(isset($product->reference_recent_price) && floatval($product->cheapest_recent_price) - floatval($product->reference_recent_price) == 0)
                     @if(isset($product->percent_diff_second_cheapest) && !is_null($product->percent_diff_second_cheapest))
                         +{{ number_format($product->percent_diff_second_cheapest*100, 2) }}%
                     @else
