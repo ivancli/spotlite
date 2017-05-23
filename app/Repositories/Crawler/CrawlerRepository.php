@@ -113,12 +113,12 @@ class CrawlerRepository implements CrawlerContract
 
         /*check cache*/
 //        $content = Cache::tags(['crawlers'])->remember("{$site->site_url}.content", 60, function () use ($site, $crawlerClass) {
-        $content = Cache::store('file')->remember("{$site->site_url}.content", 60, function () use ($site, $crawlerClass) {
+//        $content = Cache::store('file')->remember("{$site->site_url}.content", 60, function () use ($site, $crawlerClass) {
             $options = array(
                 "url" => $site->site_url,
             );
-            return $this->crawlPage($options, $crawlerClass);
-        });
+            $content = $this->crawlPage($options, $crawlerClass);
+//        });
 
         $file_path = storage_path('crawler/' . $site->getKey());
         if (File::exists($file_path)) {
