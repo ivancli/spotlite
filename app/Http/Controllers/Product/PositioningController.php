@@ -253,7 +253,7 @@ class PositioningController extends Controller
             $orderColumn = array_get($order, 'column');
             $orderSequence = array_get($order, 'dir');
             if ($orderColumn) {
-                if ($orderColumn == 'diff_ref_cheapest' && $this->request->has('reference')) {
+                if ($orderColumn == 'diff_ref_cheapest') {
                     if ($this->request->has('reference')) {
                         $productBuilder = $productBuilder->orderBy('dynamic_diff_price', $orderSequence);
                     } else {
@@ -471,7 +471,7 @@ class PositioningController extends Controller
             $orderColumn = array_get($order, 'column');
             $orderSequence = array_get($order, 'dir');
             if ($orderColumn) {
-                if ($orderColumn == 'diff_ref_cheapest' && $this->request->has('reference')) {
+                if ($orderColumn == 'diff_ref_cheapest') {
                     if ($this->request->has('reference')) {
                         $productBuilder = $productBuilder->orderBy('dynamic_diff_price', $orderSequence);
                     } else {
