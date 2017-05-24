@@ -297,9 +297,29 @@
                     {
                         "name": 'diff_ref_cheapest',
                         "data": function (data) {
-
                             if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.cheapest_recent_price != null && data.reference_recent_price != null) {
-                                return '$' + (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))).formatMoney(2, '.', ',');
+                                if (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price)) == 0) {
+                                    if (typeof data.second_cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.second_cheapest_recent_price != null && data.reference_recent_price != null) {
+                                        var $output = $('<div>').append(
+                                            $("<div>").addClass("text-success").append(
+                                                $("<i>").addClass("fa fa-plus"),
+                                                "&nbsp;&nbsp;",
+                                                '$' + (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.second_cheapest_recent_price))).formatMoney(2, '.', ',')
+                                            )
+                                        );
+                                        return $output.html();
+
+                                    }
+                                } else {
+                                    var $output = $('<div>').append(
+                                        $("<div>").addClass("text-danger").append(
+                                            $("<i>").addClass("fa fa-minus"),
+                                            "&nbsp;&nbsp;",
+                                            '$' + (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))).formatMoney(2, '.', ',')
+                                        )
+                                    );
+                                    return $output.html();
+                                }
                             }
                             return 'n/a'
                         }
@@ -308,7 +328,27 @@
                         "name": 'percent_diff_ref_cheapest',
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.cheapest_recent_price != null && data.reference_recent_price != null) {
-                                return ((Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))) / parseFloat(data.reference_recent_price) * 100).formatMoney(2, '.', ',') + '%';
+                                if (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price)) == 0) {
+                                    if (typeof data.second_cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.second_cheapest_recent_price != null && data.reference_recent_price != null) {
+                                        var $output = $('<div>').append(
+                                            $("<div>").addClass("text-success").append(
+                                                $("<i>").addClass("fa fa-plus"),
+                                                "&nbsp;&nbsp;",
+                                                ((Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.second_cheapest_recent_price))) / parseFloat(data.reference_recent_price) * 100).formatMoney(2, '.', ',') + '%'
+                                            )
+                                        );
+                                        return $output.html();
+                                    }
+                                } else {
+                                    var $output = $('<div>').append(
+                                        $("<div>").addClass("text-danger").append(
+                                            $("<i>").addClass("fa fa-minus"),
+                                            "&nbsp;&nbsp;",
+                                            ((Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price))) / parseFloat(data.reference_recent_price) * 100).formatMoney(2, '.', ',') + '%'
+                                        )
+                                    );
+                                    return $output.html();
+                                }
                             }
                             return 'n/a'
                         }

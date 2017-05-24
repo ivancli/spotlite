@@ -88,6 +88,8 @@ class PositioningController extends Controller
             'cheapestSite.recent_price as cheapest_recent_price',
             'expensiveSite.site_urls as expensive_site_url',
             'expensiveSite.recent_price as expensive_recent_price',
+            'secondCheapestSite.site_urls as second_cheapest_site_url',
+            'secondCheapestSite.recent_price as second_cheapest_recent_price',
             'products.*',
             'categories.*',
             DB::raw('COUNT(sites.site_id) as number_of_sites')
@@ -113,31 +115,41 @@ class PositioningController extends Controller
 
         $subExcludeQuery = "";
         $subExcludeQuery = " WHERE ";
+        $secondCheapestSubExcludeQuery = " AND ";
         if ($this->request->has('exclude') && is_array($this->request->get('exclude'))) {
             foreach ($this->request->get('exclude') as $index => $exclude) {
                 if ($index != 0) {
                     $subExcludeQuery .= " AND ";
+                    $secondCheapestSubExcludeQuery .= " AND ";
                 }
                 if (strpos($exclude, 'eBay: ') !== false) {
                     $subExcludeQuery .= " ebay_items.seller_username != '" . addslashes(urlencode(str_replace('eBay: ', '', $exclude))) . "' ";
+                    $secondCheapestSubExcludeQuery .= " ebay_items.seller_username != '" . addslashes(urlencode(str_replace('eBay: ', '', $exclude))) . "' ";
                 } else {
                     $subExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+                    $secondCheapestSubExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
                 }
             }
             $subExcludeQuery .= " AND sites.status != 'invalid'";
+            $secondCheapestSubExcludeQuery .= " AND sites.status != 'invalid'";
         } else {
             $subExcludeQuery .= " sites.status != 'invalid'";
+            $secondCheapestSubExcludeQuery .= " sites.status != 'invalid'";
         }
 
 
         $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS cheapestSite');
         $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS expensiveSite');
+        $nextCheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT sites.product_id, MIN(sites.recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) LEFT JOIN (	SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) as a ON (sites.product_id=a.product_id) WHERE sites.recent_price != a.recent_price ' . $secondCheapestSubExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS secondCheapestSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
         });
         $productBuilder->leftJoin($expensiveSiteQuery, function ($join) {
             $join->on('expensiveSite.product_id', '=', 'products.product_id');
+        });
+        $productBuilder->leftJoin($nextCheapestSiteQuery, function ($join) {
+            $join->on('secondCheapestSite.product_id', '=', 'products.product_id');
         });
 
 
@@ -162,6 +174,10 @@ class PositioningController extends Controller
             $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price as percent_diff_cheapest');
             $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price) as diff_expensive');
             $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price)/reference.recent_price as percent_diff_expensive');
+            $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price) as diff_second_cheapest');
+            $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)/reference.recent_price as percent_diff_second_cheapest');
+            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, secondCheapestSite.recent_price - reference.recent_price, cheapestSite.recent_price - reference.recent_price) as dynamic_diff_price');
+            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, (secondCheapestSite.recent_price - reference.recent_price)/reference.recent_price, (cheapestSite.recent_price - reference.recent_price)/reference.recent_price) as percent_dynamic_diff_price');
         }
 
         if ($this->request->has('category')) {
@@ -196,6 +212,8 @@ class PositioningController extends Controller
                     $query->orWhere('reference.recent_price', 'LIKE', "%{$keyword}%");
                     $query->orWhere(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'), 'LIKE', "%{$keyword}%");
                     $query->orWhere(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price'), 'LIKE', "%{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)'), 'LIKE', "%{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)/reference.recent_price'), 'LIKE', "%{$keyword}%");
                 }
                 $query->orWhere('cheapestSite.site_urls', 'LIKE', "%{$keyword}%")
                     ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
@@ -235,15 +253,15 @@ class PositioningController extends Controller
             $orderColumn = array_get($order, 'column');
             $orderSequence = array_get($order, 'dir');
             if ($orderColumn) {
-                if ($orderColumn == 'diff_ref_cheapest' && $this->request->has('reference')) {
+                if ($orderColumn == 'diff_ref_cheapest') {
                     if ($this->request->has('reference')) {
-                        $productBuilder = $productBuilder->orderBy('diff_cheapest', $orderSequence);
+                        $productBuilder = $productBuilder->orderBy('dynamic_diff_price', $orderSequence);
                     } else {
                         $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
                     }
                 } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
                     if ($this->request->has('reference')) {
-                        $productBuilder = $productBuilder->orderBy('percent_diff_cheapest', $orderSequence);
+                        $productBuilder = $productBuilder->orderBy('percent_dynamic_diff_price', $orderSequence);
                     } else {
                         $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
                     }
@@ -286,6 +304,8 @@ class PositioningController extends Controller
             'cheapestSite.recent_price as cheapest_recent_price',
             'expensiveSite.site_urls as expensive_site_url',
             'expensiveSite.recent_price as expensive_recent_price',
+            'secondCheapestSite.site_urls as second_cheapest_site_url',
+            'secondCheapestSite.recent_price as second_cheapest_recent_price',
             'products.*',
             'product_metas.*',
             'categories.*',
@@ -312,31 +332,41 @@ class PositioningController extends Controller
 
         $subExcludeQuery = "";
         $subExcludeQuery = " WHERE ";
+        $secondCheapestSubExcludeQuery = " AND ";
         if ($this->request->has('exclude') && is_array($this->request->get('exclude'))) {
             foreach ($this->request->get('exclude') as $index => $exclude) {
                 if ($index != 0) {
                     $subExcludeQuery .= " AND ";
+                    $secondCheapestSubExcludeQuery .= " AND ";
                 }
                 if (strpos($exclude, 'eBay: ') !== false) {
                     $subExcludeQuery .= " ebay_items.seller_username != '" . addslashes(urlencode(str_replace('eBay: ', '', $exclude))) . "' ";
+                    $secondCheapestSubExcludeQuery .= " ebay_items.seller_username != '" . addslashes(urlencode(str_replace('eBay: ', '', $exclude))) . "' ";
                 } else {
                     $subExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
+                    $secondCheapestSubExcludeQuery .= " sites.site_url NOT LIKE '%" . addslashes(urlencode($exclude)) . "%' ";
                 }
             }
             $subExcludeQuery .= " AND sites.status != 'invalid'";
+            $secondCheapestSubExcludeQuery .= " AND sites.status != 'invalid'";
         } else {
             $subExcludeQuery .= " sites.status != 'invalid'";
+            $secondCheapestSubExcludeQuery .= " sites.status != 'invalid'";
         }
 
 
         $cheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MIN(recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS cheapestSite');
         $expensiveSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT product_id, MAX(recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) ' . $subExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS expensiveSite');
+        $nextCheapestSiteQuery = DB::raw('(SELECT b.*, GROUP_CONCAT(CONCAT(a.site_url, \'$#$\', IFNULL(CONCAT(\'eBay: \', ebay_items.seller_username), \'\')) SEPARATOR \'$ $\') site_urls FROM (SELECT sites.product_id, MIN(sites.recent_price) recent_price FROM sites LEFT JOIN ebay_items ON(sites.site_id=ebay_items.site_id) LEFT JOIN (	SELECT product_id, MIN(recent_price) recent_price FROM sites GROUP BY product_id) as a ON (sites.product_id=a.product_id) WHERE sites.recent_price != a.recent_price ' . $secondCheapestSubExcludeQuery . ' GROUP BY product_id) b LEFT JOIN sites a ON(a.recent_price=b.recent_price AND a.product_id=b.product_id) LEFT JOIN ebay_items ON(a.site_id=ebay_items.site_id) ' . $excludeQuery . ' GROUP BY product_id) AS secondCheapestSite');
 
         $productBuilder->leftJoin($cheapestSiteQuery, function ($join) {
             $join->on('cheapestSite.product_id', '=', 'products.product_id');
         });
         $productBuilder->leftJoin($expensiveSiteQuery, function ($join) {
             $join->on('expensiveSite.product_id', '=', 'products.product_id');
+        });
+        $productBuilder->leftJoin($nextCheapestSiteQuery, function ($join) {
+            $join->on('secondCheapestSite.product_id', '=', 'products.product_id');
         });
 
 
@@ -361,6 +391,10 @@ class PositioningController extends Controller
             $select[] = DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price as percent_diff_cheapest');
             $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price) as diff_expensive');
             $select[] = DB::raw('ABS(reference.recent_price - expensiveSite.recent_price)/reference.recent_price as percent_diff_expensive');
+            $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price) as diff_second_cheapest');
+            $select[] = DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)/reference.recent_price as percent_diff_second_cheapest');
+            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, secondCheapestSite.recent_price - reference.recent_price, cheapestSite.recent_price - reference.recent_price) as dynamic_diff_price');
+            $select[] = DB::raw('IF((reference.recent_price - cheapestSite.recent_price) = 0, (secondCheapestSite.recent_price - reference.recent_price)/reference.recent_price, (cheapestSite.recent_price - reference.recent_price)/reference.recent_price) as percent_dynamic_diff_price');
         }
 
         if ($this->request->has('category')) {
@@ -395,6 +429,8 @@ class PositioningController extends Controller
                     $query->orWhere('reference.recent_price', 'LIKE', "%{$keyword}%");
                     $query->orWhere(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)'), 'LIKE', "%{$keyword}%");
                     $query->orWhere(DB::raw('ABS(reference.recent_price - cheapestSite.recent_price)/reference.recent_price'), 'LIKE', "%{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)'), 'LIKE', "%{$keyword}%");
+                    $query->orWhere(DB::raw('ABS(reference.recent_price - secondCheapestSite.recent_price)/reference.recent_price'), 'LIKE', "%{$keyword}%");
                 }
                 $query->orWhere('cheapestSite.site_urls', 'LIKE', "%{$keyword}%")
                     ->orWhere('cheapestSite.recent_price', 'LIKE', "%{$keyword}%")
@@ -435,15 +471,15 @@ class PositioningController extends Controller
             $orderColumn = array_get($order, 'column');
             $orderSequence = array_get($order, 'dir');
             if ($orderColumn) {
-                if ($orderColumn == 'diff_ref_cheapest' && $this->request->has('reference')) {
+                if ($orderColumn == 'diff_ref_cheapest') {
                     if ($this->request->has('reference')) {
-                        $productBuilder = $productBuilder->orderBy('diff_cheapest', $orderSequence);
+                        $productBuilder = $productBuilder->orderBy('dynamic_diff_price', $orderSequence);
                     } else {
                         $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
                     }
                 } elseif ($orderColumn == 'percent_diff_ref_cheapest') {
                     if ($this->request->has('reference')) {
-                        $productBuilder = $productBuilder->orderBy('percent_diff_cheapest', $orderSequence);
+                        $productBuilder = $productBuilder->orderBy('dynamic_diff_price', $orderSequence);
                     } else {
                         $productBuilder = $productBuilder->orderBy('categories.category_name', $orderSequence);
                     }
@@ -453,11 +489,11 @@ class PositioningController extends Controller
             }
         }
         $products = $productBuilder->get();
-
+        $position = $this->request->get('position', null);
         $fileName = "export_positioning_" . Carbon::now()->format('YmdHis');
-        Excel::create($fileName, function ($excel) use ($products) {
-            $excel->sheet('positioning view', function ($sheet) use ($products) {
-                $sheet->loadView('products.positioning.export', compact(['products']));
+        Excel::create($fileName, function ($excel) use ($products, $position) {
+            $excel->sheet('positioning view', function ($sheet) use ($products, $position) {
+                $sheet->loadView('products.positioning.export', compact(['products', 'position']));
             });
         })->download('csv');
 
