@@ -158,7 +158,7 @@ class AlertUser extends Job implements ShouldQueue
             $products = $eachCategory->products;
             foreach ($products as $eachProduct) {
                 foreach ($eachProduct->sites as $eachSite) {
-                    if (!$eachSite->crawler->lastActiveWithinHour()) {
+                    if (!$eachSite->crawler->lastActiveWithinHour() && is_null($eachSite->crawler->status)) {
                         $allCategoriesCrawled = false;
                         break;
                     }
@@ -179,5 +179,4 @@ class AlertUser extends Job implements ShouldQueue
             $alertRepo->triggerUserAlert($alert);
         }
     }
-
 }
