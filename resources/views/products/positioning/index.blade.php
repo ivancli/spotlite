@@ -299,16 +299,25 @@
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.cheapest_recent_price != null && data.reference_recent_price != null) {
                                 if (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price)) == 0) {
-                                    if (typeof data.second_cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.second_cheapest_recent_price != null && data.reference_recent_price != null) {
+                                    var site_urls_and_ebay = data.cheapest_site_url.split('$ $');
+                                    if (site_urls_and_ebay.length > 1) {
                                         var $output = $('<div>').append(
-                                            $("<div>").addClass("text-success").append(
-                                                $("<i>").addClass("fa fa-plus"),
-                                                "&nbsp;&nbsp;",
-                                                '$' + (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.second_cheapest_recent_price))).formatMoney(2, '.', ',')
+                                            $("<div>").append(
+                                                '$' + (0).formatMoney(2, '.', ',')
                                             )
                                         );
                                         return $output.html();
-
+                                    } else {
+                                        if (typeof data.second_cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.second_cheapest_recent_price != null && data.reference_recent_price != null) {
+                                            var $output = $('<div>').append(
+                                                $("<div>").addClass("text-success").append(
+                                                    $("<i>").addClass("fa fa-plus"),
+                                                    "&nbsp;&nbsp;",
+                                                    '$' + (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.second_cheapest_recent_price))).formatMoney(2, '.', ',')
+                                                )
+                                            );
+                                            return $output.html();
+                                        }
                                     }
                                 } else {
                                     var $output = $('<div>').append(
@@ -329,15 +338,25 @@
                         "data": function (data) {
                             if (typeof data.cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.cheapest_recent_price != null && data.reference_recent_price != null) {
                                 if (Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.cheapest_recent_price)) == 0) {
-                                    if (typeof data.second_cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.second_cheapest_recent_price != null && data.reference_recent_price != null) {
+                                    var site_urls_and_ebay = data.cheapest_site_url.split('$ $');
+                                    if(site_urls_and_ebay.length > 1){
                                         var $output = $('<div>').append(
-                                            $("<div>").addClass("text-success").append(
-                                                $("<i>").addClass("fa fa-plus"),
-                                                "&nbsp;&nbsp;",
-                                                ((Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.second_cheapest_recent_price))) / parseFloat(data.reference_recent_price) * 100).formatMoney(2, '.', ',') + '%'
+                                            $("<div>").append(
+                                                (0).formatMoney(2, '.', ',') + '%'
                                             )
                                         );
                                         return $output.html();
+                                    }else{
+                                        if (typeof data.second_cheapest_recent_price != 'undefined' && typeof data.reference_recent_price != 'undefined' && data.second_cheapest_recent_price != null && data.reference_recent_price != null) {
+                                            var $output = $('<div>').append(
+                                                $("<div>").addClass("text-success").append(
+                                                    $("<i>").addClass("fa fa-plus"),
+                                                    "&nbsp;&nbsp;",
+                                                    ((Math.abs(parseFloat(data.reference_recent_price) - parseFloat(data.second_cheapest_recent_price))) / parseFloat(data.reference_recent_price) * 100).formatMoney(2, '.', ',') + '%'
+                                                )
+                                            );
+                                            return $output.html();
+                                        }
                                     }
                                 } else {
                                     var $output = $('<div>').append(
