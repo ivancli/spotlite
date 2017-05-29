@@ -63,7 +63,7 @@
             {{--Welcome to your dashboard. Here you will see all the live feedback of the prices you are tracking. Add a--}}
             {{--price you want to track by clicking on the "Add product price to track" link or go to the "Product Prices"--}}
             {{--within the navigation.--}}
-            Welcome to your Dashboard. Here you'll be able to see all prices you're tricking through automatically
+            Welcome to your Dashboard. Here you'll be able to see all prices you're tracking through automatically
             updated charts. Add a product price you want to track by clicking on "Add Product to Track" link or go to
             the Products page on the navigation to add your Categories & Products.
         </p>
