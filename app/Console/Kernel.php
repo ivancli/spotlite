@@ -50,5 +50,7 @@ class Kernel extends ConsoleKernel
          * Report task
          */
         $schedule->command("report:run")->everyMinute()->name("reports");
+
+        $schedule->command('alert')->hourly()->name("alert")->withoutOverlapping();
     }
 }
