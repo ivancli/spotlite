@@ -515,6 +515,7 @@
                                     <th style="border: 1px solid lightgrey">Product</th>
                                     <th style="border: 1px solid lightgrey">URL</th>
                                     <th style="border: 1px solid lightgrey">Change</th>
+                                    <th style="border: 1px solid lightgrey">Changed at</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -533,6 +534,9 @@
                                             @else
                                                 <div style="color: #ff0000">-${{number_format(abs($alertSite->diffPrice), 2)}}</div>
                                             @endif
+                                        </td>
+                                        <td>
+                                            {{$alertSite->priceLastChangedAt}}
                                         </td>
                                     </tr>
                                 @endforeach
