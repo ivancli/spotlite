@@ -528,7 +528,11 @@
                                             </a>
                                         </td>
                                         <td style="border: 1px solid lightgrey">
-                                            {{number_format($alertSite->diffPrice, 2)}}
+                                            @if($alertSite->diffPrice > 0)
+                                                <div style="color: #20b2aa;">${{number_format(abs($alertSite->diffPrice), 2)}}</div>
+                                            @else
+                                                <div style="color: #ff0000">-${{number_format(abs($alertSite->diffPrice), 2)}}</div>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

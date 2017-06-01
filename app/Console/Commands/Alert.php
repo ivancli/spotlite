@@ -59,19 +59,19 @@ class Alert extends Command
                 $this->output->progressAdvance();
             }
             $this->output->progressFinish();
+            if ($alertSites->count() > 0) {
+                $emails = $alert->emails;
+                foreach ($emails as $email) {
+                    dispatch((new SendMail('products.alert.email.temp_user',
+                        compact(['alertSites', 'alert']),
+                        array(
+                            "email" => "ivan.li@invigorgroup.com",
+                            "subject" => 'SpotLite Price Alert',
+                        )
+                    ))->onQueue("mailing")->onConnection('sync'));
 
-
-            $emails = $alert->emails;
-            foreach ($emails as $email) {
-                dispatch((new SendMail('products.alert.email.temp_user',
-                    compact(['alertSites', 'alert']),
-                    array(
-                        "email" => "ivan.li@invigorgroup.com",
-                        "subject" => 'SpotLite Price Alert',
-                    )
-                ))->onQueue("mailing")->onConnection('sync'));
-
-                event(new AlertSent($alert, $email));
+                    event(new AlertSent($alert, $email));
+                }
             }
             $alert->last_active_at = date('Y-m-d H:i:s');
             $alert->save();
