@@ -508,26 +508,26 @@
 
                             </p>
 
-                            <table style="width: 100%">
+                            <table style="width: 100%; border: 1px solid lightgrey">
                                 <thead>
                                 <tr>
-                                    <th>Category</th>
-                                    <th>Product</th>
-                                    <td>URL</td>
-                                    <td>Change</td>
+                                    <th style="border: 1px solid lightgrey">Category</th>
+                                    <th style="border: 1px solid lightgrey">Product</th>
+                                    <th style="border: 1px solid lightgrey">URL</th>
+                                    <th style="border: 1px solid lightgrey">Change</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($alertSites as $alertSite)
                                     <tr>
-                                        <td>{{$alertSite->product->category->category_name}}</td>
-                                        <td>{{$alertSite->product->product_name}}</td>
-                                        <td>
+                                        <td style="border: 1px solid lightgrey">{{$alertSite->product->category->category_name}}</td>
+                                        <td style="border: 1px solid lightgrey">{{$alertSite->product->product_name}}</td>
+                                        <td style="border: 1px solid lightgrey">
                                             <a href="{{$alertSite->site_url}}">
                                                 {{!isset($alertSite->userDomainName) || is_null($alertSite->userDomainName) ? $alertSite->domain : $alertSite->userDomainName}}
                                             </a>
                                         </td>
-                                        <td>
+                                        <td style="border: 1px solid lightgrey">
                                             {{number_format($alertSite->diffPrice, 2)}}
                                         </td>
                                     </tr>
