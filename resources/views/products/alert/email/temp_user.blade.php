@@ -535,7 +535,7 @@
                                                 <div style="color: #ff0000">-${{number_format(abs($alertSite->diffPrice), 2)}}</div>
                                             @endif
                                         </td>
-                                        <td>
+                                        <td style="border: 1px solid lightgrey">
                                             {{$alertSite->priceLastChangedAt}}
                                         </td>
                                     </tr>
