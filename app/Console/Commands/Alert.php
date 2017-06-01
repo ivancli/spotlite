@@ -62,6 +62,8 @@ class Alert extends Command
                     dispatch((new SendMail('products.alert.email.temp_user',
                         compact(['alertSites', 'alert']),
                         array(
+                            "first_name" => $user->first_name,
+                            "last_name" => $user->last_name,
                             "email" => $email->alert_email_address,
                             "subject" => 'SpotLite Price Alert',
                         )
