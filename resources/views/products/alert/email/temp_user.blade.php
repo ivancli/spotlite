@@ -503,12 +503,7 @@
 
                         <div style="Margin-left: 20px;Margin-right: 20px;">
                             <p style="Margin-top: 0;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;"><span class="font-roboto"><strong>Hi {{isset($alert->alertable->user) ? $alert->alertable->user->first_name : ''}}&nbsp;,</strong></span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: roboto,tahoma,sans-serif;">
-                            <span class="font-roboto">The price for the following product URLs are found
-                                @if($alert->comparison_price_type == "price changed")
-                                    to have changed.
-                                @elseif($alert->comparison_price_type == "my price")
-                                    to have beaten your price.
-                                @endif
+                            <span class="font-roboto">The price for the following product URLs are found to have changed.
                             </span>
 
                             </p>
