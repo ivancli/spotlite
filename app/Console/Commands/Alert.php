@@ -27,9 +27,6 @@ class Alert extends Command
         $alerts = \App\Models\Alert::where('alert_owner_type', 'user')->get();
 
         foreach ($alerts as $alert) {
-            if ($alert->getKey() != 152) {
-                continue;
-            }
 
             $user = $alert->alertable;
             if (is_null($user)) {
