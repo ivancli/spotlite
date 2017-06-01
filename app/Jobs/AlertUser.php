@@ -43,7 +43,7 @@ class AlertUser extends Job implements ShouldQueue
 
         $this->__handleCategoryAlert($this->crawler, $alertRepo);
 
-        $this->__handleUserAlert($this->crawler, $alertRepo);
+//        $this->__handleUserAlert($this->crawler, $alertRepo);
 
     }
 

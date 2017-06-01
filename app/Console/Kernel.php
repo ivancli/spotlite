@@ -20,6 +20,8 @@ class Kernel extends ConsoleKernel
         Commands\Sync::class,
         Commands\CloneUser::class,
         Commands\FullReport::class,
+        Commands\BulkImport::class,
+        Commands\Alert::class,
     ];
 
     protected $crawler;
