@@ -37,7 +37,6 @@ class Custom extends Command
         }, 'Windows-1252');
 
         $user = User::findOrFail(219);
-
         $this->output->progressStart(count($products));
 
         foreach ($products as $product) {
@@ -48,9 +47,9 @@ class Custom extends Command
             $brand = array_get($product, 'brand');
             $cost_price = array_get($product, 'cost_price');
 
-            $category = $user->categories()->where('category_name', $category_name)->get();
+            $category = $user->categories()->where('category_name', $category_name)->first();
             if (!is_null($category)) {
-                $userProduct = $category->products()->where('product_name', $product_name)->get();
+                $userProduct = $category->products()->where('product_name', $product_name)->first();
                 if (!is_null($userProduct)) {
                     $meta = $userProduct->meta;
                     $meta->update($product);
