@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\FullReport::class,
         Commands\BulkImport::class,
         Commands\Alert::class,
+        Commands\Custom::class,
     ];
 
     protected $crawler;
