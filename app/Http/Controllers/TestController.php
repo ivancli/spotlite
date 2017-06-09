@@ -14,6 +14,7 @@ use App\Jobs\CrawlSite;
 use App\Models\Crawler;
 use App\Models\Site;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Invigor\Crawler\Repositories\Crawlers;
@@ -33,10 +34,14 @@ class TestController extends Controller
 
     public function index()
     {
-        $this->mailingAgentRepo->addSubscriber(array(
-            'EmailAddress' => 'ivan.li_live_au_2',
-            'Name' => 'invigor' . " " . 'test',
-        ));
-
+        $user = User::findOrFail(222);
+        $sites = $user->sites;
+        foreach ($sites as $site) {
+            if (!is_null($site->priceLastChangedAt)) {
+                if (Carbon::parse($site->priceLastChangedAt)->gt(Carbon::parse('2017-06-01')->startOfDay())) {
+                    dump($site->priceLastChangedAt);
+                }
+            }
+        }
     }
 }

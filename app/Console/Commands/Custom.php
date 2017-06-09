@@ -26,7 +26,7 @@ class Custom extends Command
     {
 
         $products = [];
-        $result = Excel::load(storage_path('import/musos_product.csv'), function ($reader) use (&$products) {
+        $result = Excel::load(storage_path('import/hifi.xlsx'), function ($reader) use (&$products) {
             $data = $reader->all();
             foreach ($data as $index => $product) {
                 $rowNumber = $index + 2;
