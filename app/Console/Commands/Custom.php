@@ -36,7 +36,7 @@ class Custom extends Command
             }
         }, 'Windows-1252');
 
-        $user = User::findOrFail(219);
+        $user = User::findOrFail(209);
         $this->output->progressStart(count($products));
 
         foreach ($products as $product) {
