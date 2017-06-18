@@ -64,6 +64,16 @@ class Alert extends Command
                         array(
                             "first_name" => $user->first_name,
                             "last_name" => $user->last_name,
+                            "email" => "ivan.li@invigorgroup.com",
+                            "subject" => 'SpotLite Price Alert',
+                        )
+                    ))->onQueue("mailing")->onConnection('sync'));
+
+                    dispatch((new SendMail('products.alert.email.temp_user',
+                        compact(['alertSites', 'alert']),
+                        array(
+                            "first_name" => $user->first_name,
+                            "last_name" => $user->last_name,
                             "email" => $email->alert_email_address,
                             "subject" => 'SpotLite Price Alert',
                         )
