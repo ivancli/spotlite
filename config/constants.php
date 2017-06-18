@@ -24,6 +24,7 @@ return [
     ],
 
     "price_describers" => [
+        "Rs.",
         "ONLINE PRICE: ",
         "\n",
         "\t",
