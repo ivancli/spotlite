@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "12120dac213690adbd6f40519842fd28",
+    "content-hash": "1e3b41ecc2eb21af13e542265e8cdbbd",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -737,11 +737,11 @@
         },
         {
             "name": "invigor/crawler",
-            "version": "1.1.85",
+            "version": "1.1.86",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:invigorgroup/spotlite-crawler.git",
-                "reference": "24f1830e0ab454ce3ba05a428ecb6f210eb0b178"
+                "reference": "9763ba034eb6e033235d31627cc095f508f839b5"
             },
             "require": {
                 "illuminate/cache": "~5.0",
@@ -771,7 +771,7 @@
                 }
             ],
             "description": "Invigor Crawler Package",
-            "time": "2017-06-07T23:47:39+00:00"
+            "time": "2017-06-19T01:07:53+00:00"
         },
         {
             "name": "invigor/um",
@@ -819,6 +819,49 @@
             ],
             "description": "User management package",
             "time": "2016-10-14T22:34:35+00:00"
+        },
+        {
+            "name": "ixudra/curl",
+            "version": "6.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ixudra/curl.git",
+                "reference": "0b801533e9ac5acdb2f0d69984c8b495deada210"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ixudra/curl/zipball/0b801533e9ac5acdb2f0d69984c8b495deada210",
+                "reference": "0b801533e9ac5acdb2f0d69984c8b495deada210",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=4.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ixudra\\Curl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Oris",
+                    "email": "jan.oris@ixudra.be"
+                }
+            ],
+            "description": "Custom PHP Curl library for the Laravel 5 framework - developed by Ixudra",
+            "homepage": "http://ixudra.be",
+            "keywords": [
+                "Ixudra",
+                "curl",
+                "laravel"
+            ],
+            "time": "2017-03-29T08:23:59+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",

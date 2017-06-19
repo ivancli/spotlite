@@ -170,6 +170,8 @@ return [
         Invigor\Chargify\ChargifyServiceProvider::class,
 
         App\Providers\PasswordResetServiceProvider::class,
+
+        Ixudra\Curl\CurlServiceProvider::class,
     ],
 
     /*
@@ -230,6 +232,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
         'Chargify' => Invigor\Chargify\ChargifyFacade::class,
+
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
     ],
 
 ];
