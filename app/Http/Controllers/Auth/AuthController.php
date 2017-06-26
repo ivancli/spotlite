@@ -17,6 +17,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Invigor\Chargify\Chargify;
 use Invigor\UM\UMRole;
 use Validator;
@@ -241,9 +242,12 @@ class AuthController extends Controller
 
 
                 } catch (Exception $e) {
+                    Log::warning("User {$user->email} is able to sign up but not able to subscribe. " . $e->getMessage());
                     $user->clearAllCache();
                     return $user;
                 }
+            }else{
+                Log::warning("User {$user->email} is able to sign up but not able to subscribe. " . json_encode($result->errors));
             }
         }
         $user->clearAllCache();
